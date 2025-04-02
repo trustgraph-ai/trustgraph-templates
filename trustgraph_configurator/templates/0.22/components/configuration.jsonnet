@@ -19,7 +19,7 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
             for p in std.objectKeysValuesAll($.prompts.templates)
         },
         agent: {
-            "tool-index": std.manifestJsonMinified([t.id for t in $.tools]),
+            "tool-index": [t.id for t in $.tools],
         } + {
             ["tool." + p.id]: p
             for p in $.tools
