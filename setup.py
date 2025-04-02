@@ -41,6 +41,7 @@ setuptools.setup(
     ],
     scripts=[
         "scripts/tg-configurator",
+        "scripts/tg-configurations-list",
     ]
 )
 
