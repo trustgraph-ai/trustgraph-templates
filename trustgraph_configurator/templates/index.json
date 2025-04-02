@@ -1,0 +1,60 @@
+{
+    "templates": [
+	{
+	    "name": "0.21",
+	    "description": "Template definition for TrustGraph 0.21",
+	    "version": "0.21.17",
+	    "status": "stable"
+	},
+	{
+	    "name": "0.22",
+	    "description": "Template definition for TrustGraph 0.22",
+	    "version": "0.22.1",
+	    "status": "alpha"
+	}
+    ],
+    "platforms": [
+	{
+	    "name": "podman-compose",
+	    "description": "Uses podman-compose to deploy a compose file to a local Podman environment"
+	},
+	{
+	    "name": "docker-compose",
+	    "description": "Uses docker-compose to deploy a compose file to a local Docker installation"
+	},
+	{
+	    "name": "minikube-k8s",
+	    "description": "Uses kubectl to deploy resources to a Minikube Kubernetes cluster"
+	},
+	{
+	    "name": "scw-k8s",
+	    "description": "Uses kubectl to deploy resources to a Kubernetes cluster running in Scaleway cloud"
+	},
+	{
+	    "name": "gcp-k8s",
+	    "description": "Uses kubectl to deploy resources to a Kubernetes cluster on Google Cloud (e.g. GKE)"
+	},
+	{
+	    "name": "aks-k8s",
+	    "description": "Uses kubectl to deploy resources to a Kubernetes cluster in Azure (AKS)"
+	},
+	{
+	    "name": "eks-k8s",
+	    "description": "Uses kubectl to deploy resources to an Kubernetes cluster running in AWS (e.g. EKS)"
+	}
+    ],
+    "statuses": [
+	{
+	    "name": "stable",
+	    "description": "Stable for production use"
+	},
+	{
+	    "name": "alpha",
+	    "description": "Alpha"
+	},
+	{
+	    "name": "beta",
+	    "description": "Beta"
+	}
+    ]
+}
