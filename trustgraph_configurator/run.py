@@ -15,31 +15,31 @@ def run():
     )
 
     parser.add_argument(
-        '--version',
+        '-v', '--version',
         required=True,
         help=f'Version'
     )
 
     parser.add_argument(
-        '--input',
+        '-i', '--input',
         default="config.json",
         help=f'Input configuration name (default: config.json)'
     )
 
     parser.add_argument(
-        '--output',
+        '-o', '--output',
         default="output.zip",
         help=f'Output file name (default: output.zip)'
     )
 
     parser.add_argument(
-        '--template',
+        '-t', '--template',
         default="0.21",
         help=f'Template to use'
     )
 
     parser.add_argument(
-        '--platform',
+        '-p', '--platform',
         default="docker-compose",
         help=f'Platform (default: docker-compose)'
     )

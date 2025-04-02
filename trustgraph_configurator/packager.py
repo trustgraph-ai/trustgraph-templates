@@ -55,7 +55,8 @@ class Packager:
                     "docker-compose", self.version, config
                 )
             elif self.platform in set([
-                    "minikube-k8s", "gcp-k8s", "aks-k8s", "eks-k8s"
+                    "minikube-k8s", "gcp-k8s", "aks-k8s", "eks-k8s",
+                    "scw-k8s",
             ]):
                 data = self.generate_k8s(
                     self.platform, self.version, config
@@ -120,9 +121,7 @@ class Packager:
 
     def generate_k8s(self, platform, version, config):
 
-        processed = self.process(
-            config, platform=platform, version=version
-        )
+        processed = self.process(config)
 
         y = yaml.dump(processed)
 
