@@ -7,13 +7,38 @@ from io import BytesIO
 import zipfile
 
 from . import Generator
+from . index import Index
 
 logger = logging.getLogger("packager")
 logger.setLevel(logging.DEBUG)
 
 class Packager:
 
-    def __init__(self, version, output, template, platform):
+    def __init__(
+            self, version, output, template, platform,
+            latest, latest_stable,
+    ):
+
+        if latest:
+            version = Index.get_latest().version
+            template = Index.get_latest().name
+
+        if latest_stable:
+            version = Index.get_latest_stable().version
+            template = Index.get_latest_stable().name
+
+        if template is None:
+            raise RuntimeError("Don't know which template to use")
+
+        if version is None:
+            versions = [
+                v
+                for v in Index.get_templates()
+                if v.name == template
+            ]
+            if len(versions) < 1:
+                raise RuntimeError(f"Template {template} not known")
+            version = versions[-1].version
 
         files = importlib.resources.files()
 

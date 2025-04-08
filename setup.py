@@ -38,6 +38,7 @@ setuptools.setup(
     install_requires=[
         "jsonnet",
         "pyyaml",
+        "tabulate",
     ],
     scripts=[
         "scripts/tg-configurator",

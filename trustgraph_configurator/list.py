@@ -6,7 +6,6 @@ import tabulate
 
 from . import Index
 
-
 from . import Generator, Packager
 
 def list():
@@ -49,3 +48,14 @@ def list():
     ))
 
     print()
+
+    latest = Index.get_latest()
+    if latest:
+        print("Latest version:", latest.version)
+
+    stable = Index.get_latest_stable()
+    if stable:
+        print("Latest stable:", stable.version)
+
+    print()
+

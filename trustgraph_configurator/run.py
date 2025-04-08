@@ -16,7 +16,6 @@ def run():
 
     parser.add_argument(
         '-v', '--version',
-        required=True,
         help=f'Version'
     )
 
@@ -34,7 +33,6 @@ def run():
 
     parser.add_argument(
         '-t', '--template',
-        default="0.21",
         help=f'Template to use'
     )
 
@@ -42,6 +40,18 @@ def run():
         '-p', '--platform',
         default="docker-compose",
         help=f'Platform (default: docker-compose)'
+    )
+
+    parser.add_argument(
+        '--latest',
+        action='store_true',
+        help="Latest version",
+    )
+
+    parser.add_argument(
+        '--latest-stable',
+        action='store_true',
+        help="Latest stable version",
     )
 
     args = parser.parse_args()
