@@ -119,21 +119,44 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
         },
     },
 
-    local flow_array = std.flattenArrays([
+    local class_processors = function(classes, name)
         [
             [
-                local key = std.strReplace(p.key, "{class}", c.key);
+                local key = std.strReplace(p.key, "{class}", name);
                 local parts = std.splitLimit(key, ":", 2);
                 parts,
                 {
-                    [q.key]: std.strReplace(q.value, "{class}", c.key)
+                    [q.key]: std.strReplace(q.value, "{class}", name)
                     for q in std.objectKeysValuesAll(p.value)
                 }
             ]
-            for p in std.objectKeysValuesAll(c.value.class)
-        ]
-        for c in std.objectKeysValuesAll($["flow-classes"])
-    ]),
+            for p in std.objectKeysValuesAll(classes[name].class)
+        ],
+
+    local flow_processors = function(classes, name, id)
+        [
+            [
+                local key = std.strReplace(
+                    std.strReplace(p.key, "{class}", name),
+                    "{id}", id
+                );
+                local parts = std.splitLimit(key, ":", 2);
+                parts,
+                {
+                    [q.key]: std.strReplace(
+                        std.strReplace(q.value, "{class}", name),
+                        "{id}", id
+                    )
+                    for q in std.objectKeysValuesAll(p.value)
+                }
+            ]
+            for p in std.objectKeysValuesAll(classes[name].flow)
+        ],
+
+    // Temporary hackery
+    local flow_array =
+        class_processors($["flow-classes"], "default") +
+        flow_processors($["flow-classes"], "default", "0000"),
 
     local flow_objects = std.map(
         function(item) {
@@ -151,7 +174,7 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
     ),
 
     local configuration = std.manifestJsonMinified({
-  /*      prompt: {
+        prompt: {
             "system": $["prompts"]["system-template"],
             "template-index": std.objectFieldsAll($.prompts.templates),
         } + {
@@ -163,10 +186,8 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
         } + {
             ["tool." + p.id]: p
             for p in $.tools
-        }
-*/
-    } + {
-//        "flow-classes": $["flow-classes"],
+        },
+        "flow-classes": $["flow-classes"],
         "flows": flows,
     }),
 
