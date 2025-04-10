@@ -15,10 +15,6 @@ local url = import "values/url.jsonnet";
                         "prompt-template",
                         "-p",
                         url.pulsar,
-                        "--text-completion-request-queue",
-                        "non-persistent://tg/request/text-completion",
-                        "--text-completion-response-queue",
-                        "non-persistent://tg/response/text-completion",
                     ]
                     )
                     .with_limits("0.5", "128M")
@@ -50,14 +46,8 @@ local url = import "values/url.jsonnet";
                         "prompt-template",
                         "-p",
                         url.pulsar,
-                        "-i",
-                        "non-persistent://tg/request/prompt-rag",
-                        "-o",
-                        "non-persistent://tg/response/prompt-rag",
-                        "--text-completion-request-queue",
-                        "non-persistent://tg/request/text-completion-rag",
-                        "--text-completion-response-queue",
-                        "non-persistent://tg/response/text-completion-rag",
+                        "--id",
+                        "prompt-rag",
                     ]
                     )
                     .with_limits("0.5", "128M")

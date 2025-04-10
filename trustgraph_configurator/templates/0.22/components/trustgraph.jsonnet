@@ -67,8 +67,6 @@ local config = import "configuration.jsonnet";
                         "chunker-token",
                         "-p",
                         url.pulsar,
-                        "--id",
-                        "chunker",
                         "--chunk-size",
                         std.toString($["chunk-size"]),
                         "--chunk-overlap",
@@ -133,8 +131,6 @@ local config = import "configuration.jsonnet";
                         "pdf-decoder",
                         "-p",
                         url.pulsar,
-                        "--id",
-                        "pdf-decoder",
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -165,8 +161,6 @@ local config = import "configuration.jsonnet";
                         "metering",
                         "-p",
                         url.pulsar,
-                        "--id",
-                        "metering",
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -199,8 +193,6 @@ local config = import "configuration.jsonnet";
                         url.pulsar,
                         "--id",
                         "metering-rag",
-                        "-i",
-                        "non-persistent://tg/response/text-completion-rag",
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

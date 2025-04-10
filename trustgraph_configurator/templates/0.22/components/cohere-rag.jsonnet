@@ -26,12 +26,10 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "text-completion-cohere",
                         "-p",
                         url.pulsar,
+                        "--id",
+                        "text-completion-rag",
                         "-t",
                         "%0.3f" % $["cohere-rag-temperature"],
-                        "-i",
-                        "non-persistent://tg/request/text-completion-rag",
-                        "-o",
-                        "non-persistent://tg/response/text-completion-rag",
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
