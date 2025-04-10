@@ -117,26 +117,32 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
                 },
             }
         },
-        "lion": {
-            "class": {
-                "bunchy:{class}": {
-                  input: "IN:{class}",
-                  output: "OUT:{class}",
-                }
-            }
-        }
     },
 
-    local flow_objects = [
-        {
-            [std.strReplace(p.key, "{class}", c.key)]: {
-                [q.key]: std.strReplace(q.value, "{class}", c.key)
-                for q in std.objectKeysValuesAll(p.value)
-            }
+    local flow_array = std.flattenArrays([
+        [
+            [
+                local key = std.strReplace(p.key, "{class}", c.key);
+                local parts = std.splitLimit(key, ":", 2);
+                parts,
+                {
+                    [q.key]: std.strReplace(q.value, "{class}", c.key)
+                    for q in std.objectKeysValuesAll(p.value)
+                }
+            ]
             for p in std.objectKeysValuesAll(c.value.class)
-        }
+        ]
         for c in std.objectKeysValuesAll($["flow-classes"])
-    ],
+    ]),
+
+    local flow_objects = std.map(
+        function(item) {
+            [item[0][0]] +: {
+                [item[0][1]]: item[1]
+            }
+        },
+        flow_array
+    ),
 
     local flows = std.foldr(
         function(a, b) a + b,
@@ -145,7 +151,7 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
     ),
 
     local configuration = std.manifestJsonMinified({
-        prompt: {
+  /*      prompt: {
             "system": $["prompts"]["system-template"],
             "template-index": std.objectFieldsAll($.prompts.templates),
         } + {
@@ -158,6 +164,7 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
             ["tool." + p.id]: p
             for p in $.tools
         }
+*/
     } + {
 //        "flow-classes": $["flow-classes"],
         "flows": flows,
