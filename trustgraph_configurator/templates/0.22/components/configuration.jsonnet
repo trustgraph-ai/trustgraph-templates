@@ -14,7 +14,7 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
     local request(x) = "non-persistent://tg/request/" + x,
     local response(x) = "non-persistent://tg/response/" + x,
 
-    local flow_classes = std.manifestJsonMinified({
+    "flow-classes":: {
         default: {
             "flow": {
                 "pdf-decoder:{id}": {
@@ -62,62 +62,87 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
             },
             "class": {
                 "embeddings:{class}": {
-                    request: request("embeddings"),
-                    response: response("embeddings"),
+                    request: request("embeddings:{class}"),
+                    response: response("embeddings:{class}"),
                 },
                 "graph-rag:{class}": {
-                    request: request("graph-rag"),
-                    response: response("graph-rag"),
-                    "embeddings-request": request("embeddings"),
-                    "embeddings-response": response("embeddings"),
-                    "prompt-request": request("prompt"),
-                    "prompt-response": response("prompt"),
-                    "graph-embeddings-request": request("graph-embeddings"),
-                    "graph-embeddings-response": response("graph-embeddings"),
-                    "triples-request": request("triples"),
-                    "triples-response": response("triples"),
+                    request: request("graph-rag:{class}"),
+                    response: response("graph-rag:{class}"),
+                    "embeddings-request": request("embeddings:{class}"),
+                    "embeddings-response": response("embeddings:{class}"),
+                    "prompt-request": request("prompt:{class}"),
+                    "prompt-response": response("prompt:{class}"),
+                    "graph-embeddings-request": request("graph-embeddings:{class}"),
+                    "graph-embeddings-response": response("graph-embeddings:{class}"),
+                    "triples-request": request("triples:{class}"),
+                    "triples-response": response("triples:{class}"),
                 },
                 "triples-query:{class}": {
-                    request: request("triples"),
-                    response: response("triples"),
+                    request: request("triples:{class}"),
+                    response: response("triples:{class}"),
                 },
                 "ge-query:{class}": {
-                    request: request("graph-embeddings"),
-                    response: response("graph-embeddings"),
+                    request: request("graph-embeddings:{class}"),
+                    response: response("graph-embeddings:{class}"),
                 },
                 "de-query:{class}": {
-                    request: request("document-embeddings"),
-                    response: response("document-embeddings"),
+                    request: request("document-embeddings:{class}"),
+                    response: response("document-embeddings:{class}"),
                 },
                 "prompt:{class}": {
-                    request: request("prompt"),
-                    response: response("prompt"),
-                    "text-completion-request": request("text-completion"),
-                    "text-completion-response": response("text-completion"),
+                    request: request("prompt:{class}"),
+                    response: response("prompt:{class}"),
+                    "text-completion-request": request("text-completion:{class}"),
+                    "text-completion-response": response("text-completion:{class}"),
                 },
                 "prompt-rag:{class}": {
-                    request: request("prompt-rag"),
-                    response: response("prompt-rag"),
-                    "text-completion-request": request("text-completion-rag"),
-                    "text-completion-response": response("text-completion-rag"),
-                },
-                "metering:{class}": {
-                    input: response("text-completion"),
+                    request: request("prompt-rag:{class}"),
+                    response: response("prompt-rag:{class}"),
+                    "text-completion-request": request("text-completion-rag:{class}"),
+                    "text-completion-response": response("text-completion-rag:{class}"),
                 },
                 "text-completion:{class}": {
-                    input: request("text-completion"),
-                    output: response("text-completion"),
+                    input: request("text-completion:{class}"),
+                    output: response("text-completion:{class}"),
                 },
                 "text-completion-rag:{class}": {
-                    input: request("text-completion-rag"),
-                    output: response("text-completion-rag"),
+                    input: request("text-completion-rag:{class}"),
+                    output: response("text-completion-rag:{class}"),
+                },
+                "metering:{class}": {
+                    input: response("text-completion:{class}"),
                 },
                 "metering-rag:{class}": {
-                    input: response("text-completion-rag"),
+                    input: response("text-completion-rag:{class}"),
                 },
             }
+        },
+        "lion": {
+            "class": {
+                "bunchy:{class}": {
+                  input: "IN:{class}",
+                  output: "OUT:{class}",
+                }
+            }
         }
-    }),
+    },
+
+    local flow_objects = [
+        {
+            [std.strReplace(p.key, "{class}", c.key)]: {
+                [q.key]: std.strReplace(q.value, "{class}", c.key)
+                for q in std.objectKeysValuesAll(p.value)
+            }
+            for p in std.objectKeysValuesAll(c.value.class)
+        }
+        for c in std.objectKeysValuesAll($["flow-classes"])
+    ],
+
+    local flows = std.foldr(
+        function(a, b) a + b,
+        flow_objects,
+        {}
+    ),
 
     local configuration = std.manifestJsonMinified({
         prompt: {
@@ -134,9 +159,8 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
             for p in $.tools
         }
     } + {
-        "flow-classes": flow_definitions,
-        "flows": {
-        },
+//        "flow-classes": $["flow-classes"],
+        "flows": flows,
     }),
 
     "init-trustgraph" +: {
