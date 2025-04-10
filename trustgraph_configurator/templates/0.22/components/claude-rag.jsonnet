@@ -28,16 +28,14 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "text-completion-claude",
                         "-p",
                         url.pulsar,
+                        "--id",
+                        "text-completion-rag",
                         "-x",
                         std.toString($["claude-rag-max-output-tokens"]),
                         "-m",
                         $["claude-rag-model"],
                         "-t",
                         "%0.3f" % $["claude-rag-temperature"],
-                        "-i",
-                        "non-persistent://tg/request/text-completion-rag",
-                        "-o",
-                        "non-persistent://tg/response/text-completion-rag",
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

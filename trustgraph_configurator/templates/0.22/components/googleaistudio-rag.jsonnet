@@ -28,6 +28,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "text-completion-googleaistudio",
                         "-p",
                         url.pulsar,
+                        "--id",
+                        "text-completion-rag",
                         "-x",
                         std.toString(
                             $["googleaistudio-rag-max-output-tokens"]
@@ -36,10 +38,6 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "%0.3f" % $["googleaistudio-rag-temperature"],
                         "-m",
                         $["googleaistudio-rag-model"],
-                        "-i",
-                        "non-persistent://tg/request/text-completion-rag",
-                        "-o",
-                        "non-persistent://tg/response/text-completion-rag",
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")
