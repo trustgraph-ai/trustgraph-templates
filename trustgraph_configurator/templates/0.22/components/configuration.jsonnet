@@ -16,7 +16,20 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
 
     "flow-classes":: {
         default: {
+            "descrption": "Default flow class, supports GraphRAG and document RAG",
+            "tags": ["document-rag", "graph-rag", "knowledge-extraction"],
             "flow": {
+                "agent-manager:{id}": {
+                    request: request("agent:{id}"),
+                    next: request("agent:{id}"),
+                    response: response("agent:{id}"),
+                    "text-completion-request": request("text-completion:{class}"),
+                    "text-completion-response": response("text-completion:{class}"),
+                    "prompt-request": request("prompt:{class}"),
+                    "prompt-response": response("prompt:{class}"),
+                    "graph-rag-request": request("graph-rag:{class}"),
+                    "graph-rag-response": response("graph-rag:{class}"),
+                },
                 "pdf-decoder:{id}": {
                     input: flow("document-load:{id}"),
                     output: flow("text-document-load:{id}"),
@@ -51,13 +64,13 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
                     "embeddings-response": response("embeddings:{class}"),
                 },
                 "triples-write:{id}": {
-                    input: flow("triples-store"),
+                    input: flow("triples-store:{id}"),
                 },
                 "ge-write:{id}": {
-                    input: flow("graph-embeddings-store"),
+                    input: flow("graph-embeddings-store:{id}"),
                 },
                 "de-write:{id}": {
-                    input: flow("document-embeddings-store"),
+                    input: flow("document-embeddings-store:{id}"),
                 },
             },
             "class": {
@@ -70,12 +83,22 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
                     response: response("graph-rag:{class}"),
                     "embeddings-request": request("embeddings:{class}"),
                     "embeddings-response": response("embeddings:{class}"),
-                    "prompt-request": request("prompt:{class}"),
-                    "prompt-response": response("prompt:{class}"),
+                    "prompt-request": request("prompt-rag:{class}"),
+                    "prompt-response": response("prompt-rag:{class}"),
                     "graph-embeddings-request": request("graph-embeddings:{class}"),
                     "graph-embeddings-response": response("graph-embeddings:{class}"),
                     "triples-request": request("triples:{class}"),
                     "triples-response": response("triples:{class}"),
+                },
+                "document-rag:{class}": {
+                    request: request("document-rag:{class}"),
+                    response: response("document-rag:{class}"),
+                    "embeddings-request": request("embeddings:{class}"),
+                    "embeddings-response": response("embeddings:{class}"),
+                    "prompt-request": request("prompt-rag:{class}"),
+                    "prompt-response": response("prompt-rag:{class}"),
+                    "document-embeddings-request": request("document-embeddings:{class}"),
+                    "document-embeddings-response": response("document-embeddings:{class}"),
                 },
                 "triples-query:{class}": {
                     request: request("triples:{class}"),
@@ -102,12 +125,12 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
                     "text-completion-response": response("text-completion-rag:{class}"),
                 },
                 "text-completion:{class}": {
-                    input: request("text-completion:{class}"),
-                    output: response("text-completion:{class}"),
+                    request: request("text-completion:{class}"),
+                    response: response("text-completion:{class}"),
                 },
                 "text-completion-rag:{class}": {
-                    input: request("text-completion-rag:{class}"),
-                    output: response("text-completion-rag:{class}"),
+                    request: request("text-completion-rag:{class}"),
+                    response: response("text-completion-rag:{class}"),
                 },
                 "metering:{class}": {
                     input: response("text-completion:{class}"),
@@ -153,10 +176,12 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
             for p in std.objectKeysValuesAll(classes[name].flow)
         ],
 
+    local flow_id = "0000",
+
     // Temporary hackery
     local flow_array =
         class_processors($["flow-classes"], "default") +
-        flow_processors($["flow-classes"], "default", "0000"),
+        flow_processors($["flow-classes"], "default", flow_id),
 
     local flow_objects = std.map(
         function(item) {
@@ -188,7 +213,12 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
             for p in $.tools
         },
         "flow-classes": $["flow-classes"],
-        "flows": flows,
+        "flows": {
+            [flow_id]: {
+                "description": "Default processing flow",
+            },
+        },
+        "flows-active": flows,
     }),
 
     "init-trustgraph" +: {
