@@ -13,10 +13,81 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
     local flow(x) = "persistent://tg/flow/" + x,
     local request(x) = "non-persistent://tg/request/" + x,
     local response(x) = "non-persistent://tg/response/" + x,
+    local request_response(x) = {
+        request: request(x),
+        response: response(x),
+    },
+
+    "interface-descriptions":: {
+        "pdf-load": {
+            "description": "Document loader",
+            "kind": "send",
+            "visible": true,
+        },
+        "text-load": {
+            "description": "Text document loader",
+            "kind": "send",
+            "visible": true,
+        },
+        "entity-contexts-load": {
+            "description": "Entity contexts loader",
+            "kind": "send",
+        },
+        "triples-load": {
+            "description": "Triples loader",
+            "kind": "send",
+        },
+        "graph-rag": {
+            "description": "GraphRAG service",
+            "kind": "request-response",
+        },
+        "document-rag": {
+            "description": "ChunkRAG service",
+            "kind": "request-response",
+        },
+        "triples": {
+            "description": "Triples query service",
+            "kind": "request-response",
+        },
+        "graph-embeddings": {
+            "description": "Graph embeddings service",
+            "kind": "request-response",
+        },
+        "document-embeddings": {
+            "description": "Document embeddings service",
+            "kind": "request-response",
+        },
+        "prompt": {
+            "description": "Prompt service",
+            "kind": "request-response",
+        },
+        "agent": {
+            "description": "Agent service",
+            "kind": "request-response",
+        },
+        "text-completion": {
+            "description": "Text completion service",
+            "kind": "request-response",
+        },
+    },
 
     "flow-classes":: {
         default: {
-            "descrption": "Default flow class, supports GraphRAG and document RAG",
+            "description": "Default flow class, supports GraphRAG and document RAG",
+            "interfaces": {
+                "pdf-load": flow("document-load:{id}"),
+                "text-load": flow("text-document-load:{id}"),
+                "entity-contexts-load": flow("entity-contexts-load:{id}"),
+                "triples-load": flow("entity-contexts-load:{id}"),
+                "graph-rag": request_response("graph-rag:{class}"),
+                "document-rag": request_response("document-rag:{class}"),
+                "triples": request_response("triples:{class}"),
+                "graph-embeddings": request_response("graph-embeddings:{class}"),
+                "document-embeddings": request_response("document-embeddings:{class}"),
+                "prompt": request_response("prompt:{class}"),
+                "agent": request_response("agent:{class}"),
+                "text-completion": request_response("text-completion:{class}"),
+            },
             "tags": ["document-rag", "graph-rag", "knowledge-extraction"],
             "flow": {
                 "agent-manager:{id}": {
@@ -213,9 +284,11 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
             for p in $.tools
         },
         "flow-classes": $["flow-classes"],
+        "interface-descriptions": $["interface-descriptions"],
         "flows": {
             [flow_id]: {
                 "description": "Default processing flow",
+                "class-name": "default",
             },
         },
         "flows-active": flows,
