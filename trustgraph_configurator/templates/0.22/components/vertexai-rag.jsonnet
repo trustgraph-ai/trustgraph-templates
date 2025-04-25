@@ -35,8 +35,6 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "text-completion-vertexai",
                         "-p",
                         url.pulsar,
-                        "--id",
-                        "text-completion-rag",
                         "-k",
                         $["vertexai-rag-private-key"],
                         "-r",
@@ -47,6 +45,10 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "%0.3f" % $["vertexai-rag-temperature"],
                         "-m",
                         $["vertexai-rag-model"],
+                        "-i",
+                        "non-persistent://tg/request/text-completion-rag",
+                        "-o",
+                        "non-persistent://tg/response/text-completion-rag",
                     ])
                     .with_limits("0.5", "256M")
                     .with_reservations("0.1", "256M")

@@ -191,8 +191,8 @@ local config = import "configuration.jsonnet";
                         "metering",
                         "-p",
                         url.pulsar,
-                        "--id",
-                        "metering-rag",
+                        "-i",
+                        "non-persistent://tg/response/text-completion-rag",
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
