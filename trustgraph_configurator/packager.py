@@ -89,8 +89,12 @@ class Packager:
             else:
                 raise RuntimeError("Bad platform")
 
+            print("Writing output file...")
+
             with open(self.output, "wb") as f:
                 f.write(data)
+
+            print(f"Wrote {self.output}.")
 
         except Exception as e:
             logging.error(f"Exception: {e}")

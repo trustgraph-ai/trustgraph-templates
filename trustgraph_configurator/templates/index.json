@@ -9,7 +9,13 @@
 	{
 	    "name": "0.22",
 	    "description": "Template definition for TrustGraph 0.22",
-	    "version": "0.22.5",
+	    "version": "0.22.10",
+	    "status": "alpha"
+	}
+	{
+	    "name": "0.23",
+	    "description": "Template definition for TrustGraph 0.23",
+	    "version": "0.23.0",
 	    "status": "alpha"
 	}
     ],
