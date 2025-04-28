@@ -2,20 +2,20 @@
     "templates": [
 	{
 	    "name": "0.21",
-	    "description": "Template definition for TrustGraph 0.21",
+	    "description": "Support for Mistral API, LM Studio, multiple OCR options.  Integrated deployment to AWS, GCP, Azure, Scaleway using Pulumi.",
 	    "version": "0.21.17",
 	    "status": "stable"
 	},
 	{
 	    "name": "0.22",
-	    "description": "Template definition for TrustGraph 0.22",
+	    "description": "Dynamic configuration of prompt and agent tools without a system restart",
 	    "version": "0.22.10",
 	    "status": "alpha"
 	},
 	{
 	    "name": "0.23",
-	    "description": "Template definition for TrustGraph 0.23",
-	    "version": "0.23.1",
+	    "description": "Experimental addition of the Flow API, supporting dynamic configuration of processing dataflows",
+	    "version": "0.23.2",
 	    "status": "alpha"
 	}
     ],

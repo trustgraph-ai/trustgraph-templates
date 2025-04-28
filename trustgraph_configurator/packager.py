@@ -15,7 +15,7 @@ logger.setLevel(logging.DEBUG)
 class Packager:
 
     def __init__(
-            self, version, output, template, platform,
+            self, version, template, platform,
             latest, latest_stable,
     ):
 
@@ -42,11 +42,11 @@ class Packager:
 
         files = importlib.resources.files()
 
+        self.template = template
         self.version = version
         self.templates = files.joinpath("templates").joinpath(template)
         self.resources = files.joinpath("resources")
         self.platform = platform
-        self.output = output
 
     def process(
         self, config,
@@ -68,9 +68,27 @@ class Packager:
 
         return processed
     
+    def write(self, config, output):
+
+        try:
+
+            data = self.generate(config)
+
+            print("Writing output file...")
+
+            with open(output, "wb") as f:
+                f.write(data)
+
+            print(f"Wrote {output}.")
+
+        except Exception as e:
+            logging.error(f"Exception: {e}")
+            raise e
+   
     def generate(self, config):
 
         logger.info(f"Generating for platform={self.platform} "
+                    f"template={self.template} "
                     f"version={self.version}")
 
         try:
@@ -89,12 +107,7 @@ class Packager:
             else:
                 raise RuntimeError("Bad platform")
 
-            print("Writing output file...")
-
-            with open(self.output, "wb") as f:
-                f.write(data)
-
-            print(f"Wrote {self.output}.")
+            return data
 
         except Exception as e:
             logging.error(f"Exception: {e}")

@@ -62,8 +62,11 @@ def run():
     with open(input) as f:
         config = f.read()
 
+    output = args["output"]
+
     del args["input"]
+    del args["output"]
 
     a = Packager(**args)
-    a.generate(config)
+    a.write(config, output)
 
