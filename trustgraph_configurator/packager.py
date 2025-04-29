@@ -45,7 +45,7 @@ class Packager:
         self.template = template
         self.version = version
         self.templates = files.joinpath("templates").joinpath(template)
-        self.resources = files.joinpath("resources")
+        self.resources = files.joinpath("resources").joinpath(template)
         self.platform = platform
 
     def process(
