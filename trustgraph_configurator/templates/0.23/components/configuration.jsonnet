@@ -5,6 +5,8 @@ local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
 local default_prompts = import "prompts/default-prompts.jsonnet";
 
+local token_costs = import "values/token-costs.jsonnet";
+
 {
 
     prompts:: default_prompts,
@@ -247,12 +249,33 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
             for p in std.objectKeysValuesAll(classes[name].flow)
         ],
 
-    local flow_id = "0000",
+    local interfaces = function(classes, name, id)
+        local intf = classes[name].interfaces;
+        {
+            [p.key]:
+            if std.isString(p.value) then
+                local i = std.strReplace(p.value, "{class}", name);
+                local i2 = std.strReplace(i, "{id}", id);
+                i2
+            else
+                {
+                    [q.key]:
+                        local i = std.strReplace(q.value, "{class}", name);
+                        local i2 = std.strReplace(i, "{id}", id);
+                        i2
+                    for q in std.objectKeysValuesAll(p.value)
+                }
+            for p in std.objectKeysValuesAll(intf)
+        },
+
+    local default_flow_id = "0000",
+    local default_flow_class = "default",
 
     // Temporary hackery
     local flow_array =
-        class_processors($["flow-classes"], "default") +
-        flow_processors($["flow-classes"], "default", flow_id),
+        class_processors($["flow-classes"], default_flow_class) +
+        flow_processors($["flow-classes"], default_flow_class,
+            default_flow_id),
 
     local flow_objects = std.map(
         function(item) {
@@ -267,6 +290,10 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
         function(a, b) a + b,
         flow_objects,
         {}
+    ),
+
+    local default_flow_interfaces = interfaces(
+        $["flow-classes"], default_flow_class, default_flow_id
     ),
 
     local configuration = std.manifestJsonMinified({
@@ -286,12 +313,14 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
         "flow-classes": $["flow-classes"],
         "interface-descriptions": $["interface-descriptions"],
         "flows": {
-            [flow_id]: {
+            [default_flow_id]: {
                 "description": "Default processing flow",
                 "class-name": "default",
+                "interfaces": default_flow_interfaces,
             },
         },
         "flows-active": flows,
+        "token-costs": token_costs,
     }),
 
     "init-trustgraph" +: {
