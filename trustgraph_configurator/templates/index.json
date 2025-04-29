@@ -10,12 +10,12 @@
 	    "name": "0.22",
 	    "description": "Dynamic configuration of prompt and agent tools without a system restart",
 	    "version": "0.22.10",
-	    "status": "alpha"
+	    "status": "stable"
 	},
 	{
 	    "name": "0.23",
 	    "description": "Experimental addition of the Flow API, supporting dynamic configuration of processing dataflows",
-	    "version": "0.23.2",
+	    "version": "0.23.3",
 	    "status": "alpha"
 	}
     ],
