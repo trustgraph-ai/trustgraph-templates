@@ -16,7 +16,7 @@
 	    "name": "0.23",
 	    "description": "Experimental addition of the Flow API, supporting dynamic configuration of processing dataflows",
 	    "version": "0.23.3",
-	    "status": "alpha"
+	    "status": "pre-release"
 	}
     ],
     "platforms": [
@@ -51,8 +51,8 @@
     ],
     "statuses": [
 	{
-	    "name": "stable",
-	    "description": "Stable for production use"
+	    "name": "pre-release",
+	    "description": "Pre-release"
 	},
 	{
 	    "name": "alpha",
@@ -61,6 +61,10 @@
 	{
 	    "name": "beta",
 	    "description": "Beta"
+	},
+	{
+	    "name": "stable",
+	    "description": "Stable for production use"
 	}
     ]
 }
