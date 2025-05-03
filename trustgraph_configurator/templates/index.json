@@ -15,7 +15,7 @@
 	{
 	    "name": "0.23",
 	    "description": "Experimental addition of the Flow API, supporting dynamic configuration of processing dataflows",
-	    "version": "0.23.3",
+	    "version": "0.23.8",
 	    "status": "pre-release"
 	}
     ],
