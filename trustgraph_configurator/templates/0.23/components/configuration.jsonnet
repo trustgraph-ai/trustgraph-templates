@@ -21,7 +21,7 @@ local token_costs = import "values/token-costs.jsonnet";
     },
 
     "interface-descriptions":: {
-        "pdf-load": {
+        "document-load": {
             "description": "Document loader",
             "kind": "send",
             "visible": true,
@@ -35,8 +35,16 @@ local token_costs = import "values/token-costs.jsonnet";
             "description": "Entity contexts loader",
             "kind": "send",
         },
-        "triples-load": {
+        "triples-store": {
             "description": "Triples loader",
+            "kind": "send",
+        },
+        "graph-embeddings-store": {
+            "description": "Graph embeddings loader",
+            "kind": "send",
+        },
+        "document-embeddings-store": {
+            "description": "Document embeddings loader",
             "kind": "send",
         },
         "graph-rag": {
@@ -77,10 +85,12 @@ local token_costs = import "values/token-costs.jsonnet";
         default: {
             "description": "Default flow class, supports GraphRAG and document RAG",
             "interfaces": {
-                "pdf-load": flow("document-load:{id}"),
+                "document-load": flow("document-load:{id}"),
                 "text-load": flow("text-document-load:{id}"),
                 "entity-contexts-load": flow("entity-contexts-load:{id}"),
-                "triples-load": flow("entity-contexts-load:{id}"),
+                "triples-store": flow("triples-store:{id}"),
+                "graph-embeddings-store": flow("graph-embeddings-store:{id}"),
+                "document-embeddings-store": flow("document-embeddings-store:{id}"),
                 "graph-rag": request_response("graph-rag:{class}"),
                 "document-rag": request_response("document-rag:{class}"),
                 "triples": request_response("triples:{class}"),
