@@ -36,8 +36,6 @@ local cassandra = import "stores/cassandra.jsonnet";
 
     },
 
-}
-
-    // Minio and Cassandra are used by the Librarian
-    + minio + cassandra
+// Minio and Cassandra are used by the Librarian
+} + minio + cassandra
 

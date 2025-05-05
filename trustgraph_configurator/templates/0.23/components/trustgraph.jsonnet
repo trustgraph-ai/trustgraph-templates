@@ -3,6 +3,7 @@ local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 
 local config = import "configuration.jsonnet";
+local librarian = import "librarian.jsonnet";
 
 {
 
@@ -212,5 +213,5 @@ local config = import "configuration.jsonnet";
 
     },
 
-} + config
+} + config + librarian
 
