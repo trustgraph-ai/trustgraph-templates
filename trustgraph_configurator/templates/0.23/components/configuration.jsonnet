@@ -156,6 +156,10 @@ local token_costs = import "values/token-costs.jsonnet";
                 "de-write:{id}": {
                     input: flow("document-embeddings-store:{id}"),
                 },
+                "kg-store:{id}": {
+                    "triples-input": flow("triples-store:{id}"),
+                    "graph-embeddings-input": flow("graph-embeddings-store:{id}"),
+                },
             },
             "class": {
                 "embeddings:{class}": {

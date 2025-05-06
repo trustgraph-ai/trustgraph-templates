@@ -213,5 +213,65 @@ local librarian = import "librarian.jsonnet";
 
     },
 
+    "kg-store" +: {
+    
+        create:: function(engine)
+
+            local container =
+                engine.container("kg-store")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "kg-store",
+                        "-p",
+                        url.pulsar,
+                    ])
+                    .with_limits("0.5", "128M")
+                    .with_reservations("0.1", "128M");
+
+            local containerSet = engine.containers(
+                "kg-store", [ container ]
+            );
+
+            local service =
+                engine.internalService(containerSet)
+                    .with_port(8000, 8000, "metrics");
+
+            engine.resources([
+                containerSet,
+                service,
+            ])
+
+    },
+
+    "kg-manager" +: {
+    
+        create:: function(engine)
+
+            local container =
+                engine.container("kg-manager")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "kg-manager",
+                        "-p",
+                        url.pulsar,
+                    ])
+                    .with_limits("0.5", "128M")
+                    .with_reservations("0.1", "128M");
+
+            local containerSet = engine.containers(
+                "kg-manager", [ container ]
+            );
+
+            local service =
+                engine.internalService(containerSet)
+                    .with_port(8000, 8000, "metrics");
+
+            engine.resources([
+                containerSet,
+                service,
+            ])
+
+    },
+
 } + config + librarian
 
