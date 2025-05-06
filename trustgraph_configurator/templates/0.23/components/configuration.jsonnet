@@ -343,7 +343,7 @@ local token_costs = import "values/token-costs.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command(
                         [
-                            "tg-init-pulsar",
+                            "tg-init-trustgraph",
                             "-p",
                             url.pulsar_admin,
                             "--config",
