@@ -15,7 +15,7 @@
 	{
 	    "name": "0.23",
 	    "description": "Dynamic configuration of processing flows with the addition of the librarian component, and the flow API.  This is an early release of a major change with considerable impact on all web and websocket APIs.  Some of the functionality is only available in APIs and command-line",
-	    "version": "0.23.14",
+	    "version": "0.23.17",
 	    "status": "pre-release"
 	}
     ],
