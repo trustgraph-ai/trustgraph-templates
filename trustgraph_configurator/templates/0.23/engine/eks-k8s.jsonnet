@@ -17,7 +17,7 @@ local sc = {
     metadata: {
         name: "tg",
     },
-    provisioner: "ebs.csi.eks.amazonaws.com",
+    provisioner: "ebs.csi.aws.com",
     parameters: {
         type: "gp3",
         "encrypted": "true",
@@ -36,7 +36,7 @@ k8s + {
         local resourceList = {
             apiVersion: "v1",
             kind: "List",
-            items: [ns, sc] + resources,
+            items: resources,
         };
         resourceList
 

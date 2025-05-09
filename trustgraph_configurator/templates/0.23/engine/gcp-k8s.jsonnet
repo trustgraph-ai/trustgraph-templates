@@ -36,7 +36,7 @@ k8s + {
         local resourceList = {
             apiVersion: "v1",
             kind: "List",
-            items: [ns, sc] + resources,
+            items: resources,
         };
         resourceList
 
