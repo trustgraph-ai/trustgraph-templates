@@ -10,7 +10,11 @@ local prompts = import "prompts/mixtral.jsonnet";
             ["azure-openai-" + key]:: value,
         },
 
-    "azure-openai-model":: "GPT-3.5-Turbo",
+// Strategy is to specify the model with the AZURE_MODEL environment
+// variable.  This isn't something that can just be specified dynamically,
+// it has to match what was provisioned in Azure.
+
+//    "azure-openai-model":: "GPT-3.5-Turbo",
     "azure-openai-max-output-tokens":: 4192,
     "azure-openai-temperature":: 0.0,
 
@@ -19,7 +23,9 @@ local prompts = import "prompts/mixtral.jsonnet";
         create:: function(engine)
 
             local envSecrets = engine.envSecrets("azure-openai-credentials")
-                .with_env_var("AZURE_TOKEN", "azure-token");
+                .with_env_var("AZURE_TOKEN", "azure-token")
+                .with_env_var("AZURE_MODEL", "azure-model")
+                .with_env_var("AZURE_ENDPOINT", "azure-endpoint");
 
             local container =
                 engine.container("text-completion")
@@ -28,8 +34,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "text-completion-azure-openai",
                         "-p",
                         url.pulsar,
-                        "-m",
-                        $["azure-openai-model"],
+//                        "-m",
+//                        $["azure-openai-model"],
                         "-x",
                         std.toString($["azure-openai-max-output-tokens"]),
                         "-t",

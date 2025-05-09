@@ -7,10 +7,10 @@ local prompts = import "prompts/mixtral.jsonnet";
 
     with:: function(key, value)
         self + {
-            ["ollama-rag-" + key]:: value,
+            ["azure-openai-rag-" + key]:: value,
         },
 
-    "azure-openai-rag-model":: "GPT-3.5-Turbo",
+//    "azure-openai-rag-model":: "GPT-3.5-Turbo",
     "azure-openai-rag-max-output-tokens":: 4192,
     "azure-openai-rag-temperature":: 0.0,
 
@@ -19,15 +19,19 @@ local prompts = import "prompts/mixtral.jsonnet";
         create:: function(engine)
 
             local envSecrets = engine.envSecrets("azure-openai-credentials")
-                .with_env_var("AZURE_TOKEN", "azure-token");
+                .with_env_var("AZURE_TOKEN", "azure-token")
+                .with_env_var("AZURE_MODEL", "azure-model")
+                .with_env_var("AZURE_ENDPOINT", "azure-endpoint");
 
             local containerRag =
                 engine.container("text-completion-rag")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "text-completion-azure",
+                        "text-completion-azure-openai",
                         "-p",
                         url.pulsar,
+//                        "-m",
+//                        $["azure-openai-rag-model"],
                         "--id",
                         "text-completion-rag",
                         "-x",
