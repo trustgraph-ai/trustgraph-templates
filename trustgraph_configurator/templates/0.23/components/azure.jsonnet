@@ -16,7 +16,7 @@ local prompts = import "prompts/mixtral.jsonnet";
     
         create:: function(engine)
 
-            local envSecrets = engine.envSecrets("azure-credentials")
+            local envSecrets = engine.envSecrets("azure-ai-credentials")
                 .with_env_var("AZURE_TOKEN", "azure-token")
                 .with_env_var("AZURE_ENDPOINT", "azure-endpoint");
 
