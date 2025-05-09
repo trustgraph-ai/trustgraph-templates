@@ -30,7 +30,7 @@ local images = import "values/images.jsonnet";
                     .with_volume_mount(vol, "/minio_data");
 
             local containerSet = engine.containers(
-                "etcd", [ container ]
+                "minio", [ container ]
             );
 
             local service =
