@@ -17,6 +17,12 @@
 	    "description": "Dynamic configuration of processing flows with the addition of the librarian component, and the flow API.  This is an early release of a major change.  Some of the functionality is only available in APIs and command-line.",
 	    "version": "0.23.24",
 	    "status": "alpha"
+	},
+	{
+	    "name": "1.0",
+	    "description": "Preparing for production release of Flow API, Librarian and dynamic flow processing.",
+	    "version": "1.0.0",
+	    "status": "pre-release"
 	}
     ],
     "platforms": [
