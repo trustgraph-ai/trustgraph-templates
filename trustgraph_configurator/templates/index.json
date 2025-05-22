@@ -9,19 +9,19 @@
 	{
 	    "name": "0.22",
 	    "description": "Dynamic configuration of prompt and agent tools without a system restart",
-	    "version": "0.22.10",
+	    "version": "0.22.11",
 	    "status": "stable"
 	},
 	{
 	    "name": "0.23",
 	    "description": "Dynamic configuration of processing flows with the addition of the librarian component, and the flow API.  This is an early release of a major change.  Some of the functionality is only available in APIs and command-line.",
-	    "version": "0.23.24",
+	    "version": "0.23.25",
 	    "status": "alpha"
 	},
 	{
 	    "name": "1.0",
 	    "description": "Preparing for production release of Flow API, Librarian and dynamic flow processing.",
-	    "version": "1.0.1",
+	    "version": "1.0.2",
 	    "status": "pre-release"
 	}
     ],
