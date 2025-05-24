@@ -1,3 +1,7 @@
+
+// This puts the default configuration together.  References many things,
+// flow classes, a default flow, token costs, prompts, agent tools
+
 local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
@@ -7,7 +11,7 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
 
 local token_costs = import "values/token-costs.jsonnet";
 
-local flow_classes = import "flow-classes/default.jsonnet";
+local flow_classes = import "flows/flow-classes.jsonnet";
 
 {
 
@@ -133,8 +137,8 @@ local flow_classes = import "flow-classes/default.jsonnet";
             for p in std.objectKeysValuesAll(intf)
         },
 
-    local default_flow_id = "0000",
-    local default_flow_class = "default",
+    local default_flow_id = "default",
+    local default_flow_class = "document-rag+graph-rag",
 
     // Temporary hackery
     local flow_array =
@@ -180,7 +184,7 @@ local flow_classes = import "flow-classes/default.jsonnet";
         "flows": {
             [default_flow_id]: {
                 "description": "Default processing flow",
-                "class-name": "default",
+                "class-name": default_flow_class,
                 "interfaces": default_flow_interfaces,
             },
         },

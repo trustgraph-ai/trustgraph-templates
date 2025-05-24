@@ -11,6 +11,7 @@
    "claude": import "components/claude.jsonnet",
    "cohere": import "components/cohere.jsonnet",
    "googleaistudio": import "components/googleaistudio.jsonnet",
+   "llamafile": import "components/llamafile.jsonnet",
    "lmstudio": import "components/lmstudio.jsonnet",
    "mistral": import "components/mistral.jsonnet",
    "ollama": import "components/ollama.jsonnet",
@@ -24,6 +25,7 @@
    "claude-rag": import "components/claude-rag.jsonnet",
    "cohere-rag": import "components/cohere-rag.jsonnet",
    "googleaistudio-rag": import "components/googleaistudio-rag.jsonnet",
+   "llamafile-rag": import "components/llamafile-rag.jsonnet",
    "lmstudio-rag": import "components/lmstudio-rag.jsonnet",
    "mistral-rag": import "components/mistral-rag.jsonnet",
    "ollama-rag": import "components/ollama-rag.jsonnet",
@@ -63,7 +65,6 @@
    // Pulsar manager is a UI for Pulsar.  Uses a LOT of memory
    "pulsar-manager": import "components/pulsar-manager.jsonnet",
 
-   "llamafile": import "components/llamafile.jsonnet",
    "override-recursive-chunker": import "components/chunker-recursive.jsonnet",
 
    // The prompt manager
