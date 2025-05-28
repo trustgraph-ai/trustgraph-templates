@@ -8,8 +8,6 @@ local images = import "values/images.jsonnet";
             ["tgi-service-" + key]:: value,
         },
 
-    "hf-token":: "NOT-SUPPLIED",
-
     // mistralai/Mistral-7B-Instruct-v0.3 is supported, this one isn't,
     // but this doesn't need an HF token to load
     "tgi-service-model":: "teknium/OpenHermes-2.5-Mistral-7B",
