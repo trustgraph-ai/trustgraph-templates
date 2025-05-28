@@ -13,6 +13,15 @@ local librarian = import "librarian.jsonnet";
     "chunk-size":: 250,
     "chunk-overlap":: 15,
 
+    "prompt-replicas":: 1,
+    "prompt-rag-replicas":: 1,
+
+    "text-completion-replicas":: 1,
+    "text-completion-rag-replicas":: 1,
+
+    "kg-extraction-replicas":: 1,
+    "graph-rag-replicas":: 1,
+
     "api-gateway" +: {
     
         create:: function(engine)
@@ -133,8 +142,8 @@ local librarian = import "librarian.jsonnet";
                         "-p",
                         url.pulsar,
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits("0.5", "512M")
+                    .with_reservations("0.1", "512M");
 
             local containerSet = engine.containers(
                 "pdf-decoder", [ container ]
