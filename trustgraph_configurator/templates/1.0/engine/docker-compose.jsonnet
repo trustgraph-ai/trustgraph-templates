@@ -13,12 +13,7 @@
 
         local container = self,
 
-        name: name,
-        limits: {},
-        reservations: {},
-        ports: [],
-        volumes: [],
-        environment: {},
+        name:: name,
 
         with_image:: function(x) self + { image: x },
 
@@ -26,29 +21,63 @@
 
         with_command:: function(x) self + { command: x },
 
-        with_environment:: function(x) self + {
-            environment: super.environment + x,
+        with_privileged:: function(x) self + { privileged: x },
+
+        with_ipc:: function(x) self + { ipc: x },
+
+        with_capability:: function(x) self +
+            if std.objectHas(container, "capability") then
+              { cap_add: container.capability + x }
+            else
+              { cap_add: [x], },
+
+        with_environment:: function(x) self +
+            if std.objectHas(container, "environment") then
+              { environment: container.environment + x }
+            else
+              { environment: x, },
+
+        with_device:: function(hdev, cdev) self +
+            if std.objectHas(container, "devices") then
+              { devices: container.devices + "%s:%s" % [hdev, cdev] }
+            else
+              { devices: [ "%s:%s" % [hdev, cdev] ], },
+
+        with_limits:: function(c, m) self + {
+           deploy +: { resources +: {
+               limits: { cpus: c, memory: m }
+           } },
         },
 
-        with_limits:: function(c, m) self + { limits: { cpus: c, memory: m } },
-
-        with_reservations::
-            function(c, m) self + { reservations: { cpus: c, memory: m } },
+        with_reservations:: function(c, m) self + {
+            deploy +: { resources +: {
+                reservations: { cpus: c, memory: m }
+            } },
+        },
 
         with_volume_mount::
             function(vol, mnt)
                 self + {
-                    volumes: super.volumes + [{
-                        volume: vol, mount: mnt
-                    }]
+                    volumes: 
+                        if std.objectHas(container, "volumes") then
+                            container.volumes + [
+                                "%s:%s" % [vol.volid, mnt]
+                            ]
+                        else
+                            [
+                                "%s:%s" % [vol.volid, mnt]
+                            ]
                 },
 
         with_port::
-            function(src, dest, name) self + {
-                ports: super.ports + [
-                    { src: src, dest: dest, name : name }
-                ]
-            },
+            function(src, dest, name)
+                self + {
+                    ports:
+                        if std.objectHas(container, "ports") then
+                            container.ports + [ "%d:%d" % [src, dest] ]
+                        else
+                            [ "%d:%d" % [src, dest] ]
+                },
 
         with_env_var_secrets::
             function(vars)
@@ -60,49 +89,11 @@
                     self
                 ),
 
+        restart: "on-failure:100",
+
         add:: function() {
             services +: {
-                [container.name]: {
-                    image: container.image,
-                    deploy: {
-                        resources: {
-                            limits: container.limits,
-                            reservations: container.reservations,
-                        }
-                    },
-                    restart: "on-failure:100",
-                } +
-
-                (if std.objectHas(container, "command") then
-                { command: container.command }
-                else {}) +
-
-                (if std.objectHas(container, "user") then
-                { user: container.user }
-                else {}) +
-
-                (if ! std.isEmpty(container.environment) then
-                { environment: container.environment }
-                else {}) +
-
-                (if std.length(container.ports) > 0 then
-                {
-                    ports:  [
-                        "%d:%d" % [port.src, port.dest]
-                        for port in container.ports
-                    ]
-                }
-                else {}) +
-
-                (if std.length(container.volumes) > 0 then
-                {
-                    volumes:  [
-                        "%s:%s" % [vol.volume.volid, vol.mount]
-                        for vol in container.volumes
-                    ]
-                }
-                else {})
-
+                [container.name]: container,
             }
         }
 
