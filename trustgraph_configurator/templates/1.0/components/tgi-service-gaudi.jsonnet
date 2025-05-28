@@ -9,8 +9,8 @@ local images = import "values/images.jsonnet";
         },
 
     "tgi-service-model":: "teknium/OpenHermes-2.5-Mistral-7B",
-    "tgi-service-cpus":: "8.0",
-    "tgi-service-memory":: "16G",
+    "tgi-service-cpus":: "32.0",
+    "tgi-service-memory":: "64G",
 
     "tgi-service" +: {
     
@@ -24,9 +24,37 @@ local images = import "values/images.jsonnet";
                     .with_command([
                         "--model-id",
                         $["tgi-service-model"],
+                        "--sharded",
+                        "true",
+                        "--num-shard",
+                        "8",
+                        "--max-input-tokens",
+                        "2000",
+                        "--max-total-tokens",
+                        "4000",
+                        "--max-batch-size",
+                        "32",
+                        "--max-batch-prefill-tokens",
+                        "2048",
+                        "--max-waiting-tokens",
+                        "7",
+                        "--waiting-served-ratio",
+                        "1.2",
+                        "--max-concurrent-requests",
+                        "64",
                         "--port",
                         "8899"
                     ])
+                    .with_environment({
+                        PT_HPU_ENABLE_LAZY_COLLECTIVES: "true",
+                        HABANA_VISIBLE_DEVICES: "all",
+                        OMPI_MCA_btl_vader_single_copy_mechanism: "none",
+//                        HF_TOKEN=$hf_token,
+                        ENABLE_HPU_GRAPH: "true",
+                        LIMIT_HPU_GRAPH: "true",
+                        USE_FLASH_ATTENTION: "true",
+                        FLASH_ATTENTION_RECOMPUTE: "true",
+                    })
                     .with_ipc("host")
                     .with_capability("SYS_NICE")
                     .with_limits(
@@ -56,27 +84,3 @@ local images = import "values/images.jsonnet";
 
 }
 
-/*
-
-    volumes:
-    - ./models:/data
-    deploy:
-      resources:
-        limits:
-          cpus: '8'
-          memory: 16384M
-        reservations:
-          cpus: '8'
-          memory: 16384M
-    image: ghcr.io/huggingface/text-generation-inference:3.3.1-intel-xpu
-    privileged: true
-    cap_add:
-    - SYS_NICE
-    devices:
-    - /dev/dri:/dev/dri
-    ipc: host
-    ports:
-    - 8899:8899
-    restart: on-failure:100
-
-*/
