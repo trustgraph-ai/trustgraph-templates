@@ -8,8 +8,13 @@ local images = import "values/images.jsonnet";
             ["tgi-service-" + key]:: value,
         },
 
+    "hf-token":: "NOT-SUPPLIED",
+
+    // mistralai/Mistral-7B-Instruct-v0.3 is supported, this one isn't,
+    // but this doesn't need an HF token to load
     "tgi-service-model":: "teknium/OpenHermes-2.5-Mistral-7B",
-    "tgi-service-cpus":: "32.0",
+
+    "tgi-service-cpus":: "64.0",
     "tgi-service-memory":: "64G",
 
     "tgi-service" +: {
@@ -29,13 +34,13 @@ local images = import "values/images.jsonnet";
                         "--num-shard",
                         "8",
                         "--max-input-tokens",
-                        "2000",
+                        "4096",
                         "--max-total-tokens",
-                        "4000",
+                        "8192",
                         "--max-batch-size",
-                        "32",
+                        "4",
                         "--max-batch-prefill-tokens",
-                        "2048",
+                        "16384",
                         "--max-waiting-tokens",
                         "7",
                         "--waiting-served-ratio",
@@ -43,17 +48,19 @@ local images = import "values/images.jsonnet";
                         "--max-concurrent-requests",
                         "64",
                         "--port",
-                        "8899"
+                        "8899",
                     ])
                     .with_environment({
-                        PT_HPU_ENABLE_LAZY_COLLECTIVES: "true",
+                        ENABLE_HPU_GRAPH: 'true',
+                        FLASH_ATTENTION_RECOMPUTE: 'true',
                         HABANA_VISIBLE_DEVICES: "all",
+                        LIMIT_HPU_GRAPH: 'true',
                         OMPI_MCA_btl_vader_single_copy_mechanism: "none",
-//                        HF_TOKEN=$hf_token,
-                        ENABLE_HPU_GRAPH: "true",
-                        LIMIT_HPU_GRAPH: "true",
-                        USE_FLASH_ATTENTION: "true",
-                        FLASH_ATTENTION_RECOMPUTE: "true",
+                        PT_HPU_ENABLE_LAZY_COLLECTIVES: 'true',
+                        USE_FLASH_ATTENTION: 'true',
+                        PREFILL_BATCH_BUCKET_SIZE: "1",
+                        BATCH_BUCKET_SIZE: "1",
+//                        HF_TOKEN: $["hf-token"],
                     })
                     .with_ipc("host")
                     .with_capability("SYS_NICE")
