@@ -13,8 +13,8 @@ local url = import "values/url.jsonnet";
     
         create:: function(engine)
 
-            local container =
-                engine.container("kg-extract-definitions")
+            local container(x) =
+                engine.container("kg-extract-definitions-%d" % x)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-definitions",
@@ -24,17 +24,20 @@ local url = import "values/url.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSet = engine.containers(
-                "kg-extract-definitions", [ container ]
+            local containerSet(x) = engine.containers(
+                "kg-extract-definitions-%d" % x, [ container(x) ]
             );
 
-            local service =
-                engine.internalService(containerSet)
+            local service(x) =
+                engine.internalService(containerSet(x))
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
-                containerSet,
-                service,
+                containerSet(x)
+                for x in std.range(0, $["kg-extraction-replicas"] - 1)
+            ] + [
+                service(x)
+                for x in std.range(0, $["kg-extraction-replicas"] - 1)
             ])
 
     },
@@ -43,8 +46,8 @@ local url = import "values/url.jsonnet";
     
         create:: function(engine)
 
-            local container =
-                engine.container("kg-extract-relationships")
+            local container(x) =
+                engine.container("kg-extract-relationships-%d" % x)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-relationships",
@@ -54,17 +57,20 @@ local url = import "values/url.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSet = engine.containers(
-                "kg-extract-relationships", [ container ]
+            local containerSet(x) = engine.containers(
+                "kg-extract-relationships-%d" % x, [ container(x) ]
             );
 
-            local service =
-                engine.internalService(containerSet)
+            local service(x) =
+                engine.internalService(containerSet(x))
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
-                containerSet,
-                service,
+                containerSet(x)
+                for x in std.range(0, $["kg-extraction-replicas"] - 1)
+            ] + [
+                service(x)
+                for x in std.range(0, $["kg-extraction-replicas"] - 1)
             ])
 
     },
@@ -73,8 +79,8 @@ local url = import "values/url.jsonnet";
     
         create:: function(engine)
 
-            local container =
-                engine.container("graph-rag")
+            local container(x) =
+                engine.container("graph-rag-%d" % x)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "graph-rag",
@@ -92,17 +98,20 @@ local url = import "values/url.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSet = engine.containers(
-                "graph-rag", [ container ]
+            local containerSet(x) = engine.containers(
+                "graph-rag-%d" % x, [ container(x) ]
             );
 
-            local service =
-                engine.internalService(containerSet)
+            local service(x) =
+                engine.internalService(containerSet(x))
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
-                containerSet,
-                service,
+                containerSet(x)
+                for x in std.range(0, $["graph-rag-replicas"] - 1)
+            ] + [
+                service(x)
+                for x in std.range(0, $["graph-rag-replicas"] - 1)
             ])
 
     },

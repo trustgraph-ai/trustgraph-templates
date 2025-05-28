@@ -11,8 +11,8 @@ local prompts = import "prompts/mixtral.jsonnet";
     
         create:: function(engine)
 
-            local container =
-                engine.container("embeddings")
+            local container(x) =
+                engine.container("embeddings-%d" % x)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "embeddings-fastembed",
@@ -24,17 +24,20 @@ local prompts = import "prompts/mixtral.jsonnet";
                     .with_limits("1.0", "400M")
                     .with_reservations("0.5", "400M");
 
-            local containerSet = engine.containers(
-                "embeddings", [ container ]
+            local containerSet(x) = engine.containers(
+                "embeddings-%d" % x, [ container(x) ]
             );
 
-            local service =
-                engine.internalService(containerSet)
+            local service(x) =
+                engine.internalService(containerSet(x))
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
-                containerSet,
-                service,
+                containerSet(x)
+                for x in std.range(0, $["embeddings-replicas"] - 1)
+            ] + [
+                service(x)
+                for x in std.range(0, $["embeddings-replicas"] - 1)
             ])
 
     },

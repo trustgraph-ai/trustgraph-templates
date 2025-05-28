@@ -20,8 +20,8 @@ local prompts = import "prompts/mixtral.jsonnet";
             local envSecrets = engine.envSecrets("tgi-credentials")
                 .with_env_var("TGI_BASE_URL", "tgi-url");
 
-            local containerRag =
-                engine.container("text-completion-rag")
+            local container(x) =
+                engine.container("text-completion-rag-%d" % x)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-tgi",
@@ -38,18 +38,22 @@ local prompts = import "prompts/mixtral.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSetRag = engine.containers(
-                "text-completion-rag", [ containerRag ]
+            local containerSet(x) = engine.containers(
+                "text-completion-rag-%d" % x, [ container(x) ]
             );
 
-            local serviceRag =
-                engine.internalService(containerSetRag)
+            local service(x) =
+                engine.internalService(containerSet(x))
                 .with_port(8080, 8080, "metrics");
 
             engine.resources([
-                envSecrets,
-                containerSetRag,
-                serviceRag,
+                envSecrets
+            ] + [
+                containerSet(x)
+                for x in std.range(0, $["text-completion-replicas"] - 1)
+            ] + [
+                service(x)
+                for x in std.range(0, $["text-completion-replicas"] - 1)
             ])
 
     },
