@@ -60,7 +60,7 @@ local images = import "values/images.jsonnet";
                         USE_FLASH_ATTENTION: 'true',
                         PREFILL_BATCH_BUCKET_SIZE: "1",
                         BATCH_BUCKET_SIZE: "1",
-//                        HF_TOKEN: $["hf-token"],
+                        HF_TOKEN: $["hf-token"],
                     })
                     .with_ipc("host")
                     .with_capability("SYS_NICE")
