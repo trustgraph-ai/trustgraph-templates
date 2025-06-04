@@ -22,8 +22,6 @@ local librarian = import "librarian.jsonnet";
     "kg-extraction-replicas":: 1,
     "graph-rag-replicas":: 1,
 
-    "hf-token":: "NOT-SUPPLIED",
-
     "embeddings-replicas":: 1,
 
     "api-gateway" +: {
