@@ -11,7 +11,6 @@ local images = import "values/images.jsonnet";
     // mistralai/Mistral-7B-Instruct-v0.3 is supported, this one isn't,
     // but this doesn't need an HF token to load
     "tgi-service-model":: "teknium/OpenHermes-2.5-Mistral-7B",
-
     "tgi-service-cpus":: "64.0",
     "tgi-service-memory":: "64G",
 
@@ -46,13 +45,11 @@ local images = import "values/images.jsonnet";
                         "--max-concurrent-requests",
                         "64",
                         "--port",
-                        "8899",
+                        "8899"
                     ])
                     .with_environment({
-                        ENABLE_HPU_GRAPH: 'true',
-                        FLASH_ATTENTION_RECOMPUTE: 'true',
+                        PT_HPU_ENABLE_LAZY_COLLECTIVES: "true",
                         HABANA_VISIBLE_DEVICES: "all",
-                        LIMIT_HPU_GRAPH: 'true',
                         OMPI_MCA_btl_vader_single_copy_mechanism: "none",
                         PT_HPU_ENABLE_LAZY_COLLECTIVES: 'true',
                         USE_FLASH_ATTENTION: 'true',

@@ -13,8 +13,8 @@ local url = import "values/url.jsonnet";
     
         create:: function(engine)
 
-            local container(x) =
-                engine.container("kg-extract-definitions-%d" % x)
+            local container =
+                engine.container("kg-extract-definitions")
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-definitions",
@@ -24,20 +24,17 @@ local url = import "values/url.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSet(x) = engine.containers(
-                "kg-extract-definitions-%d" % x, [ container(x) ]
+            local containerSet = engine.containers(
+                "kg-extract-definitions", [ container ]
             );
 
-            local service(x) =
-                engine.internalService(containerSet(x))
+            local service =
+                engine.internalService(containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
-                containerSet(x)
-                for x in std.range(0, $["kg-extraction-replicas"] - 1)
-            ] + [
-                service(x)
-                for x in std.range(0, $["kg-extraction-replicas"] - 1)
+                containerSet,
+                service,
             ])
 
     },
@@ -46,8 +43,8 @@ local url = import "values/url.jsonnet";
     
         create:: function(engine)
 
-            local container(x) =
-                engine.container("kg-extract-relationships-%d" % x)
+            local container =
+                engine.container("kg-extract-relationships")
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-relationships",
@@ -57,20 +54,17 @@ local url = import "values/url.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSet(x) = engine.containers(
-                "kg-extract-relationships-%d" % x, [ container(x) ]
+            local containerSet = engine.containers(
+                "kg-extract-relationships", [ container ]
             );
 
-            local service(x) =
-                engine.internalService(containerSet(x))
+            local service =
+                engine.internalService(containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
-                containerSet(x)
-                for x in std.range(0, $["kg-extraction-replicas"] - 1)
-            ] + [
-                service(x)
-                for x in std.range(0, $["kg-extraction-replicas"] - 1)
+                containerSet,
+                service,
             ])
 
     },
@@ -79,8 +73,8 @@ local url = import "values/url.jsonnet";
     
         create:: function(engine)
 
-            local container(x) =
-                engine.container("graph-rag-%d" % x)
+            local container =
+                engine.container("graph-rag")
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "graph-rag",
@@ -98,20 +92,17 @@ local url = import "values/url.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSet(x) = engine.containers(
-                "graph-rag-%d" % x, [ container(x) ]
+            local containerSet = engine.containers(
+                "graph-rag", [ container ]
             );
 
-            local service(x) =
-                engine.internalService(containerSet(x))
+            local service =
+                engine.internalService(containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
-                containerSet(x)
-                for x in std.range(0, $["graph-rag-replicas"] - 1)
-            ] + [
-                service(x)
-                for x in std.range(0, $["graph-rag-replicas"] - 1)
+                containerSet,
+                service,
             ])
 
     },
