@@ -13,16 +13,16 @@ local librarian = import "librarian.jsonnet";
     "chunk-size":: 250,
     "chunk-overlap":: 15,
 
-    "prompt-replicas":: 1,
-    "prompt-rag-replicas":: 1,
+    "prompt-concurrency":: 1,
+    "prompt-rag-concurrency":: 1,
 
-    "text-completion-replicas":: 1,
-    "text-completion-rag-replicas":: 1,
+    "text-completion-concurrency":: 1,
+    "text-completion-rag-concurrency":: 1,
 
-    "kg-extraction-replicas":: 1,
-    "graph-rag-replicas":: 1,
+    "kg-extraction-concurrency":: 1,
+    "graph-rag-concurrency":: 1,
 
-    "embeddings-replicas":: 1,
+    "embeddings-concurrency":: 1,
 
     "api-gateway" +: {
     

@@ -26,6 +26,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "text-completion-ollama",
                         "-p",
                         url.pulsar,
+                        "--concurrency",
+                        std.toString($["text-completion-concurrency"]),
                         "-m",
                         $["ollama-model"],
                     ])

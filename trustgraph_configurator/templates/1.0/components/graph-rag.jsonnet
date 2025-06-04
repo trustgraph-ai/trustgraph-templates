@@ -20,6 +20,8 @@ local url = import "values/url.jsonnet";
                         "kg-extract-definitions",
                         "-p",
                         url.pulsar,
+                        "--concurrency",
+                        std.toString($["kg-extraction-concurrency"]),
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -50,6 +52,8 @@ local url = import "values/url.jsonnet";
                         "kg-extract-relationships",
                         "-p",
                         url.pulsar,
+                        "--concurrency",
+                        std.toString($["kg-extraction-concurrency"]),
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -80,6 +84,8 @@ local url = import "values/url.jsonnet";
                         "graph-rag",
                         "-p",
                         url.pulsar,
+//                        "--concurrency",
+//                        std.toString($["graph-rag-concurrency"]),
                         "--entity-limit",
                         std.toString($["graph-rag-entity-limit"]),
                         "--triple-limit",
