@@ -18,6 +18,8 @@ local url = import "values/url.jsonnet";
                         "embeddings-ollama",
                         "-p",
                         url.pulsar,
+                        "--concurrency",
+                        std.toString($["embeddings-concurrency"]),
                         "-m",
                         $["embeddings-model"],
                         "-r",

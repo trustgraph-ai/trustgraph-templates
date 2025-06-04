@@ -27,6 +27,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "text-completion-tgi",
                         "-p",
                         url.pulsar,
+                        "--concurrency",
+                        std.toString($["text-completion-concurrency"]),
                         "-x",
                         std.toString($["tgi-max-output-tokens"]),
                         "-t",

@@ -18,6 +18,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "embeddings-fastembed",
                         "-p",
                         url.pulsar,
+                        "--concurrency",
+                        std.toString($["embeddings-concurrency"]),
                         "-m",
                         $["embeddings-model"],
                     ])

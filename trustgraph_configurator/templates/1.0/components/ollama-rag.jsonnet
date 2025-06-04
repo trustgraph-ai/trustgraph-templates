@@ -28,6 +28,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         url.pulsar,
                         "--id",
                         "text-completion-rag",
+                        "--concurrency",
+                        std.toString($["text-completion-rag-concurrency"]),
                         "-m",
                         $["ollama-rag-model"],
                     ])
