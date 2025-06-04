@@ -8,9 +8,7 @@ local images = import "values/images.jsonnet";
             ["tgi-service-" + key]:: value,
         },
 
-    // mistralai/Mistral-7B-Instruct-v0.3 is supported, this one isn't,
-    // but this doesn't need an HF token to load
-    "tgi-service-model":: "teknium/OpenHermes-2.5-Mistral-7B",
+    "tgi-service-model":: "mistralai/Mistral-7B-Instruct-v0.3",
     "tgi-service-cpus":: "64.0",
     "tgi-service-memory":: "64G",
 
@@ -48,14 +46,16 @@ local images = import "values/images.jsonnet";
                         "8899"
                     ])
                     .with_environment({
-                        PT_HPU_ENABLE_LAZY_COLLECTIVES: "true",
+                        ENABLE_HPU_GRAPH: 'true',
+                        FLASH_ATTENTION_RECOMPUTE: 'true',
                         HABANA_VISIBLE_DEVICES: "all",
+                        LIMIT_HPU_GRAPH: 'true',
                         OMPI_MCA_btl_vader_single_copy_mechanism: "none",
                         PT_HPU_ENABLE_LAZY_COLLECTIVES: 'true',
                         USE_FLASH_ATTENTION: 'true',
                         PREFILL_BATCH_BUCKET_SIZE: "1",
                         BATCH_BUCKET_SIZE: "1",
-//                        HF_TOKEN: $["hf-token"],
+                        HF_TOKEN: $["hf-token"],
                     })
                     .with_ipc("host")
                     .with_capability("SYS_NICE")
