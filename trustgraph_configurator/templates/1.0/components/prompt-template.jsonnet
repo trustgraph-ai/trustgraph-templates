@@ -8,8 +8,8 @@ local url = import "values/url.jsonnet";
     
         create:: function(engine)
 
-            local container(x) =
-                engine.container("prompt-%d" % x)
+            local container =
+                engine.container("prompt")
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "prompt-template",
@@ -20,20 +20,17 @@ local url = import "values/url.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSet(x) = engine.containers(
-                "prompt-%d" % x, [ container(x) ]
+            local containerSet = engine.containers(
+                "prompt", [ container ]
             );
 
-            local service(x) =
-                engine.internalService(containerSet(x))
+            local service =
+                engine.internalService(containerSet)
                 .with_port(8080, 8080, "metrics");
 
             engine.resources([
-                containerSet(x)
-                for x in std.range(0, $["prompt-replicas"] - 1)
-            ] + [
-                service(x)
-                for x in std.range(0, $["prompt-replicas"] - 1)
+                containerSet,
+                service,
             ])
 
     },
@@ -42,8 +39,8 @@ local url = import "values/url.jsonnet";
     
         create:: function(engine)
 
-            local container(x) =
-                engine.container("prompt-rag-%d" % x)
+            local container =
+                engine.container("prompt-rag")
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "prompt-template",
@@ -56,20 +53,17 @@ local url = import "values/url.jsonnet";
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
 
-            local containerSet(x) = engine.containers(
-                "prompt-rag-%d" % x, [ container(x) ]
+            local containerSet = engine.containers(
+                "prompt-rag", [ container ]
             );
 
-            local service(x) =
-                engine.internalService(containerSet(x))
+            local service =
+                engine.internalService(containerSet)
                 .with_port(8080, 8080, "metrics");
 
             engine.resources([
-                containerSet(x)
-                for x in std.range(0, $["prompt-rag-replicas"] - 1)
-            ] + [
-                service(x)
-                for x in std.range(0, $["prompt-rag-replicas"] - 1)
+                containerSet,
+                service,
             ])
 
     },
