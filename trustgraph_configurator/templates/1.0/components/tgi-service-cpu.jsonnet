@@ -31,6 +31,9 @@ local images = import "values/images.jsonnet";
                     ])
                     .with_privileged(true)
                     .with_device("/dev/dri", "/dev/dri")
+                    .with_environment({
+                        HF_TOKEN: $["hf-token"],
+                    })
                     .with_ipc("host")
                     .with_capability("SYS_NICE")
                     .with_limits(

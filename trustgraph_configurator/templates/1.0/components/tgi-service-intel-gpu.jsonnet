@@ -29,6 +29,9 @@ local images = import "values/images.jsonnet";
                         "--port",
                         "8899"
                     ])
+                    .with_environment({
+                        HF_TOKEN: $["hf-token"],
+                    })
                     .with_privileged(true)
                     .with_device("/dev/dri", "/dev/dri")
                     .with_ipc("host")
