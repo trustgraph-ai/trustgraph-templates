@@ -18,6 +18,7 @@
    "openai": import "components/openai.jsonnet",
    "vertexai": import "components/vertexai.jsonnet",
    "tgi": import "components/tgi.jsonnet",
+   "vllm": import "components/vllm.jsonnet",
 
    // LLMs for RAG
    "azure-rag": import "components/azure-rag.jsonnet",
@@ -33,10 +34,13 @@
    "openai-rag": import "components/openai-rag.jsonnet",
    "vertexai-rag": import "components/vertexai-rag.jsonnet",
    "tgi-rag": import "components/tgi-rag.jsonnet",
+   "vllm-rag": import "components/vllm-rag.jsonnet",
 
    "tgi-service-cpu": import "components/tgi-service-cpu.jsonnet",
    "tgi-service-intel-gpu": import "components/tgi-service-intel-gpu.jsonnet",
    "tgi-service-gaudi": import "components/tgi-service-gaudi.jsonnet",
+
+   "vllm-service-intel-gpu": import "components/vllm-service-intel-gpu.jsonnet",
 
    // Embeddings
    "embeddings-ollama": import "components/embeddings-ollama.jsonnet",
