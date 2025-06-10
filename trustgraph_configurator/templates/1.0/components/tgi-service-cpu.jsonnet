@@ -63,27 +63,3 @@ local images = import "values/images.jsonnet";
 
 }
 
-/*
-
-    volumes:
-    - ./models:/data
-    deploy:
-      resources:
-        limits:
-          cpus: '8'
-          memory: 16384M
-        reservations:
-          cpus: '8'
-          memory: 16384M
-    image: ghcr.io/huggingface/text-generation-inference:3.3.1-intel-cpu
-    privileged: true
-    cap_add:
-    - SYS_NICE
-    devices:
-    - /dev/dri:/dev/dri
-    ipc: host
-    ports:
-    - 8899:8899
-    restart: on-failure:100
-
-*/
