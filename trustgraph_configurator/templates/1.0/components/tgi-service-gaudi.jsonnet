@@ -8,7 +8,7 @@ local images = import "values/images.jsonnet";
             ["tgi-service-" + key]:: value,
         },
 
-    "tgi-service-model":: "mistralai/Mistral-7B-Instruct-v0.3",
+    "tgi-service-model":: "meta-llama/Llama-3.3-70B-Instruct",
     "tgi-service-cpus":: "64.0",
     "tgi-service-memory":: "64G",
 
@@ -16,7 +16,7 @@ local images = import "values/images.jsonnet";
     
         create:: function(engine)
 
-            local vol = engine.volume("tgi-storage").with_size("20G");
+            local vol = engine.volume("tgi-storage").with_size("50G");
 
             local container =
                 engine.container("tgi-service")
@@ -31,31 +31,35 @@ local images = import "values/images.jsonnet";
                         "--max-input-tokens",
                         "4096",
                         "--max-total-tokens",
-                        "8192",
+                        "4096",
                         "--max-batch-size",
-                        "4",
-                        "--max-batch-prefill-tokens",
-                        "16384",
+                        "128",
+//                        "--max-batch-prefill-tokens",
+//                        "16384",
                         "--max-waiting-tokens",
                         "7",
-                        "--waiting-served-ratio",
-                        "1.2",
+//                        "--waiting-served-ratio",
+//                        "1.2",
                         "--max-concurrent-requests",
-                        "64",
+                        "512",
+                        "--cuda-graphs",
+                        "0",
                         "--port",
                         "8899"
                     ])
+                    .with_runtime("habana")
                     .with_environment({
-                        ENABLE_HPU_GRAPH: 'true',
-                        FLASH_ATTENTION_RECOMPUTE: 'true',
                         HABANA_VISIBLE_DEVICES: "all",
-                        LIMIT_HPU_GRAPH: 'true',
                         OMPI_MCA_btl_vader_single_copy_mechanism: "none",
-                        PT_HPU_ENABLE_LAZY_COLLECTIVES: 'true',
-                        USE_FLASH_ATTENTION: 'true',
-                        PREFILL_BATCH_BUCKET_SIZE: "1",
-                        BATCH_BUCKET_SIZE: "1",
                         HF_TOKEN: $["hf-token"],
+                        ENABLE_HPU_GRAPH: 'true',
+                        LIMIT_HPU_GRAPH: 'true',
+                        USE_FLASH_ATTENTION: 'true',
+                        FLASH_ATTENTION_RECOMPUTE: 'true',
+//                        PT_HPU_ENABLE_LAZY_COLLECTIVES: 'true',
+//                        PREFILL_BATCH_BUCKET_SIZE: "1",
+//                        BATCH_BUCKET_SIZE: "1",
+
                     })
                     .with_ipc("host")
                     .with_capability("SYS_NICE")

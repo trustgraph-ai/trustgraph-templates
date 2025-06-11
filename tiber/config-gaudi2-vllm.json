@@ -51,7 +51,7 @@
         "parameters": {
             "temperature": 0.1,
             "max-output-tokens": 4096,
-	    "model": "meta-llama/Llama-3.3-70B-Instruct",
+	    "model": "meta-llama/Llama-3.3-70B-Instruct"
         }
     },
     {
@@ -67,7 +67,7 @@
 	"parameters": {
 	    "model": "meta-llama/Llama-3.3-70B-Instruct",
 	    "cpus": "64.0",
-	    "memory": "64G",
+	    "memory": "64G"
 	}
     },
     {

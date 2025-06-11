@@ -22,12 +22,12 @@
     {
         "name": "trustgraph-base",
         "parameters": {
-	    "text-completion-concurrency": 10,
-	    "prompt-concurrency": 10,
-	    "kg-extraction-concurrency": 10,
-	    "embeddings-concurrency": 1,
-	    "hf-token": "TOKEN_PLACEHOLDER",
-	}
+	    "text-completion-concurrency": 50,
+	    "prompt-concurrency": 50,
+	    "kg-extraction-concurrency": 50,
+	    "embeddings-concurrency": 4,
+	    "hf-token": "TOKEN_PLACEHOLDER"
+        }
     },
     {
         "name": "prompt-template",
@@ -50,20 +50,22 @@
         "name": "tgi",
         "parameters": {
             "temperature": 0.1,
-            "max-output-tokens": 1024
+            "max-output-tokens": 4096
         }
     },
     {
         "name": "tgi-rag",
         "parameters": {
             "temperature": 0.1,
-            "max-output-tokens": 1024
+            "max-output-tokens": 4096
         }
     },
     {
 	"name": "tgi-service-gaudi",
 	"parameters": {
-	    "model": "mistralai/Mistral-7B-Instruct-v0.3",
+	    "model": "meta-llama/Llama-3.3-70B-Instruct",
+	    "cpus": "64.0",
+	    "memory": "128G"
 	}
     },
     {
