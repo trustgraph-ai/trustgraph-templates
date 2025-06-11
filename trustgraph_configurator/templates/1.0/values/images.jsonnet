@@ -23,4 +23,5 @@ local version = import "version.jsonnet";
     "tgi-service-intel-xpu": "ghcr.io/huggingface/text-generation-inference:3.3.1-intel-xpu",
     "tgi-service-cpu": "ghcr.io/huggingface/text-generation-inference:3.3.1-intel-cpu",
     "tgi-service-gaudi": "ghcr.io/huggingface/text-generation-inference:sha-f140440-gaudi",
+    "vllm-service-intel-xpu": "docker.io/intel/vllm:0.8.0-xpu",
 }
