@@ -41,6 +41,7 @@
    "tgi-service-gaudi": import "components/tgi-service-gaudi.jsonnet",
 
    "vllm-service-intel-gpu": import "components/vllm-service-intel-gpu.jsonnet",
+   "vllm-service-gaudi": import "components/vllm-service-gaudi.jsonnet",
 
    // Embeddings
    "embeddings-ollama": import "components/embeddings-ollama.jsonnet",

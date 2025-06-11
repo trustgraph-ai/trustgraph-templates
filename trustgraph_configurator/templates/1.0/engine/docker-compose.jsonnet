@@ -21,6 +21,8 @@
 
         with_command:: function(x) self + { command: x },
 
+        with_runtime:: function(x) self + { runtime: x },
+
         with_privileged:: function(x) self + { privileged: x },
 
         with_ipc:: function(x) self + { ipc: x },
