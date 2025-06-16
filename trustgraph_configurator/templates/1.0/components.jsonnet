@@ -42,6 +42,7 @@
 
    "vllm-service-intel-gpu": import "components/vllm-service-intel-gpu.jsonnet",
    "vllm-service-gaudi": import "components/vllm-service-gaudi.jsonnet",
+   "vllm-service-nvidia": import "components/vllm-service-nvidia.jsonnet",
 
    // Embeddings
    "embeddings-ollama": import "components/embeddings-ollama.jsonnet",

@@ -25,4 +25,5 @@ local version = import "version.jsonnet";
     "tgi-service-gaudi": "ghcr.io/huggingface/text-generation-inference:sha-f140440-gaudi",
     "vllm-service-intel-xpu": "docker.io/intel/vllm:0.8.0-xpu",
     "vllm-service-gaudi": "docker.io/trustgraph/vllm-hpu:027f5645",
+    "vllm-service-nvidia": "docker.io/vllm/vllm-openai:latest",
 }
