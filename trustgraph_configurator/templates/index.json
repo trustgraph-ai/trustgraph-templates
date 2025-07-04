@@ -23,7 +23,7 @@
 	    "description": "Production release of Flow API, Librarian and dynamic flow processing.  For best results stay with cassandra and qdrant stores.",
 	    "version": "1.0.22",
 	    "status": "stable"
-	}
+	},
 	{
 	    "name": "1.1",
 	    "description": "MCP support and some agent functionality upgrades.",
