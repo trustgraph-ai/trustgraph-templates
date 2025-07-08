@@ -16,6 +16,7 @@ local graphrag_part = {
         "graph-embeddings": request_response("graph-embeddings:{class}"),
         "embeddings": request_response("embeddings:{class}"),
         "prompt": request_response("prompt:{class}"),
+        "mcp-tool": request_response("mtp-tool:{class}"),
         "text-completion": request_response("text-completion:{class}"),
     },
     "flow" +: {
@@ -82,6 +83,12 @@ local graphrag_part = {
             "text-completion-request": request("text-completion-rag:{class}"),
             "text-completion-response": response("text-completion-rag:{class}"),
         },
+        "mcp-tool:{class}": {
+            request: request("mcp-tool:{class}"),
+            response: response("mcp-tool:{class}"),
+            "text-completion-request": request("text-completion:{class}"),
+            "text-completion-response": response("text-completion:{class}"),
+        },
         "text-completion:{class}": {
             request: request("text-completion:{class}"),
             response: response("text-completion:{class}"),
@@ -106,6 +113,7 @@ local documentrag_part = {
         "embeddings": request_response("embeddings:{class}"),
         "document-embeddings": request_response("document-embeddings:{class}"),
         "prompt": request_response("prompt:{class}"),
+        "mcp-tool": request_response("mcp-tool:{class}"),
         "text-completion": request_response("text-completion:{class}"),
     },
     "flow" +: {
@@ -150,6 +158,12 @@ local documentrag_part = {
             "text-completion-request": request("text-completion-rag:{class}"),
             "text-completion-response": response("text-completion-rag:{class}"),
         },
+        "mcp-tool:{class}": {
+            request: request("mcp-tool:{class}"),
+            response: response("mcp-tool:{class}"),
+            "text-completion-request": request("text-completion:{class}"),
+            "text-completion-response": response("text-completion:{class}"),
+        },
         "text-completion:{class}": {
             request: request("text-completion:{class}"),
             response: response("text-completion:{class}"),
@@ -180,6 +194,8 @@ local agent_part = {
             "text-completion-response": response("text-completion:{class}"),
             "prompt-request": request("prompt:{class}"),
             "prompt-response": response("prompt:{class}"),
+            "mcp-tool-request": request("mcp-tool:{class}"),
+            "mcp-tool-response": response("mcp-tool:{class}"),
             "graph-rag-request": request("graph-rag:{class}"),
             "graph-rag-response": response("graph-rag:{class}"),
         },
