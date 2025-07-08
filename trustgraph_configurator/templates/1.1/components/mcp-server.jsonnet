@@ -20,7 +20,7 @@ local librarian = import "librarian.jsonnet";
 
             local container =
                 engine.container("mcp-server")
-                    .with_image(images.trustgraph_flow)
+                    .with_image(images.trustgraph_mcp)
                     .with_command([
                         "mcp-server",
                         "--port",
