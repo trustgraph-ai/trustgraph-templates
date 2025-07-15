@@ -6,9 +6,9 @@ config:
   config-svc:cloud-run-region: europe-west4
   config-svc:domain: app.trustgraph.ai
   config-svc:environment: prod
-  config-svc:gcp-project: trustgraph-demo
+  config-svc:gcp-project: trustgraph-ai
   config-svc:gcp-region: europe-west4
   config-svc:hostname: config-svc.app.trustgraph.ai
-  config-svc:managed-zone: demo
+  config-svc:managed-zone: app
   config-svc:max-scale: "1"
   config-svc:min-scale: "0"
