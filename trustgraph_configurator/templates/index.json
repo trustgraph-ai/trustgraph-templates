@@ -27,8 +27,8 @@
 	{
 	    "name": "1.1",
 	    "description": "MCP support and agent functionality upgrades.",
-	    "version": "1.1.7",
-	    "status": "pre-release"
+	    "version": "1.1.9",
+	    "status": "stable"
 	}
     ],
     "platforms": [
