@@ -1,14 +1,9 @@
-#!/usr/bin/env python3
 
 import _jsonnet as j
 import json
 import os
-import logging
-
-import zipfile
 import pathlib
-from io import BytesIO
-import argparse
+import logging
 
 logger = logging.getLogger("generator")
 logger.setLevel(logging.INFO)
@@ -18,12 +13,20 @@ private_json = "Put your GCP private.json here"
 class Generator:
 
     def __init__(
-        self, config, templates="./templates/", resources="./resources",
-        version="0.0.0",
+            self, config, templates=None, resources=None,
+            version="0.0.0"
     ):
 
-        self.templates = pathlib.Path(templates)
-        self.resources = pathlib.Path(resources)
+        if templates:
+            self.templates = templates
+        else:
+            self.templates = pathlib.Path("templates")
+
+        if resources:
+            self.resources = resources
+        else:
+            self.resources = pathlib.Path("resources")
+
         self.config = config
         self.version = f"\"{version}\"".encode("utf-8")
 
@@ -36,16 +39,13 @@ class Generator:
 
         logger.debug("Request jsonnet: %s %s", dir, filename)
 
-        values_dir = self.templates.joinpath("values")
-
         if filename == "config.json" and dir == "":
-            path = os.path.join(".", dir, filename)
+            path = self.templates.joinpath(dir, filename)
             return str(path), self.config
-
+        
         if filename == "version.jsonnet":
-            if pathlib.Path(dir) == values_dir:
-                path = os.path.join(".", dir, filename)
-                return str(path), self.version
+            path = self.templates.joinpath(dir, filename)
+            return str(path), self.version
 
         if dir:
             candidates = [
@@ -53,20 +53,16 @@ class Generator:
                 self.templates.joinpath(filename),
                 self.resources.joinpath(dir, filename),
                 self.resources.joinpath(filename),
-                pathlib.Path(dir).joinpath(filename),
             ]
         else:
             candidates = [
-                self.templates.joinpath(filename),
-                pathlib.Path(dir).joinpath(filename),
-                pathlib.Path(filename),
+                self.templates.joinpath(filename)
             ]
 
         try:
 
             if filename == "vertexai/private.json":
-
-                return str(candidates[0]), private_json.encode("utf-8")
+                return str(candidates[0]), (private_json.encode("utf-8"))
 
             for c in candidates:
                 logger.debug("Try: %s", c)
