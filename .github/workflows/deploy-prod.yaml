@@ -56,7 +56,7 @@ jobs:
       - name: Login to Artifact Registry
         uses: redhat-actions/podman-login@v1
         with:
-          registry: europe-west2-docker.pkg.dev
+          registry: europe-west1-docker.pkg.dev
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
 
