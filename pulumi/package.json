@@ -1,12 +1,7 @@
 {
-    "name": "safety-ai",
-    "main": "index.ts",
-    "devDependencies": {
-        "@types/node": "^16"
-    },
-    "dependencies": {
-        "@pulumi/command": "^0.7.2",
-        "@pulumi/gcp": "^6.58.0",
-        "@pulumi/pulumi": "^3.0.0"
-    }
+  "dependencies": {
+    "@pulumi/command": "^1.1.0",
+    "@pulumi/gcp": "^8.38.0",
+    "@pulumi/pulumi": "^3.182.0"
+  }
 }
