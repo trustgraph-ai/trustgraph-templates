@@ -86,7 +86,7 @@ const image = new local.Command(
 	dependsOn: [taggedImage, artifactRepo],
     }
 );
-
+/*
 const svcAccount = new gcp.serviceaccount.Account(
     "service-account",
     {
@@ -98,22 +98,6 @@ const svcAccount = new gcp.serviceaccount.Account(
 	provider: provider,
     }
 );
-
-/*
-
-const vertexAiUserMember = new gcp.projects.IAMMember(
-    "vertexai-user-role",
-    {
-	member: svcAccount.email.apply(x => "serviceAccount:" + x),
-	project: project,
-	role: "roles/aiplatform.admin",
-    },
-    {
-	provider: provider,
-    }
-);
-
-*/
 
 const service = new gcp.cloudrun.Service(
     "service",
@@ -336,4 +320,6 @@ const availabilitySlo = new gcp.monitoring.Slo(
 	provider: provider,
     }
 );
+
+*/
 

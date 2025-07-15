@@ -1,7 +1,7 @@
 encryptionsalt: v1:vQGk98eEeYI=:v1:tHg+f1b66tEydgA9:J1RGVNI0FssyjSXVhcKU7bfBofNFTg==
 config:
   config-svc:artifact-name: config-svc
-  config-svc:artifact-repo: europe-west2-docker.pkg.dev/trustgraph-ai/broker
+  config-svc:artifact-repo: europe-west2-docker.pkg.dev/trustgraph-ai/config-svc
   config-svc:artifact-repo-region: europe-west2
   config-svc:cloud-run-region: europe-west2
   config-svc:domain: app.trustgraph.ai
