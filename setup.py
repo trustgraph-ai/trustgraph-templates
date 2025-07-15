@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 # Load a version number module
 spec = importlib.util.spec_from_file_location(
-    'version', 'version.py'
+    'version', 'trustgraph_configurator/version.py'
 )
 version_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(version_module)
@@ -43,6 +43,7 @@ setuptools.setup(
     ],
     scripts=[
         "scripts/tg-configurator",
+        "scripts/tg-config-svc",
         "scripts/tg-configurations-list",
     ]
 )
