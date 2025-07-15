@@ -86,7 +86,7 @@ const image = new local.Command(
 	dependsOn: [taggedImage, artifactRepo],
     }
 );
-/*
+
 const svcAccount = new gcp.serviceaccount.Account(
     "service-account",
     {
@@ -320,6 +320,4 @@ const availabilitySlo = new gcp.monitoring.Slo(
 	provider: provider,
     }
 );
-
-*/
 
