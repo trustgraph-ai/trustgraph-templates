@@ -46,6 +46,21 @@ scripts/tg-configurator --template 1.1 --version 1.1.9 \
     --input config.json --output deployment.zip --platform docker-compose
 ```
 
+### Configuration Service API
+
+You can also run the configurator as a REST API service:
+
+```bash
+scripts/tg-config-svc
+```
+
+This starts a web service on port 8080 that provides:
+- REST API endpoints for configuration generation
+- Programmatic access to version information
+- Web-based configuration generation
+
+The service provides the same functionality as the command-line tool but through HTTP endpoints (see API Service section below for details).
+
 ### Command Line Options
 
 - `-i, --input`: Input configuration file (default: config.json)
@@ -164,13 +179,28 @@ Packager (orchestrator)
 
 ### API Service
 
-The REST API provides programmatic access:
+The REST API service (`tg-config-svc`) provides programmatic access to the configurator functionality. Start the service with:
+
+```bash
+scripts/tg-config-svc
+```
+
+The service runs on port 8080 and provides the following endpoints:
 
 ```
-POST /api/generate/{platform}/{template}
-GET /api/latest
-GET /api/latest-stable  
-GET /api/versions
+POST /api/generate/{platform}/{template}  # Generate configuration
+GET /api/latest                          # Get latest version info
+GET /api/latest-stable                   # Get latest stable version info
+GET /api/versions                        # List all available versions
+```
+
+Example usage:
+```bash
+# Generate configuration via API
+curl -X POST http://localhost:8080/api/generate/docker-compose/1.1 \
+  -H "Content-Type: application/json" \
+  -d @config.json \
+  --output deployment.zip
 ```
 
 ## Output Structure
