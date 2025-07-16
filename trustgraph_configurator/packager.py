@@ -52,9 +52,7 @@ class Packager:
         self.resources = files.joinpath("resources").joinpath(template)
         self.platform = platform
 
-    def fetch(
-            self, dir, filename
-    ):
+    def fetch(self, dir, filename):
 
         if filename == "trustgraph/config.json":
             config = self.generate_trustgraph_config(self.config)
@@ -142,7 +140,6 @@ class Packager:
 
         try:
 
-            self.config = config
             data = self.generate(config)
 
             print("Writing output file...")
@@ -157,6 +154,8 @@ class Packager:
             raise e
    
     def generate(self, config):
+
+        self.config = config
 
         logger.info(f"Generating for platform={self.platform} "
                     f"template={self.template} "
