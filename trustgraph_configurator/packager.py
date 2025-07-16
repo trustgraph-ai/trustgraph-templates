@@ -183,6 +183,40 @@ class Packager:
         except Exception as e:
             logging.error(f"Exception: {e}")
             raise e
+    
+    def write_tg_config(self, config):
+        """Output only the TrustGraph configuration to stdout"""
+        try:
+            self.config = config
+            tg_config_json = self.generate_trustgraph_config(config)
+            tg_config_file = json.dumps(tg_config_json, indent=4)
+            print(tg_config_file)
+        except Exception as e:
+            logging.error(f"Exception: {e}")
+            raise e
+    
+    def write_resources(self, config):
+        """Output only the platform resources to stdout"""
+        try:
+            self.config = config
+            
+            if self.platform in set(["docker-compose", "podman-compose"]):
+                compose_json = self.generate_resources(config)
+                compose_file = yaml.dump(compose_json)
+                print(compose_file)
+            elif self.platform in set([
+                    "minikube-k8s", "gcp-k8s", "aks-k8s", "eks-k8s",
+                    "scw-k8s",
+            ]):
+                processed = self.generate_resources(config)
+                y = yaml.dump(processed)
+                print(y)
+            else:
+                raise RuntimeError("Bad platform")
+                
+        except Exception as e:
+            logging.error(f"Exception: {e}")
+            raise e
 
     def generate_docker_compose(self, platform, version, config):
 

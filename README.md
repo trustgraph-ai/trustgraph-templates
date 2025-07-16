@@ -46,6 +46,25 @@ scripts/tg-configurator --template 1.1 --version 1.1.9 \
     --input config.json --output deployment.zip --platform docker-compose
 ```
 
+#### Output to stdout
+
+To output only the TrustGraph configuration:
+```bash
+scripts/tg-configurator --template 1.1 --latest-stable \
+    --input config.json -O > trustgraph-config.json
+```
+
+To output only the platform resources (docker-compose.yaml or resources.yaml):
+```bash
+# For Docker Compose
+scripts/tg-configurator --template 1.1 --latest-stable \
+    --input config.json --platform docker-compose -R > docker-compose.yaml
+
+# For Kubernetes
+scripts/tg-configurator --template 1.1 --latest-stable \
+    --input config.json --platform gcp-k8s -R > resources.yaml
+```
+
 ### Configuration Service API
 
 You can also run the configurator as a REST API service:
@@ -70,6 +89,8 @@ The service provides the same functionality as the command-line tool but through
 - `-p, --platform`: Target platform (default: docker-compose)
 - `--latest`: Use the latest available version
 - `--latest-stable`: Use the latest stable version
+- `-O, --output-tg-config`: Output only TrustGraph configuration to stdout (no ZIP file)
+- `-R, --output-resources`: Output only platform resources (docker-compose.yaml or resources.yaml) to stdout (no ZIP file)
 
 ### Available Platforms
 
