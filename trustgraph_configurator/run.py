@@ -54,19 +54,25 @@ def run():
         help="Latest stable version",
     )
 
-    args = parser.parse_args()
-    args = vars(args)
+    try:
 
-    input = args["input"]
+        args = parser.parse_args()
+        args = vars(args)
 
-    with open(input) as f:
-        config = f.read()
+        input = args["input"]
 
-    output = args["output"]
+        with open(input) as f:
+            config = f.read()
 
-    del args["input"]
-    del args["output"]
+        output = args["output"]
 
-    a = Packager(**args)
-    a.write(config, output)
+        del args["input"]
+        del args["output"]
+
+        a = Packager(**args)
+        a.write(config, output)
+
+    except Exception as e:
+
+        print(f"Exception: {e}")
 

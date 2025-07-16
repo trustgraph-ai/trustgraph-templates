@@ -28,7 +28,9 @@ class Packager:
             template = Index.get_latest_stable().name
 
         if template is None:
-            raise RuntimeError("Don't know which template to use")
+            raise RuntimeError(
+                "You must latest, latest-stable or select a template."
+            )
 
         if version is None:
             versions = [
