@@ -17,6 +17,7 @@ local configuration = {
 
     prompts:: default_prompts,
     tools:: [],
+    mcp:: [],
 
     // This defines standard 'interfaces'.  Different flow classes can
     // support different interfaces.  Interfaces are 'external' endpoints
@@ -173,12 +174,8 @@ local configuration = {
             ["template." + p.key]: p.value
             for p in std.objectKeysValuesAll($.prompts.templates)
         },
-        agent: {
-            "tool-index": [t.id for t in $.tools],
-        } + {
-            ["tool." + p.id]: p
-            for p in $.tools
-        },
+        tools: $.tools,
+        mcp: $.mcp,
         "flow-classes": $["flow-classes"],
         "interface-descriptions": $["interface-descriptions"],
         "flows": {
