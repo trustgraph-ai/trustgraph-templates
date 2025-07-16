@@ -1,0 +1,44 @@
+[
+    {
+        "name": "bedrock",
+        "parameters": {
+            "model": "anthropic.claude-3-sonnet-20240229-v1:0"
+        }
+    },
+    {
+        "name": "bedrock-rag",
+        "parameters": {
+            "model": "anthropic.claude-3-sonnet-20240229-v1:0"
+        }
+    },
+    {
+        "name": "embeddings-hf",
+        "parameters": {
+            "embeddings-model": "sentence-transformers/all-MiniLM-L6-v2"
+        }
+    },
+    {
+        "name": "vector-store-qdrant",
+        "parameters": {}
+    },
+    {
+        "name": "graph-rag",
+        "parameters": {}
+    },
+    {
+        "name": "document-rag",
+        "parameters": {}
+    },
+    {
+        "name": "prompt-template",
+        "parameters": {}
+    },
+    {
+        "name": "trustgraph-base",
+        "parameters": {}
+    },
+    {
+        "name": "pulsar",
+        "parameters": {}
+    }
+]

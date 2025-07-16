@@ -1,0 +1,32 @@
+
+name: Test pull request
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+
+  container-push:
+
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup environment
+        run: python3 -m venv env
+
+      - name: Invoke environment
+        run: . env/bin/activate
+
+      - name: Setup packages
+        run: pip install aiohttp jsonnet pyyaml tabulate
+
+      - name: Unit tests
+        run: PYTHONPATH=. tests/scripts/test-template-compilation.sh
+

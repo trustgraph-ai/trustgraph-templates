@@ -2,12 +2,11 @@
 import json
 import logging
 import argparse
+import sys
 
 from . import Generator, Packager
 
 def run():
-
-    logging.basicConfig(level=logging.INFO, format='%(message)s')
 
     parser = argparse.ArgumentParser(
         prog="tg-configurator",
@@ -54,19 +53,54 @@ def run():
         help="Latest stable version",
     )
 
-    args = parser.parse_args()
-    args = vars(args)
+    parser.add_argument(
+        '-O', '--output-tg-config',
+        action='store_true',
+        help="Output only TrustGraph configuration to stdout",
+    )
 
-    input = args["input"]
+    parser.add_argument(
+        '-R', '--output-resources',
+        action='store_true',
+        help="Output only resources (docker-compose.yaml or resources.yaml) to stdout",
+    )
 
-    with open(input) as f:
-        config = f.read()
+    try:
 
-    output = args["output"]
+        args = parser.parse_args()
+        args = vars(args)
 
-    del args["input"]
-    del args["output"]
+        input = args["input"]
 
-    a = Packager(**args)
-    a.write(config, output)
+        with open(input) as f:
+            config = f.read()
+
+        output = args["output"]
+        output_tg_config = args.get("output_tg_config", False)
+        output_resources = args.get("output_resources", False)
+
+        # Configure logging only if not outputting to stdout
+        if not output_tg_config and not output_resources:
+            logging.basicConfig(level=logging.INFO, format='%(message)s')
+        else:
+            # Suppress all logging when outputting to stdout
+            logging.basicConfig(level=logging.CRITICAL)
+
+        del args["input"]
+        del args["output"]
+        del args["output_tg_config"]
+        del args["output_resources"]
+
+        a = Packager(**args)
+        
+        if output_tg_config:
+            a.write_tg_config(config)
+        elif output_resources:
+            a.write_resources(config)
+        else:
+            a.write(config, output)
+
+    except Exception as e:
+
+        print(f"Exception: {e}")
 

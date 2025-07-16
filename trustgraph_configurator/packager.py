@@ -1,10 +1,12 @@
 
 import pathlib
 import yaml
+import json
 import logging
 import importlib.resources
 from io import BytesIO
 import zipfile
+import os
 
 from . import Generator
 from . index import Index
@@ -28,7 +30,9 @@ class Packager:
             template = Index.get_latest_stable().name
 
         if template is None:
-            raise RuntimeError("Don't know which template to use")
+            raise RuntimeError(
+                "You must latest, latest-stable or select a template."
+            )
 
         if version is None:
             versions = [
@@ -48,16 +52,82 @@ class Packager:
         self.resources = files.joinpath("resources").joinpath(template)
         self.platform = platform
 
-    def process(
-        self, config,
+    def fetch(
+            self, dir, filename
     ):
+
+        if filename == "trustgraph/config.json":
+            config = self.generate_trustgraph_config(self.config)
+            config = json.dumps(config)
+            path = self.templates.joinpath(dir, filename)
+            return str(path), config.encode("utf-8")
+        
+        if filename == "config.json" and dir == "":
+            path = self.templates.joinpath(dir, filename)
+            return str(path), self.config.encode("utf-8")
+        
+        if filename == "version.jsonnet":
+            path = self.templates.joinpath(dir, filename)
+            return str(path), f"\"{self.version}\"".encode("utf-8")
+
+        if dir:
+            candidates = [
+                self.templates.joinpath(dir, filename),
+                self.templates.joinpath(filename),
+                self.resources.joinpath(dir, filename),
+                self.resources.joinpath(filename),
+            ]
+        else:
+            candidates = [
+                self.templates.joinpath(filename)
+            ]
+
+        try:
+
+            if filename == "vertexai/private.json":
+                private_json = "Put your GCP private.json here"
+                return str(candidates[0]), (private_json.encode("utf-8"))
+
+            for c in candidates:
+                logger.debug("Try: %s", c)
+
+                if os.path.isfile(c):
+                    with open(c, "rb") as f:
+                        logger.debug("Loading: %s", c)
+                        return str(c), f.read()
+
+            raise RuntimeError(
+                f"Could not load file={filename} dir={dir}"
+            )
+                
+        except:
+
+            path = os.path.join(self.templates, filename)
+            logger.debug("Try: %s", path)
+            with open(path, "rb") as f:
+                logger.debug("Loaded: %s", path)
+                return str(path), f.read()
+
+    def generate_trustgraph_config(self, config):
 
         config = config.encode("utf-8")
 
-        gen = Generator(
-            config, templates=self.templates, resources=self.resources,
-            version=self.version
+        gen = Generator(fetch=self.fetch)
+
+        path = self.templates.joinpath(
+            f"trustgraph-config.jsonnet"
         )
+        wrapper = path.read_text()
+
+        processed = gen.process(wrapper)
+
+        return processed
+    
+    def generate_resources(self, config):
+
+        config = config.encode("utf-8")
+
+        gen = Generator(fetch=self.fetch)
 
         path = self.templates.joinpath(
             f"config-to-{self.platform}.jsonnet"
@@ -72,6 +142,7 @@ class Packager:
 
         try:
 
+            self.config = config
             data = self.generate(config)
 
             print("Writing output file...")
@@ -112,12 +183,50 @@ class Packager:
         except Exception as e:
             logging.error(f"Exception: {e}")
             raise e
+    
+    def write_tg_config(self, config):
+        """Output only the TrustGraph configuration to stdout"""
+        try:
+            self.config = config
+            tg_config_json = self.generate_trustgraph_config(config)
+            tg_config_file = json.dumps(tg_config_json, indent=4)
+            print(tg_config_file)
+        except Exception as e:
+            logging.error(f"Exception: {e}")
+            raise e
+    
+    def write_resources(self, config):
+        """Output only the platform resources to stdout"""
+        try:
+            self.config = config
+            
+            if self.platform in set(["docker-compose", "podman-compose"]):
+                compose_json = self.generate_resources(config)
+                compose_file = yaml.dump(compose_json)
+                print(compose_file)
+            elif self.platform in set([
+                    "minikube-k8s", "gcp-k8s", "aks-k8s", "eks-k8s",
+                    "scw-k8s",
+            ]):
+                processed = self.generate_resources(config)
+                y = yaml.dump(processed)
+                print(y)
+            else:
+                raise RuntimeError("Bad platform")
+                
+        except Exception as e:
+            logging.error(f"Exception: {e}")
+            raise e
 
     def generate_docker_compose(self, platform, version, config):
 
-        processed = self.process(config)
+        compose_json = self.generate_resources(config)
+        compose_file = yaml.dump(compose_json)
 
-        y = yaml.dump(processed)
+        # Generate TG config for versions after 1.1...
+        if version[:2] != "0." and version[:3] != "1.0":
+            tg_config_json = self.generate_trustgraph_config(config)
+            tg_config_file = json.dumps(tg_config_json, indent=4)
 
         mem = BytesIO()
 
@@ -127,9 +236,11 @@ class Packager:
                 logger.info(f"Adding {name}...")
                 out.writestr(name, content)
 
-            fname = "docker-compose.yaml"
+            output("docker-compose.yaml", compose_file)
 
-            output(fname, y)
+            # Add seperate TG config for versions after 1.1...
+            if version[:2] != "0." and version[:3] != "1.0":
+                output("trustgraph/config.json", tg_config_file)
 
             # Grafana config
             path = self.resources.joinpath(
@@ -163,7 +274,7 @@ class Packager:
 
     def generate_k8s(self, platform, version, config):
 
-        processed = self.process(config)
+        processed = self.generate_resources(config)
 
         y = yaml.dump(processed)
 
