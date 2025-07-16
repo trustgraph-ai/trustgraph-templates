@@ -223,8 +223,10 @@ class Packager:
         compose_json = self.generate_resources(config)
         compose_file = yaml.dump(compose_json)
 
-        tg_config_json = self.generate_trustgraph_config(config)
-        tg_config_file = json.dumps(tg_config_json, indent=4)
+        # Generate TG config for versions after 1.1...
+        if version[:2] != "0." and version[:3] != "1.0":
+            tg_config_json = self.generate_trustgraph_config(config)
+            tg_config_file = json.dumps(tg_config_json, indent=4)
 
         mem = BytesIO()
 
@@ -235,7 +237,10 @@ class Packager:
                 out.writestr(name, content)
 
             output("docker-compose.yaml", compose_file)
-            output("trustgraph/config.json", tg_config_file)
+
+            # Add seperate TG config for versions after 1.1...
+            if version[:2] != "0." and version[:3] != "1.0":
+                output("trustgraph/config.json", tg_config_file)
 
             # Grafana config
             path = self.resources.joinpath(
