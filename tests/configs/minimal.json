@@ -1,0 +1,13 @@
+{
+    "llm": {
+        "engine": "openai",
+        "model": "gpt-3.5-turbo"
+    },
+    "embeddings": {
+        "engine": "hf",
+        "model": "sentence-transformers/all-MiniLM-L6-v2"
+    },
+    "prompt": {
+        "style": "openai"
+    }
+}

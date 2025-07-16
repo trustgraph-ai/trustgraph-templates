@@ -1,0 +1,26 @@
+{
+    "llm": {
+        "engine": "ollama",
+        "model": "llama2"
+    },
+    "embeddings": {
+        "engine": "fastembed",
+        "model": "BAAI/bge-small-en-v1.5"
+    },
+    "vector_store": {
+        "engine": "milvus"
+    },
+    "graph_store": {
+        "engine": "memgraph"
+    },
+    "document_store": {
+        "engine": "cassandra"
+    },
+    "monitoring": {
+        "grafana": true,
+        "prometheus": true
+    },
+    "prompt": {
+        "style": "openai"
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "llm": {
+        "engine": "bedrock",
+        "model": "anthropic.claude-3-sonnet-20240229-v1:0"
+    },
+    "embeddings": {
+        "engine": "bedrock",
+        "model": "amazon.titan-embed-text-v1"
+    },
+    "vector_store": {
+        "engine": "qdrant"
+    },
+    "rag": {
+        "enabled": true
+    },
+    "prompt": {
+        "style": "openai"
+    }
+}
