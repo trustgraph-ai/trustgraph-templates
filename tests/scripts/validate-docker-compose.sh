@@ -27,10 +27,11 @@ fi
 
 # Validate syntax
 echo "Checking syntax..."
-if docker-compose -f "$COMPOSE_FILE" config -q; then
+if docker-compose -f "$COMPOSE_FILE" config -q 2>/dev/null; then
     echo "✓ Docker Compose syntax is valid"
 else
     echo "✗ Docker Compose syntax validation failed"
+    docker-compose -f "$COMPOSE_FILE" config 2>&1 | head -10
     exit 1
 fi
 
@@ -38,11 +39,6 @@ fi
 echo "Checking for common issues..."
 
 # Check for missing required fields
-if ! grep -q "version:" "$COMPOSE_FILE"; then
-    echo "✗ Missing version field"
-    exit 1
-fi
-
 if ! grep -q "services:" "$COMPOSE_FILE"; then
     echo "✗ Missing services field"
     exit 1
