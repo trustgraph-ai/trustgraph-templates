@@ -1,27 +1,61 @@
-{
-    "llm": {
-        "engine": "openai",
-        "model": "gpt-4",
-        "temperature": 0.7
+[
+    {
+        "name": "openai",
+        "parameters": {
+            "model": "gpt-4",
+            "temperature": 0.7
+        }
     },
-    "embeddings": {
-        "engine": "hf",
-        "model": "sentence-transformers/all-MiniLM-L6-v2"
+    {
+        "name": "openai-rag",
+        "parameters": {
+            "model": "gpt-4",
+            "temperature": 0.7
+        }
     },
-    "vector_store": {
-        "engine": "qdrant"
+    {
+        "name": "embeddings-hf",
+        "parameters": {
+            "embeddings-model": "sentence-transformers/all-MiniLM-L6-v2"
+        }
     },
-    "graph_store": {
-        "engine": "neo4j"
+    {
+        "name": "vector-store-qdrant",
+        "parameters": {}
     },
-    "document_store": {
-        "engine": "cassandra"
+    {
+        "name": "graph-store-neo4j",
+        "parameters": {}
     },
-    "rag": {
-        "enabled": true,
-        "chunking": "recursive"
+    {
+        "name": "triple-store-cassandra",
+        "parameters": {}
     },
-    "prompt": {
-        "style": "openai"
+    {
+        "name": "chunker-recursive",
+        "parameters": {
+            "chunk-size": 2000,
+            "chunk-overlap": 100
+        }
+    },
+    {
+        "name": "graph-rag",
+        "parameters": {}
+    },
+    {
+        "name": "document-rag",
+        "parameters": {}
+    },
+    {
+        "name": "prompt-template",
+        "parameters": {}
+    },
+    {
+        "name": "trustgraph-base",
+        "parameters": {}
+    },
+    {
+        "name": "pulsar",
+        "parameters": {}
     }
-}
+]

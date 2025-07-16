@@ -1,26 +1,56 @@
-{
-    "llm": {
-        "engine": "ollama",
-        "model": "llama2"
+[
+    {
+        "name": "ollama",
+        "parameters": {
+            "model": "llama2"
+        }
     },
-    "embeddings": {
-        "engine": "fastembed",
-        "model": "BAAI/bge-small-en-v1.5"
+    {
+        "name": "ollama-rag",
+        "parameters": {
+            "model": "llama2"
+        }
     },
-    "vector_store": {
-        "engine": "milvus"
+    {
+        "name": "embeddings-fastembed",
+        "parameters": {
+            "embeddings-model": "BAAI/bge-small-en-v1.5"
+        }
     },
-    "graph_store": {
-        "engine": "memgraph"
+    {
+        "name": "vector-store-milvus",
+        "parameters": {}
     },
-    "document_store": {
-        "engine": "cassandra"
+    {
+        "name": "graph-store-memgraph",
+        "parameters": {}
     },
-    "monitoring": {
-        "grafana": true,
-        "prometheus": true
+    {
+        "name": "triple-store-cassandra",
+        "parameters": {}
     },
-    "prompt": {
-        "style": "openai"
+    {
+        "name": "graph-rag",
+        "parameters": {}
+    },
+    {
+        "name": "document-rag",
+        "parameters": {}
+    },
+    {
+        "name": "grafana",
+        "parameters": {}
+    },
+    {
+        "name": "prompt-template",
+        "parameters": {}
+    },
+    {
+        "name": "trustgraph-base",
+        "parameters": {}
+    },
+    {
+        "name": "pulsar",
+        "parameters": {}
     }
-}
+]

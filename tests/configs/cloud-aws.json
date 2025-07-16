@@ -1,19 +1,44 @@
-{
-    "llm": {
-        "engine": "bedrock",
-        "model": "anthropic.claude-3-sonnet-20240229-v1:0"
+[
+    {
+        "name": "bedrock",
+        "parameters": {
+            "model": "anthropic.claude-3-sonnet-20240229-v1:0"
+        }
     },
-    "embeddings": {
-        "engine": "bedrock",
-        "model": "amazon.titan-embed-text-v1"
+    {
+        "name": "bedrock-rag",
+        "parameters": {
+            "model": "anthropic.claude-3-sonnet-20240229-v1:0"
+        }
     },
-    "vector_store": {
-        "engine": "qdrant"
+    {
+        "name": "embeddings-hf",
+        "parameters": {
+            "embeddings-model": "sentence-transformers/all-MiniLM-L6-v2"
+        }
     },
-    "rag": {
-        "enabled": true
+    {
+        "name": "vector-store-qdrant",
+        "parameters": {}
     },
-    "prompt": {
-        "style": "openai"
+    {
+        "name": "graph-rag",
+        "parameters": {}
+    },
+    {
+        "name": "document-rag",
+        "parameters": {}
+    },
+    {
+        "name": "prompt-template",
+        "parameters": {}
+    },
+    {
+        "name": "trustgraph-base",
+        "parameters": {}
+    },
+    {
+        "name": "pulsar",
+        "parameters": {}
     }
-}
+]
