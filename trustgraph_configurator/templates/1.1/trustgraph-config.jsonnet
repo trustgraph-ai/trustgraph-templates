@@ -1,0 +1,198 @@
+
+// This puts the default configuration together.  References many things,
+// flow classes, a default flow, token costs, prompts, agent tools
+
+local base = import "base/base.jsonnet";
+local images = import "values/images.jsonnet";
+local url = import "values/url.jsonnet";
+
+local prompts = import "prompts/mixtral.jsonnet";
+local default_prompts = import "prompts/default-prompts.jsonnet";
+
+local token_costs = import "values/token-costs.jsonnet";
+
+local flow_classes = import "flows/flow-classes.jsonnet";
+
+local configuration = {
+
+    prompts:: default_prompts,
+    tools:: [],
+
+    // This defines standard 'interfaces'.  Different flow classes can
+    // support different interfaces.  Interfaces are 'external' endpoints
+    // into a processing chain.
+    "interface-descriptions":: {
+        "document-load": {
+            "description": "Document loader",
+            "kind": "send",
+            "visible": true,
+        },
+        "text-load": {
+            "description": "Text document loader",
+            "kind": "send",
+            "visible": true,
+        },
+        "entity-contexts-load": {
+            "description": "Entity contexts loader",
+            "kind": "send",
+        },
+        "triples-store": {
+            "description": "Triples loader",
+            "kind": "send",
+        },
+        "graph-embeddings-store": {
+            "description": "Graph embeddings loader",
+            "kind": "send",
+        },
+        "document-embeddings-store": {
+            "description": "Document embeddings loader",
+            "kind": "send",
+        },
+        "graph-rag": {
+            "description": "GraphRAG service",
+            "kind": "request-response",
+        },
+        "document-rag": {
+            "description": "ChunkRAG service",
+            "kind": "request-response",
+        },
+        "triples": {
+            "description": "Triples query service",
+            "kind": "request-response",
+        },
+        "graph-embeddings": {
+            "description": "Graph embeddings service",
+            "kind": "request-response",
+        },
+        "document-embeddings": {
+            "description": "Document embeddings service",
+            "kind": "request-response",
+        },
+        "prompt": {
+            "description": "Prompt service",
+            "kind": "request-response",
+        },
+        "agent": {
+            "description": "Agent service",
+            "kind": "request-response",
+        },
+        "text-completion": {
+            "description": "Text completion service",
+            "kind": "request-response",
+        },
+    },
+
+    "flow-classes":: flow_classes,
+
+    local class_processors = function(classes, name)
+        [
+            [
+                local key = std.strReplace(p.key, "{class}", name);
+                local parts = std.splitLimit(key, ":", 2);
+                parts,
+                {
+                    [q.key]: std.strReplace(q.value, "{class}", name)
+                    for q in std.objectKeysValuesAll(p.value)
+                }
+            ]
+            for p in std.objectKeysValuesAll(classes[name].class)
+        ],
+
+    local flow_processors = function(classes, name, id)
+        [
+            [
+                local key = std.strReplace(
+                    std.strReplace(p.key, "{class}", name),
+                    "{id}", id
+                );
+                local parts = std.splitLimit(key, ":", 2);
+                parts,
+                {
+                    [q.key]: std.strReplace(
+                        std.strReplace(q.value, "{class}", name),
+                        "{id}", id
+                    )
+                    for q in std.objectKeysValuesAll(p.value)
+                }
+            ]
+            for p in std.objectKeysValuesAll(classes[name].flow)
+        ],
+
+    local interfaces = function(classes, name, id)
+        local intf = classes[name].interfaces;
+        {
+            [p.key]:
+            if std.isString(p.value) then
+                local i = std.strReplace(p.value, "{class}", name);
+                local i2 = std.strReplace(i, "{id}", id);
+                i2
+            else
+                {
+                    [q.key]:
+                        local i = std.strReplace(q.value, "{class}", name);
+                        local i2 = std.strReplace(i, "{id}", id);
+                        i2
+                    for q in std.objectKeysValuesAll(p.value)
+                }
+            for p in std.objectKeysValuesAll(intf)
+        },
+
+    local default_flow_id = "default",
+    local default_flow_class = "document-rag+graph-rag",
+
+    // Temporary hackery
+    local flow_array =
+        class_processors($["flow-classes"], default_flow_class) +
+        flow_processors($["flow-classes"], default_flow_class,
+            default_flow_id),
+
+    local flow_objects = std.map(
+        function(item) {
+            [item[0][0]] +: {
+                [item[0][1]]: item[1]
+            }
+        },
+        flow_array
+    ),
+
+    local flows = std.foldr(
+        function(a, b) a + b,
+        flow_objects,
+        {}
+    ),
+
+    local default_flow_interfaces = interfaces(
+        $["flow-classes"], default_flow_class, default_flow_id
+    ),
+
+    configuration: {
+        prompt: {
+            "system": $["prompts"]["system-template"],
+            "template-index": std.objectFieldsAll($.prompts.templates),
+        } + {
+            ["template." + p.key]: p.value
+            for p in std.objectKeysValuesAll($.prompts.templates)
+        },
+        agent: {
+            "tool-index": [t.id for t in $.tools],
+        } + {
+            ["tool." + p.id]: p
+            for p in $.tools
+        },
+        "flow-classes": $["flow-classes"],
+        "interface-descriptions": $["interface-descriptions"],
+        "flows": {
+            [default_flow_id]: {
+                "description": "Default processing flow",
+                "class-name": default_flow_class,
+                "interfaces": default_flow_interfaces,
+            },
+        },
+        "flows-active": flows,
+        "token-costs": token_costs,
+    },
+
+} + default_prompts;
+
+configuration.configuration
+
