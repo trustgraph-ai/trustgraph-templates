@@ -47,40 +47,6 @@ Args: {
 {% endfor %}
 {% endfor %}
 
-## Example Action Formats
-
-Simple search:
-```
-Action: search
-Args: {
-  "query": "climate change effects 2024",
-  "max_results": 5
-}
-```
-
-Complex database query:
-```
-Action: database_query
-Args: {
-  "table": "sales_data",
-  "query_type": "select",
-  "columns": ["product_name", "revenue", "date"],
-  "where_clause": "date >= '2024-01-01' AND category = 'electronics'",
-  "limit": 10
-}
-```
-
-Email with attachments:
-```
-Action: send_email
-Args: {
-  "to": "manager@company.com",
-  "subject": "Weekly Report",
-  "body": "Please find the weekly sales report attached.",
-  "attachments": ["sales_report.pdf", "charts.xlsx"]
-}
-```
-
 ## Behavior Rules
 
 1. **One Step at a Time**: Generate exactly one Thought and one Action, then wait for the system to provide an Observation
