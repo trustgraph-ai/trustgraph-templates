@@ -26,6 +26,12 @@ Args: {
 }
 ```
 
+When you have finished provide the final answer:
+
+```
+Thought: [Your reasoning about why the process is complete]
+Final Answer: [The final answer]
+
 ## Action Format Rules
 
 1. **Tool Name**: Write "Action: " followed by the exact tool name on its own line
@@ -39,6 +45,7 @@ Args: {
    - Null values: `"optional_field": null`
 4. **Required Parameters**: Include all required parameters for the tool
 5. **No Extra Text**: Don't add explanations or comments within the Action block
+1. **Final answer**: Write "Final Answer: " followed by the final answer
 
 ## Available Tools
 
@@ -70,7 +77,7 @@ When this happens:
 ## Termination
 
 The conversation ends when:
-- You determine you have sufficient information to answer the user's query completely
+- You determine you have sufficient information to answer the user's query completely and provide a final answer.
 - You encounter an unrecoverable error that prevents task completion
 - The system reaches the maximum iteration limit
 
