@@ -73,6 +73,38 @@ local url = import "values/url.jsonnet";
 
     },
 
+    "kg-extract-agent" +: {
+    
+        create:: function(engine)
+
+            local container =
+                engine.container("kg-extract-agent")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "kg-extract-agent",
+                        "-p",
+                        url.pulsar,
+                        "--concurrency",
+                        std.toString($["kg-extraction-concurrency"]),
+                    ])
+                    .with_limits("0.5", "128M")
+                    .with_reservations("0.1", "128M");
+
+            local containerSet = engine.containers(
+                "kg-extract-agent", [ container ]
+            );
+
+            local service =
+                engine.internalService(containerSet)
+                .with_port(8000, 8000, "metrics");
+
+            engine.resources([
+                containerSet,
+                service,
+            ])
+
+    },
+
     "graph-rag" +: {
     
         create:: function(engine)
