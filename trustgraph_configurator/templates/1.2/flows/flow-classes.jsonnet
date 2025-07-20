@@ -20,19 +20,6 @@ local graphrag_part = {
         "text-completion": request_response("text-completion:{class}"),
     },
     "flow" +: {
-        "kg-extract-definitions:{id}": {
-            input: flow("chunk-load:{id}"),
-            triples: flow("triples-store:{id}"),
-            "entity-contexts": flow("entity-contexts-load:{id}"),
-            "prompt-request": request("prompt:{class}"),
-            "prompt-response": response("prompt:{class}"),
-        },
-        "kg-extract-relationships:{id}": {
-            input: flow("chunk-load:{id}"),
-            triples: flow("triples-store:{id}"),
-            "prompt-request": request("prompt:{class}"),
-            "prompt-response": response("prompt:{class}"),
-        },
         "graph-embeddings:{id}": {
             input: flow("entity-contexts-load:{id}"),
             output: flow("graph-embeddings-store:{id}"),
@@ -103,6 +90,44 @@ local graphrag_part = {
         "metering-rag:{class}": {
             input: response("text-completion-rag:{class}"),
         },
+    }
+};
+
+local kg_base_part = {
+    "interfaces" +: {
+    },
+    "flow" +: {
+        "kg-extract-definitions:{id}": {
+            input: flow("chunk-load:{id}"),
+            triples: flow("triples-store:{id}"),
+            "entity-contexts": flow("entity-contexts-load:{id}"),
+            "prompt-request": request("prompt:{class}"),
+            "prompt-response": response("prompt:{class}"),
+        },
+        "kg-extract-relationships:{id}": {
+            input: flow("chunk-load:{id}"),
+            triples: flow("triples-store:{id}"),
+            "prompt-request": request("prompt:{class}"),
+            "prompt-response": response("prompt:{class}"),
+        },
+    },
+    "class" +: {
+    }
+};
+
+local agent_extract_part = {
+    "interfaces" +: {
+    },
+    "flow" +: {
+        "kg-extract-agent:{id}": {
+            input: flow("chunk-load:{id}"),
+            triples: flow("triples-store:{id}"),
+            "entity-contexts": flow("entity-contexts-load:{id}"),
+            "agent-request": request("agent:{id}"),
+            "agent-response": response("agent:{id}"),
+        },
+    },
+    "class" +: {
     }
 };
 
@@ -247,13 +272,13 @@ local kgcore_part = {
         description: "Supports GraphRAG and document RAG, no core creation",
         tags: ["document-rag", "graph-rag", "knowledge-extraction"],
     } +
-      graphrag_part + documentrag_part + agent_part + load_part,
+      graphrag_part + documentrag_part + agent_part + load_part + kg_base_part,
 
     "graph-rag": {
         description: "GraphRAG only",
         tags: ["graph-rag", "knowledge-extraction"],
     } +
-      graphrag_part + agent_part + load_part,
+      graphrag_part + agent_part + load_part + kg_base_part,
 
     "document-rag": {
         description: "DocumentRAG only",
@@ -266,6 +291,13 @@ local kgcore_part = {
         tags: ["document-rag", "graph-rag", "knowledge-extraction"],
     } +
       graphrag_part + documentrag_part + agent_part + load_part +
-      kgcore_part,
+      kgcore_part + kg_base_part,
+
+    "graph-rag+agent-extract": {
+        description: "GraphRAG + agent extract",
+        tags: ["graph-rag", "knowledge-extraction", "agent-extract"],
+    } +
+      graphrag_part + agent_part + load_part + agent_extract_part,
+
 }
 
