@@ -2,7 +2,6 @@
 
    // Essentials
    "trustgraph-base": import "components/trustgraph.jsonnet",
-   "mcp-server": import "components/mcp-server.jsonnet",
    "rev-gateway": import "components/rev-gateway.jsonnet",
    "pulsar": import "components/pulsar.jsonnet",
 
@@ -51,16 +50,9 @@
    "embeddings-hf": import "components/embeddings-hf.jsonnet",
    "embeddings-fastembed": import "components/embeddings-fastembed.jsonnet",
 
-   // Processing pipelines
-   "graph-rag": import "components/graph-rag.jsonnet",
-   "document-rag": import "components/document-rag.jsonnet",
-
    // OCR options
    "ocr": import "components/ocr.jsonnet",
    "mistral-ocr": import "components/mistral-ocr.jsonnet",
-
-   // Librarian - document management
-   "librarian": import "components/librarian.jsonnet",
 
    // Vector stores
    "vector-store-milvus": import "components/milvus.jsonnet",
@@ -82,14 +74,16 @@
    "override-recursive-chunker": import "components/chunker-recursive.jsonnet",
 
    // The prompt manager
-   "prompt-template": import "components/prompt-template.jsonnet",
    "prompt-overrides": import "components/prompt-overrides.jsonnet",
 
-   // ReAct agent
-   "agent-manager-react": import "components/agent-manager-react.jsonnet",
-
-   // Optional UI
-   "workbench-ui": import "components/workbench-ui.jsonnet",
+   // Archaic - part of core system, just making sure these don't
+   // cause a failure
+   "workbench-ui": {},
+   "prompt-template": {},
+   "agent-manager-react": {},
+   "graph-rag": {},
+   "document-rag": {},
+   "librarian": {},
 
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
