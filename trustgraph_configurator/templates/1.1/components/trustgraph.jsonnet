@@ -4,6 +4,12 @@ local url = import "values/url.jsonnet";
 
 local config = import "configuration.jsonnet";
 local librarian = import "librarian.jsonnet";
+local mcp_server = import "mcp-server.jsonnet";
+local workbench = import "workbench-ui.jsonnet";
+local graphrag = import "graph-rag.jsonnet";
+local documentrag = import "document-rag.jsonnet";
+local prompt_template = import "prompt-template.jsonnet";
+local agent_manager = import "agent-manager-react.jsonnet";
 
 {
 
@@ -313,5 +319,6 @@ local librarian = import "librarian.jsonnet";
 
     },
 
-} + config + librarian
+} + config + librarian + mcp_server + workbench + graphrag + documentrag
+  + prompt_template + agent_manager
 
