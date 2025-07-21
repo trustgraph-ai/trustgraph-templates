@@ -31,6 +31,9 @@ When you have finished provide the final answer:
 ```
 Thought: [Your reasoning about why the process is complete]
 Final Answer: [The final answer]
+```
+
+When providing a final answer, do not provide an Action or Args.
 
 ## Action Format Rules
 
