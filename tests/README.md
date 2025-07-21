@@ -75,7 +75,6 @@ AWS Bedrock configuration for cloud deployments.
 
 - **0.21** - Mistral API, LM Studio, OCR options
 - **0.22** - Dynamic configuration
-- **0.23** - Dynamic flow processing (alpha)
 - **1.0** - Flow API, Librarian (stable)
 - **1.1** - MCP support, agent upgrades (stable)
 

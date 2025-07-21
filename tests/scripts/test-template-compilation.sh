@@ -12,7 +12,7 @@ TEST_DIR="$ROOT_DIR/tests"
 CONFIGURATOR="$ROOT_DIR/scripts/tg-configurator"
 
 # Test parameters
-VERSIONS="0.21 0.22 0.23 1.0 1.1"
+VERSIONS="0.22 1.0 1.1 1.2"
 PLATFORMS="docker-compose podman-compose minikube-k8s gcp-k8s aks-k8s eks-k8s scw-k8s"
 CONFIGS="minimal.json complex-rag.json multi-service.json cloud-aws.json"
 

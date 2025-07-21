@@ -13,12 +13,6 @@
 	    "status": "stable"
 	},
 	{
-	    "name": "0.23",
-	    "description": "Dynamic configuration of processing flows with the addition of the librarian component, and the flow API.  This is an early release of a major change.  Some of the functionality is only available in APIs and command-line.",
-	    "version": "0.23.25",
-	    "status": "alpha"
-	},
-	{
 	    "name": "1.0",
 	    "description": "Production release of Flow API, Librarian and dynamic flow processing.  For best results stay with cassandra and qdrant stores.",
 	    "version": "1.0.22",
@@ -29,6 +23,12 @@
 	    "description": "MCP support and agent functionality upgrades.",
 	    "version": "1.1.10",
 	    "status": "stable"
+	},
+	{
+	    "name": "1.2",
+	    "description": "Further MCP/agent support and row/object extraction.",
+	    "version": "1.2.0",
+	    "status": "pre-release"
 	}
     ],
     "platforms": [

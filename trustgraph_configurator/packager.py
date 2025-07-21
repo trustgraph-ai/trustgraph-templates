@@ -12,7 +12,7 @@ from . import Generator
 from . index import Index
 
 logger = logging.getLogger("packager")
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 class Packager:
 
