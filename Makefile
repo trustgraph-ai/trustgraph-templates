@@ -2,7 +2,7 @@
 PACKAGE_VERSION=0.0.0
 VERSION=0.0.0
 
-all: package container
+all: container
 
 package: update-package-versions
 	python3 -m build --sdist --outdir pkgs
