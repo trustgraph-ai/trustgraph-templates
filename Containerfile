@@ -13,8 +13,7 @@ RUN pip wheel -w /root/wheels --no-deps jsonnet
 RUN mkdir -p /root/src
 
 COPY trustgraph_configurator/ /root/build/trustgraph_configurator/
-COPY scripts/ /root/build/scripts/
-COPY setup.py /root/build/setup.py
+COPY pyproject.toml /root/build/pyproject.toml
 COPY README.md /root/build/README.md
 
 RUN (cd /root/build && pip wheel -w /root/wheels --no-deps .)

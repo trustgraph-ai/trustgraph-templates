@@ -5,7 +5,7 @@ VERSION=0.0.0
 all: package container
 
 package: update-package-versions
-	python3 setup.py sdist --dist-dir pkgs
+	python3 -m build --sdist --outdir pkgs
 
 update-package-versions:
 	echo __version__ = \"${PACKAGE_VERSION}\" > trustgraph_configurator/version.py
