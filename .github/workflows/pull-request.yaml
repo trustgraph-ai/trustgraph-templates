@@ -25,5 +25,7 @@ jobs:
             pip install .
 
       - name: Unit tests
-        run: PYTHONPATH=. tests/scripts/test-template-compilation.sh
+        run: |
+           . env/bin/activate
+           tests/scripts/test-template-compilation.sh
 
