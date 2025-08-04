@@ -4,11 +4,8 @@ VERSION=0.0.0
 
 all: container
 
-package: update-package-versions
+package:
 	python3 -m build --sdist --outdir pkgs
-
-update-package-versions:
-	echo __version__ = \"${PACKAGE_VERSION}\" > trustgraph_configurator/version.py
 
 CONTAINER=localhost/config-svc
 DOCKER=podman
@@ -20,3 +17,4 @@ container: package
 # On port 8081
 run-container:
 	${DOCKER} run -i -t -p 8081:8080 ${CONTAINER}:${VERSION}
+
