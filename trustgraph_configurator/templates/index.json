@@ -1,12 +1,6 @@
 {
     "templates": [
 	{
-	    "name": "0.21",
-	    "description": "Support for Mistral API, LM Studio, multiple OCR options.  Integrated deployment to AWS, GCP, Azure, Scaleway using Pulumi.",
-	    "version": "0.21.17",
-	    "status": "stable"
-	},
-	{
 	    "name": "0.22",
 	    "description": "Dynamic configuration of prompt and agent tools without a system restart",
 	    "version": "0.22.11",
