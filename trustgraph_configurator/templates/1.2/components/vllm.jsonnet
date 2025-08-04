@@ -36,6 +36,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         std.toString($["vllm-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["vllm-temperature"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

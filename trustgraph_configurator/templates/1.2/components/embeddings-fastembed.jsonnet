@@ -22,6 +22,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         std.toString($["embeddings-concurrency"]),
                         "-m",
                         $["embeddings-model"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("1.0", "400M")
                     .with_reservations("0.5", "400M");

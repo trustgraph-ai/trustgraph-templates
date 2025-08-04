@@ -23,6 +23,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         std.toString($["chunk-size"]),
                         "--chunk-overlap",
                         std.toString($["chunk-overlap"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

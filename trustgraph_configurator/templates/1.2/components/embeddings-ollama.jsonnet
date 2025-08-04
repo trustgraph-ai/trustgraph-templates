@@ -24,6 +24,8 @@ local url = import "values/url.jsonnet";
                         $["embeddings-model"],
                         "-r",
                         $["ollama-url"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

@@ -22,6 +22,8 @@ local url = import "values/url.jsonnet";
                         url.pulsar,
                         "--concurrency",
                         std.toString($["kg-extraction-concurrency"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -54,6 +56,8 @@ local url = import "values/url.jsonnet";
                         url.pulsar,
                         "--concurrency",
                         std.toString($["kg-extraction-concurrency"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -86,6 +90,8 @@ local url = import "values/url.jsonnet";
                         url.pulsar,
                         "--concurrency",
                         std.toString($["kg-extraction-concurrency"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -126,6 +132,8 @@ local url = import "values/url.jsonnet";
                         std.toString($["graph-rag-max-subgraph-size"]),
                         "--max-path-length",
                         std.toString($["graph-rag-max-path-length"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -156,6 +164,8 @@ local url = import "values/url.jsonnet";
                         "graph-embeddings",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("1.0", "512M")
                     .with_reservations("0.5", "512M");

@@ -23,6 +23,8 @@ memgraph + {
                         $["memgraph-url"],
                         "--database",
                         $["memgraph-database"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -57,6 +59,8 @@ memgraph + {
                         $["memgraph-url"],
                         "--database",
                         $["memgraph-database"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

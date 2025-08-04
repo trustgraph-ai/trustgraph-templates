@@ -13,6 +13,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
 
 {
 
+    "log-level": $["log-level"],
+
     "api-gateway-port":: 8088,
     "api-gateway-timeout":: 600,
 
@@ -50,6 +52,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         std.toString($["api-gateway-timeout"]),
                         "--port",
                         std.toString(port),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "256M")
@@ -88,6 +92,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         std.toString($["chunk-size"]),
                         "--chunk-overlap",
                         std.toString($["chunk-overlap"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -118,6 +124,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         "config-svc",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -148,6 +156,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         "pdf-decoder",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "512M")
                     .with_reservations("0.1", "512M");
@@ -178,6 +188,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         "mcp-tool",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -208,6 +220,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         "metering",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -240,6 +254,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         url.pulsar,
                         "--id",
                         "metering-rag",
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -270,6 +286,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         "kg-store",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -300,6 +318,8 @@ local agent_manager = import "agent-manager-react.jsonnet";
                         "kg-manager",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

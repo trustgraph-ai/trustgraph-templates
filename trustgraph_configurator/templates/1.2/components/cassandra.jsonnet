@@ -19,6 +19,8 @@ cassandra + {
                         url.pulsar,
                         "-g",
                         cassandra_hosts,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -51,6 +53,8 @@ cassandra + {
                         url.pulsar,
                         "-g",
                         cassandra_hosts,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "512M")
                     .with_reservations("0.1", "512M");

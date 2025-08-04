@@ -20,6 +20,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         url.pulsar,
                         "--doc-limit",
                         std.toString($["document-rag-doc-limit"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -50,6 +52,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "document-embeddings",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("1.0", "512M")
                     .with_reservations("0.5", "512M");
