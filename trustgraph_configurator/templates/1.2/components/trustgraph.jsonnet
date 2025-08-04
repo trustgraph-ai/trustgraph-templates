@@ -13,7 +13,7 @@ local agent_manager = import "agent-manager-react.jsonnet";
 
 {
 
-    "log-level": $["log-level"],
+    "log-level":: "DEBUG",
 
     "api-gateway-port":: 8088,
     "api-gateway-timeout":: 600,
