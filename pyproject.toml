@@ -39,5 +39,5 @@ include = ["trustgraph_configurator*"]
 trustgraph_configurator = ["templates/**", "resources/**"]
 
 [tool.setuptools.dynamic]
-version = {attr = "trustgraph_configurator.version.__version__"}
+version = {attr = "trustgraph_configurator.__version__"}
 
