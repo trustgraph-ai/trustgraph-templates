@@ -17,6 +17,8 @@ local url = import "values/url.jsonnet";
                         url.pulsar,
                         "--concurrency",
                         std.toString($["prompt-concurrency"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -51,6 +53,8 @@ local url = import "values/url.jsonnet";
                         "prompt-rag",
                         "--concurrency",
                         std.toString($["prompt-rag-concurrency"]),
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

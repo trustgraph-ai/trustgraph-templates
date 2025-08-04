@@ -17,6 +17,8 @@ local cassandra = import "stores/cassandra.jsonnet";
                         "librarian",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "256M")
                     .with_reservations("0.1", "256M");

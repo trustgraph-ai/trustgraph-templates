@@ -28,6 +28,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         url.pulsar,
                         "-t",
                         "%0.3f" % $["cohere-temperature"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

@@ -34,6 +34,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         $["claude-model"],
                         "-t",
                         "%0.3f" % $["claude-temperature"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

@@ -9,7 +9,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 TEST_DIR="$ROOT_DIR/tests"
-CONFIGURATOR="$ROOT_DIR/scripts/tg-configurator"
+CONFIGURATOR="tg-configurator"
 
 # Test parameters
 VERSIONS="0.22 1.0 1.1 1.2"
@@ -213,8 +213,9 @@ main() {
     export PYTHONPATH="$ROOT_DIR"
     
     # Check if configurator exists
-    if [ ! -f "$CONFIGURATOR" ]; then
-        echo -e "${RED}Error: Configurator not found at $CONFIGURATOR${NC}"
+    if ! command -v "$CONFIGURATOR" &> /dev/null; then
+        echo -e "${RED}Error: Configurator command not found: $CONFIGURATOR${NC}"
+        echo -e "${YELLOW}Make sure trustgraph-configurator is installed (pip install -e .)${NC}"
         exit 1
     fi
     

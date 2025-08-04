@@ -19,14 +19,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup environment
-        run: python3 -m venv env
-
-      - name: Invoke environment
-        run: . env/bin/activate
-
-      - name: Setup packages
-        run: pip install aiohttp jsonnet pyyaml tabulate
+        run: |
+            python3 -m venv env
+            . env/bin/activate
+            pip install .
 
       - name: Unit tests
-        run: PYTHONPATH=. tests/scripts/test-template-compilation.sh
+        run: |
+           . env/bin/activate
+           tests/scripts/test-template-compilation.sh
 

@@ -40,6 +40,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         std.toString($["azure-openai-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["azure-openai-temperature"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

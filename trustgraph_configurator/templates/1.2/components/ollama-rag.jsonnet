@@ -32,6 +32,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         std.toString($["text-completion-rag-concurrency"]),
                         "-m",
                         $["ollama-rag-model"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

@@ -30,6 +30,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "text-completion-rag",
                         "-t",
                         "%0.3f" % $["cohere-rag-temperature"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

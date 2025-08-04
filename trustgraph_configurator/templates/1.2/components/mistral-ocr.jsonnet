@@ -22,6 +22,8 @@ local url = import "values/url.jsonnet";
                         "pdf-ocr-mistral",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

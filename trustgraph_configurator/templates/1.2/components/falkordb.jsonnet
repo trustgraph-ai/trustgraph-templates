@@ -20,6 +20,8 @@ falkordb + {
                         url.pulsar,
                         "-g",
                         $["falkordb-url"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -52,6 +54,8 @@ falkordb + {
                         url.pulsar,
                         "-g",
                         $["falkordb-url"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

@@ -28,6 +28,8 @@ local prompts = import "prompts/slm.jsonnet";
                         url.pulsar,
                         "-m",
                         $["llamafile-model"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

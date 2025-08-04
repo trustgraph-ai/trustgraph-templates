@@ -19,6 +19,8 @@ qdrant + {
                         url.pulsar,
                         "-t",
                         url.qdrant,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -51,6 +53,8 @@ qdrant + {
                         url.pulsar,
                         "-t",
                         url.qdrant,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -83,6 +87,8 @@ qdrant + {
                         url.pulsar,
                         "-t",
                         url.qdrant,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -115,6 +121,8 @@ qdrant + {
                         url.pulsar,
                         "-t",
                         url.qdrant,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

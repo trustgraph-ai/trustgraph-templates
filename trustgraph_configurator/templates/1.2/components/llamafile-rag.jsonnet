@@ -30,6 +30,8 @@ local prompts = import "prompts/slm.jsonnet";
                         "text-completion-rag",
                         "-m",
                         $["llamafile-rag-model"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

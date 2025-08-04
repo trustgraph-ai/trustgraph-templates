@@ -20,6 +20,8 @@ neo4j + {
                         url.pulsar,
                         "-g",
                         $["neo4j-url"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -52,6 +54,8 @@ neo4j + {
                         url.pulsar,
                         "-g",
                         $["neo4j-url"],
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

@@ -22,6 +22,8 @@ local cassandra_hosts = "cassandra";
                         "ge-write-pinecone",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")
@@ -57,6 +59,8 @@ local cassandra_hosts = "cassandra";
                         "ge-query-pinecone",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")
@@ -92,6 +96,8 @@ local cassandra_hosts = "cassandra";
                         "de-write-pinecone",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")
@@ -127,6 +133,8 @@ local cassandra_hosts = "cassandra";
                         "de-query-pinecone",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

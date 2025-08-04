@@ -15,6 +15,8 @@ local url = import "values/url.jsonnet";
                         "agent-manager-react",
                         "-p",
                         url.pulsar,
+                        "--log-level",
+                        $["log-level"],
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
