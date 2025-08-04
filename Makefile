@@ -13,7 +13,7 @@ update-package-versions:
 CONTAINER=localhost/config-svc
 DOCKER=podman
 
-container: package
+container:
 	${DOCKER} build -f Containerfile -t ${CONTAINER}:${VERSION} \
 	    --format docker
 
