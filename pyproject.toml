@@ -33,7 +33,7 @@ tg-config-svc = "trustgraph_configurator:run_service"
 tg-configurations-list = "trustgraph_configurator:list"
 
 [tool.setuptools]
-packages = ["trustgraph_configurator"]
+packages = ["trustgraph_configurator*"]
 include-package-data = true
 
 [tool.setuptools.package-data]
