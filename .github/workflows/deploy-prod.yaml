@@ -30,11 +30,11 @@ jobs:
         run: echo VERSION=sha-$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT
 
       # Python package version MUST be a semantic version, but also doesn't
-      # matter, so just setting to 0.0.1.
+      # matter, so just setting to 0.0.0.
       # The container version MUST change on every push to get Cloud Run
       # to re-deploy, so is based on git hash.
       - name: Build container
-        run: make PACKAGE_VERSION=0.0.1 VERSION=${{ steps.version.outputs.VERSION }}
+        run: make PACKAGE_VERSION=0.0.0 VERSION=${{ steps.version.outputs.VERSION }}
 
       - name: Log in to the container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
