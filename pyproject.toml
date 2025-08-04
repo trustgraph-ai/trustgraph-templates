@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trustgraph-configurator"
+dynamic = ["version"]
+authors = [
+    {name = "trustgraph.ai", email = "security@trustgraph.ai"},
+]
+description = "Configuration creator for trustgraph.ai"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "GPL-3.0-or-later"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "aiohttp",
+    "jsonnet",
+    "pyyaml",
+    "tabulate",
+]
+
+[project.urls]
+Homepage = "https://github.com/trustgraph-ai/trustgraph-configurator"
+
+[project.scripts]
+tg-configurator = "trustgraph_configurator:run"
+tg-config-svc = "trustgraph_configurator:run_service"
+tg-configurations-list = "trustgraph_configurator:list"
+
+[tool.setuptools]
+packages = ["trustgraph_configurator"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+trustgraph_configurator = ["templates/**", "resources/**"]
+
+[tool.setuptools.dynamic]
+version = {attr = "trustgraph_configurator.version.__version__"}
