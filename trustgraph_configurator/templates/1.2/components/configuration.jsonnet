@@ -29,8 +29,6 @@ local url = import "values/url.jsonnet";
                             url.pulsar_admin,
                             "--config-file",
                             "/trustgraph/config.json",
-                            "--log-level",
-                            $["log-level"],
                         ]
                     )
                     .with_limits("0.5", "128M")
