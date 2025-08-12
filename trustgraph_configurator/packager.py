@@ -169,7 +169,7 @@ class Packager:
                 )
             elif self.platform in set([
                     "minikube-k8s", "gcp-k8s", "aks-k8s", "eks-k8s",
-                    "scw-k8s",
+                    "scw-k8s", "ovh-k8s"
             ]):
                 data = self.generate_k8s(
                     self.platform, self.version, config
