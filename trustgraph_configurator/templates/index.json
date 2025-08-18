@@ -42,6 +42,10 @@
 	    "name": "scw-k8s",
 	    "description": "Uses kubectl to deploy resources to a Kubernetes cluster running in Scaleway cloud"
 	},
+        {
+            "name": "ovh-k8s",
+            "description": "Uses kubectl to deploy resources to a Kubernetes cluster running in OVHCloud"
+        },
 	{
 	    "name": "gcp-k8s",
 	    "description": "Uses kubectl to deploy resources to a Kubernetes cluster on Google Cloud (e.g. GKE)"
