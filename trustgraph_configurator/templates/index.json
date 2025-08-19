@@ -20,8 +20,8 @@
 	},
 	{
 	    "name": "1.2",
-	    "description": "Further MCP/agent support and row/object extraction.",
-	    "version": "1.2.10",
+	    "description": "Further MCP and agent support and row/object extraction.",
+	    "version": "1.2.12",
 	    "status": "pre-release"
 	}
     ],
