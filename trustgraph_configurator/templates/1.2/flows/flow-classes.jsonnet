@@ -131,6 +131,26 @@ local agent_extract_part = {
     }
 };
 
+local object_extract_part = {
+    "interfaces" +: {
+        "objects-store": flow("objects-store:{id}"),
+    },
+    "flow" +: {
+        "kg-extract-object:{id}": {
+            input: flow("chunk-load:{id}"),
+            triples: flow("triples-store:{id}"),
+            "entity-contexts": flow("entity-contexts-load:{id}"),
+            "prompt-request": request("prompt:{class}"),
+            "prompt-response": response("prompt:{class}"),
+        },
+        "objects-write:{id}": {
+            input: flow("objects-store:{id}"),
+        },
+    },
+    "class" +: {
+    }
+};
+
 local documentrag_part = {
     "interfaces" +: {
         "document-embeddings-store": flow("document-embeddings-store:{id}"),
@@ -298,6 +318,18 @@ local kgcore_part = {
         tags: ["graph-rag", "knowledge-extraction", "agent-extract"],
     } +
       graphrag_part + agent_part + load_part + agent_extract_part,
+
+    "graph-rag+object-extract": {
+        description: "GraphRAG + object extract",
+        tags: ["graph-rag", "knowledge-extraction", "object-extract"],
+    } +
+      graphrag_part + agent_part + load_part + object_extract_part,
+
+    "object-extract": {
+        description: "object extract only",
+        tags: ["knowledge-extraction", "object-extract"],
+    } +
+      agent_part + load_part + object_extract_part,
 
 }
 
