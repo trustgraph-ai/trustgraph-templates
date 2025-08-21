@@ -72,7 +72,41 @@ cassandra + {
                 service,
             ])
 
-    }
+    },
+
+    "store-objects" +: {
+    
+        create:: function(engine)
+
+            local container =
+                engine.container("store-objects")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "objects-write-cassandra",
+                        "-p",
+                        url.pulsar,
+                        "-g",
+                        cassandra_hosts,
+                        "--log-level",
+                        $["log-level"],
+                    ])
+                    .with_limits("0.5", "128M")
+                    .with_reservations("0.1", "128M");
+
+            local containerSet = engine.containers(
+                "store-objects", [ container ]
+            );
+
+            local service =
+                engine.internalService(containerSet)
+                .with_port(8080, 8080, "metrics");
+
+            engine.resources([
+                containerSet,
+                service,
+            ])
+
+    },
 
 }
 
