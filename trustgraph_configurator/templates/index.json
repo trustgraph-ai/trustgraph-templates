@@ -21,7 +21,7 @@
 	{
 	    "name": "1.2",
 	    "description": "Further MCP and agent support and row/object extraction.",
-	    "version": "1.2.14",
+	    "version": "1.2.15",
 	    "status": "pre-release"
 	}
     ],
