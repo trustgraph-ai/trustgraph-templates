@@ -104,6 +104,7 @@ The service provides the same functionality as the command-line tool but through
 
 ### Template Versions
 
+- **1.2** (stable): Structured data MVP
 - **1.1** (stable): MCP support and agent functionality upgrades
 - **1.0** (stable): Production release with Flow API and Librarian
 - **0.23** (alpha): Early release with dynamic flow processing
