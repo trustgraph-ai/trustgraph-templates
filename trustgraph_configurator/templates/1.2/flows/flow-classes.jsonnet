@@ -16,7 +16,6 @@ local graphrag_part = {
         "graph-embeddings": request_response("graph-embeddings:{class}"),
         "embeddings": request_response("embeddings:{class}"),
         "prompt": request_response("prompt:{class}"),
-        "mcp-tool": request_response("mtp-tool:{class}"),
         "text-completion": request_response("text-completion:{class}"),
     },
     "flow" +: {
@@ -69,12 +68,6 @@ local graphrag_part = {
             response: response("prompt-rag:{class}"),
             "text-completion-request": request("text-completion-rag:{class}"),
             "text-completion-response": response("text-completion-rag:{class}"),
-        },
-        "mcp-tool:{class}": {
-            request: request("mcp-tool:{class}"),
-            response: response("mcp-tool:{class}"),
-            "text-completion-request": request("text-completion:{class}"),
-            "text-completion-response": response("text-completion:{class}"),
         },
         "text-completion:{class}": {
             request: request("text-completion:{class}"),
@@ -133,12 +126,15 @@ local agent_extract_part = {
 
 local object_extract_part = {
     "interfaces" +: {
+        "embeddings": request_response("embeddings:{class}"),
+        "prompt": request_response("prompt:{class}"),
+        "text-completion": request_response("text-completion:{class}"),
         "objects-store": flow("objects-store:{id}"),
     },
     "flow" +: {
-        "kg-extract-object:{id}": {
+        "kg-extract-objects:{id}": {
             input: flow("chunk-load:{id}"),
-            triples: flow("triples-store:{id}"),
+            output: flow("objects-store:{id}"),
             "entity-contexts": flow("entity-contexts-load:{id}"),
             "prompt-request": request("prompt:{class}"),
             "prompt-response": response("prompt:{class}"),
@@ -148,6 +144,36 @@ local object_extract_part = {
         },
     },
     "class" +: {
+        "embeddings:{class}": {
+            request: request("embeddings:{class}"),
+            response: response("embeddings:{class}"),
+        },
+        "prompt:{class}": {
+            request: request("prompt:{class}"),
+            response: response("prompt:{class}"),
+            "text-completion-request": request("text-completion:{class}"),
+            "text-completion-response": response("text-completion:{class}"),
+        },
+        "prompt-rag:{class}": {
+            request: request("prompt-rag:{class}"),
+            response: response("prompt-rag:{class}"),
+            "text-completion-request": request("text-completion-rag:{class}"),
+            "text-completion-response": response("text-completion-rag:{class}"),
+        },
+        "text-completion:{class}": {
+            request: request("text-completion:{class}"),
+            response: response("text-completion:{class}"),
+        },
+        "text-completion-rag:{class}": {
+            request: request("text-completion-rag:{class}"),
+            response: response("text-completion-rag:{class}"),
+        },
+        "metering:{class}": {
+            input: response("text-completion:{class}"),
+        },
+        "metering-rag:{class}": {
+            input: response("text-completion-rag:{class}"),
+        },
     }
 };
 
@@ -229,6 +255,7 @@ local documentrag_part = {
 local agent_part = {
     "interfaces" +: {
         "agent": request_response("agent:{id}"),
+        "mcp-tool": request_response("mtp-tool:{class}"),
     },
     "flow" +: {
         "agent-manager:{id}": {
@@ -246,6 +273,12 @@ local agent_part = {
         },
     },
     "class" +: {
+        "mcp-tool:{class}": {
+            request: request("mcp-tool:{class}"),
+            response: response("mcp-tool:{class}"),
+            "text-completion-request": request("text-completion:{class}"),
+            "text-completion-response": response("text-completion:{class}"),
+        },
     }
 };
 
