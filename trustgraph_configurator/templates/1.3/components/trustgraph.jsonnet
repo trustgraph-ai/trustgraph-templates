@@ -12,6 +12,7 @@ local documentrag = import "document-rag.jsonnet";
 local prompt_template = import "prompt-template.jsonnet";
 local agent_manager = import "agent-manager-react.jsonnet";
 local object_extract = import "object-extract.jsonnet";
+local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
 {
 
@@ -344,4 +345,5 @@ local object_extract = import "object-extract.jsonnet";
 } + librarian + mcp_server + workbench + graphrag
   + documentrag + prompt_template + agent_manager + object_extract
   + config_initialiser + config
+  + ddg
 
