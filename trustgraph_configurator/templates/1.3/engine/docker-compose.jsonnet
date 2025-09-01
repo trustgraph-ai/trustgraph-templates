@@ -1,6 +1,6 @@
 {
 
-    // Extract resources usnig the engine
+    // Extract resources using the engine
     package:: function(patterns)
         std.foldl(
             function(state, p) state + p.create(self),

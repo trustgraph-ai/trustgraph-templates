@@ -2,7 +2,8 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 
-local config = import "configuration.jsonnet";
+local config_initialiser = import "configuration.jsonnet";
+local config  = import "trustgraph-config.jsonnet";
 local librarian = import "librarian.jsonnet";
 local mcp_server = import "mcp-server.jsonnet";
 local workbench = import "workbench-ui.jsonnet";
@@ -340,6 +341,7 @@ local object_extract = import "object-extract.jsonnet";
 
     },
 
-} + config + librarian + mcp_server + workbench + graphrag + documentrag
-  + prompt_template + agent_manager + object_extract
+} + librarian + mcp_server + workbench + graphrag
+  + documentrag + prompt_template + agent_manager + object_extract
+  + config_initialiser + config
 

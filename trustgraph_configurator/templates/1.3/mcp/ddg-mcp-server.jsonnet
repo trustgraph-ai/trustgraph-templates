@@ -7,7 +7,7 @@ local url = import "values/url.jsonnet";
     "ddg-mcp-server-port":: 9790,
 
     "ddg-mcp-server" +: {
-    
+
         create:: function(engine)
 
             local port = $["ddg-mcp-server-port"];
@@ -34,9 +34,15 @@ local url = import "values/url.jsonnet";
 
     },
 
-    mcp + :: [
-        "asdasdasldkasdj"
-    ],
+    mcp +:: {
+        "duckduckgo": {
+            "remote-name": "search",
+            local port = $["ddg-mcp-server-port"],
+            local url = "http://ddg-mcp-server:%s/mcp" % port,
+            "url": url,
+        }
+
+    },
 
 }
 
