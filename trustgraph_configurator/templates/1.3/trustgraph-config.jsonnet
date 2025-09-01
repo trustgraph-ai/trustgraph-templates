@@ -16,37 +16,38 @@ local flow_classes = import "flows/flow-classes.jsonnet";
 local configuration = {
 
     prompts:: default_prompts,
+
     tools:: [
         {
             id: "knowledge-extraction",
-	    name: "Knowledge extraction",
-	    description: "Takes a chunk of text and extracts knowledge in definition and relationship formats. The input is a text chunk",
-	    type: "prompt",
-	    template: "agent-kg-extract",
-	    arguments: [
+            name: "Knowledge extraction",
+            description: "Takes a chunk of text and extracts knowledge in definition and relationship formats. The input is a text chunk",
+            type: "prompt",
+            template: "agent-kg-extract",
+            arguments: [
                 {
-		    "name": "text",
-		    "type": "string",
-		    "description": "The text chunk",
+                    "name": "text",
+                    "type": "string",
+                    "description": "The text chunk",
                 }
-	    ],
+            ],
         },
         {
-	    id: "knowledge-query",
-	    name: "Knowledge query",
-	    description: "This tool queries a knowledge base that holds information about domain-specific information.  The question should be a natural language question.",
-	    type: "knowledge-query",
-	    collection: "default",
-	    arguments: [
+            id: "knowledge-query",
+            name: "Knowledge query",
+            description: "This tool queries a knowledge base that holds information about domain-specific information.  The question should be a natural language question.",
+            type: "knowledge-query",
+            collection: "default",
+            arguments: [
                 {
-		    name: "question",
-		    type: "string",
-		    description: "A simple natural language question.",
+                    name: "question",
+                    type: "string",
+                    description: "A simple natural language question.",
                 }
-	    ]
+            ]
         },
-	{
-	    id: "llm-completion",
+        {
+            id: "llm-completion",
             name: "LLM text completion",
             type: "text-completion",
             description: "This tool queries an LLM for non-domain-specific information.  The question should be a natural language question.",
@@ -59,7 +60,10 @@ local configuration = {
             ]
         }
     ],
-    mcp:: [],
+
+    mcp:: {},
+
+    "flow-classes":: flow_classes,
 
     // This defines standard 'interfaces'.  Different flow classes can
     // support different interfaces.  Interfaces are 'external' endpoints
@@ -125,116 +129,120 @@ local configuration = {
         },
     },
 
-    "flow-classes":: flow_classes,
+    configuration:: {
 
-    local class_processors = function(classes, name)
-        [
-            [
-                local key = std.strReplace(p.key, "{class}", name);
-                local parts = std.splitLimit(key, ":", 2);
-                parts,
-                {
-                    [q.key]: std.strReplace(q.value, "{class}", name)
-                    for q in std.objectKeysValuesAll(p.value)
-                }
-            ]
-            for p in std.objectKeysValuesAll(classes[name].class)
-        ],
+        create:: function(engine) {},
 
-    local flow_processors = function(classes, name, id)
-        [
+        local class_processors = function(classes, name)
             [
-                local key = std.strReplace(
-                    std.strReplace(p.key, "{class}", name),
-                    "{id}", id
-                );
-                local parts = std.splitLimit(key, ":", 2);
-                parts,
-                {
-                    [q.key]: std.strReplace(
-                        std.strReplace(q.value, "{class}", name),
+                [
+                    local key = std.strReplace(p.key, "{class}", name);
+                    local parts = std.splitLimit(key, ":", 2);
+                    parts,
+                    {
+                        [q.key]: std.strReplace(q.value, "{class}", name)
+                        for q in std.objectKeysValuesAll(p.value)
+                    }
+                ]
+                for p in std.objectKeysValuesAll(classes[name].class)
+            ],
+
+        local flow_processors = function(classes, name, id)
+            [
+                [
+                    local key = std.strReplace(
+                        std.strReplace(p.key, "{class}", name),
                         "{id}", id
-                    )
-                    for q in std.objectKeysValuesAll(p.value)
-                }
-            ]
-            for p in std.objectKeysValuesAll(classes[name].flow)
-        ],
+                    );
+                    local parts = std.splitLimit(key, ":", 2);
+                    parts,
+                    {
+                        [q.key]: std.strReplace(
+                            std.strReplace(q.value, "{class}", name),
+                            "{id}", id
+                        )
+                        for q in std.objectKeysValuesAll(p.value)
+                    }
+                ]
+                for p in std.objectKeysValuesAll(classes[name].flow)
+            ],
 
-    local interfaces = function(classes, name, id)
-        local intf = classes[name].interfaces;
-        {
-            [p.key]:
-            if std.isString(p.value) then
-                local i = std.strReplace(p.value, "{class}", name);
-                local i2 = std.strReplace(i, "{id}", id);
-                i2
-            else
-                {
-                    [q.key]:
-                        local i = std.strReplace(q.value, "{class}", name);
-                        local i2 = std.strReplace(i, "{id}", id);
-                        i2
-                    for q in std.objectKeysValuesAll(p.value)
-                }
-            for p in std.objectKeysValuesAll(intf)
-        },
-
-    local default_flow_id = "default",
-    local default_flow_class = "document-rag+graph-rag",
-
-    // Temporary hackery
-    local flow_array =
-        class_processors($["flow-classes"], default_flow_class) +
-        flow_processors($["flow-classes"], default_flow_class,
-            default_flow_id),
-
-    local flow_objects = std.map(
-        function(item) {
-            [item[0][0]] +: {
-                [item[0][1]]: item[1]
-            }
-        },
-        flow_array
-    ),
-
-    local flows = std.foldr(
-        function(a, b) a + b,
-        flow_objects,
-        {}
-    ),
-
-    local default_flow_interfaces = interfaces(
-        $["flow-classes"], default_flow_class, default_flow_id
-    ),
-
-    configuration: {
-        prompt: {
-            "system": $["prompts"]["system-template"],
-            "template-index": std.objectFieldsAll($.prompts.templates),
-        } + {
-            ["template." + p.key]: p.value
-            for p in std.objectKeysValuesAll($.prompts.templates)
-        },
-        tool: {
-            [p.id]: p
-            for p in $.tools
-        },
-        mcp: $.mcp,
-        "flow-classes": $["flow-classes"],
-        "interface-descriptions": $["interface-descriptions"],
-        "flows": {
-            [default_flow_id]: {
-                "description": "Default processing flow",
-                "class-name": default_flow_class,
-                "interfaces": default_flow_interfaces,
+        local interfaces = function(classes, name, id)
+            local intf = classes[name].interfaces;
+            {
+                [p.key]:
+                if std.isString(p.value) then
+                    local i = std.strReplace(p.value, "{class}", name);
+                    local i2 = std.strReplace(i, "{id}", id);
+                    i2
+                else
+                    {
+                        [q.key]:
+                            local i = std.strReplace(q.value, "{class}", name);
+                            local i2 = std.strReplace(i, "{id}", id);
+                            i2
+                        for q in std.objectKeysValuesAll(p.value)
+                    }
+                for p in std.objectKeysValuesAll(intf)
             },
+
+        local default_flow_id = "default",
+        local default_flow_class = "document-rag+graph-rag",
+
+        // Temporary hackery
+        local flow_array =
+            class_processors($["flow-classes"], default_flow_class) +
+            flow_processors($["flow-classes"], default_flow_class,
+                default_flow_id),
+
+        local flow_objects = std.map(
+            function(item) {
+                [item[0][0]] +: {
+                    [item[0][1]]: item[1]
+                }
+            },
+            flow_array
+        ),
+
+        local flows = std.foldr(
+            function(a, b) a + b,
+            flow_objects,
+            {}
+        ),
+
+        local default_flow_interfaces = interfaces(
+            $["flow-classes"], default_flow_class, default_flow_id
+        ),
+
+        configuration:: {
+            prompt: {
+                "system": $["prompts"]["system-template"],
+                "template-index": std.objectFieldsAll($.prompts.templates),
+            } + {
+                ["template." + p.key]: p.value
+                for p in std.objectKeysValuesAll($.prompts.templates)
+            },
+            tool: {
+                [p.id]: p
+                for p in $.tools
+            },
+            mcp: $.mcp,
+            "flow-classes": $["flow-classes"],
+            "interface-descriptions": $["interface-descriptions"],
+            "flows": {
+                [default_flow_id]: {
+                    "description": "Default processing flow",
+                    "class-name": default_flow_class,
+                    "interfaces": default_flow_interfaces,
+                },
+            },
+            "flows-active": flows,
+            "token-costs": token_costs,
         },
-        "flows-active": flows,
-        "token-costs": token_costs,
+
     },
 
 } + default_prompts;
 
-configuration.configuration
+configuration
 
