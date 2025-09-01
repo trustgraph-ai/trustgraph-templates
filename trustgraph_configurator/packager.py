@@ -113,7 +113,7 @@ class Packager:
         gen = Generator(fetch=self.fetch)
 
         path = self.templates.joinpath(
-            f"trustgraph-config.jsonnet"
+            f"config-to-tg-configuration.jsonnet"
         )
         wrapper = path.read_text()
 
