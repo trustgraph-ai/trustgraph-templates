@@ -4,7 +4,7 @@ local url = import "values/url.jsonnet";
 
 {
 
-    "ddg-mcp-server-port":: 9790,
+    "ddg-mcp-server-port":: 9870,
 
     "ddg-mcp-server" +: {
 
