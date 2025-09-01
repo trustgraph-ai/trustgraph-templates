@@ -85,6 +85,9 @@
    "document-rag": {},
    "librarian": {},
 
+   // Extra MCP services
+   "ddg-mcp-server": import "mcp/ddg-mcp-server.jsonnet",
+
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
 
