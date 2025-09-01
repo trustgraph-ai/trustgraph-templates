@@ -9,14 +9,7 @@ local config = import "config.json";
 // Produce patterns from config
 local patterns = decode(config);
 
-// Extract resources
-local resources = std.foldl(
-    function(state, p) state + p,
-    std.objectValues(patterns),
-    {}
-);
+// Extract configuration directly from patterns
+patterns.configuration.configuration
 
-local c = resources.configuration.mcp;
-
-c
 

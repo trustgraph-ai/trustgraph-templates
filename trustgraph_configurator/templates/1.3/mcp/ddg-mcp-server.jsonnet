@@ -34,9 +34,15 @@ local url = import "values/url.jsonnet";
 
     },
 
-//    mcp +:: [
-//        "asdasdasldkasdj"
-//    ],
+    mcp +:: {
+        "duckduckgo": {
+            "remote-name": "search",
+            local port = $["ddg-mcp-server-port"],
+            local url = "http://ddg-mcp-server:%s/mcp" % port,
+            "url": url,
+        }
+
+    },
 
 }
 
