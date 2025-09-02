@@ -16,7 +16,7 @@ local graphrag_part = {
         "graph-embeddings": request_response("graph-embeddings:{class}"),
         "embeddings": request_response("embeddings:{class}"),
         "prompt": request_response("prompt:{class}"),
-        "mcp-tool": request_response("mtp-tool:{class}"),
+        "mcp-tool": request_response("mcp-tool:{class}"),
         "text-completion": request_response("text-completion:{class}"),
     },
     "flow" +: {

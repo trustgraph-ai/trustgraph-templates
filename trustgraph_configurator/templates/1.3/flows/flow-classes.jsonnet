@@ -255,7 +255,7 @@ local documentrag_part = {
 local agent_part = {
     "interfaces" +: {
         "agent": request_response("agent:{id}"),
-        "mcp-tool": request_response("mtp-tool:{class}"),
+        "mcp-tool": request_response("mcp-tool:{class}"),
     },
     "flow" +: {
         "agent-manager:{id}": {
