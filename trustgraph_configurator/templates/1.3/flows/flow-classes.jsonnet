@@ -130,6 +130,7 @@ local object_part = {
         "prompt": request_response("prompt:{class}"),
         "text-completion": request_response("text-completion:{class}"),
         "objects-store": flow("objects-store:{id}"),
+        "objects": request_response("objects:{class}"),
     },
     "flow" +: {
         "kg-extract-objects:{id}": {
