@@ -221,5 +221,9 @@ local flow_classes = import "flows/flow-classes.jsonnet";
 
     },
 
+    configuration:: {
+        configuration:: configuration
+    }
+
 } + default_prompts
 
