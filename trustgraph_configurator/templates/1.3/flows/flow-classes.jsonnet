@@ -124,7 +124,7 @@ local agent_extract_part = {
     }
 };
 
-local object_extract_part = {
+local object_part = {
     "interfaces" +: {
         "embeddings": request_response("embeddings:{class}"),
         "prompt": request_response("prompt:{class}"),
@@ -144,6 +144,10 @@ local object_extract_part = {
         },
     },
     "class" +: {
+        "objects-query:{class}": {
+            request: request("objects:{class}"),
+            response: response("objects:{class}"),
+        },
         "embeddings:{class}": {
             request: request("embeddings:{class}"),
             response: response("embeddings:{class}"),
@@ -356,13 +360,13 @@ local kgcore_part = {
         description: "GraphRAG + object extract",
         tags: ["graph-rag", "knowledge-extraction", "object-extract"],
     } +
-      graphrag_part + agent_part + load_part + object_extract_part,
+      graphrag_part + agent_part + load_part + object_part,
 
-    "object-extract": {
-        description: "object extract only",
-        tags: ["knowledge-extraction", "object-extract"],
+    "object-extraction": {
+        description: "object extraction only",
+        tags: ["knowledge-extraction", "object-extraction"],
     } +
-      agent_part + load_part + object_extract_part,
+      agent_part + load_part + object_part,
 
 }
 
