@@ -236,5 +236,7 @@ local configuration = {
 
 } + default_prompts;
 
-configuration.configuration
+{
+    configuration:: configuration
+}
 
