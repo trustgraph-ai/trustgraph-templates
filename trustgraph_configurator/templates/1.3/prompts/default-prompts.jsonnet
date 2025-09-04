@@ -164,7 +164,47 @@
                     "relationships"
                 ]
             }
-        }
+        },
+
+        "schema-selection":: {
+            "prompt": importstr "schema-selection.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "An array of schema names that are relevant to answering the given question"
+            }
+        },
+
+        "graphql-generation":: {
+            "prompt": importstr "graphql-generation.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The GraphQL query string generated to answer the question"
+                    },
+                    "variables": {
+                        "type": "object",
+                        "description": "Object containing any GraphQL variables needed for the query",
+                        "additionalProperties": true
+                    },
+                    "confidence": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                        "description": "Float between 0.0-1.0 indicating confidence in the generated query"
+                    }
+                },
+                "required": ["query", "variables", "confidence"],
+                "additionalProperties": false
+            }
+        },
+
     }
 
 }

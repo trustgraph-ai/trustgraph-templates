@@ -131,6 +131,8 @@ local object_part = {
         "text-completion": request_response("text-completion:{class}"),
         "objects-store": flow("objects-store:{id}"),
         "objects": request_response("objects:{class}"),
+        "nlp-query": request_response("nlp-query:{class}"),
+        "structured-query": request_response("structured-query:{class}"),
     },
     "flow" +: {
         "kg-extract-objects:{id}": {
@@ -148,6 +150,14 @@ local object_part = {
         "objects-query:{class}": {
             request: request("objects:{class}"),
             response: response("objects:{class}"),
+        },
+        "nlp-query:{class}": {
+            request: request("nlp-query:{class}"),
+            response: response("nlp-query:{class}"),
+        },
+        "structured-query:{class}": {
+            request: request("structured-query:{class}"),
+            response: response("structured-query:{class}"),
         },
         "embeddings:{class}": {
             request: request("embeddings:{class}"),
