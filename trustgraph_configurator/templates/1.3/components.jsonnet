@@ -55,15 +55,18 @@
    "mistral-ocr": import "components/mistral-ocr.jsonnet",
 
    // Vector stores
-   "vector-store-milvus": import "components/milvus.jsonnet",
-   "vector-store-qdrant": import "components/qdrant.jsonnet",
-   "vector-store-pinecone": import "components/pinecone.jsonnet",
+   "vector-store-milvus": import "components/vector-store-milvus.jsonnet",
+   "vector-store-qdrant": import "components/vector-store-qdrant.jsonnet",
+   "vector-store-pinecone": import "components/vector-store-pinecone.jsonnet",
 
    // Triples stores
-   "triple-store-cassandra": import "components/cassandra.jsonnet",
-   "triple-store-neo4j": import "components/neo4j.jsonnet",
-   "triple-store-falkordb": import "components/falkordb.jsonnet",
-   "triple-store-memgraph": import "components/memgraph.jsonnet",
+   "triple-store-cassandra": import "components/triple-store-cassandra.jsonnet",
+   "triple-store-neo4j": import "components/triple-store-neo4j.jsonnet",
+   "triple-store-falkordb": import "components/triple-store-falkordb.jsonnet",
+   "triple-store-memgraph": import "components/triple-store-memgraph.jsonnet",
+
+   // Object stores
+   "object-store-cassandra": import "components/object-store-cassandra.jsonnet",
 
    // Observability support
    "grafana": import "components/grafana.jsonnet",
