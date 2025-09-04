@@ -154,10 +154,16 @@ local object_part = {
         "nlp-query:{class}": {
             request: request("nlp-query:{class}"),
             response: response("nlp-query:{class}"),
+            "prompt-request": request("prompt-rag:{class}"),
+            "prompt-response": response("prompt-rag:{class}"),
         },
         "structured-query:{class}": {
             request: request("structured-query:{class}"),
             response: response("structured-query:{class}"),
+            "nlp-query-request": request("nlp-query:{class}"),
+            "nlp-query-response": response("nlp-query:{class}"),
+            "objects-query-request": request("objects:{class}"),
+            "objects-query-response": response("objects:{class}"),
         },
         "embeddings:{class}": {
             request: request("embeddings:{class}"),
@@ -285,6 +291,8 @@ local agent_part = {
             "mcp-tool-response": response("mcp-tool:{class}"),
             "graph-rag-request": request("graph-rag:{class}"),
             "graph-rag-response": response("graph-rag:{class}"),
+            "structured-query-request": request("structured-query:{class}"),
+            "structured-query-response": response("structured-query:{class}"),
         },
     },
     "class" +: {
