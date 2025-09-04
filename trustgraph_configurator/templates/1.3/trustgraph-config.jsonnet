@@ -127,10 +127,6 @@ local configuration = {
             "description": "Text completion service",
             "kind": "request-response",
         },
-        "text-completion": {
-            "description": "Text completion service",
-            "kind": "request-response",
-        },
         "objects-store": {
             "description": "Object store",
             "kind": "request-response",
