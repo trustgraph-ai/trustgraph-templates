@@ -127,6 +127,26 @@ local configuration = {
             "description": "Text completion service",
             "kind": "request-response",
         },
+        "text-completion": {
+            "description": "Text completion service",
+            "kind": "request-response",
+        },
+        "objects-store": {
+            "description": "Object store",
+            "kind": "request-response",
+        },
+        "objects": {
+            "description": "Object query service",
+            "kind": "request-response",
+        },
+        "nlp-query": {
+            "description": "NLP question to GraphQL service",
+            "kind": "request-response",
+        },
+        "structured-query": {
+            "description": "Structured query service",
+            "kind": "request-response",
+        },
     },
 
     configuration:: {
