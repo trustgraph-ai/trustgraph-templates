@@ -164,7 +164,25 @@
                     "relationships"
                 ]
             }
-        }
+        },
+
+        "schema-selection":: {
+            "prompt": importstr "schema-selection.txt",
+            "response-type": "json",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "An array of schema names that are relevant to answering the given question"
+            }
+        },
+
+        "graphql-generation":: {
+            "prompt": importstr "graphql-generation.txt",
+            "response-type": "text"
+        },
+
     }
 
 }
