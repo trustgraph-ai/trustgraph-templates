@@ -364,7 +364,7 @@ local kgcore_part = {
       graphrag_part + agent_part + load_part + object_part,
 
     "object-extraction": {
-        description: "object extraction only",
+        description: "Object extraction only",
         tags: ["knowledge-extraction", "object-extraction"],
     } +
       agent_part + load_part + object_part,
