@@ -205,6 +205,11 @@
             }
         },
 
+        "diagnose-structured-data":: {
+            "prompt": importstr "diagnose-structured-data.txt",
+            "response-type": "json",
+        },
+
     }
 
 }
