@@ -32,7 +32,7 @@ falkordb + {
 
             local service =
                 engine.internalService(containerSet)
-                .with_port(8080, 8080, "metrics");
+                .with_port(8000, 8000, "metrics");
 
             engine.resources([
                 containerSet,
@@ -66,7 +66,7 @@ falkordb + {
 
             local service =
                 engine.internalService(containerSet)
-                .with_port(8080, 8080, "metrics");
+                .with_port(8000, 8000, "metrics");
 
             engine.resources([
                 containerSet,
