@@ -43,7 +43,7 @@ local prompts = import "prompts/slm.jsonnet";
 
             local serviceRag =
                 engine.internalService(containerSetRag)
-                .with_port(8080, 8080, "metrics");
+                .with_port(8000, 8000, "metrics");
 
             engine.resources([
                 envSecrets,
