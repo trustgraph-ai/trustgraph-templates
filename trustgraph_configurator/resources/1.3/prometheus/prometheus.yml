@@ -14,6 +14,8 @@ scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries
   # scraped from this config.
 
+  # TrustGraph services
+
   - job_name: 'pdf-decoder'
     scrape_interval: 5s
     static_configs:
@@ -26,12 +28,6 @@ scrape_configs:
       - targets:
         - 'chunker:8000'
 
-  - job_name: 'vectorize'
-    scrape_interval: 5s
-    static_configs:
-      - targets:
-        - 'vectorize:8000'
-
   - job_name: 'embeddings'
     scrape_interval: 5s
     static_configs:
@@ -43,12 +39,6 @@ scrape_configs:
     static_configs:
       - targets:
         - 'kg-extract-definitions:8000'
-
-  - job_name: 'kg-extract-topics'
-    scrape_interval: 5s
-    static_configs:
-      - targets:
-        - 'kg-extract-topics:8000'
 
   - job_name: 'kg-extract-relationships'
     scrape_interval: 5s
@@ -140,6 +130,103 @@ scrape_configs:
       - targets:
         - 'config-svc:8000'
 
+  - job_name: 'agent-manager'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'agent-manager:8000'
+
+  - job_name: 'api-gateway'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'api-gateway:8000'
+
+  - job_name: 'document-embeddings'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'document-embeddings:8000'
+
+  - job_name: 'document-rag'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'document-rag:8000'
+
+  - job_name: 'graph-embeddings'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'graph-embeddings:8000'
+
+  - job_name: 'kg-extract-agent'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'kg-extract-agent:8000'
+
+  - job_name: 'kg-extract-objects'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'kg-extract-objects:8000'
+
+  - job_name: 'librarian'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'librarian:8000'
+
+  - job_name: 'mcp-server'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'mcp-server:8000'
+
+  - job_name: 'mcp-tool'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'mcp-tool:8000'
+
+  - job_name: 'nlp-query'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'nlp-query:8000'
+
+  - job_name: 'query-doc-embeddings'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'query-doc-embeddings:8000'
+
+  - job_name: 'query-objects'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'query-objects:8000'
+
+  - job_name: 'store-doc-embeddings'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'store-doc-embeddings:8000'
+
+  - job_name: 'store-objects'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'store-objects:8000'
+
+  - job_name: 'structured-query'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'structured-query:8000'
+
+  # Non-Trustgraph services
   - job_name: 'pulsar'
     scrape_interval: 5s
     static_configs:
