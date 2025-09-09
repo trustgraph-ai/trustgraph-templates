@@ -205,7 +205,7 @@ class Packager:
                 print(compose_file)
             elif self.platform in set([
                     "minikube-k8s", "gcp-k8s", "aks-k8s", "eks-k8s",
-                    "scw-k8s",
+                    "scw-k8s", "ovh-k8s"
             ]):
                 processed = self.generate_resources(config)
                 y = yaml.dump(processed)
