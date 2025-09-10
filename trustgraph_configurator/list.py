@@ -42,7 +42,7 @@ def list():
     print("Templates:")
     print(tabulate.tabulate(
         templates, tablefmt="pretty",
-        headers=["name", "description"],
+        headers=["tpl", "description", "status", "version"],
         maxcolwidths=[None, 60],
         stralign="left"
     ))
