@@ -1,18 +1,6 @@
 {
     "templates": [
 	{
-	    "name": "0.22",
-	    "description": "Dynamic configuration of prompt and agent tools without a system restart",
-	    "version": "0.22.11",
-	    "status": "stable"
-	},
-	{
-	    "name": "1.0",
-	    "description": "Production release of Flow API, Librarian and dynamic flow processing.  For best results stay with cassandra and qdrant stores.",
-	    "version": "1.0.22",
-	    "status": "stable"
-	},
-	{
 	    "name": "1.1",
 	    "description": "MCP support and agent functionality upgrades.",
 	    "version": "1.1.10",
@@ -26,8 +14,14 @@
 	},
 	{
 	    "name": "1.3",
-	    "description": "Further agent support and data extraction",
+	    "description": "Further agent support and structured data extraction",
 	    "version": "1.3.18",
+	    "status": "pre-release"
+	},
+	{
+	    "name": "1.4",
+	    "description": "Roadmap TBD, a few backlog items",
+	    "version": "1.4.0",
 	    "status": "pre-release"
 	}
     ],
