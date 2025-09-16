@@ -133,6 +133,7 @@ local object_part = {
         "objects": request_response("objects:{class}"),
         "nlp-query": request_response("nlp-query:{class}"),
         "structured-query": request_response("structured-query:{class}"),
+        "structured-diag": request_response("structured-diag:{class}"),
     },
     "flow" +: {
         "kg-extract-objects:{id}": {
@@ -164,6 +165,12 @@ local object_part = {
             "nlp-query-response": response("nlp-query:{class}"),
             "objects-query-request": request("objects:{class}"),
             "objects-query-response": response("objects:{class}"),
+        },
+        "structured-diag:{class}": {
+            request: request("structured-diag:{class}"),
+            response: response("structured-diag:{class}"),
+            "prompt-request": request("prompt:{class}"),
+            "prompt-response": response("prompt:{class}"),
         },
         "embeddings:{class}": {
             request: request("embeddings:{class}"),
