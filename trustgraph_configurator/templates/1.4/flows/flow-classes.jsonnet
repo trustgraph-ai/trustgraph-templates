@@ -351,6 +351,16 @@ local kgcore_part = {
 
 {
 
+    "everything": {
+        description: "GraphRAG, DocumentRAG, structured data + knowledge cores",
+        tags: [
+            "document-rag", "graph-rag", "knowledge-extraction",
+            "structured-data", "kgcore"
+        ],
+    } +
+      graphrag_part + documentrag_part + agent_part + load_part +
+      kg_base_part + object_part,
+
     "document-rag+graph-rag": {
         description: "Supports GraphRAG and document RAG, no core creation",
         tags: ["document-rag", "graph-rag", "knowledge-extraction"],
@@ -382,15 +392,15 @@ local kgcore_part = {
     } +
       graphrag_part + agent_part + load_part + agent_extract_part,
 
-    "graph-rag+object-extract": {
-        description: "GraphRAG + object extract",
-        tags: ["graph-rag", "knowledge-extraction", "object-extract"],
+    "graph-rag+structured-data": {
+        description: "GraphRAG + structured data",
+        tags: ["graph-rag", "knowledge-extraction", "structured-data"],
     } +
       graphrag_part + agent_part + load_part + object_part,
 
-    "object-extraction": {
-        description: "Object extraction only",
-        tags: ["knowledge-extraction", "object-extraction"],
+    "structured-data": {
+        description: "Structured data only",
+        tags: ["knowledge-extraction", "structured-data"],
     } +
       agent_part + load_part + object_part,
 
