@@ -133,6 +133,7 @@ local object_part = {
         "objects": request_response("objects:{class}"),
         "nlp-query": request_response("nlp-query:{class}"),
         "structured-query": request_response("structured-query:{class}"),
+        "structured-diag": request_response("structured-diag:{class}"),
     },
     "flow" +: {
         "kg-extract-objects:{id}": {
@@ -164,6 +165,12 @@ local object_part = {
             "nlp-query-response": response("nlp-query:{class}"),
             "objects-query-request": request("objects:{class}"),
             "objects-query-response": response("objects:{class}"),
+        },
+        "structured-diag:{class}": {
+            request: request("structured-diag:{class}"),
+            response: response("structured-diag:{class}"),
+            "prompt-request": request("prompt:{class}"),
+            "prompt-response": response("prompt:{class}"),
         },
         "embeddings:{class}": {
             request: request("embeddings:{class}"),
@@ -344,6 +351,16 @@ local kgcore_part = {
 
 {
 
+    "everything": {
+        description: "GraphRAG, DocumentRAG, structured data + knowledge cores",
+        tags: [
+            "document-rag", "graph-rag", "knowledge-extraction",
+            "structured-data", "kgcore"
+        ],
+    } +
+      graphrag_part + documentrag_part + agent_part + load_part +
+      kg_base_part + object_part,
+
     "document-rag+graph-rag": {
         description: "Supports GraphRAG and document RAG, no core creation",
         tags: ["document-rag", "graph-rag", "knowledge-extraction"],
@@ -375,15 +392,15 @@ local kgcore_part = {
     } +
       graphrag_part + agent_part + load_part + agent_extract_part,
 
-    "graph-rag+object-extract": {
-        description: "GraphRAG + object extract",
-        tags: ["graph-rag", "knowledge-extraction", "object-extract"],
+    "graph-rag+structured-data": {
+        description: "GraphRAG + structured data",
+        tags: ["graph-rag", "knowledge-extraction", "structured-data"],
     } +
       graphrag_part + agent_part + load_part + object_part,
 
-    "object-extraction": {
-        description: "Object extraction only",
-        tags: ["knowledge-extraction", "object-extraction"],
+    "structured-data": {
+        description: "Structured data only",
+        tags: ["knowledge-extraction", "structured-data"],
     } +
       agent_part + load_part + object_part,
 

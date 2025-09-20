@@ -22,8 +22,8 @@ cassandra + {
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits("0.5", "256M")
+                    .with_reservations("0.1", "256M");
 
             local containerSet = engine.containers(
                 "store-triples", [ container ]

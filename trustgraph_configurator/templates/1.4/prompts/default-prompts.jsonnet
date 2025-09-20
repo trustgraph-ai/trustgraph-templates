@@ -210,6 +210,19 @@
             "response-type": "json",
         },
 
+        "diagnose-xml":: {
+            "prompt": importstr "diagnose-xml.txt",
+            "response-type": "json",
+        },
+        "diagnose-json":: {
+            "prompt": importstr "diagnose-json.txt",
+            "response-type": "json",
+        },
+        "diagnose-csv":: {
+            "prompt": importstr "diagnose-csv.txt",
+            "response-type": "json",
+        },
+
     }
 
 }
