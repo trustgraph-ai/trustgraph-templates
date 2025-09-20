@@ -203,7 +203,7 @@ local configuration = {
             },
 
         local default_flow_id = "default",
-        local default_flow_class = "document-rag+graph-rag",
+        local default_flow_class = "everything",
 
         // Temporary hackery
         local flow_array =
