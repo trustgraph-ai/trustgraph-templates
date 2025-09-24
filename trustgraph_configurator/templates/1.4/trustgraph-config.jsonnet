@@ -65,6 +65,11 @@ local configuration = {
 
     "flow-classes":: flow_classes,
 
+    default_llm_model:: "gemma2:9b",
+    flow_init_parameters:: {
+        "model": $["default_llm_model"],
+    },
+
     // This defines standard 'interfaces'.  Different flow classes can
     // support different interfaces.  Interfaces are 'external' endpoints
     // into a processing chain.

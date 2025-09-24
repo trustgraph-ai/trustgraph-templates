@@ -94,6 +94,8 @@ local graphrag_part = {
 local kg_base_part = {
     "interfaces" +: {
     },
+    "parameters" +: {
+    },
     "flow" +: {
         "kg-extract-definitions:{id}": {
             input: flow("chunk-load:{id}"),
@@ -115,6 +117,8 @@ local kg_base_part = {
 
 local agent_extract_part = {
     "interfaces" +: {
+    },
+    "parameters" +: {
     },
     "flow" +: {
         "kg-extract-agent:{id}": {
@@ -300,6 +304,8 @@ local agent_part = {
         "agent": request_response("agent:{id}"),
         "mcp-tool": request_response("mcp-tool:{class}"),
     },
+    "parameters" +: {
+    },
     "flow" +: {
         "agent-manager:{id}": {
             request: request("agent:{id}"),
@@ -333,6 +339,8 @@ local load_part = {
         "text-load": flow("text-document-load:{id}"),
         "embeddings": request_response("embeddings:{class}"),
     },
+    "parameters" +: {
+    },
     "flow" +: {
         "pdf-decoder:{id}": {
             input: flow("document-load:{id}"),
@@ -353,6 +361,8 @@ local load_part = {
 
 local kgcore_part = {
     "interfaces" +: {
+    },
+    "parameters" +: {
     },
     "flow" +: {
         "kg-store:{id}": {
