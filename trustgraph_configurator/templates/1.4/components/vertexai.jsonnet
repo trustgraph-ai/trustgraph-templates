@@ -2,7 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
-local vertexai_models = import "llm-models/vertexai.jsonnet";
+local models = import "llm-models/vertexai.jsonnet";
 
 {
 
@@ -17,7 +17,7 @@ local vertexai_models = import "llm-models/vertexai.jsonnet";
     "vertexai-max-output-tokens":: 4096,
     "vertexai-temperature":: 0.0,
 
-    "llm-models" +:: vertexai_models,
+    "llm-models" +:: models,
 
     "text-completion" +: {
     
