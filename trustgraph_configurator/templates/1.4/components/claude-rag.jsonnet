@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/claude.jsonnet";
 
 {
 
@@ -13,6 +14,8 @@ local prompts = import "prompts/mixtral.jsonnet";
     "claude-rag-model":: "claude-3-sonnet-20240229",
     "claude-rag-max-output-tokens":: 4096,
     "claude-rag-temperature":: 0.0,
+
+    "llm-models" +:: models,
 
     "text-completion-rag" +: {
     
