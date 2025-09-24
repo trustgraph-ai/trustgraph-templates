@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/openai.jsonnet";
 
 {
 
@@ -13,6 +14,8 @@ local prompts = import "prompts/mixtral.jsonnet";
     "openai-rag-max-output-tokens":: 4096,
     "openai-rag-temperature":: 0.0,
     "openai-rag-model":: "GPT-3.5-Turbo",
+
+    "llm-models" +:: models,
 
     "text-completion-rag" +: {
     

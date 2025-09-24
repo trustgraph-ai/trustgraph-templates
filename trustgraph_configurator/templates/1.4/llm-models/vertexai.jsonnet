@@ -19,6 +19,6 @@
             description: "Gemini 2.5 Flash-Lite"
         },
     ],
-    "required": false
+    "required": true
 }
 
