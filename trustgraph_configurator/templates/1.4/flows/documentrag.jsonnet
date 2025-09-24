@@ -25,7 +25,8 @@ local request_response = helpers.request_response;
     },
     // Parameters that can be configured for this flow
     "parameters": {
-        "model": "llm-model",  // LLM model selection for RAG responses
+        "llm-model": "llm-model",  // LLM model selection for RAG responses
+        "llm-rag-model": "llm-model",  // LLM model for RAG operations
     },
     // Flow-level processors for document embedding and storage
     "flow": {
@@ -80,12 +81,12 @@ local request_response = helpers.request_response;
         "text-completion:{class}": {
             request: request("text-completion:{class}"),
             response: response("text-completion:{class}"),
-            model: "{model}",
+            model: "{llm-model}",
         },
         "text-completion-rag:{class}": {
             request: request("text-completion-rag:{class}"),
             response: response("text-completion-rag:{class}"),
-            model: "{model}",
+            model: "{llm-rag-model}",
         },
         "metering:{class}": {
             input: response("text-completion:{class}"),
