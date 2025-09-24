@@ -273,6 +273,7 @@ local configuration = {
                     "description": "Default processing flow",
                     "class-name": default_flow_class,
                     "interfaces": default_flow_interfaces,
+                    "parameters": $["flow_init_parameters"],
                 },
             },
             "flows-active": flows_active,
