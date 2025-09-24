@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/googleaistudio.jsonnet";
 
 {
 
@@ -13,6 +14,8 @@ local prompts = import "prompts/mixtral.jsonnet";
     "googleaistudio-rag-max-output-tokens":: 4096,
     "googleaistudio-rag-temperature":: 0.0,
     "googleaistudio-rag-model":: "gemini-1.5-flash-002",
+
+    "llm-models" +:: models,
 
     "text-completion-rag" +: {
     

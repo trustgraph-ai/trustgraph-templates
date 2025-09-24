@@ -1,5 +1,5 @@
-// VertexAI LLM Model Definitions
-// Defines available models and their configurations for Google's VertexAI platform
+// Google AI Studio LLM Model Definitions
+// Defines available models and their configurations for Google AI Studio
 
 {
     "type": "string",
