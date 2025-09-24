@@ -1,4 +1,4 @@
-// Azure LLM Model Definitions
+// LlamaFile LLM Model Definitions
 // Model input is just text
 
 {

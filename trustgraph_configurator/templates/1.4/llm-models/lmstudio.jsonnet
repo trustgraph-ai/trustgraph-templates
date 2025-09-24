@@ -1,5 +1,5 @@
-// Ollama LLM Model Definitions
-// Defines available models and their configurations for Ollama
+// LMStudio LLM Model Definitions
+// Defines available models and their configurations for LMStudio
 
 {
     "type": "string",

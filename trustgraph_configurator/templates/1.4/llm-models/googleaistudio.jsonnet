@@ -65,4 +65,3 @@
     ],
     "required": true
 }
-
