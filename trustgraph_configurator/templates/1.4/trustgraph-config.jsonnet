@@ -29,10 +29,12 @@ local configuration = {
     // Flow classes reference
     "flow-classes":: flow_classes,
 
+    // LLM model parameters
+    "llm-models" +:: {},
+
     // Default model and flow parameters
-    default_llm_model:: "gemma2:9b",
     flow_init_parameters:: {
-        "model": $["default_llm_model"],
+        "model": $["llm-models"].default,
     },
 
     // Interface descriptions for external endpoints
@@ -40,26 +42,7 @@ local configuration = {
 
     // Parameter type definitions
     "parameter-types":: {
-        "llm-model": {
-            "type": "string",
-            "description": "LLM model to use",
-            "default": "gpt-4",
-            "enum": [
-                {
-                    id: "gemini-2.5-pro",
-                    description: "Gemini 2.5 Pro"
-                },
-                {
-                    id: "gemini-2.5-flash",
-                    description: "Gemini Flash"
-                },
-                {
-                    id: "gemini-2.5-flash-lite",
-                    description: "Gemini 2.5 Flash-Lite"
-                },
-            ],
-            "required": false
-        },
+        "llm-model": $["llm-models"],
     },
 
     // Token costs
