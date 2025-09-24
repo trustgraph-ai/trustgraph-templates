@@ -154,6 +154,18 @@ local configuration = {
 
         create:: function(engine) {},
 
+        // Helper function to apply all parameter replacements dynamically
+        local apply_parameter_replacements = function(value, params)
+            if std.isString(value) then
+                std.foldl(
+                    function(acc, param)
+                        std.strReplace(acc, "{" + param.key + "}", param.value),
+                    std.objectKeysValuesAll(params),
+                    value
+                )
+            else
+                value,
+
         local class_processors = function(classes, name)
             [
                 [
@@ -161,7 +173,10 @@ local configuration = {
                     local parts = std.splitLimit(key, ":", 2);
                     parts,
                     {
-                        [q.key]: std.strReplace(q.value, "{class}", name)
+                        // Apply {class} replacement first, then parameter replacements (values only)
+                        [q.key]:
+                            local classReplaced = std.strReplace(q.value, "{class}", name);
+                            apply_parameter_replacements(classReplaced, $["flow_init_parameters"])
                         for q in std.objectKeysValuesAll(p.value)
                     }
                 ]
@@ -178,10 +193,11 @@ local configuration = {
                     local parts = std.splitLimit(key, ":", 2);
                     parts,
                     {
-                        [q.key]: std.strReplace(
-                            std.strReplace(q.value, "{class}", name),
-                            "{id}", id
-                        )
+                        // Apply {class} and {id} replacements first, then parameter replacements (values only)
+                        [q.key]:
+                            local classReplaced = std.strReplace(q.value, "{class}", name);
+                            local idReplaced = std.strReplace(classReplaced, "{id}", id);
+                            apply_parameter_replacements(idReplaced, $["flow_init_parameters"])
                         for q in std.objectKeysValuesAll(p.value)
                     }
                 ]
@@ -195,13 +211,15 @@ local configuration = {
                 if std.isString(p.value) then
                     local i = std.strReplace(p.value, "{class}", name);
                     local i2 = std.strReplace(i, "{id}", id);
-                    i2
+                    // Apply parameter replacements to interface values
+                    apply_parameter_replacements(i2, $["flow_init_parameters"])
                 else
                     {
                         [q.key]:
                             local i = std.strReplace(q.value, "{class}", name);
                             local i2 = std.strReplace(i, "{id}", id);
-                            i2
+                            // Apply parameter replacements to nested interface values
+                            apply_parameter_replacements(i2, $["flow_init_parameters"])
                         for q in std.objectKeysValuesAll(p.value)
                     }
                 for p in std.objectKeysValuesAll(intf)
