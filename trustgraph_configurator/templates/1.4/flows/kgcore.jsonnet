@@ -8,15 +8,15 @@ local flow = helpers.flow;
 
 {
     // No external interfaces - internal storage service
-    "interfaces": {
+    "interfaces" +: {
     },
 
     // No configurable parameters for core storage
-    "parameters": {
+    "parameters" +: {
     },
 
     // Flow-level processors for knowledge graph storage
-    "flow": {
+    "flow" +: {
         // Knowledge graph store consolidates extracted knowledge
         // Takes processed triples and embeddings and stores them permanently
         "kg-store:{id}": {
@@ -26,6 +26,6 @@ local flow = helpers.flow;
     },
 
     // No class-level processors needed
-    "class": {
+    "class" +: {
     }
 }

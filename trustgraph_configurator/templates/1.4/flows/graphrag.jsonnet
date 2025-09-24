@@ -10,7 +10,7 @@ local request_response = helpers.request_response;
 
 {
     // External interfaces exposed by the GraphRAG flow
-    "interfaces": {
+    "interfaces" +: {
         // Data ingestion interfaces for graph construction
         "entity-contexts-load": flow("entity-contexts-load:{id}"),      // Entity context data stream
         "triples-store": flow("triples-store:{id}"),                    // RDF triples storage stream
@@ -24,15 +24,15 @@ local request_response = helpers.request_response;
         // Supporting services
         "embeddings": request_response("embeddings:{class}"),           // General embedding service
         "prompt": request_response("prompt:{class}"),                   // Prompt processing service
-        "text-completion": request_response("text-completion:{class}"),  // LLM text completion
+        "text-completion": request_response("text-completion:{id}"),  // LLM text completion
     },
     // Parameters that can be configured for this flow
-    "parameters": {
+    "parameters" +: {
         "llm-model": "llm-model",  // LLM model selection parameter
         "llm-rag-model": "llm-model",  // LLM model for RAG operations
     },
     // Flow-level processors - handle data streams for a specific flow instance
-    "flow": {
+    "flow" +: {
         "graph-embeddings:{id}": {
             input: flow("entity-contexts-load:{id}"),
             output: flow("graph-embeddings-store:{id}"),
@@ -45,9 +45,19 @@ local request_response = helpers.request_response;
         "ge-write:{id}": {
             input: flow("graph-embeddings-store:{id}"),
         },
+        "text-completion:{id}": {
+            request: request("text-completion:{id}"),
+            response: response("text-completion:{id}"),
+            model: "{llm-model}",
+        },
+        "text-completion-rag:{id}": {
+            request: request("text-completion-rag:{id}"),
+            response: response("text-completion-rag:{id}"),
+            model: "{llm-rag-model}",
+        },
     },
     // Class-level processors - shared across all flow instances of this class
-    "class": {
+    "class" +: {
         "embeddings:{class}": {
             request: request("embeddings:{class}"),
             response: response("embeddings:{class}"),
@@ -75,30 +85,20 @@ local request_response = helpers.request_response;
         "prompt:{class}": {
             request: request("prompt:{class}"),
             response: response("prompt:{class}"),
-            "text-completion-request": request("text-completion:{class}"),
-            "text-completion-response": response("text-completion:{class}"),
+            "text-completion-request": request("text-completion:{id}"),
+            "text-completion-response": response("text-completion:{id}"),
         },
         "prompt-rag:{class}": {
             request: request("prompt-rag:{class}"),
             response: response("prompt-rag:{class}"),
-            "text-completion-request": request("text-completion-rag:{class}"),
-            "text-completion-response": response("text-completion-rag:{class}"),
-        },
-        "text-completion:{class}": {
-            request: request("text-completion:{class}"),
-            response: response("text-completion:{class}"),
-            model: "{llm-model}",
-        },
-        "text-completion-rag:{class}": {
-            request: request("text-completion-rag:{class}"),
-            response: response("text-completion-rag:{class}"),
-            model: "{llm-rag-model}",
+            "text-completion-request": request("text-completion-rag:{id}"),
+            "text-completion-response": response("text-completion-rag:{id}"),
         },
         "metering:{class}": {
-            input: response("text-completion:{class}"),
+            input: response("text-completion:{id}"),
         },
         "metering-rag:{class}": {
-            input: response("text-completion-rag:{class}"),
+            input: response("text-completion-rag:{id}"),
         },
     }
 }

@@ -10,16 +10,16 @@ local request_response = helpers.request_response;
 
 {
     // External interfaces for document loading
-    "interfaces": {
+    "interfaces" +: {
         "document-load": flow("document-load:{id}"),       // Raw document input stream
         "text-load": flow("text-document-load:{id}"),     // Text document stream
         "embeddings": request_response("embeddings:{class}"), // Embedding service for chunks
     },
     // No configurable parameters for document loading
-    "parameters": {
+    "parameters" +: {
     },
     // Flow-level processors for document preprocessing
-    "flow": {
+    "flow" +: {
         // PDF decoder converts PDF documents to text
         "pdf-decoder:{id}": {
             input: flow("document-load:{id}"),         // Raw PDF input
@@ -33,7 +33,7 @@ local request_response = helpers.request_response;
         },
     },
     // Class-level processors for document loading services
-    "class": {
+    "class" +: {
         // Embedding service for converting text chunks to vectors
         "embeddings:{class}": {
             request: request("embeddings:{class}"),   // Embedding requests

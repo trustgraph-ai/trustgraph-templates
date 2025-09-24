@@ -9,15 +9,15 @@ local response = helpers.response;
 
 {
     // No external interfaces - internal agent extraction service
-    "interfaces": {
+    "interfaces" +: {
     },
 
     // No configurable parameters for agent extraction
-    "parameters": {
+    "parameters" +: {
     },
 
     // Flow-level processors for agent-based extraction
-    "flow": {
+    "flow" +: {
         // Agent-based knowledge extraction processor
         // Uses AI agents with tools to extract structured knowledge
         "kg-extract-agent:{id}": {
@@ -30,6 +30,6 @@ local response = helpers.response;
     },
 
     // No class-level processors needed
-    "class": {
+    "class" +: {
     }
 }
