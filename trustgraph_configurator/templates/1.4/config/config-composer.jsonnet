@@ -41,47 +41,53 @@ local interface_builder = import "interface-builder.jsonnet";
             flow_init_parameters
         );
 
-        // Compose and return the final configuration object
+        // Return object with nested configuration (for backwards compatibility)
         {
-            // Prompts configuration
-            prompt: {
-                "system": config_spec.prompts["system-template"],
-                "template-index": std.objectFieldsAll(config_spec.prompts.templates),
-            } + {
-                ["template." + template.key]: template.value
-                for template in std.objectKeysValuesAll(config_spec.prompts.templates)
-            },
+            // Create function (for backwards compatibility)
+            create: function(engine) {},
 
-            // Tools configuration
-            tool: {
-                [tool.id]: tool
-                for tool in config_spec.tools
-            },
-
-            // MCP configuration
-            mcp: config_spec.mcp,
-
-            // Flow classes reference
-            "flow-classes": flow_classes,
-
-            // Interface descriptions
-            "interface-descriptions": config_spec.interface_descriptions,
-
-            // Flow instances
-            "flows": {
-                [default_flow_id]: {
-                    "description": "Default processing flow",
-                    "class-name": default_flow_class,
-                    "interfaces": default_flow_interfaces,
-                    "parameters": flow_init_parameters,
+            // The actual configuration object
+            configuration: {
+                // Prompts configuration
+                prompt: {
+                    "system": config_spec.prompts["system-template"],
+                    "template-index": std.objectFieldsAll(config_spec.prompts.templates),
+                } + {
+                    ["template." + template.key]: template.value
+                    for template in std.objectKeysValuesAll(config_spec.prompts.templates)
                 },
+
+                // Tools configuration
+                tool: {
+                    [tool.id]: tool
+                    for tool in config_spec.tools
+                },
+
+                // MCP configuration
+                mcp: config_spec.mcp,
+
+                // Flow classes reference
+                "flow-classes": flow_classes,
+
+                // Interface descriptions
+                "interface-descriptions": config_spec.interface_descriptions,
+
+                // Flow instances
+                "flows": {
+                    [default_flow_id]: {
+                        "description": "Default processing flow",
+                        "class-name": default_flow_class,
+                        "interfaces": default_flow_interfaces,
+                        "parameters": flow_init_parameters,
+                    },
+                },
+
+                // Active flow processors
+                "flows-active": flows_active,
+
+                // Token costs and parameter types
+                "token-costs": config_spec.token_costs,
+                "parameter-types": config_spec.parameter_types,
             },
-
-            // Active flow processors
-            "flows-active": flows_active,
-
-            // Token costs and parameter types
-            "token-costs": config_spec.token_costs,
-            "parameter-types": config_spec.parameter_types,
         },
 }
