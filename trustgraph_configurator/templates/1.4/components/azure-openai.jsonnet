@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/azure-openai.jsonnet";
 
 {
 
@@ -14,9 +15,11 @@ local prompts = import "prompts/mixtral.jsonnet";
 // variable.  This isn't something that can just be specified dynamically,
 // it has to match what was provisioned in Azure.
 
-//    "azure-openai-model":: "GPT-3.5-Turbo",
+    "azure-openai-model":: "gpt-4o",
     "azure-openai-max-output-tokens":: 4192,
     "azure-openai-temperature":: 0.0,
+
+    "llm-models" +:: models,
 
     "text-completion" +: {
     
