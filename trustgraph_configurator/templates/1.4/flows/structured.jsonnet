@@ -1,3 +1,8 @@
+// Structured data processing module
+// Handles extraction and querying of structured data objects
+// Provides natural language to GraphQL query capabilities
+// Supports structured data storage and retrieval
+
 local helpers = import "helpers.jsonnet";
 local flow = helpers.flow;
 local request = helpers.request;
@@ -5,19 +10,27 @@ local response = helpers.response;
 local request_response = helpers.request_response;
 
 {
+    // External interfaces for structured data operations
     "interfaces": {
-        "embeddings": request_response("embeddings:{class}"),
-        "prompt": request_response("prompt:{class}"),
-        "text-completion": request_response("text-completion:{class}"),
-        "objects-store": flow("objects-store:{id}"),
-        "objects": request_response("objects:{class}"),
-        "nlp-query": request_response("nlp-query:{class}"),
-        "structured-query": request_response("structured-query:{class}"),
-        "structured-diag": request_response("structured-diag:{class}"),
+        // Supporting services
+        "embeddings": request_response("embeddings:{class}"),           // Embedding service
+        "prompt": request_response("prompt:{class}"),                   // Prompt processing
+        "text-completion": request_response("text-completion:{class}"),  // LLM completion
+
+        // Structured data storage and querying
+        "objects-store": flow("objects-store:{id}"),                    // Object storage stream
+        "objects": request_response("objects:{class}"),                 // Object query service
+
+        // Query interfaces
+        "nlp-query": request_response("nlp-query:{class}"),             // NLP to GraphQL translation
+        "structured-query": request_response("structured-query:{class}"), // Structured query execution
+        "structured-diag": request_response("structured-diag:{class}"),  // Query diagnostics
     },
+    // Parameters that can be configured for this flow
     "parameters": {
-        "model": "llm-model",
+        "model": "llm-model",  // LLM model selection for query processing
     },
+    // Flow-level processors for structured data extraction
     "flow": {
         "kg-extract-objects:{id}": {
             input: flow("chunk-load:{id}"),
@@ -30,6 +43,7 @@ local request_response = helpers.request_response;
             input: flow("objects-store:{id}"),
         },
     },
+    // Class-level processors for structured data operations
     "class": {
         "objects-query:{class}": {
             request: request("objects:{class}"),

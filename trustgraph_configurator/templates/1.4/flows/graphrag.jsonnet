@@ -1,3 +1,7 @@
+// GraphRAG flow configuration module
+// Implements graph-based retrieval augmented generation (GraphRAG) functionality
+// Handles knowledge graph storage, embeddings, and graph-based question answering
+
 local helpers = import "helpers.jsonnet";
 local flow = helpers.flow;
 local request = helpers.request;
@@ -5,20 +9,28 @@ local response = helpers.response;
 local request_response = helpers.request_response;
 
 {
+    // External interfaces exposed by the GraphRAG flow
     "interfaces": {
-        "entity-contexts-load": flow("entity-contexts-load:{id}"),
-        "triples-store": flow("triples-store:{id}"),
-        "graph-embeddings-store": flow("graph-embeddings-store:{id}"),
-        "graph-rag": request_response("graph-rag:{class}"),
-        "triples": request_response("triples:{class}"),
-        "graph-embeddings": request_response("graph-embeddings:{class}"),
-        "embeddings": request_response("embeddings:{class}"),
-        "prompt": request_response("prompt:{class}"),
-        "text-completion": request_response("text-completion:{class}"),
+        // Data ingestion interfaces for graph construction
+        "entity-contexts-load": flow("entity-contexts-load:{id}"),      // Entity context data stream
+        "triples-store": flow("triples-store:{id}"),                    // RDF triples storage stream
+        "graph-embeddings-store": flow("graph-embeddings-store:{id}"),  // Graph embedding storage
+
+        // Query interfaces for graph-based operations
+        "graph-rag": request_response("graph-rag:{class}"),             // Main GraphRAG query interface
+        "triples": request_response("triples:{class}"),                 // Triple store queries
+        "graph-embeddings": request_response("graph-embeddings:{class}"), // Graph embedding queries
+
+        // Supporting services
+        "embeddings": request_response("embeddings:{class}"),           // General embedding service
+        "prompt": request_response("prompt:{class}"),                   // Prompt processing service
+        "text-completion": request_response("text-completion:{class}"),  // LLM text completion
     },
+    // Parameters that can be configured for this flow
     "parameters": {
-        "model": "llm-model",
+        "model": "llm-model",  // LLM model selection parameter
     },
+    // Flow-level processors - handle data streams for a specific flow instance
     "flow": {
         "graph-embeddings:{id}": {
             input: flow("entity-contexts-load:{id}"),
@@ -33,6 +45,7 @@ local request_response = helpers.request_response;
             input: flow("graph-embeddings-store:{id}"),
         },
     },
+    // Class-level processors - shared across all flow instances of this class
     "class": {
         "embeddings:{class}": {
             request: request("embeddings:{class}"),

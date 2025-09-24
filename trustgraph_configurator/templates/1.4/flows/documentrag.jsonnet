@@ -1,3 +1,8 @@
+// Document RAG (Retrieval Augmented Generation) module
+// Implements document-based RAG using chunk embeddings
+// Provides semantic search and context-aware question answering
+// Supports MCP (Model Context Protocol) tool integration
+
 local helpers = import "helpers.jsonnet";
 local flow = helpers.flow;
 local request = helpers.request;
@@ -5,18 +10,24 @@ local response = helpers.response;
 local request_response = helpers.request_response;
 
 {
+    // External interfaces for document RAG functionality
     "interfaces": {
-        "document-embeddings-store": flow("document-embeddings-store:{id}"),
-        "document-rag": request_response("document-rag:{class}"),
-        "embeddings": request_response("embeddings:{class}"),
-        "document-embeddings": request_response("document-embeddings:{class}"),
-        "prompt": request_response("prompt:{class}"),
-        "mcp-tool": request_response("mcp-tool:{class}"),
-        "text-completion": request_response("text-completion:{class}"),
+        // Document embedding storage and retrieval
+        "document-embeddings-store": flow("document-embeddings-store:{id}"), // Embedding storage stream
+        "document-rag": request_response("document-rag:{class}"),            // Main document RAG interface
+        "document-embeddings": request_response("document-embeddings:{class}"), // Document embedding queries
+
+        // Supporting services
+        "embeddings": request_response("embeddings:{class}"),           // General embedding service
+        "prompt": request_response("prompt:{class}"),                   // Prompt processing
+        "mcp-tool": request_response("mcp-tool:{class}"),               // MCP tool integration
+        "text-completion": request_response("text-completion:{class}"),  // LLM text completion
     },
+    // Parameters that can be configured for this flow
     "parameters": {
-        "model": "llm-model",
+        "model": "llm-model",  // LLM model selection for RAG responses
     },
+    // Flow-level processors for document embedding and storage
     "flow": {
         "document-embeddings:{id}": {
             input: flow("chunk-load:{id}"),
@@ -28,6 +39,7 @@ local request_response = helpers.request_response;
             input: flow("document-embeddings-store:{id}"),
         },
     },
+    // Class-level processors for document RAG operations
     "class": {
         "embeddings:{class}": {
             request: request("embeddings:{class}"),
