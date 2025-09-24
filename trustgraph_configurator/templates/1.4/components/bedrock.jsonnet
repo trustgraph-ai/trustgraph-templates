@@ -14,7 +14,6 @@ local models = import "llm-models/bedrock.jsonnet";
 
     "bedrock-max-output-tokens":: 4096,
     "bedrock-temperature":: 0.0,
-    "bedrock-model":: "mistral.mixtral-8x7b-instruct-v0:1",
 
     "llm-models" +:: models,
 
@@ -38,8 +37,6 @@ local models = import "llm-models/bedrock.jsonnet";
                         std.toString($["bedrock-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["bedrock-temperature"],
-                        "-m",
-                        $["bedrock-model"],
               	    ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")
@@ -83,8 +80,6 @@ local models = import "llm-models/bedrock.jsonnet";
                         std.toString($["bedrock-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["bedrock-temperature"],
-                        "-m",
-                        $["bedrock-model"],
               	    ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

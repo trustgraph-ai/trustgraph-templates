@@ -13,7 +13,6 @@ local models = import "llm-models/lmstudio.jsonnet";
 
     "lmstudio-max-output-tokens":: 4096,
     "lmstudio-temperature":: 0.0,
-    "lmstudio-model":: "llama3.1:70b",
 
     "llm-models" +:: models,
 
@@ -35,8 +34,6 @@ local models = import "llm-models/lmstudio.jsonnet";
                         std.toString($["lmstudio-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["lmstudio-temperature"],
-                        "-m",
-                        $["lmstudio-model"],
                         "--log-level",
                         $["log-level"],
                     ])
@@ -80,8 +77,6 @@ local models = import "llm-models/lmstudio.jsonnet";
                         std.toString($["lmstudio-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["lmstudio-temperature"],
-                        "-m",
-                        $["lmstudio-model"],
                         "--log-level",
                         $["log-level"],
                     ])

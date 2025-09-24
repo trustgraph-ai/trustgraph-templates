@@ -13,7 +13,6 @@ local models = import "llm-models/mistral.jsonnet";
 
     "mistral-max-output-tokens":: 4096,
     "mistral-temperature":: 0.0,
-    "mistral-model":: "ministral-8b-latest",
 
     "llm-models" +:: models,
 
@@ -35,8 +34,6 @@ local models = import "llm-models/mistral.jsonnet";
                         std.toString($["mistral-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["mistral-temperature"],
-                        "-m",
-                        $["mistral-model"],
                         "--log-level",
                         $["log-level"],
                     ])
@@ -80,8 +77,6 @@ local models = import "llm-models/mistral.jsonnet";
                         std.toString($["mistral-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["mistral-temperature"],
-                        "-m",
-                        $["mistral-model"],
                         "--log-level",
                         $["log-level"],
                     ])

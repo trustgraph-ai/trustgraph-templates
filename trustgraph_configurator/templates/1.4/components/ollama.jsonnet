@@ -11,8 +11,6 @@ local models = import "llm-models/ollama.jsonnet";
             ["ollama-" + key]:: value,
         },
 
-    "ollama-model":: "llama3.1:70b",
-
     "llm-models" +:: models,
 
     "text-completion" +: {
@@ -31,8 +29,6 @@ local models = import "llm-models/ollama.jsonnet";
                         url.pulsar,
                         "--concurrency",
                         std.toString($["text-completion-concurrency"]),
-                        "-m",
-                        $["ollama-model"],
                         "--log-level",
                         $["log-level"],
                     ])
@@ -74,8 +70,6 @@ local models = import "llm-models/ollama.jsonnet";
                         "text-completion-rag",
                         "--concurrency",
                         std.toString($["text-completion-rag-concurrency"]),
-                        "-m",
-                        $["ollama-model"],
                         "--log-level",
                         $["log-level"],
                     ])

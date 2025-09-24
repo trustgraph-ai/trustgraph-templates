@@ -11,7 +11,6 @@ local models = import "llm-models/claude.jsonnet";
             ["claude-" + key]:: value,
         },
 
-    "claude-model":: "claude-3-sonnet-20240229",
     "claude-max-output-tokens":: 4096,
     "claude-temperature":: 0.0,
 
@@ -33,8 +32,6 @@ local models = import "llm-models/claude.jsonnet";
                         url.pulsar,
                         "-x",
                         std.toString($["claude-max-output-tokens"]),
-                        "-m",
-                        $["claude-model"],
                         "-t",
                         "%0.3f" % $["claude-temperature"],
                         "--log-level",
@@ -78,8 +75,6 @@ local models = import "llm-models/claude.jsonnet";
                         "text-completion-rag",
                         "-x",
                         std.toString($["claude-max-output-tokens"]),
-                        "-m",
-                        $["claude-model"],
                         "-t",
                         "%0.3f" % $["claude-temperature"],
                         "--log-level",
