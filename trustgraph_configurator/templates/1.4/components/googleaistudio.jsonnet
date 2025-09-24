@@ -60,5 +60,50 @@ local models = import "llm-models/googleaistudio.jsonnet";
 
     },
 
+    "text-completion-rag" +: {
+
+        create:: function(engine)
+
+            local envSecrets = engine.envSecrets("googleaistudio-credentials")
+                .with_env_var("GOOGLE_AI_STUDIO_KEY", "googleaistudio-key");
+
+            local containerRag =
+                engine.container("text-completion-rag")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "text-completion-googleaistudio",
+                        "-p",
+                        url.pulsar,
+                        "--id",
+                        "text-completion-rag",
+                        "-x",
+                        std.toString($["googleaistudio-max-output-tokens"]),
+                        "-t",
+                        "%0.3f" % $["googleaistudio-temperature"],
+                        "-m",
+                        $["googleaistudio-model"],
+                        "--log-level",
+                        $["log-level"],
+                    ])
+                    .with_env_var_secrets(envSecrets)
+                    .with_limits("0.5", "128M")
+                    .with_reservations("0.1", "128M");
+
+            local containerSetRag = engine.containers(
+                "text-completion-rag", [ containerRag ]
+            );
+
+            local serviceRag =
+                engine.internalService(containerSetRag)
+                .with_port(8000, 8000, "metrics");
+
+            engine.resources([
+                envSecrets,
+                containerSetRag,
+                serviceRag,
+            ])
+
+    },
+
 } + prompts
 

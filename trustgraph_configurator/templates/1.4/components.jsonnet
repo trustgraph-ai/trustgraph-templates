@@ -21,19 +21,20 @@
    "tgi": import "components/tgi.jsonnet",
    "vllm": import "components/vllm.jsonnet",
 
-   // LLMs for RAG
-   "azure-rag": import "components/azure-rag.jsonnet",
-   "azure-openai-rag": import "components/azure-openai-rag.jsonnet",
-   "bedrock-rag": import "components/bedrock-rag.jsonnet",
-   "claude-rag": import "components/claude-rag.jsonnet",
-   "cohere-rag": import "components/cohere-rag.jsonnet",
-   "googleaistudio-rag": import "components/googleaistudio-rag.jsonnet",
-   "llamafile-rag": import "components/llamafile-rag.jsonnet",
-   "lmstudio-rag": import "components/lmstudio-rag.jsonnet",
-   "mistral-rag": import "components/mistral-rag.jsonnet",
-   "ollama-rag": import "components/ollama-rag.jsonnet",
-   "openai-rag": import "components/openai-rag.jsonnet",
-   "vertexai-rag": import "components/vertexai-rag.jsonnet",
+   // LLMs for RAG.  RAG components have been collapsed into the core
+   // component, so gone away.
+   "azure-rag": {},
+   "azure-openai-rag": {},
+   "bedrock-rag": {},
+   "claude-rag": {},
+   "cohere-rag": {},
+   "googleaistudio-rag": {},
+   "llamafile-rag": {},
+   "lmstudio-rag": {},
+   "mistral-rag": {},
+   "ollama-rag": {},
+   "openai-rag": {},
+   "vertexai-rag": {},
    "tgi-rag": import "components/tgi-rag.jsonnet",
    "vllm-rag": import "components/vllm-rag.jsonnet",
 
