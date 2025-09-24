@@ -16,7 +16,7 @@
 	    "name": "1.3",
 	    "description": "Further agent support and structured data extraction",
 	    "version": "1.3.20",
-	    "status": "beta"
+	    "status": "stable"
 	},
 	{
 	    "name": "1.4",
