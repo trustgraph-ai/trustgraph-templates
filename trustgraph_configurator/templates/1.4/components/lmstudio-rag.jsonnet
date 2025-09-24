@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/lmstudio.jsonnet";
 
 {
 
@@ -12,7 +13,9 @@ local prompts = import "prompts/mixtral.jsonnet";
 
     "lmstudio-rag-max-output-tokens":: 4096,
     "lmstudio-rag-temperature":: 0.0,
-    "lmstudio-rag-model":: "GPT-3.5-Turbo",
+    "lmstudio-rag-model":: "llama3.1:70b",
+
+    "llm-models" +:: models,
 
     "text-completion-rag" +: {
     

@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/slm.jsonnet";
+local models = import "llm-models/llamafile.jsonnet";
 
 {
 
@@ -10,7 +11,9 @@ local prompts = import "prompts/slm.jsonnet";
             ["llamafile-" + key]:: value,
         },
 
-    "llamafile-model":: "LLaMA_CPP",
+    "llamafile-model":: "phi4:14b",
+
+    "llm-models" +:: models,
 
     "text-completion" +: {
     

@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/vertexai.jsonnet";
 
 {
 
@@ -15,6 +16,8 @@ local prompts = import "prompts/mixtral.jsonnet";
     "vertexai-rag-region":: "us-central1",
     "vertexai-rag-max-output-tokens":: 4096,
     "vertexai-rag-temperature":: 0.0,
+
+    "llm-models" +:: models,
 
     "text-completion-rag" +: {
     

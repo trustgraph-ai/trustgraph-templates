@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/cohere.jsonnet";
 
 {
 
@@ -11,6 +12,8 @@ local prompts = import "prompts/mixtral.jsonnet";
         },
 
     "cohere-temperature":: 0.0,
+
+    "llm-models" +:: models,
 
     "text-completion" +: {
     

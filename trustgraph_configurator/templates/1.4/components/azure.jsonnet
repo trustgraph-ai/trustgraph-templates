@@ -1,6 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/azure.jsonnet";
 
 {
 
@@ -11,6 +12,9 @@ local prompts = import "prompts/mixtral.jsonnet";
 
     "azure-max-output-tokens":: 4096,
     "azure-temperature":: 0.0,
+    "azure-model":: "phi4:14b",
+
+    "llm-models" +:: models,
 
     "text-completion" +: {
     

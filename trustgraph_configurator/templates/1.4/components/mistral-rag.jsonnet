@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/mistral.jsonnet";
 
 {
 
@@ -13,6 +14,8 @@ local prompts = import "prompts/mixtral.jsonnet";
     "mistral-rag-max-output-tokens":: 4096,
     "mistral-rag-temperature":: 0.0,
     "mistral-rag-model":: "ministral-8b-latest",
+
+    "llm-models" +:: models,
 
     "text-completion-rag" +: {
     
