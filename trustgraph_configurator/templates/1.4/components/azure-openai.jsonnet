@@ -15,7 +15,6 @@ local models = import "llm-models/azure-openai.jsonnet";
 // variable.  This isn't something that can just be specified dynamically,
 // it has to match what was provisioned in Azure.
 
-    "azure-openai-model":: "gpt-4o",
     "azure-openai-max-output-tokens":: 4192,
     "azure-openai-temperature":: 0.0,
 
@@ -37,8 +36,6 @@ local models = import "llm-models/azure-openai.jsonnet";
                         "text-completion-azure-openai",
                         "-p",
                         url.pulsar,
-//                        "-m",
-//                        $["azure-openai-model"],
                         "-x",
                         std.toString($["azure-openai-max-output-tokens"]),
                         "-t",
@@ -82,8 +79,6 @@ local models = import "llm-models/azure-openai.jsonnet";
                         "text-completion-azure-openai",
                         "-p",
                         url.pulsar,
-//                        "-m",
-//                        $["azure-openai-model"],
                         "--id",
                         "text-completion-rag",
                         "-x",

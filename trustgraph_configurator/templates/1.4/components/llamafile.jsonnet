@@ -11,8 +11,6 @@ local models = import "llm-models/llamafile.jsonnet";
             ["llamafile-" + key]:: value,
         },
 
-    "llamafile-model":: "phi4:14b",
-
     "llm-models" +:: models,
 
     "text-completion" +: {
@@ -29,8 +27,6 @@ local models = import "llm-models/llamafile.jsonnet";
                         "text-completion-llamafile",
                         "-p",
                         url.pulsar,
-                        "-m",
-                        $["llamafile-model"],
                         "--log-level",
                         $["log-level"],
                     ])
@@ -70,8 +66,6 @@ local models = import "llm-models/llamafile.jsonnet";
                         url.pulsar,
                         "--id",
                         "text-completion-rag",
-                        "-m",
-                        $["llamafile-model"],
                         "--log-level",
                         $["log-level"],
                     ])

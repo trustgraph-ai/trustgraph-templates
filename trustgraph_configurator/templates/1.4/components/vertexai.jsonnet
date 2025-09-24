@@ -11,7 +11,6 @@ local models = import "llm-models/vertexai.jsonnet";
             ["vertexai-" + key]:: value,
         },
 
-    "vertexai-model":: "gemini-1.0-pro-001",
     "vertexai-private-key":: "/vertexai/private.json",
     "vertexai-region":: "us-central1",
     "vertexai-max-output-tokens":: 4096,
@@ -46,8 +45,6 @@ local models = import "llm-models/vertexai.jsonnet";
                         std.toString($["vertexai-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["vertexai-temperature"],
-                        "-m",
-                        $["vertexai-model"],
                     ])
                     .with_limits("0.5", "256M")
                     .with_reservations("0.1", "256M")
@@ -98,8 +95,6 @@ local models = import "llm-models/vertexai.jsonnet";
                         std.toString($["vertexai-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["vertexai-temperature"],
-                        "-m",
-                        $["vertexai-model"],
                     ])
                     .with_limits("0.5", "256M")
                     .with_reservations("0.1", "256M")

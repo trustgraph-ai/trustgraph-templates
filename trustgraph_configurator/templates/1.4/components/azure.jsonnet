@@ -12,7 +12,6 @@ local models = import "llm-models/azure.jsonnet";
 
     "azure-max-output-tokens":: 4096,
     "azure-temperature":: 0.0,
-    "azure-model":: "phi4:14b",
 
     "llm-models" +:: models,
 

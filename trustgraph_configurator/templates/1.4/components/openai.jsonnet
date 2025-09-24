@@ -13,7 +13,6 @@ local models = import "llm-models/openai.jsonnet";
 
     "openai-max-output-tokens":: 4096,
     "openai-temperature":: 0.0,
-    "openai-model":: "GPT-3.5-Turbo",
 
     "llm-models" +:: models,
 
@@ -36,8 +35,6 @@ local models = import "llm-models/openai.jsonnet";
                         std.toString($["openai-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["openai-temperature"],
-                        "-m",
-                        $["openai-model"],
                         "--log-level",
                         $["log-level"],
                     ])
@@ -82,8 +79,6 @@ local models = import "llm-models/openai.jsonnet";
                         std.toString($["openai-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["openai-temperature"],
-                        "-m",
-                        $["openai-model"],
                         "--log-level",
                         $["log-level"],
                     ])

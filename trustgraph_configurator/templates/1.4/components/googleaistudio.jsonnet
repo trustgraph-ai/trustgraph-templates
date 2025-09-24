@@ -13,7 +13,6 @@ local models = import "llm-models/googleaistudio.jsonnet";
 
     "googleaistudio-max-output-tokens":: 4096,
     "googleaistudio-temperature":: 0.0,
-    "googleaistudio-model":: "gemini-1.5-flash-002",
 
     "llm-models" +:: models,
 
@@ -35,8 +34,6 @@ local models = import "llm-models/googleaistudio.jsonnet";
                         std.toString($["googleaistudio-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["googleaistudio-temperature"],
-                        "-m",
-                        $["googleaistudio-model"],
                         "--log-level",
                         $["log-level"],
                     ])
@@ -80,8 +77,6 @@ local models = import "llm-models/googleaistudio.jsonnet";
                         std.toString($["googleaistudio-max-output-tokens"]),
                         "-t",
                         "%0.3f" % $["googleaistudio-temperature"],
-                        "-m",
-                        $["googleaistudio-model"],
                         "--log-level",
                         $["log-level"],
                     ])
