@@ -11,6 +11,7 @@ local default_prompts = import "prompts/default-prompts.jsonnet";
 local token_costs = import "values/token-costs.jsonnet";
 local flow_classes = import "flows/flow-classes.jsonnet";
 local config_composer = import "config/config-composer.jsonnet";
+local interface_descriptions = import "config/interface-descriptions.jsonnet";
 
 // Main configuration object
 local configuration = {
@@ -76,82 +77,7 @@ local configuration = {
     },
 
     // Interface descriptions for external endpoints
-    "interface-descriptions":: {
-        "document-load": {
-            "description": "Document loader",
-            "kind": "send",
-            "visible": true,
-        },
-        "text-load": {
-            "description": "Text document loader",
-            "kind": "send",
-            "visible": true,
-        },
-        "entity-contexts-load": {
-            "description": "Entity contexts loader",
-            "kind": "send",
-        },
-        "triples-store": {
-            "description": "Triples loader",
-            "kind": "send",
-        },
-        "graph-embeddings-store": {
-            "description": "Graph embeddings loader",
-            "kind": "send",
-        },
-        "document-embeddings-store": {
-            "description": "Document embeddings loader",
-            "kind": "send",
-        },
-        "graph-rag": {
-            "description": "GraphRAG service",
-            "kind": "request-response",
-        },
-        "document-rag": {
-            "description": "ChunkRAG service",
-            "kind": "request-response",
-        },
-        "triples": {
-            "description": "Triples query service",
-            "kind": "request-response",
-        },
-        "graph-embeddings": {
-            "description": "Graph embeddings service",
-            "kind": "request-response",
-        },
-        "document-embeddings": {
-            "description": "Document embeddings service",
-            "kind": "request-response",
-        },
-        "prompt": {
-            "description": "Prompt service",
-            "kind": "request-response",
-        },
-        "agent": {
-            "description": "Agent service",
-            "kind": "request-response",
-        },
-        "text-completion": {
-            "description": "Text completion service",
-            "kind": "request-response",
-        },
-        "objects-store": {
-            "description": "Object store",
-            "kind": "request-response",
-        },
-        "objects": {
-            "description": "Object query service",
-            "kind": "request-response",
-        },
-        "nlp-query": {
-            "description": "NLP question to GraphQL service",
-            "kind": "request-response",
-        },
-        "structured-query": {
-            "description": "Structured query service",
-            "kind": "request-response",
-        },
-    },
+    "interface-descriptions":: interface_descriptions,
 
     // Parameter type definitions
     "parameter-types":: {
