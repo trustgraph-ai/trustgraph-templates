@@ -3,6 +3,7 @@ local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
 local chunker = import "chunker-recursive.jsonnet";
+local models = import "llm-models/bedrock.jsonnet";
 
 {
 
@@ -14,6 +15,8 @@ local chunker = import "chunker-recursive.jsonnet";
     "bedrock-max-output-tokens":: 4096,
     "bedrock-temperature":: 0.0,
     "bedrock-model":: "mistral.mixtral-8x7b-instruct-v0:1",
+
+    "llm-models" +:: models,
 
     "text-completion" +: {
     
