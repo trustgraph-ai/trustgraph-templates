@@ -7,8 +7,7 @@ local interface_builder = import "interface-builder.jsonnet";
 
 {
     // Main function to build the complete configuration
-    build: function(config_spec) {
-
+    build: function(config_spec)
         // Extract configuration parameters
         local flow_classes = config_spec.flow_classes;
         local default_flow_class = config_spec.default_flow_class;
@@ -42,8 +41,8 @@ local interface_builder = import "interface-builder.jsonnet";
             flow_init_parameters
         );
 
-        // Compose the final configuration object
-        local configuration = {
+        // Compose and return the final configuration object
+        {
             // Prompts configuration
             prompt: {
                 "system": config_spec.prompts["system-template"],
@@ -84,9 +83,5 @@ local interface_builder = import "interface-builder.jsonnet";
             // Token costs and parameter types
             "token-costs": config_spec.token_costs,
             "parameter-types": config_spec.parameter_types,
-        };
-
-        // Return the complete configuration
-        configuration,
-    },
+        },
 }
