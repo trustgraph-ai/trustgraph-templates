@@ -1,22 +1,24 @@
+// TrustGraph Main Configuration
+// Clean, modular composition of TrustGraph configuration
+// Uses specialized modules for different aspects of config building
 
-// This puts the default configuration together.  References many things,
-// flow classes, a default flow, token costs, prompts, agent tools
-
+// Import dependencies
 local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-
 local prompts = import "prompts/mixtral.jsonnet";
 local default_prompts = import "prompts/default-prompts.jsonnet";
-
 local token_costs = import "values/token-costs.jsonnet";
-
 local flow_classes = import "flows/flow-classes.jsonnet";
+local config_composer = import "config/config-composer.jsonnet";
 
+// Main configuration object
 local configuration = {
 
+    // Prompt templates
     prompts:: default_prompts,
 
+    // Tool definitions
     tools:: [
         {
             id: "knowledge-extraction",
@@ -61,18 +63,19 @@ local configuration = {
         }
     ],
 
+    // MCP configuration
     mcp:: {},
 
+    // Flow classes reference
     "flow-classes":: flow_classes,
 
+    // Default model and flow parameters
     default_llm_model:: "gemma2:9b",
     flow_init_parameters:: {
         "model": $["default_llm_model"],
     },
 
-    // This defines standard 'interfaces'.  Different flow classes can
-    // support different interfaces.  Interfaces are 'external' endpoints
-    // into a processing chain.
+    // Interface descriptions for external endpoints
     "interface-descriptions":: {
         "document-load": {
             "description": "Document loader",
@@ -150,161 +153,48 @@ local configuration = {
         },
     },
 
-    configuration:: {
-
-        create:: function(engine) {},
-
-        // Helper function to apply all parameter replacements dynamically
-        local apply_parameter_replacements = function(value, params)
-            if std.isString(value) then
-                std.foldl(
-                    function(acc, param)
-                        std.strReplace(acc, "{" + param.key + "}", param.value),
-                    std.objectKeysValuesAll(params),
-                    value
-                )
-            else
-                value,
-
-        local class_processors = function(classes, name)
-            [
-                [
-                    local key = std.strReplace(p.key, "{class}", name);
-                    local parts = std.splitLimit(key, ":", 2);
-                    parts,
-                    {
-                        // Apply {class} replacement first, then parameter replacements (values only)
-                        [q.key]:
-                            local classReplaced = std.strReplace(q.value, "{class}", name);
-                            apply_parameter_replacements(classReplaced, $["flow_init_parameters"])
-                        for q in std.objectKeysValuesAll(p.value)
-                    }
-                ]
-                for p in std.objectKeysValuesAll(classes[name].class)
-            ],
-
-        local flow_processors = function(classes, name, id)
-            [
-                [
-                    local key = std.strReplace(
-                        std.strReplace(p.key, "{class}", name),
-                        "{id}", id
-                    );
-                    local parts = std.splitLimit(key, ":", 2);
-                    parts,
-                    {
-                        // Apply {class} and {id} replacements first, then parameter replacements (values only)
-                        [q.key]:
-                            local classReplaced = std.strReplace(q.value, "{class}", name);
-                            local idReplaced = std.strReplace(classReplaced, "{id}", id);
-                            apply_parameter_replacements(idReplaced, $["flow_init_parameters"])
-                        for q in std.objectKeysValuesAll(p.value)
-                    }
-                ]
-                for p in std.objectKeysValuesAll(classes[name].flow)
-            ],
-
-        local interfaces = function(classes, name, id)
-            local intf = classes[name].interfaces;
-            {
-                [p.key]:
-                if std.isString(p.value) then
-                    local i = std.strReplace(p.value, "{class}", name);
-                    local i2 = std.strReplace(i, "{id}", id);
-                    // Apply parameter replacements to interface values
-                    apply_parameter_replacements(i2, $["flow_init_parameters"])
-                else
-                    {
-                        [q.key]:
-                            local i = std.strReplace(q.value, "{class}", name);
-                            local i2 = std.strReplace(i, "{id}", id);
-                            // Apply parameter replacements to nested interface values
-                            apply_parameter_replacements(i2, $["flow_init_parameters"])
-                        for q in std.objectKeysValuesAll(p.value)
-                    }
-                for p in std.objectKeysValuesAll(intf)
-            },
-
-        local default_flow_id = "default",
-        local default_flow_class = "everything",
-
-        // Temporary hackery
-        local flow_array =
-            class_processors($["flow-classes"], default_flow_class) +
-            flow_processors($["flow-classes"], default_flow_class,
-                default_flow_id),
-
-        local flow_objects = std.map(
-            function(item) {
-                [item[0][0]] +: {
-                    [item[0][1]]: item[1]
-                }
-            },
-            flow_array
-        ),
-
-        local flows_active = std.foldr(
-            function(a, b) a + b,
-            flow_objects,
-            {}
-        ),
-
-        local default_flow_interfaces = interfaces(
-            $["flow-classes"], default_flow_class, default_flow_id
-        ),
-
-        configuration:: {
-            prompt: {
-                "system": $["prompts"]["system-template"],
-                "template-index": std.objectFieldsAll($.prompts.templates),
-            } + {
-                ["template." + p.key]: p.value
-                for p in std.objectKeysValuesAll($.prompts.templates)
-            },
-            tool: {
-                [p.id]: p
-                for p in $.tools
-            },
-            mcp: $.mcp,
-            "flow-classes": $["flow-classes"],
-            "interface-descriptions": $["interface-descriptions"],
-            "flows": {
-                [default_flow_id]: {
-                    "description": "Default processing flow",
-                    "class-name": default_flow_class,
-                    "interfaces": default_flow_interfaces,
-                    "parameters": $["flow_init_parameters"],
+    // Parameter type definitions
+    "parameter-types":: {
+        "llm-model": {
+            "type": "string",
+            "description": "LLM model to use",
+            "default": "gpt-4",
+            "enum": [
+                {
+                    id: "gemini-2.5-pro",
+                    description: "Gemini 2.5 Pro"
                 },
-            },
-            "flows-active": flows_active,
-            "token-costs": token_costs,
-            "parameter-types": {
-                "llm-model": {
-                  "type": "string",
-                  "description": "LLM model to use",
-                  "default": "gpt-4",
-                  "enum": [
-                      {
-                          id: "gemini-2.5-pro",
-                          description: "Gemini 2.5 Pro"
-                      },
-                      {
-                          id: "gemini-2.5-flash",
-                          description: "Gemini Flash"
-                      },
-                      {
-                          id: "gemini-2.5-flash-lite",
-                          description: "Gemini 2.5 Flash-Lite"
-                      },
-                  ],
-                  "required": false
+                {
+                    id: "gemini-2.5-flash",
+                    description: "Gemini Flash"
                 },
-            },
+                {
+                    id: "gemini-2.5-flash-lite",
+                    description: "Gemini 2.5 Flash-Lite"
+                },
+            ],
+            "required": false
         },
-
     },
+
+    // Token costs
+    "token-costs":: token_costs,
+
+    // Build the complete configuration using the composer
+    configuration:: config_composer.build({
+        flow_classes: $["flow-classes"],
+        default_flow_class: "everything",
+        default_flow_id: "default",
+        flow_init_parameters: $["flow_init_parameters"],
+        prompts: $["prompts"],
+        tools: $["tools"],
+        mcp: $["mcp"],
+        interface_descriptions: $["interface-descriptions"],
+        parameter_types: $["parameter-types"],
+        token_costs: $["token-costs"],
+    }),
 
 } + default_prompts;
 
+// Export the final configuration
 configuration
-
