@@ -56,7 +56,51 @@ local models = import "llm-models/azure.jsonnet";
                 service,
             ])
 
-    }
+    },
+
+    "text-completion-rag" +: {
+
+        create:: function(engine)
+
+            local envSecrets = engine.envSecrets("azure-ai-credentials")
+                .with_env_var("AZURE_TOKEN", "azure-token")
+                .with_env_var("AZURE_ENDPOINT", "azure-endpoint");
+
+            local containerRag =
+                engine.container("text-completion-rag")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "text-completion-azure",
+                        "-p",
+                        url.pulsar,
+                        "--id",
+                        "text-completion-rag",
+                        "-x",
+                        std.toString($["azure-max-output-tokens"]),
+                        "-t",
+                        "%0.3f" % $["azure-temperature"],
+                        "--log-level",
+                        $["log-level"],
+                    ])
+                    .with_env_var_secrets(envSecrets)
+                    .with_limits("0.5", "128M")
+                    .with_reservations("0.1", "128M");
+
+            local containerSetRag = engine.containers(
+                "text-completion-rag", [ containerRag ]
+            );
+
+            local serviceRag =
+                engine.internalService(containerSetRag)
+                .with_port(8000, 8000, "metrics");
+
+            engine.resources([
+                envSecrets,
+                containerSetRag,
+                serviceRag,
+            ])
+
+    },
 
 } + prompts
 
