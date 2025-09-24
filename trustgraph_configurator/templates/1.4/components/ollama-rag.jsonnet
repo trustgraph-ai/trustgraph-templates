@@ -2,6 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "llm-models/ollama.jsonnet";
 
 {
 
@@ -10,7 +11,9 @@ local prompts = import "prompts/mixtral.jsonnet";
             ["ollama-rag-" + key]:: value,
         },
 
-    "ollama-rag-model":: "gemma2:9b",
+    "ollama-rag-model":: "llama3.1:70b",
+
+    "llm-models" +:: models,
 
     "text-completion-rag" +: {
     
