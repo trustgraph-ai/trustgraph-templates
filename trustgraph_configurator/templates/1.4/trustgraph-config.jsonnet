@@ -220,7 +220,7 @@ local configuration = {
             flow_array
         ),
 
-        local flows = std.foldr(
+        local flows_active = std.foldr(
             function(a, b) a + b,
             flow_objects,
             {}
@@ -252,8 +252,30 @@ local configuration = {
                     "interfaces": default_flow_interfaces,
                 },
             },
-            "flows-active": flows,
+            "flows-active": flows_active,
             "token-costs": token_costs,
+            "parameter-types": {
+                "llm-model": {
+                  "type": "string",
+                  "description": "LLM model to use",
+                  "default": "gpt-4",
+                  "enum": [
+                      {
+                          id: "gemini-2.5-pro",
+                          description: "Gemini 2.5 Pro"
+                      },
+                      {
+                          id: "gemini-2.5-flash",
+                          description: "Gemini Flash"
+                      },
+                      {
+                          id: "gemini-2.5-flash-lite",
+                          description: "Gemini 2.5 Flash-Lite"
+                      },
+                  ],
+                  "required": false
+                },
+            },
         },
 
     },

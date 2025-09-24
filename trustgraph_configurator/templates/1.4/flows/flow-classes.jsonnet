@@ -18,6 +18,9 @@ local graphrag_part = {
         "prompt": request_response("prompt:{class}"),
         "text-completion": request_response("text-completion:{class}"),
     },
+    "parameters" +: {
+        "model": "llm-model",
+    },
     "flow" +: {
         "graph-embeddings:{id}": {
             input: flow("entity-contexts-load:{id}"),
@@ -72,10 +75,12 @@ local graphrag_part = {
         "text-completion:{class}": {
             request: request("text-completion:{class}"),
             response: response("text-completion:{class}"),
+            model: "{model}",
         },
         "text-completion-rag:{class}": {
             request: request("text-completion-rag:{class}"),
             response: response("text-completion-rag:{class}"),
+            model: "{model}",
         },
         "metering:{class}": {
             input: response("text-completion:{class}"),
@@ -135,6 +140,9 @@ local object_part = {
         "structured-query": request_response("structured-query:{class}"),
         "structured-diag": request_response("structured-diag:{class}"),
     },
+    "parameters" +: {
+        "model": "llm-model",
+    },
     "flow" +: {
         "kg-extract-objects:{id}": {
             input: flow("chunk-load:{id}"),
@@ -191,10 +199,12 @@ local object_part = {
         "text-completion:{class}": {
             request: request("text-completion:{class}"),
             response: response("text-completion:{class}"),
+            model: "{model}",
         },
         "text-completion-rag:{class}": {
             request: request("text-completion-rag:{class}"),
             response: response("text-completion-rag:{class}"),
+            model: "{model}",
         },
         "metering:{class}": {
             input: response("text-completion:{class}"),
@@ -214,6 +224,9 @@ local documentrag_part = {
         "prompt": request_response("prompt:{class}"),
         "mcp-tool": request_response("mcp-tool:{class}"),
         "text-completion": request_response("text-completion:{class}"),
+    },
+    "parameters" +: {
+        "model": "llm-model",
     },
     "flow" +: {
         "document-embeddings:{id}": {
@@ -266,10 +279,12 @@ local documentrag_part = {
         "text-completion:{class}": {
             request: request("text-completion:{class}"),
             response: response("text-completion:{class}"),
+            model: "{model}",
         },
         "text-completion-rag:{class}": {
             request: request("text-completion-rag:{class}"),
             response: response("text-completion-rag:{class}"),
+            model: "{model}",
         },
         "metering:{class}": {
             input: response("text-completion:{class}"),
