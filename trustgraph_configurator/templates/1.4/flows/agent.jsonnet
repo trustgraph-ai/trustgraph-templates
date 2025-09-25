@@ -14,9 +14,11 @@ local request_response = helpers.request_response;
         "agent": request_response("agent:{id}"),         // Main agent service interface
         "mcp-tool": request_response("mcp-tool:{class}"), // MCP tool execution interface
     },
+
     // No configurable parameters for agent management
     "parameters" +: {
     },
+
     // Flow-level processors for agent management
     "flow" +: {
         // Agent manager orchestrates agent conversations and tool usage
@@ -41,6 +43,7 @@ local request_response = helpers.request_response;
             "structured-query-response": response("structured-query:{class}"),
         },
     },
+
     // Class-level processors for agent-related services
     "class" +: {
         // MCP tool executor for agent tool usage

@@ -13,6 +13,8 @@ local flow_classes = import "flows/flow-classes.jsonnet";
 local config_composer = import "config/config-composer.jsonnet";
 local interface_descriptions = import "config/interface-descriptions.jsonnet";
 local tools = import "config/tools.jsonnet";
+local temperature_params = import "parameters/temperature-param-types.jsonnet";
+local chunking_params = import "parameters/chunking-param-types.jsonnet";
 
 // Main configuration object
 local configuration = {
@@ -36,6 +38,10 @@ local configuration = {
     flow_init_parameters:: {
         "llm-model": $["llm-models"].default,
         "llm-rag-model": $["llm-models"].default,
+        "llm-temperature": "%0.3f" % $["parameter-types"]["llm-temperature"].default,
+        "llm-rag-temperature": "%0.3f" % $["parameter-types"]["llm-temperature"].default,
+        "chunk-size": std.toString($["parameter-types"]["chunk-size"].default),
+        "chunk-overlap": std.toString($["parameter-types"]["chunk-overlap"].default),
     },
 
     // Interface descriptions for external endpoints
@@ -44,7 +50,7 @@ local configuration = {
     // Parameter type definitions
     "parameter-types":: {
         "llm-model": $["llm-models"],
-    },
+    } + chunking_params + temperature_params,
 
     // Token costs
     "token-costs":: token_costs,

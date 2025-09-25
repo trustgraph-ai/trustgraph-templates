@@ -2,7 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/slm.jsonnet";
-local models = import "llm-models/llamafile.jsonnet";
+local models = import "parameters/llamafile.jsonnet";
 
 {
 

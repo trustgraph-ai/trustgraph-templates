@@ -7,6 +7,7 @@ local flow = helpers.flow;
 local request = helpers.request;
 local response = helpers.response;
 local request_response = helpers.request_response;
+local llm_parameters = import "llm-parameters.jsonnet";
 
 {
     // External interfaces exposed by the GraphRAG flow
@@ -26,11 +27,11 @@ local request_response = helpers.request_response;
         "prompt": request_response("prompt:{class}"),                   // Prompt processing service
         "text-completion": request_response("text-completion:{id}"),  // LLM text completion
     },
+
+
     // Parameters that can be configured for this flow
-    "parameters" +: {
-        "llm-model": "llm-model",  // LLM model selection parameter
-        "llm-rag-model": "llm-model",  // LLM model for RAG operations
-    },
+    "parameters" +: llm_parameters,
+
     // Flow-level processors - handle data streams for a specific flow instance
     "flow" +: {
         "graph-embeddings:{id}": {
@@ -56,6 +57,7 @@ local request_response = helpers.request_response;
             model: "{llm-rag-model}",
         },
     },
+
     // Class-level processors - shared across all flow instances of this class
     "class" +: {
         "embeddings:{class}": {
