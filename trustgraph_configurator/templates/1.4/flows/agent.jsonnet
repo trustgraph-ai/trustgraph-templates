@@ -10,15 +10,15 @@ local request_response = helpers.request_response;
 
 {
     // External interfaces for agent operations
-    "interfaces": {
+    "interfaces" +: {
         "agent": request_response("agent:{id}"),         // Main agent service interface
         "mcp-tool": request_response("mcp-tool:{class}"), // MCP tool execution interface
     },
     // No configurable parameters for agent management
-    "parameters": {
+    "parameters" +: {
     },
     // Flow-level processors for agent management
-    "flow": {
+    "flow" +: {
         // Agent manager orchestrates agent conversations and tool usage
         "agent-manager:{id}": {
             // Agent communication channels
@@ -27,8 +27,8 @@ local request_response = helpers.request_response;
             response: response("agent:{id}"),                  // Agent responses
 
             // LLM and prompt services
-            "text-completion-request": request("text-completion:{class}"),   // LLM requests
-            "text-completion-response": response("text-completion:{class}"), // LLM responses
+            "text-completion-request": request("text-completion:{id}"),   // LLM requests
+            "text-completion-response": response("text-completion:{id}"), // LLM responses
             "prompt-request": request("prompt:{class}"),                     // Prompt processing
             "prompt-response": response("prompt:{class}"),
 
@@ -42,13 +42,13 @@ local request_response = helpers.request_response;
         },
     },
     // Class-level processors for agent-related services
-    "class": {
+    "class" +: {
         // MCP tool executor for agent tool usage
         "mcp-tool:{class}": {
             request: request("mcp-tool:{class}"),                            // Tool invocation requests
             response: response("mcp-tool:{class}"),                          // Tool execution results
-            "text-completion-request": request("text-completion:{class}"),   // LLM for tool reasoning
-            "text-completion-response": response("text-completion:{class}"),
+            "text-completion-request": request("text-completion:{id}"),   // LLM for tool reasoning
+            "text-completion-response": response("text-completion:{id}"),
         },
     }
 }

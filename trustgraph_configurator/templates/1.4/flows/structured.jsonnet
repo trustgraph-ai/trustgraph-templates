@@ -11,11 +11,11 @@ local request_response = helpers.request_response;
 
 {
     // External interfaces for structured data operations
-    "interfaces": {
+    "interfaces" +: {
         // Supporting services
         "embeddings": request_response("embeddings:{class}"),           // Embedding service
         "prompt": request_response("prompt:{class}"),                   // Prompt processing
-        "text-completion": request_response("text-completion:{class}"),  // LLM completion
+        "text-completion": request_response("text-completion:{id}"),  // LLM completion
 
         // Structured data storage and querying
         "objects-store": flow("objects-store:{id}"),                    // Object storage stream
@@ -27,12 +27,12 @@ local request_response = helpers.request_response;
         "structured-diag": request_response("structured-diag:{class}"),  // Query diagnostics
     },
     // Parameters that can be configured for this flow
-    "parameters": {
+    "parameters" +: {
         "llm-model": "llm-model",  // LLM model selection for query processing
         "llm-rag-model": "llm-model",  // LLM model for RAG operations
     },
     // Flow-level processors for structured data extraction
-    "flow": {
+    "flow" +: {
         "kg-extract-objects:{id}": {
             input: flow("chunk-load:{id}"),
             output: flow("objects-store:{id}"),
@@ -43,9 +43,19 @@ local request_response = helpers.request_response;
         "objects-write:{id}": {
             input: flow("objects-store:{id}"),
         },
+        "text-completion:{id}": {
+            request: request("text-completion:{id}"),
+            response: response("text-completion:{id}"),
+            model: "{llm-model}",
+        },
+        "text-completion-rag:{id}": {
+            request: request("text-completion-rag:{id}"),
+            response: response("text-completion-rag:{id}"),
+            model: "{llm-rag-model}",
+        },
     },
     // Class-level processors for structured data operations
-    "class": {
+    "class" +: {
         "objects-query:{class}": {
             request: request("objects:{class}"),
             response: response("objects:{class}"),
@@ -77,30 +87,20 @@ local request_response = helpers.request_response;
         "prompt:{class}": {
             request: request("prompt:{class}"),
             response: response("prompt:{class}"),
-            "text-completion-request": request("text-completion:{class}"),
-            "text-completion-response": response("text-completion:{class}"),
+            "text-completion-request": request("text-completion:{id}"),
+            "text-completion-response": response("text-completion:{id}"),
         },
         "prompt-rag:{class}": {
             request: request("prompt-rag:{class}"),
             response: response("prompt-rag:{class}"),
-            "text-completion-request": request("text-completion-rag:{class}"),
-            "text-completion-response": response("text-completion-rag:{class}"),
-        },
-        "text-completion:{class}": {
-            request: request("text-completion:{class}"),
-            response: response("text-completion:{class}"),
-            model: "{llm-model}",
-        },
-        "text-completion-rag:{class}": {
-            request: request("text-completion-rag:{class}"),
-            response: response("text-completion-rag:{class}"),
-            model: "{llm-rag-model}",
+            "text-completion-request": request("text-completion-rag:{id}"),
+            "text-completion-response": response("text-completion-rag:{id}"),
         },
         "metering:{class}": {
-            input: response("text-completion:{class}"),
+            input: response("text-completion:{id}"),
         },
         "metering-rag:{class}": {
-            input: response("text-completion-rag:{class}"),
+            input: response("text-completion-rag:{id}"),
         },
     }
 }

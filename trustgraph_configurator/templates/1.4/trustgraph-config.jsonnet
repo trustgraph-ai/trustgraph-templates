@@ -34,7 +34,8 @@ local configuration = {
 
     // Default model and flow parameters
     flow_init_parameters:: {
-        "model": $["llm-models"].default,
+        "llm-model": $["llm-models"].default,
+        "llm-rag-model": $["llm-models"].default,
     },
 
     // Interface descriptions for external endpoints

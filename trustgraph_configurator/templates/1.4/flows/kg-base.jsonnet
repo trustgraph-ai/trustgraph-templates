@@ -9,15 +9,15 @@ local response = helpers.response;
 
 {
     // No external interfaces - this module provides internal extraction services
-    "interfaces": {
+    "interfaces" +: {
     },
 
     // No configurable parameters for basic KG extraction
-    "parameters": {
+    "parameters" +: {
     },
 
     // Flow-level processors for knowledge extraction
-    "flow": {
+    "flow" +: {
         // Extracts entity definitions from text chunks
         // Identifies and defines key entities mentioned in the text
         "kg-extract-definitions:{id}": {
@@ -39,6 +39,6 @@ local response = helpers.response;
     },
 
     // No class-level processors needed
-    "class": {
+    "class" +: {
     }
 }
