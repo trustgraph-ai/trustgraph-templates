@@ -13,6 +13,8 @@ local flow_classes = import "flows/flow-classes.jsonnet";
 local config_composer = import "config/config-composer.jsonnet";
 local interface_descriptions = import "config/interface-descriptions.jsonnet";
 local tools = import "config/tools.jsonnet";
+local temperature_params = import "llm-models/temperature-param-types.jsonnet";
+local chunking_params = import "llm-models/chunking-param-types.jsonnet";
 
 // Main configuration object
 local configuration = {
@@ -44,7 +46,7 @@ local configuration = {
     // Parameter type definitions
     "parameter-types":: {
         "llm-model": $["llm-models"],
-    },
+    } + chunking_params + temperature_params,
 
     // Token costs
     "token-costs":: token_costs,

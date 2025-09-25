@@ -8,6 +8,7 @@ local flow = helpers.flow;
 local request = helpers.request;
 local response = helpers.response;
 local request_response = helpers.request_response;
+local llm_parameters = import "llm-parameters.jsonnet";
 
 {
     // External interfaces for structured data operations
@@ -26,11 +27,11 @@ local request_response = helpers.request_response;
         "structured-query": request_response("structured-query:{class}"), // Structured query execution
         "structured-diag": request_response("structured-diag:{class}"),  // Query diagnostics
     },
+
+
     // Parameters that can be configured for this flow
-    "parameters" +: {
-        "llm-model": "llm-model",  // LLM model selection for query processing
-        "llm-rag-model": "llm-model",  // LLM model for RAG operations
-    },
+    "parameters" +: llm_parameters,
+
     // Flow-level processors for structured data extraction
     "flow" +: {
         "kg-extract-objects:{id}": {

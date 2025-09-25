@@ -8,6 +8,7 @@ local flow = helpers.flow;
 local request = helpers.request;
 local response = helpers.response;
 local request_response = helpers.request_response;
+local llm_parameters = import "llm-parameters.jsonnet";
 
 {
     // External interfaces for document RAG functionality
@@ -23,11 +24,10 @@ local request_response = helpers.request_response;
         "mcp-tool": request_response("mcp-tool:{class}"),               // MCP tool integration
         "text-completion": request_response("text-completion:{id}"),  // LLM text completion
     },
+
     // Parameters that can be configured for this flow
-    "parameters" +: {
-        "llm-model": "llm-model",  // LLM model selection for RAG responses
-        "llm-rag-model": "llm-model",  // LLM model for RAG operations
-    },
+    "parameters" +: llm_parameters,
+
     // Flow-level processors for document embedding and storage
     "flow" +: {
         "document-embeddings:{id}": {
@@ -50,6 +50,7 @@ local request_response = helpers.request_response;
             model: "{llm-rag-model}",
         },
     },
+
     // Class-level processors for document RAG operations
     "class" +: {
         "embeddings:{class}": {

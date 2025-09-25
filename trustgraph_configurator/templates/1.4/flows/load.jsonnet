@@ -9,15 +9,18 @@ local response = helpers.response;
 local request_response = helpers.request_response;
 
 {
+
     // External interfaces for document loading
     "interfaces" +: {
         "document-load": flow("document-load:{id}"),       // Raw document input stream
         "text-load": flow("text-document-load:{id}"),     // Text document stream
         "embeddings": request_response("embeddings:{class}"), // Embedding service for chunks
     },
+
     // No configurable parameters for document loading
     "parameters" +: {
     },
+
     // Flow-level processors for document preprocessing
     "flow" +: {
         // PDF decoder converts PDF documents to text
@@ -32,6 +35,7 @@ local request_response = helpers.request_response;
             output: flow("chunk-load:{id}"),            // Document chunks for processing
         },
     },
+
     // Class-level processors for document loading services
     "class" +: {
         // Embedding service for converting text chunks to vectors
