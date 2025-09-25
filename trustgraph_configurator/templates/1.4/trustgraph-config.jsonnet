@@ -38,8 +38,8 @@ local configuration = {
     flow_init_parameters:: {
         "llm-model": $["llm-models"].default,
         "llm-rag-model": $["llm-models"].default,
-        "llm-temperature": std.toString($["parameter-types"]["llm-temperature"].default),
-        "llm-rag-temperature": std.toString($["parameter-types"]["llm-temperature"].default),
+        "llm-temperature": "%0.3f" % $["parameter-types"]["llm-temperature"].default,
+        "llm-rag-temperature": "%0.3f" % $["parameter-types"]["llm-temperature"].default,
         "chunk-size": std.toString($["parameter-types"]["chunk-size"].default),
         "chunk-overlap": std.toString($["parameter-types"]["chunk-overlap"].default),
     },
