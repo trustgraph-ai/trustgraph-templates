@@ -9,7 +9,11 @@
         if std.isString(value) then
             std.foldl(
                 function(acc, param)
-                    std.strReplace(acc, "{" + param.key + "}", param.value),
+                    // Only do string replacement if param.value is a string
+                    if std.isString(param.value) then
+                        std.strReplace(acc, "{" + param.key + "}", param.value)
+                    else
+                        acc,  // Skip replacement for non-string parameter values
                 std.objectKeysValuesAll(parameters),
                 value
             )

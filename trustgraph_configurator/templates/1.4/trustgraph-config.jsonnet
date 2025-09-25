@@ -38,6 +38,10 @@ local configuration = {
     flow_init_parameters:: {
         "llm-model": $["llm-models"].default,
         "llm-rag-model": $["llm-models"].default,
+        "llm-temperature": $["parameter-types"]["llm-temperature"].default,
+        "llm-rag-temperature": $["parameter-types"]["llm-temperature"].default,
+        "chunk-size": $["parameter-types"]["chunk-size"].default,
+        "chunk-overlap": $["parameter-types"]["chunk-overlap"].default,
     },
 
     // Interface descriptions for external endpoints
