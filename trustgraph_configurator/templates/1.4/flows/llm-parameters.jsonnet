@@ -24,7 +24,7 @@
     // LLM model selection for normal LLM
     "llm-rag-temperature": {
         "type": "llm-temperature",
-        "description": "LLM temperature",
+        "description": "LLM temperature for RAG",
         "order": 4,
     },
 
