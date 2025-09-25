@@ -5,6 +5,7 @@
         "type": "llm-model",
         "description": "LLM model",
         "order": 1,
+        "advanced": false,
     },
 
     // LLM model for RAG operations
@@ -12,6 +13,7 @@
         "type": "llm-model",
         "description": "LLM model for RAG",
         "order": 2,
+        "advanced": false,
     },
 
     // LLM model selection for normal LLM
@@ -19,6 +21,7 @@
         "type": "llm-temperature",
         "description": "LLM temperature",
         "order": 3,
+        "advanced": true,
     },
 
     // LLM model selection for normal LLM
@@ -26,6 +29,23 @@
         "type": "llm-temperature",
         "description": "LLM temperature for RAG",
         "order": 4,
+        "advanced": true,
+    },
+
+    // LLM model selection for normal LLM
+    "chunk-size": {
+        "type": "chunk-size",
+        "description": "Chunk size",
+        "order": 5,
+        "advanced": true,
+    },
+
+    // LLM model selection for normal LLM
+    "chunk-overlap": {
+        "type": "chunk-overlap",
+        "description": "Chunk overlap",
+        "order": 6,
+        "advanced": true,
     },
 
 }
