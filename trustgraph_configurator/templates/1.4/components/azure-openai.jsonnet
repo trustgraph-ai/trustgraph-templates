@@ -2,7 +2,7 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
-local models = import "llm-models/azure-openai.jsonnet";
+local models = import "parameters/azure-openai.jsonnet";
 
 {
 
