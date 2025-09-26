@@ -18,13 +18,13 @@ local llm_parameters = import "llm-parameters.jsonnet";
         "graph-embeddings-store": flow("graph-embeddings-store:{id}"),  // Graph embedding storage
 
         // Query interfaces for graph-based operations
-        "graph-rag": request_response("graph-rag:{class}"),             // Main GraphRAG query interface
-        "triples": request_response("triples:{class}"),                 // Triple store queries
-        "graph-embeddings": request_response("graph-embeddings:{class}"), // Graph embedding queries
+        "graph-rag": request_response("graph-rag:{id}"),             // Main GraphRAG query interface
+        "triples": request_response("triples:{id}"),                 // Triple store queries
+        "graph-embeddings": request_response("graph-embeddings:{id}"), // Graph embedding queries
 
         // Supporting services
-        "embeddings": request_response("embeddings:{class}"),           // General embedding service
-        "prompt": request_response("prompt:{class}"),                   // Prompt processing service
+        "embeddings": request_response("embeddings:{id}"),           // General embedding service
+        "prompt": request_response("prompt:{id}"),                   // Prompt processing service
         "text-completion": request_response("text-completion:{id}"),  // LLM text completion
     },
 
@@ -37,8 +37,8 @@ local llm_parameters = import "llm-parameters.jsonnet";
         "graph-embeddings:{id}": {
             input: flow("entity-contexts-load:{id}"),
             output: flow("graph-embeddings-store:{id}"),
-            "embeddings-request": request("embeddings:{class}"),
-            "embeddings-response": response("embeddings:{class}"),
+            "embeddings-request": request("embeddings:{id}"),
+            "embeddings-response": response("embeddings:{id}"),
         },
         "triples-write:{id}": {
             input: flow("triples-store:{id}"),
@@ -56,51 +56,51 @@ local llm_parameters = import "llm-parameters.jsonnet";
             response: response("text-completion-rag:{id}"),
             model: "{llm-rag-model}",
         },
+        "embeddings:{id}": {
+            request: request("embeddings:{id}"),
+            response: response("embeddings:{id}"),
+        },
+        "graph-rag:{id}": {
+            request: request("graph-rag:{id}"),
+            response: response("graph-rag:{id}"),
+            "embeddings-request": request("embeddings:{id}"),
+            "embeddings-response": response("embeddings:{id}"),
+            "prompt-request": request("prompt-rag:{id}"),
+            "prompt-response": response("prompt-rag:{id}"),
+            "graph-embeddings-request": request("graph-embeddings:{id}"),
+            "graph-embeddings-response": response("graph-embeddings:{id}"),
+            "triples-request": request("triples:{id}"),
+            "triples-response": response("triples:{id}"),
+        },
+        "triples-query:{id}": {
+            request: request("triples:{id}"),
+            response: response("triples:{id}"),
+        },
+        "ge-query:{id}": {
+            request: request("graph-embeddings:{id}"),
+            response: response("graph-embeddings:{id}"),
+        },
+        "prompt:{id}": {
+            request: request("prompt:{id}"),
+            response: response("prompt:{id}"),
+            "text-completion-request": request("text-completion:{id}"),
+            "text-completion-response": response("text-completion:{id}"),
+        },
+        "prompt-rag:{id}": {
+            request: request("prompt-rag:{id}"),
+            response: response("prompt-rag:{id}"),
+            "text-completion-request": request("text-completion-rag:{id}"),
+            "text-completion-response": response("text-completion-rag:{id}"),
+        },
+        "metering:{id}": {
+            input: response("text-completion:{id}"),
+        },
+        "metering-rag:{id}": {
+            input: response("text-completion-rag:{id}"),
+        },
     },
 
     // Class-level processors - shared across all flow instances of this class
     "class" +: {
-        "embeddings:{class}": {
-            request: request("embeddings:{class}"),
-            response: response("embeddings:{class}"),
-        },
-        "graph-rag:{class}": {
-            request: request("graph-rag:{class}"),
-            response: response("graph-rag:{class}"),
-            "embeddings-request": request("embeddings:{class}"),
-            "embeddings-response": response("embeddings:{class}"),
-            "prompt-request": request("prompt-rag:{class}"),
-            "prompt-response": response("prompt-rag:{class}"),
-            "graph-embeddings-request": request("graph-embeddings:{class}"),
-            "graph-embeddings-response": response("graph-embeddings:{class}"),
-            "triples-request": request("triples:{class}"),
-            "triples-response": response("triples:{class}"),
-        },
-        "triples-query:{class}": {
-            request: request("triples:{class}"),
-            response: response("triples:{class}"),
-        },
-        "ge-query:{class}": {
-            request: request("graph-embeddings:{class}"),
-            response: response("graph-embeddings:{class}"),
-        },
-        "prompt:{class}": {
-            request: request("prompt:{class}"),
-            response: response("prompt:{class}"),
-            "text-completion-request": request("text-completion:{id}"),
-            "text-completion-response": response("text-completion:{id}"),
-        },
-        "prompt-rag:{class}": {
-            request: request("prompt-rag:{class}"),
-            response: response("prompt-rag:{class}"),
-            "text-completion-request": request("text-completion-rag:{id}"),
-            "text-completion-response": response("text-completion-rag:{id}"),
-        },
-        "metering:{class}": {
-            input: response("text-completion:{id}"),
-        },
-        "metering-rag:{class}": {
-            input: response("text-completion-rag:{id}"),
-        },
     }
 }

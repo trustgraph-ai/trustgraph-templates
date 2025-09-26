@@ -14,18 +14,18 @@ local llm_parameters = import "llm-parameters.jsonnet";
     // External interfaces for structured data operations
     "interfaces" +: {
         // Supporting services
-        "embeddings": request_response("embeddings:{class}"),           // Embedding service
-        "prompt": request_response("prompt:{class}"),                   // Prompt processing
+        "embeddings": request_response("embeddings:{id}"),           // Embedding service
+        "prompt": request_response("prompt:{id}"),                   // Prompt processing
         "text-completion": request_response("text-completion:{id}"),  // LLM completion
 
         // Structured data storage and querying
         "objects-store": flow("objects-store:{id}"),                    // Object storage stream
-        "objects": request_response("objects:{class}"),                 // Object query service
+        "objects": request_response("objects:{id}"),                 // Object query service
 
         // Query interfaces
-        "nlp-query": request_response("nlp-query:{class}"),             // NLP to GraphQL translation
-        "structured-query": request_response("structured-query:{class}"), // Structured query execution
-        "structured-diag": request_response("structured-diag:{class}"),  // Query diagnostics
+        "nlp-query": request_response("nlp-query:{id}"),             // NLP to GraphQL translation
+        "structured-query": request_response("structured-query:{id}"), // Structured query execution
+        "structured-diag": request_response("structured-diag:{id}"),  // Query diagnostics
     },
 
 
@@ -38,8 +38,8 @@ local llm_parameters = import "llm-parameters.jsonnet";
             input: flow("chunk-load:{id}"),
             output: flow("objects-store:{id}"),
             "entity-contexts": flow("entity-contexts-load:{id}"),
-            "prompt-request": request("prompt:{class}"),
-            "prompt-response": response("prompt:{class}"),
+            "prompt-request": request("prompt:{id}"),
+            "prompt-response": response("prompt:{id}"),
         },
         "objects-write:{id}": {
             input: flow("objects-store:{id}"),
@@ -54,54 +54,54 @@ local llm_parameters = import "llm-parameters.jsonnet";
             response: response("text-completion-rag:{id}"),
             model: "{llm-rag-model}",
         },
-    },
-    // Class-level processors for structured data operations
-    "class" +: {
-        "objects-query:{class}": {
-            request: request("objects:{class}"),
-            response: response("objects:{class}"),
+        "objects-query:{id}": {
+            request: request("objects:{id}"),
+            response: response("objects:{id}"),
         },
-        "nlp-query:{class}": {
-            request: request("nlp-query:{class}"),
-            response: response("nlp-query:{class}"),
-            "prompt-request": request("prompt-rag:{class}"),
-            "prompt-response": response("prompt-rag:{class}"),
+        "nlp-query:{id}": {
+            request: request("nlp-query:{id}"),
+            response: response("nlp-query:{id}"),
+            "prompt-request": request("prompt-rag:{id}"),
+            "prompt-response": response("prompt-rag:{id}"),
         },
-        "structured-query:{class}": {
-            request: request("structured-query:{class}"),
-            response: response("structured-query:{class}"),
-            "nlp-query-request": request("nlp-query:{class}"),
-            "nlp-query-response": response("nlp-query:{class}"),
-            "objects-query-request": request("objects:{class}"),
-            "objects-query-response": response("objects:{class}"),
+        "structured-query:{id}": {
+            request: request("structured-query:{id}"),
+            response: response("structured-query:{id}"),
+            "nlp-query-request": request("nlp-query:{id}"),
+            "nlp-query-response": response("nlp-query:{id}"),
+            "objects-query-request": request("objects:{id}"),
+            "objects-query-response": response("objects:{id}"),
         },
-        "structured-diag:{class}": {
-            request: request("structured-diag:{class}"),
-            response: response("structured-diag:{class}"),
-            "prompt-request": request("prompt:{class}"),
-            "prompt-response": response("prompt:{class}"),
+        "structured-diag:{id}": {
+            request: request("structured-diag:{id}"),
+            response: response("structured-diag:{id}"),
+            "prompt-request": request("prompt:{id}"),
+            "prompt-response": response("prompt:{id}"),
         },
-        "embeddings:{class}": {
-            request: request("embeddings:{class}"),
-            response: response("embeddings:{class}"),
+        "embeddings:{id}": {
+            request: request("embeddings:{id}"),
+            response: response("embeddings:{id}"),
         },
-        "prompt:{class}": {
-            request: request("prompt:{class}"),
-            response: response("prompt:{class}"),
+        "prompt:{id}": {
+            request: request("prompt:{id}"),
+            response: response("prompt:{id}"),
             "text-completion-request": request("text-completion:{id}"),
             "text-completion-response": response("text-completion:{id}"),
         },
-        "prompt-rag:{class}": {
-            request: request("prompt-rag:{class}"),
-            response: response("prompt-rag:{class}"),
+        "prompt-rag:{id}": {
+            request: request("prompt-rag:{id}"),
+            response: response("prompt-rag:{id}"),
             "text-completion-request": request("text-completion-rag:{id}"),
             "text-completion-response": response("text-completion-rag:{id}"),
         },
-        "metering:{class}": {
+        "metering:{id}": {
             input: response("text-completion:{id}"),
         },
-        "metering-rag:{class}": {
+        "metering-rag:{id}": {
             input: response("text-completion-rag:{id}"),
         },
+    },
+    // Class-level processors for structured data operations
+    "class" +: {
     }
 }
