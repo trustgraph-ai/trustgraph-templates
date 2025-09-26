@@ -13,7 +13,8 @@
         "type": "llm-model",
         "description": "LLM model for RAG",
         "order": 2,
-        "advanced": false,
+        "advanced": true,
+        "controlled-by": "llm-model",
     },
 
     // LLM model selection for normal LLM
