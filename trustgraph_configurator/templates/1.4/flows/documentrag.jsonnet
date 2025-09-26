@@ -15,13 +15,13 @@ local llm_parameters = import "llm-parameters.jsonnet";
     "interfaces" +: {
         // Document embedding storage and retrieval
         "document-embeddings-store": flow("document-embeddings-store:{id}"), // Embedding storage stream
-        "document-rag": request_response("document-rag:{class}"),            // Main document RAG interface
-        "document-embeddings": request_response("document-embeddings:{class}"), // Document embedding queries
+        "document-rag": request_response("document-rag:{id}"),            // Main document RAG interface
+        "document-embeddings": request_response("document-embeddings:{id}"), // Document embedding queries
 
         // Supporting services
-        "embeddings": request_response("embeddings:{class}"),           // General embedding service
-        "prompt": request_response("prompt:{class}"),                   // Prompt processing
-        "mcp-tool": request_response("mcp-tool:{class}"),               // MCP tool integration
+        "embeddings": request_response("embeddings:{id}"),           // General embedding service
+        "prompt": request_response("prompt:{id}"),                   // Prompt processing
+        "mcp-tool": request_response("mcp-tool:{id}"),               // MCP tool integration
         "text-completion": request_response("text-completion:{id}"),  // LLM text completion
     },
 
@@ -33,8 +33,8 @@ local llm_parameters = import "llm-parameters.jsonnet";
         "document-embeddings:{id}": {
             input: flow("chunk-load:{id}"),
             output: flow("document-embeddings-store:{id}"),
-            "embeddings-request": request("embeddings:{class}"),
-            "embeddings-response": response("embeddings:{class}"),
+            "embeddings-request": request("embeddings:{id}"),
+            "embeddings-response": response("embeddings:{id}"),
         },
         "de-write:{id}": {
             input: flow("document-embeddings-store:{id}"),
@@ -49,51 +49,51 @@ local llm_parameters = import "llm-parameters.jsonnet";
             response: response("text-completion-rag:{id}"),
             model: "{llm-rag-model}",
         },
+        "embeddings:{id}": {
+            request: request("embeddings:{id}"),
+            response: response("embeddings:{id}"),
+        },
+        "document-rag:{id}": {
+            request: request("document-rag:{id}"),
+            response: response("document-rag:{id}"),
+            "embeddings-request": request("embeddings:{id}"),
+            "embeddings-response": response("embeddings:{id}"),
+            "prompt-request": request("prompt-rag:{id}"),
+            "prompt-response": response("prompt-rag:{id}"),
+            "document-embeddings-request": request("document-embeddings:{id}"),
+            "document-embeddings-response": response("document-embeddings:{id}"),
+        },
+        "de-query:{id}": {
+            request: request("document-embeddings:{id}"),
+            response: response("document-embeddings:{id}"),
+        },
+        "prompt:{id}": {
+            request: request("prompt:{id}"),
+            response: response("prompt:{id}"),
+            "text-completion-request": request("text-completion:{id}"),
+            "text-completion-response": response("text-completion:{id}"),
+        },
+        "prompt-rag:{id}": {
+            request: request("prompt-rag:{id}"),
+            response: response("prompt-rag:{id}"),
+            "text-completion-request": request("text-completion-rag:{id}"),
+            "text-completion-response": response("text-completion-rag:{id}"),
+        },
+        "mcp-tool:{id}": {
+            request: request("mcp-tool:{id}"),
+            response: response("mcp-tool:{id}"),
+            "text-completion-request": request("text-completion:{id}"),
+            "text-completion-response": response("text-completion:{id}"),
+        },
+        "metering:{id}": {
+            input: response("text-completion:{id}"),
+        },
+        "metering-rag:{id}": {
+            input: response("text-completion-rag:{id}"),
+        },
     },
 
     // Class-level processors for document RAG operations
     "class" +: {
-        "embeddings:{class}": {
-            request: request("embeddings:{class}"),
-            response: response("embeddings:{class}"),
-        },
-        "document-rag:{class}": {
-            request: request("document-rag:{class}"),
-            response: response("document-rag:{class}"),
-            "embeddings-request": request("embeddings:{class}"),
-            "embeddings-response": response("embeddings:{class}"),
-            "prompt-request": request("prompt-rag:{class}"),
-            "prompt-response": response("prompt-rag:{class}"),
-            "document-embeddings-request": request("document-embeddings:{class}"),
-            "document-embeddings-response": response("document-embeddings:{class}"),
-        },
-        "de-query:{class}": {
-            request: request("document-embeddings:{class}"),
-            response: response("document-embeddings:{class}"),
-        },
-        "prompt:{class}": {
-            request: request("prompt:{class}"),
-            response: response("prompt:{class}"),
-            "text-completion-request": request("text-completion:{id}"),
-            "text-completion-response": response("text-completion:{id}"),
-        },
-        "prompt-rag:{class}": {
-            request: request("prompt-rag:{class}"),
-            response: response("prompt-rag:{class}"),
-            "text-completion-request": request("text-completion-rag:{id}"),
-            "text-completion-response": response("text-completion-rag:{id}"),
-        },
-        "mcp-tool:{class}": {
-            request: request("mcp-tool:{class}"),
-            response: response("mcp-tool:{class}"),
-            "text-completion-request": request("text-completion:{id}"),
-            "text-completion-response": response("text-completion:{id}"),
-        },
-        "metering:{class}": {
-            input: response("text-completion:{id}"),
-        },
-        "metering-rag:{class}": {
-            input: response("text-completion-rag:{id}"),
-        },
     }
 }

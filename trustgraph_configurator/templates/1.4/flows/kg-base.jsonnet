@@ -24,8 +24,8 @@ local response = helpers.response;
             input: flow("chunk-load:{id}"),                       // Input text chunks
             triples: flow("triples-store:{id}"),                  // Output definition triples
             "entity-contexts": flow("entity-contexts-load:{id}"), // Entity context information
-            "prompt-request": request("prompt:{class}"),          // Definition extraction prompts
-            "prompt-response": response("prompt:{class}"),
+            "prompt-request": request("prompt:{id}"),          // Definition extraction prompts
+            "prompt-response": response("prompt:{id}"),
         },
 
         // Extracts relationships between entities
@@ -33,8 +33,8 @@ local response = helpers.response;
         "kg-extract-relationships:{id}": {
             input: flow("chunk-load:{id}"),                // Input text chunks
             triples: flow("triples-store:{id}"),           // Output relationship triples
-            "prompt-request": request("prompt:{class}"),   // Relationship extraction prompts
-            "prompt-response": response("prompt:{class}"),
+            "prompt-request": request("prompt:{id}"),   // Relationship extraction prompts
+            "prompt-response": response("prompt:{id}"),
         },
     },
 

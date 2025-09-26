@@ -14,7 +14,7 @@ local request_response = helpers.request_response;
     "interfaces" +: {
         "document-load": flow("document-load:{id}"),       // Raw document input stream
         "text-load": flow("text-document-load:{id}"),     // Text document stream
-        "embeddings": request_response("embeddings:{class}"), // Embedding service for chunks
+        "embeddings": request_response("embeddings:{id}"), // Embedding service for chunks
     },
 
     // No configurable parameters for document loading
@@ -34,14 +34,14 @@ local request_response = helpers.request_response;
             input: flow("text-document-load:{id}"),    // Full text documents
             output: flow("chunk-load:{id}"),            // Document chunks for processing
         },
+        // Embedding service for converting text chunks to vectors
+        "embeddings:{id}": {
+            request: request("embeddings:{id}"),   // Embedding requests
+            response: response("embeddings:{id}"),  // Embedding responses
+        },
     },
 
     // Class-level processors for document loading services
     "class" +: {
-        // Embedding service for converting text chunks to vectors
-        "embeddings:{class}": {
-            request: request("embeddings:{class}"),   // Embedding requests
-            response: response("embeddings:{class}"),  // Embedding responses
-        },
     }
 }
