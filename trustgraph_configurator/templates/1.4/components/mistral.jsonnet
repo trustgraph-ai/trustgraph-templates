@@ -13,8 +13,9 @@ local models = import "parameters/mistral.jsonnet";
 
     "mistral-max-output-tokens":: 4096,
     "mistral-temperature":: 0.0,
+    "mistral-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["mistral-models"],
 
     "text-completion" +: {
     

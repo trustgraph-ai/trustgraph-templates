@@ -11,7 +11,9 @@ local models = import "parameters/llamafile.jsonnet";
             ["llamafile-" + key]:: value,
         },
 
-    "llm-models" +:: models,
+    "llamafile-models":: models,
+
+    "llm-models" +:: $["llamafile-models"],
 
     "text-completion" +: {
     

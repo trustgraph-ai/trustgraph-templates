@@ -12,8 +12,9 @@ local models = import "parameters/azure.jsonnet";
 
     "azure-max-output-tokens":: 4096,
     "azure-temperature":: 0.0,
+    "azure-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["azure-models"],
 
     "text-completion" +: {
     

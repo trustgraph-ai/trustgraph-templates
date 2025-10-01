@@ -13,8 +13,9 @@ local models = import "parameters/openai.jsonnet";
 
     "openai-max-output-tokens":: 4096,
     "openai-temperature":: 0.0,
+    "openai-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["openai-models"],
 
     "text-completion" +: {
     
