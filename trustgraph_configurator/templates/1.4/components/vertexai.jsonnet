@@ -15,8 +15,9 @@ local models = import "parameters/vertexai.jsonnet";
     "vertexai-region":: "us-central1",
     "vertexai-max-output-tokens":: 4096,
     "vertexai-temperature":: 0.0,
+    "vertexai-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["vertexai-models"],
 
     "text-completion" +: {
     

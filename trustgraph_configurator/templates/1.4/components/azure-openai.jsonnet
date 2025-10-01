@@ -17,8 +17,9 @@ local models = import "parameters/azure-openai.jsonnet";
 
     "azure-openai-max-output-tokens":: 4192,
     "azure-openai-temperature":: 0.0,
+    "azure-openai-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["azure-openai-models"],
 
     "text-completion" +: {
     

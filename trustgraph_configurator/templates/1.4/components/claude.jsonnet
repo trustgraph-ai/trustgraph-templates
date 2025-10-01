@@ -13,8 +13,9 @@ local models = import "parameters/claude.jsonnet";
 
     "claude-max-output-tokens":: 4096,
     "claude-temperature":: 0.0,
+    "claude-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["claude-models"],
 
     "text-completion" +: {
     

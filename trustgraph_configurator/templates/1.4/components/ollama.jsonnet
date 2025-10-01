@@ -11,7 +11,9 @@ local models = import "parameters/ollama.jsonnet";
             ["ollama-" + key]:: value,
         },
 
-    "llm-models" +:: models,
+    "ollama-models":: models,
+
+    "llm-models" +:: $["ollama-models"],
 
     "text-completion" +: {
     

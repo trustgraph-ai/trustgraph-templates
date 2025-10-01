@@ -14,8 +14,9 @@ local models = import "parameters/bedrock.jsonnet";
 
     "bedrock-max-output-tokens":: 4096,
     "bedrock-temperature":: 0.0,
+    "bedrock-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["bedrock-models"],
 
     "text-completion" +: {
     

@@ -13,8 +13,9 @@ local models = import "parameters/lmstudio.jsonnet";
 
     "lmstudio-max-output-tokens":: 4096,
     "lmstudio-temperature":: 0.0,
+    "lmstudio-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["lmstudio-models"],
 
     "text-completion" +: {
     

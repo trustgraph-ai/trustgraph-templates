@@ -12,8 +12,9 @@ local models = import "parameters/cohere.jsonnet";
         },
 
     "cohere-temperature":: 0.0,
+    "cohere-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["cohere-models"],
 
     "text-completion" +: {
     

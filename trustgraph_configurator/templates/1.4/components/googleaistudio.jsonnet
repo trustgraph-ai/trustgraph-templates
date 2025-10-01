@@ -13,8 +13,9 @@ local models = import "parameters/googleaistudio.jsonnet";
 
     "googleaistudio-max-output-tokens":: 4096,
     "googleaistudio-temperature":: 0.0,
+    "googleaistudio-models":: models,
 
-    "llm-models" +:: models,
+    "llm-models" +:: $["googleaistudio-models"],
 
     "text-completion" +: {
     
