@@ -4,7 +4,7 @@
 {
     "type": "string",
     "description": "LLM model to use",
-    "default": "llama3.1:70b",
+    "default": "gemma3:12b",
     "enum": [
         // Gemma3 models
         {
