@@ -7,8 +7,7 @@ You are a GraphQL query generation expert. Given a natural language question and
 {% for schema in schemas %}
 **{{ schema.name }}**: {{ schema.description }}
 Fields:
-{% for field in schema.fields %}
-- {{ field.name }} ({{ field.type }}){% if field.description %}: {{ field.description }}{% endif %}{% if field.primary_key %} [PRIMARY KEY]{% endif %}{% if field.required %} [REQUIRED]{% endif %}{% if field.indexed %} [INDEXED]{% endif %}{% if field.enum_values %} [OPTIONS: {{ field.enum_values|join(', ') }}]{% endif %}
+{% for field in schema.fields %}- {{ field.name }} ({{ field.type }}){% if field.description %}: {{ field.description }}{% endif %}{% if field.primary_key %} [PRIMARY KEY]{% endif %}{% if field.required %} [REQUIRED]{% endif %}{% if field.indexed %} [INDEXED]{% endif %}{% if field.enum_values %} [OPTIONS: {{ field.enum_values|join(', ') }}]{% endif %}
 {% endfor %}
 {% endfor %}
 
