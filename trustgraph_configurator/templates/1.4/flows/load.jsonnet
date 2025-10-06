@@ -33,6 +33,8 @@ local request_response = helpers.request_response;
         "chunker:{id}": {
             input: flow("text-document-load:{id}"),    // Full text documents
             output: flow("chunk-load:{id}"),            // Document chunks for processing
+            "chunk-size": "{chunk-size}",              // Chunk size
+            "chunk-overlap": "{chunk-overlap}",        // Overlap between chunks
         },
         // Embedding service for converting text chunks to vectors
         "embeddings:{id}": {
