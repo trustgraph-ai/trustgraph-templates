@@ -22,7 +22,7 @@
 	    "name": "1.4",
 	    "description": "Collection management.  Collection support in Neo4j & Memgraph.",
 	    "version": "1.4.20",
-	    "status": "pre-release"
+	    "status": "stable"
 	}
     ],
     "platforms": [
