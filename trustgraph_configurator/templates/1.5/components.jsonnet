@@ -4,6 +4,7 @@
    "trustgraph-base": import "components/trustgraph.jsonnet",
    "rev-gateway": import "components/rev-gateway.jsonnet",
    "pulsar": import "components/pulsar.jsonnet",
+   "pulsar-standalone": import "components/pulsar-standalone.jsonnet",
 
    // LLMs
    "azure": import "components/azure.jsonnet",
