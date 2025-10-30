@@ -5,6 +5,7 @@ local version = import "version.jsonnet";
     pulsar: "docker.io/apachepulsar/pulsar:4.1.0",
     pulsar_manager: "docker.io/apachepulsar/pulsar-manager:v0.4.0",
     etcd: "quay.io/coreos/etcd:v3.6.4",
+    oxia: "docker.io/oxia/oxia:0.14",
     minio: "docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z",
     milvus: "docker.io/milvusdb/milvus:v2.5.17",
     prometheus: "docker.io/prom/prometheus:v3.5.0",
