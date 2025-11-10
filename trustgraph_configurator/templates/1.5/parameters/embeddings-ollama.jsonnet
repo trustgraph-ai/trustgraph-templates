@@ -8,15 +8,15 @@
     "enum": [
 	{
 	    "id": "all-minilm:latest",
-	    "description": "sentence-transformers/all-MiniLM-L6-v2"
+	    "description": "all-MiniLM-L6-v2"
 	},
 	{
 	    "id": "nomic-ai/nomic-embed-text-v1.5-Q",
-	    "description": "nomic-ai/nomic-embed-text-v1.5-Q"
+	    "description": "nomic-embed-text-v1.5-Q"
 	},
 	{
 	    "id": "mixedbread-ai/mxbai-embed-large-v1",
-	    "description": "mixedbread-ai/mxbai-embed-large-v1"
+	    "description": "mxbai-embed-large-v1"
 	},
     ],
     "required": true
