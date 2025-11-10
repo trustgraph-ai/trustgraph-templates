@@ -34,6 +34,9 @@ local configuration = {
     // LLM model parameters
     "llm-models" +:: {},
 
+    // Embeddings model parameters
+    "embeddings-models" +:: {},
+
     // Default model and flow parameters
     flow_init_parameters:: {
         "llm-model": $["llm-models"].default,
@@ -42,6 +45,7 @@ local configuration = {
         "llm-rag-temperature": "%0.3f" % $["parameter-types"]["llm-temperature"].default,
         "chunk-size": std.toString($["parameter-types"]["chunk-size"].default),
         "chunk-overlap": std.toString($["parameter-types"]["chunk-overlap"].default),
+        "embeddings-model": $["embeddings-models"].default,
     },
 
     // Interface descriptions for external endpoints
@@ -50,6 +54,7 @@ local configuration = {
     // Parameter type definitions
     "parameter-types":: {
         "llm-model": $["llm-models"],
+        "embeddings-model": $["embeddings-models"],
     } + chunking_params + temperature_params,
 
     // Token costs

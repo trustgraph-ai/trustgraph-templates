@@ -40,6 +40,7 @@ local request_response = helpers.request_response;
         "embeddings:{id}": {
             request: request("embeddings:{id}"),   // Embedding requests
             response: response("embeddings:{id}"),  // Embedding responses
+            model: "{embeddings-model}",
         },
     },
 
