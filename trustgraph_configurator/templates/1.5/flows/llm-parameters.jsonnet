@@ -33,11 +33,18 @@
         "advanced": true,
     },
 
+    "embeddings-model": {
+        "type": "embeddings-model",
+        "description": "Embeddings model",
+        "order": 5,
+        "advanced": true,
+    },
+
     // LLM model selection for normal LLM
     "chunk-size": {
         "type": "chunk-size",
         "description": "Chunk size",
-        "order": 5,
+        "order": 6,
         "advanced": true,
     },
 
@@ -45,7 +52,7 @@
     "chunk-overlap": {
         "type": "chunk-overlap",
         "description": "Chunk overlap",
-        "order": 6,
+        "order": 7,
         "advanced": true,
     },
 

@@ -81,6 +81,7 @@ local llm_parameters = import "llm-parameters.jsonnet";
         "embeddings:{id}": {
             request: request("embeddings:{id}"),
             response: response("embeddings:{id}"),
+            model: "{embeddings-model}",
         },
         "prompt:{id}": {
             request: request("prompt:{id}"),

@@ -1,11 +1,15 @@
 local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
+local models = import "parameters/embeddings-ollama.jsonnet";
 
 {
 
-    "embeddings-model":: "mxbai-embed-large",
     "ollama-url":: "${OLLAMA_HOST}",
+
+    "ollama-models":: models,
+
+    "embeddings-models" +:: $["ollama-models"],
 
     embeddings +: {
     
@@ -20,8 +24,6 @@ local url = import "values/url.jsonnet";
                         url.pulsar,
                         "--concurrency",
                         std.toString($["embeddings-concurrency"]),
-                        "-m",
-                        $["embeddings-model"],
                         "-r",
                         $["ollama-url"],
                         "--log-level",

@@ -2,10 +2,13 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
+local models = import "parameters/embeddings-huggingface.jsonnet";
 
 {
 
-    "embeddings-model":: "all-MiniLM-L6-v2",
+    "huggingface-embeddings-models":: models,
+
+    "embeddings-models" +:: $["huggingface-embeddings-models"],
 
     embeddings +: {
     
@@ -20,8 +23,6 @@ local prompts = import "prompts/mixtral.jsonnet";
                         url.pulsar,
                         "--concurrency",
                         std.toString($["embeddings-concurrency"]),
-                        "-m",
-                        $["embeddings-model"],
                     ])
                     .with_limits("1.0", "400M")
                     .with_reservations("0.5", "400M");

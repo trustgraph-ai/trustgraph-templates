@@ -59,6 +59,7 @@ local llm_parameters = import "llm-parameters.jsonnet";
         "embeddings:{id}": {
             request: request("embeddings:{id}"),
             response: response("embeddings:{id}"),
+            model: "{embeddings-model}",
         },
         "graph-rag:{id}": {
             request: request("graph-rag:{id}"),
