@@ -49,4 +49,11 @@
         "advanced": true,
     },
 
+    "embeddings-model": {
+        "type": "embeddings-model",
+        "description": "Embeddings model",
+        "order": 1,
+        "advanced": false,
+    },
+
 }
