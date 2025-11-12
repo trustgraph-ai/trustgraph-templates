@@ -110,7 +110,7 @@ local url = import "values/url.jsonnet";
             ])
 
     },
-/*
+
     "kg-extract-ontology" +: {
     
         create:: function(engine)
@@ -127,8 +127,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits("0.5", "300M")
+                    .with_reservations("0.1", "300M");
 
             local containerSet = engine.containers(
                 "kg-extract-ontology", [ container ]
@@ -144,7 +144,6 @@ local url = import "values/url.jsonnet";
             ])
 
     },
-    */
 
     "graph-rag" +: {
     
