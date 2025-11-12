@@ -26,6 +26,8 @@ local response = helpers.response;
             "prompt-request": request("prompt:{id}"),   // Definition
                                                         // extraction prompts
             "prompt-response": response("prompt:{id}"),
+            "embeddings-request": request("embeddings:{id}"),
+            "embeddings-response": response("embeddings:{id}"),
         },
 
     },

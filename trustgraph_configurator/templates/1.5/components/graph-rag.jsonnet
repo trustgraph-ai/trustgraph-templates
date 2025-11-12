@@ -110,7 +110,7 @@ local url = import "values/url.jsonnet";
             ])
 
     },
-
+/*
     "kg-extract-ontology" +: {
     
         create:: function(engine)
@@ -144,6 +144,7 @@ local url = import "values/url.jsonnet";
             ])
 
     },
+    */
 
     "graph-rag" +: {
     
