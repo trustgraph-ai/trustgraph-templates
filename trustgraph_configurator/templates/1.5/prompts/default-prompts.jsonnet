@@ -223,6 +223,37 @@
             "response-type": "json",
         },
 
+        "extract-with-ontologies":: {
+            "prompt": importstr "agent-prompt.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "subject": {
+                            "type": "string"
+                        },
+                        "predicate": {
+                            "type": "string"
+                        },
+                        "object": {
+                            "type": "string"
+                        },
+                        "object-entity": {
+                            "type": "boolean"
+                        },
+                    },
+                    "required": [
+                        "subject",
+                        "predicate",
+                        "object",
+                        "object-entity"
+                    ]
+                }
+            }
+        },
+
     }
 
 }

@@ -94,6 +94,12 @@ scrape_configs:
       - targets:
         - 'kg-extract-relationships:8000'
 
+  - job_name: 'kg-extract-ontology'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'kg-extract-ontology:8000'
+
   - job_name: 'kg-manager'
     scrape_interval: 5s
     static_configs:

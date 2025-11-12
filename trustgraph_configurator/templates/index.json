@@ -26,8 +26,8 @@
         },
         {
             "name": "1.5",
-            "description": "Authenticated MCP invocation",
-            "version": "1.5.3",
+            "description": "Authenticated MCP invocation, ontology-based knowledge extraction",
+            "version": "1.5.4",
             "status": "alpha"
         }
     ],
