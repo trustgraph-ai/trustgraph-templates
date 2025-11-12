@@ -15,6 +15,7 @@
 // Import all the modular flow components
 local graphrag_part = import "graphrag.jsonnet";
 local kg_base_part = import "kg-base.jsonnet";
+local onto_base_part = import "onto-base.jsonnet";
 local agent_extract_part = import "agent-extract.jsonnet";
 local structured_part = import "structured.jsonnet";
 local documentrag_part = import "documentrag.jsonnet";
@@ -51,6 +52,14 @@ local kgcore_part = import "kgcore.jsonnet";
         tags: ["graph-rag", "knowledge-extraction"],
     } +
       graphrag_part + agent_part + load_part + kg_base_part,
+
+    // Graph-based RAG only
+    // Uses knowledge graphs for context-aware question answering
+    "onto-rag": {
+        description: "Ontoology RAG only",
+        tags: ["graph-rag", "knowledge-extraction"],
+    } +
+      graphrag_part + agent_part + load_part + onto_base_part,
 
     // Document-based RAG only
     // Uses document embeddings for semantic search and answers
