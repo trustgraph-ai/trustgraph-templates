@@ -56,7 +56,7 @@ local kgcore_part = import "kgcore.jsonnet";
     // Graph-based RAG only
     // Uses knowledge graphs for context-aware question answering
     "onto-rag": {
-        description: "Ontoology RAG only",
+        description: "Ontology RAG only",
         tags: ["graph-rag", "knowledge-extraction"],
     } +
       graphrag_part + agent_part + load_part + onto_base_part,
