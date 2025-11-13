@@ -1,12 +1,6 @@
 {
     "templates": [
         {
-            "name": "1.1",
-            "description": "MCP support and agent functionality upgrades.",
-            "version": "1.1.10",
-            "status": "stable"
-        },
-        {
             "name": "1.2",
             "description": "Further MCP and agent support and structured data extraction.",
             "version": "1.2.20",
@@ -26,9 +20,9 @@
         },
         {
             "name": "1.5",
-            "description": "Authenticated MCP invocation, ontology-based knowledge extraction",
-            "version": "1.5.4",
-            "status": "alpha"
+            "description": "Ontology-based knowledge extraction, authenticated MCP invocation",
+            "version": "1.5.6",
+            "status": "beta"
         }
     ],
     "platforms": [
