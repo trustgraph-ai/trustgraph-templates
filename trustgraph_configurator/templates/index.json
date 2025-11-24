@@ -21,8 +21,8 @@
         {
             "name": "1.5",
             "description": "Ontology-based knowledge extraction, authenticated MCP invocation",
-            "version": "1.5.7",
-            "status": "beta"
+            "version": "1.5.8",
+            "status": "stable"
         }
     ],
     "platforms": [
