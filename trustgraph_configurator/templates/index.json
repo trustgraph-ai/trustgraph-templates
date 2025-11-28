@@ -23,6 +23,12 @@
             "description": "Ontology-based knowledge extraction, authenticated MCP invocation",
             "version": "1.5.8",
             "status": "stable"
+        },
+	{
+            "name": "1.6",
+            "description": "Streaming LLM responses, module API additions",
+            "version": "1.6.4",
+            "status": "pre-release"
         }
     ],
     "platforms": [
