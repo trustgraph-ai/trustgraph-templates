@@ -36,7 +36,7 @@
    "openai-rag": {},
    "vertexai-rag": {},
    "tgi-rag": import "components/tgi-rag.jsonnet",
-   "vllm-rag": import "components/vllm-rag.jsonnet",
+   "vllm-rag": {},
 
    "tgi-service-cpu": import "components/tgi-service-cpu.jsonnet",
    "tgi-service-intel-gpu": import "components/tgi-service-intel-gpu.jsonnet",
