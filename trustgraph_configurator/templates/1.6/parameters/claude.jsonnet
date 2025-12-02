@@ -4,27 +4,31 @@
 {
     "type": "string",
     "description": "LLM model to use",
-    "default": "claude-3-5-sonnet-20241022",
+    "default": "claude-sonnet-4-5-20250929",
     "enum": [
         {
-            id: "claude-3-5-sonnet-20241022",
-            description: "Claude 3.5 Sonnet (latest)"
+            id: "claude-sonnet-4-5-20250929",
+            description: "Claude Sonnet 4.5 (complex agents + coding)"
+        },
+        {
+            id: "claude-opus-4-5-20251101",
+            description: "Claude Opus 4.5 (maximum intelligence)"
+        },
+        {
+            id: "claude-haiku-4-5-20251001",
+            description: "Claude Haiku 4.5 (fast)"
+        },
+        {
+            id: "claude-opus-4-1-20250805",
+            description: "Claude Opus 4.1 (specialized reasoning)"
+        },
+        {
+            id: "claude-sonnet-4-20250514",
+            description: "Claude Sonnet 4.0"
         },
         {
             id: "claude-3-5-haiku-20241022",
             description: "Claude 3.5 Haiku"
-        },
-        {
-            id: "claude-3-opus-20240229",
-            description: "Claude 3 Opus"
-        },
-        {
-            id: "claude-3-sonnet-20240229",
-            description: "Claude 3 Sonnet"
-        },
-        {
-            id: "claude-3-haiku-20240307",
-            description: "Claude 3 Haiku"
         },
     ],
     "required": true
