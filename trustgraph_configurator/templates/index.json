@@ -1,12 +1,6 @@
 {
     "templates": [
         {
-            "name": "1.2",
-            "description": "Further MCP and agent support and structured data extraction.",
-            "version": "1.2.20",
-            "status": "stable"
-        },
-        {
             "name": "1.3",
             "description": "Further agent support and structured data extraction",
             "version": "1.3.20",
@@ -27,8 +21,8 @@
 	{
             "name": "1.6",
             "description": "Streaming LLM responses, module API additions",
-            "version": "1.6.4",
-            "status": "pre-release"
+            "version": "1.6.5",
+            "status": "stable"
         }
     ],
     "platforms": [
