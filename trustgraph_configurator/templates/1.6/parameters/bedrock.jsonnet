@@ -4,10 +4,10 @@
 {
     "type": "string",
     "description": "LLM model to use",
-    "default": "anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "default": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
     "enum": [
         {
-            id: "anthropic.claude-sonnet-4-5-20250929-v1:0",
+            id: "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
             description: "Claude Sonnet 4.5 (smartest for complex agents and coding)"
         },
         {
@@ -15,19 +15,19 @@
             description: "Claude Opus 4.5 (maximum intelligence)"
         },
         {
-            id: "anthropic.claude-haiku-4-5-20251001-v1:0",
+            id: "global.anthropic.claude-haiku-4-5-20251001-v1:0",
             description: "Claude Haiku 4.5 (fastest with near-frontier intelligence)"
         },
         {
-            id: "anthropic.claude-opus-4-1-20250805-v1:0",
+            id: "global.anthropic.claude-opus-4-1-20250805-v1:0",
             description: "Claude Opus 4.1 (specialized reasoning)"
         },
         {
-            id: "anthropic.claude-sonnet-4-20250514-v1:0",
+            id: "global.anthropic.claude-sonnet-4-20250514-v1:0",
             description: "Claude Sonnet 4.0"
         },
         {
-            id: "anthropic.claude-opus-4-20250514-v1:0",
+            id: "global.anthropic.claude-opus-4-20250514-v1:0",
             description: "Claude Opus 4.0"
         },
         {
