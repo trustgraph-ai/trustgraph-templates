@@ -23,6 +23,12 @@
             "description": "Streaming LLM responses, module API additions",
             "version": "1.6.5",
             "status": "stable"
+        },
+	{
+            "name": "1.7",
+            "description": "Additional agentic features, ontology extraction updates ",
+            "version": "1.7.0",
+            "status": "pre-release"
         }
     ],
     "platforms": [
