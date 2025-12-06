@@ -72,6 +72,15 @@ local configuration = {
         interface_descriptions: $["interface-descriptions"],
         parameter_types: $["parameter-types"],
         token_costs: $["token-costs"],
+        "trustgraph:default": {
+          "user": "default-user",
+          "collection": "default",
+          "name": "Default Collection",
+          "description": "Default collection",
+          "tags": ["default"]
+        }
+      }
+
     }),
 
 } + default_prompts;
