@@ -37,6 +37,16 @@ local configuration = {
     // Embeddings model parameters
     "embeddings-models" +:: {},
 
+    collections:: {
+      "trustgraph:default": {
+        "user": "default-user",
+        "collection": "default",
+        "name": "Default Collection",
+        "description": "Default collection",
+        "tags": ["default"],
+      },
+    },
+
     // Default model and flow parameters
     flow_init_parameters:: {
         "llm-model": $["llm-models"].default,
@@ -72,15 +82,7 @@ local configuration = {
         interface_descriptions: $["interface-descriptions"],
         parameter_types: $["parameter-types"],
         token_costs: $["token-costs"],
-        "trustgraph:default": {
-          "user": "default-user",
-          "collection": "default",
-          "name": "Default Collection",
-          "description": "Default collection",
-          "tags": ["default"]
-        }
-      }
-
+        collection: $["collections"],
     }),
 
 } + default_prompts;
