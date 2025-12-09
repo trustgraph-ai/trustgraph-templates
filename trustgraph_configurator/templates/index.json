@@ -26,8 +26,8 @@
         },
 	{
             "name": "1.7",
-            "description": "Additional agentic features, ontology extraction updates ",
-            "version": "1.7.0",
+            "description": "Additional agentic features, ontology extraction updates, Loki logging",
+            "version": "1.7.6",
             "status": "pre-release"
         }
     ],
