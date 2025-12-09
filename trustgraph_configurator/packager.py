@@ -269,10 +269,10 @@ class Packager:
 
             # Prometheus config
             path = self.resources.joinpath(
-                "loki/loki-config.yaml"
+                "loki/local-config.yaml"
             )
             res = path.read_text()
-            output("loki/loki-config.yaml", res)
+            output("loki/local-config.yaml", res)
 
         logger.info("Generation complete.")
 

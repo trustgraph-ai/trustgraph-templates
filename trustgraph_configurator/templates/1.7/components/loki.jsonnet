@@ -12,7 +12,7 @@ local images = import "values/images.jsonnet";
             local cfgVol = engine.configVolume(
                 "loki-cfg", "loki",
 		{
-		    "loki-config.yaml": importstr "loki/loki-config.yaml",
+		    "local-config.yaml": importstr "loki/local-config.yaml",
 		}
             );
 
