@@ -88,6 +88,10 @@ local interface_builder = import "interface-builder.jsonnet";
                 // Token costs and parameter types
                 "token-costs": config_spec.token_costs,
                 "parameter-types": config_spec.parameter_types,
+
+                // Collections configuration
+                "collection": config_spec.collection,
+
             },
         },
 }
