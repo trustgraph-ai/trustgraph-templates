@@ -21,7 +21,7 @@ local images = import "values/images.jsonnet";
                     .with_image(images.loki)
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M")
-                    .with_port(9090, 9090, "http")
+                    .with_port(3100, 3100, "http")
                     .with_volume_mount(cfgVol, "/etc/loki/")
                     .with_volume_mount(vol, "/loki");
 

@@ -267,6 +267,13 @@ class Packager:
             res = path.read_text()
             output("prometheus/prometheus.yml", res)
 
+            # Prometheus config
+            path = self.resources.joinpath(
+                "loki/loki-config.yaml"
+            )
+            res = path.read_text()
+            output("loki/loki-config.yaml", res)
+
         logger.info("Generation complete.")
 
         return mem.getvalue()
