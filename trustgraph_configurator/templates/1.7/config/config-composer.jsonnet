@@ -91,6 +91,7 @@ local interface_builder = import "interface-builder.jsonnet";
 
                 // Collections configuration
                 "collection": config_spec.collection,
+
             },
         },
 }
