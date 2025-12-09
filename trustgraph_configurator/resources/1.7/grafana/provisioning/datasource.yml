@@ -19,3 +19,18 @@ datasources:
     isDefault: true
     editable: true
 
+  - name: Loki
+    type: loki
+    access: proxy
+    orgId: 1
+    # <string> Sets a custom UID to reference this
+    # data source in other parts of the configuration.
+    # If not specified, Grafana generates one.
+    uid: 'cf6m73l5rnvuod'
+
+    url: http://loki:3100
+
+    basicAuth: false
+    withCredentials: false
+    editable: true
+

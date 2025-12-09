@@ -243,10 +243,16 @@ class Packager:
 
             # Grafana config
             path = self.resources.joinpath(
-                "grafana/dashboards/dashboard.json"
+                "grafana/dashboards/overview-dashboard.json"
             )
             res = path.read_text()
-            output("grafana/dashboards/dashboard.json", res)
+            output("grafana/dashboards/overview-dashboard.json", res)
+
+            path = self.resources.joinpath(
+                "grafana/dashboards/log-dashboard.json"
+            )
+            res = path.read_text()
+            output("grafana/dashboards/log-dashboard.json", res)
 
             path = self.resources.joinpath(
                 "grafana/provisioning/dashboard.yml"
@@ -266,6 +272,13 @@ class Packager:
             )
             res = path.read_text()
             output("prometheus/prometheus.yml", res)
+
+            # Prometheus config
+            path = self.resources.joinpath(
+                "loki/local-config.yaml"
+            )
+            res = path.read_text()
+            output("loki/local-config.yaml", res)
 
         logger.info("Generation complete.")
 

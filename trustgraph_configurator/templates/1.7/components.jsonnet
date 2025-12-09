@@ -71,6 +71,7 @@
 
    // Observability support
    "grafana": import "components/grafana.jsonnet",
+   "loki": import "components/loki.jsonnet",
 
    // Pulsar manager is a UI for Pulsar.  Uses a LOT of memory
    "pulsar-manager": import "components/pulsar-manager.jsonnet",

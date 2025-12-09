@@ -1,5 +1,6 @@
 local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
+local loki = import "loki.jsonnet";
 
 {
 
@@ -51,8 +52,10 @@ local images = import "values/images.jsonnet";
             local provDashVol = engine.configVolume(
                 "prov-dash", "grafana/provisioning/",
 		{
-		    "dashboard.yml":
-                        importstr "grafana/provisioning/dashboard.yml",
+		    "overview-dashboard.yml":
+                        importstr "grafana/provisioning/overview-dashboard.yml",
+		    "log-dashboard.yml":
+                        importstr "grafana/provisioning/log-dashboard.yml",
 		}
 		
             );
@@ -69,8 +72,10 @@ local images = import "values/images.jsonnet";
             local dashVol = engine.configVolume(
                 "dashboards", "grafana/dashboards/",
 		{
-		    "dashboard.json":
-                        importstr "grafana/dashboards/dashboard.json",
+		    "overview-dashboard.json":
+                        importstr "grafana/dashboards/overview-dashboard.json",
+		    "log-dashboard.json":
+                        importstr "grafana/dashboards/log-dashboard.json",
 		}
 		
             );
@@ -118,5 +123,5 @@ local images = import "values/images.jsonnet";
 
     },
 
-}
+} + loki
 
