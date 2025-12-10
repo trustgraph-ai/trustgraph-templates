@@ -1267,30 +1267,13 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(job) (rate(input_tokens_total[$__rate_interval]))",
+          "expr": "sum by(model, direction)  (rate(tokens_total[$__rate_interval]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "input {{job}}",
+          "legendFormat": "{{model}} - {{direction}}",
           "range": true,
           "refId": "A",
-          "useBackend": false
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "f6b18033-5918-4e05-a1ca-4cb30343b129"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(job) (rate(output_tokens_total[$__rate_interval]))",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "output {{job}}",
-          "range": true,
-          "refId": "B",
           "useBackend": false
         }
       ],
@@ -1387,30 +1370,13 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(job) (rate(input_cost_total[$__rate_interval]))",
+          "expr": "sum by(direction, model) (rate(tokens_total[$__rate_interval]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "input {{job}}",
+          "legendFormat": "{{model}} - {{direction}}",
           "range": true,
           "refId": "A",
-          "useBackend": false
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "f6b18033-5918-4e05-a1ca-4cb30343b129"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(job) (rate(output_cost_total[$__rate_interval]))",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "output {{job}}",
-          "range": true,
-          "refId": "B",
           "useBackend": false
         }
       ],
