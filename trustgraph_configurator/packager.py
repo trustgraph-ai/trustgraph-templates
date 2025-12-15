@@ -241,44 +241,16 @@ class Packager:
             if version[:2] != "0." and version[:3] != "1.0":
                 output("trustgraph/config.json", tg_config_file)
 
-            # Grafana config
-            path = self.resources.joinpath(
-                "grafana/dashboards/overview-dashboard.json"
-            )
-            res = path.read_text()
-            output("grafana/dashboards/overview-dashboard.json", res)
-
-            path = self.resources.joinpath(
-                "grafana/dashboards/log-dashboard.json"
-            )
-            res = path.read_text()
-            output("grafana/dashboards/log-dashboard.json", res)
-
-            path = self.resources.joinpath(
-                "grafana/provisioning/dashboard.yml"
-            )
-            res = path.read_text()
-            output("grafana/provisioning/dashboard.yml", res)
-
-            path = self.resources.joinpath(
-                "grafana/provisioning/datasource.yml"
-            )
-            res = path.read_text()
-            output("grafana/provisioning/datasource.yml", res)
-
-            # Prometheus config
-            path = self.resources.joinpath(
-                "prometheus/prometheus.yml"
-            )
-            res = path.read_text()
-            output("prometheus/prometheus.yml", res)
-
-            # Prometheus config
-            path = self.resources.joinpath(
-                "loki/local-config.yaml"
-            )
-            res = path.read_text()
-            output("loki/local-config.yaml", res)
+            # Walk the resources directory and add all files
+            if os.path.isdir(self.resources):
+                for root, dirs, files in os.walk(self.resources):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        # Get relative path from resources directory
+                        rel_path = os.path.relpath(file_path, self.resources)
+                        with open(file_path, 'r') as f:
+                            content = f.read()
+                        output(rel_path, content)
 
         logger.info("Generation complete.")
 
