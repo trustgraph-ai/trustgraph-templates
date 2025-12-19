@@ -52,10 +52,8 @@ local loki = import "loki.jsonnet";
             local provDashVol = engine.configVolume(
                 "prov-dash", "grafana/provisioning/",
 		{
-		    "overview-dashboard.yml":
-                        importstr "grafana/provisioning/overview-dashboard.yml",
-		    "log-dashboard.yml":
-                        importstr "grafana/provisioning/log-dashboard.yml",
+		    "dashboard.yml":
+                        importstr "grafana/provisioning/dashboard.yml",
 		}
 		
             );
