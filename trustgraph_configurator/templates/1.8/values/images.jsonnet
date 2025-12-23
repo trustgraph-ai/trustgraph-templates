@@ -1,6 +1,7 @@
 local version = import "version.jsonnet";
 {
     cassandra: "docker.io/cassandra:4.1.10",
+    ceph: "quay.io/ceph/ceph:v20.2.0",
     neo4j: "docker.io/neo4j:2025.08.0-community-bullseye",
     pulsar: "docker.io/apachepulsar/pulsar:4.1.0",
     pulsar_manager: "docker.io/apachepulsar/pulsar-manager:v0.4.0",
