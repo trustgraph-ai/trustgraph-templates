@@ -74,11 +74,20 @@ local images = import "values/images.jsonnet";
             // Daemon environment for services that discover and fetch config from MON
             // The ceph/daemon entrypoint will contact MON_HOST, authenticate, and
             // populate the daemon's own isolated config volume automatically
+            //
+            // SRE SECURITY NOTE: CEPH_GET_ADMIN_KEY="1" distributes client.admin keyring
+            // to all daemons (MGR, OSD, RGW). In strictly hardened environments, this grants
+            // broader privileges than necessary. However, for engine-agnostic portability
+            // across Docker/K8s with isolated volumes, this is the most reliable bootstrap
+            // method to ensure cluster startup without manual intervention.
+            //
+            // Production hardening: After cluster is stable, consider implementing
+            // daemon-specific keyrings with limited capabilities.
             local daemon_env = cluster_env + {
                 MON_HOST: "ceph-mon:6789",  // DNS-based service discovery
-                // Tell entrypoint to fetch config and admin keyring from MON
+                // Fetch config and admin keyring from MON for bootstrap
                 CEPH_GET_ADMIN_KEY: "1",
-                // No external KV store
+                // Disable external discovery (Etcd/Consul) - prevents infinite hangs
                 KV_TYPE: "none",
             };
 
@@ -157,12 +166,15 @@ local images = import "values/images.jsonnet";
             // IMPORTANT: This container exits with code 0 after completion
             // Orchestrator must NOT restart it (use K8s Job or Compose restart: "no")
             // Uses MON_HOST to fetch config into its own isolated volume
+            // Needs CEPH_GET_ADMIN_KEY to run radosgw-admin commands
             local init_container =
                 engine.container("ceph-init")
                     .with_image(images.ceph)
                     .with_environment({
                         CLUSTER: $["ceph-cluster-id"],
                         MON_HOST: "ceph-mon:6789",
+                        CEPH_GET_ADMIN_KEY: "1",
+                        KV_TYPE: "none",
                         RGW_ACCESS_KEY: $["ceph-access-key"],
                         RGW_SECRET_KEY: $["ceph-secret-key"],
                     })
