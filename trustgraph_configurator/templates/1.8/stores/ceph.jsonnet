@@ -92,24 +92,40 @@ local images = import "values/images.jsonnet";
                     .with_volume_mount(vol_rgw, "/var/lib/ceph/radosgw")
                     .with_volume_mount(vol_config, "/etc/ceph");
 
-            // Group all Ceph containers together
-            local containerSet = engine.containers(
-                "ceph", [
-                    mon_container,
-                    mgr_container,
-                    osd_container,
-                    rgw_container
-                ]
+            // Create separate container sets for each daemon (for k8s node distribution)
+            local mon_containerSet = engine.containers(
+                "ceph-mon", [ mon_container ]
             );
 
-            // Service exposing all Ceph ports
-            local service =
-                engine.service(containerSet)
+            local mgr_containerSet = engine.containers(
+                "ceph-mgr", [ mgr_container ]
+            );
+
+            local osd_containerSet = engine.containers(
+                "ceph-osd", [ osd_container ]
+            );
+
+            local rgw_containerSet = engine.containers(
+                "ceph-rgw", [ rgw_container ]
+            );
+
+            // Create separate services for each daemon
+            local mon_service =
+                engine.service(mon_containerSet)
                 .with_port(6789, 6789, "mon")
-                .with_port(3300, 3300, "mon-msgr2")
+                .with_port(3300, 3300, "mon-msgr2");
+
+            local mgr_service =
+                engine.service(mgr_containerSet)
                 .with_port(7000, 7000, "mgr")
-                .with_port(8443, 8443, "dashboard")
-                .with_port(6800, 6800, "osd")
+                .with_port(8443, 8443, "dashboard");
+
+            local osd_service =
+                engine.service(osd_containerSet)
+                .with_port(6800, 6800, "osd");
+
+            local rgw_service =
+                engine.service(rgw_containerSet)
                 .with_port(7480, 7480, "s3");
 
             engine.resources([
@@ -118,8 +134,14 @@ local images = import "values/images.jsonnet";
                 vol_osd,
                 vol_rgw,
                 vol_config,
-                containerSet,
-                service,
+                mon_containerSet,
+                mgr_containerSet,
+                osd_containerSet,
+                rgw_containerSet,
+                mon_service,
+                mgr_service,
+                osd_service,
+                rgw_service,
             ])
 
     },
