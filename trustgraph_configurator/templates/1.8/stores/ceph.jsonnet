@@ -82,6 +82,9 @@ local images = import "values/images.jsonnet";
                         RGW_NAME: "rgw0",
                         RGW_FRONTEND_PORT: "7480",
                         RGW_CIVETWEB_PORT: "7480",
+                        RGW_USER: $["ceph-access-key"],
+                        RGW_USER_USER_ACCESS_KEY: $["ceph-access-key"],
+                        RGW_USER_USER_SECRET_KEY: $["ceph-secret-key"],
                     })
                     .with_limits("1.0", "512M")
                     .with_reservations("0.5", "512M")
