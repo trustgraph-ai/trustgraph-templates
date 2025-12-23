@@ -13,9 +13,11 @@ local images = import "values/images.jsonnet";
     "ceph-cluster-id":: "ceph",
     "ceph-fsid":: "a7f64266-0894-4f1e-a635-d0aeaca0e993",
 
-    // Pool redundancy settings - minimum 2 for fault tolerance
+    // Pool redundancy settings
+    // size: 2 = two replicas for fault tolerance
+    // min_size: 1 = allow degraded I/O if one OSD is down (prevents cluster freeze)
     "ceph-pool-size":: "2",
-    "ceph-pool-min-size":: "2",
+    "ceph-pool-min-size":: "1",
 
     ceph +: {
         create:: function(engine)
@@ -25,8 +27,10 @@ local images = import "values/images.jsonnet";
             local vol_osd = engine.volume("ceph-osd").with_size("100G");
             local vol_rgw = engine.volume("ceph-rgw").with_size("20G");
 
-            // Shared config volume approach - ceph/daemon manages config sync
-            // Each daemon mounts this but the daemon image handles coordination
+            // Shared config volume - SAFE with ceph/daemon image
+            // The MON daemon bootstraps /etc/ceph/ceph.conf and keyrings on first run
+            // Other daemons read the config but write to their own subdirectories
+            // The ceph/daemon entrypoint handles this coordination automatically
             local vol_config = engine.volume("ceph-config").with_size("500M");
 
             // Base cluster environment - shared across all daemons
@@ -44,8 +48,9 @@ local images = import "values/images.jsonnet";
             local mon_env = cluster_env + {
                 CEPH_DAEMON: "MON",
                 MON_NAME: "mon0",
-                // Use service discovery - the service name resolves to the pod IP
-                // The daemon image will bind to the resolved address
+                // MON_IP must be set to allow binding to local interface
+                // The ceph/daemon image uses this to determine which IP to bind to
+                MON_IP: "0.0.0.0",
             };
 
             // Daemon environment for services that discover MON
@@ -121,7 +126,8 @@ local images = import "values/images.jsonnet";
                     .with_volume_mount(vol_config, "/etc/ceph");
 
             // Init container - one-time S3 user provisioning
-            // Exits cleanly after completion instead of sleeping forever
+            // IMPORTANT: This container exits with code 0 after completion
+            // Orchestrator must NOT restart it (use K8s Job or Compose restart: "no")
             local init_container =
                 engine.container("ceph-init")
                     .with_image(images.ceph)
