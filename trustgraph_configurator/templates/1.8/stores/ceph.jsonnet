@@ -18,7 +18,7 @@ local images = import "values/images.jsonnet";
             // Data volumes
             local vol_mon = engine.volume("ceph-mon").with_size("20G");
             local vol_mgr = engine.volume("ceph-mgr").with_size("20G");
-            local vol_osd = engine.volume("ceph-osd").with_size("100G");
+            local vol_osd = engine.volume("ceph-osd").with_size("20G");
             local vol_rgw = engine.volume("ceph-rgw").with_size("20G");
 
             // Separate config volumes per daemon
