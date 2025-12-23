@@ -15,30 +15,39 @@ local images = import "values/images.jsonnet";
 
     ceph +: {
         create:: function(engine)
-            // Volumes for persistent storage
+            // Data volumes
             local vol_mon = engine.volume("ceph-mon").with_size("20G");
             local vol_mgr = engine.volume("ceph-mgr").with_size("20G");
             local vol_osd = engine.volume("ceph-osd").with_size("20G");
             local vol_rgw = engine.volume("ceph-rgw").with_size("20G");
-            local vol_config = engine.volume("ceph-config").with_size("1G");
 
-            // Common environment variables for all Ceph daemons
-            local common_env = {
+            // Separate config volumes per daemon
+            local vol_mon_config = engine.volume("ceph-mon-config").with_size("100M");
+            local vol_mgr_config = engine.volume("ceph-mgr-config").with_size("100M");
+            local vol_osd_config = engine.volume("ceph-osd-config").with_size("100M");
+            local vol_rgw_config = engine.volume("ceph-rgw-config").with_size("100M");
+
+            // Base environment for MON (bootstraps cluster)
+            local mon_env = {
                 CLUSTER: $["ceph-cluster-id"],
                 FSID: $["ceph-fsid"],
                 CEPH_PUBLIC_NETWORK: "0.0.0.0/0",
                 CEPH_CLUSTER_NETWORK: "0.0.0.0/0",
-                // Single node / dev settings
                 CEPH_CONF_OSD_POOL_DEFAULT_SIZE: "1",
                 CEPH_CONF_OSD_POOL_DEFAULT_MIN_SIZE: "1",
                 CEPH_CONF_OSD_CRUSH_CHOOSELEAF_TYPE: "0",
+            };
+
+            // Environment for non-MON daemons (fetch config from MON)
+            local daemon_env = mon_env + {
+                MON_HOST: "ceph-mon",
             };
 
             // MON (Monitor) container - bootstraps cluster on first run
             local mon_container =
                 engine.container("ceph-mon")
                     .with_image(images.ceph)
-                    .with_environment(common_env + {
+                    .with_environment(mon_env + {
                         CEPH_DAEMON: "MON",
                         MON_IP: "auto",
                         MON_NAME: "mon0",
@@ -48,13 +57,13 @@ local images = import "values/images.jsonnet";
                     .with_port(6789, 6789, "mon")
                     .with_port(3300, 3300, "mon-msgr2")
                     .with_volume_mount(vol_mon, "/var/lib/ceph/mon")
-                    .with_volume_mount(vol_config, "/etc/ceph");
+                    .with_volume_mount(vol_mon_config, "/etc/ceph");
 
-            // MGR (Manager) container - retries until MON available
+            // MGR (Manager) container
             local mgr_container =
                 engine.container("ceph-mgr")
                     .with_image(images.ceph)
-                    .with_environment(common_env + {
+                    .with_environment(daemon_env + {
                         CEPH_DAEMON: "MGR",
                         MGR_NAME: "mgr0",
                     })
@@ -64,26 +73,26 @@ local images = import "values/images.jsonnet";
                     .with_port(8443, 8443, "dashboard")
                     .with_port(9283, 9283, "prometheus")
                     .with_volume_mount(vol_mgr, "/var/lib/ceph/mgr")
-                    .with_volume_mount(vol_config, "/etc/ceph");
+                    .with_volume_mount(vol_mgr_config, "/etc/ceph");
 
-            // OSD (Object Storage Daemon) container - retries until MON available
+            // OSD (Object Storage Daemon) container
             local osd_container =
                 engine.container("ceph-osd")
                     .with_image(images.ceph)
-                    .with_environment(common_env + {
+                    .with_environment(daemon_env + {
                         CEPH_DAEMON: "OSD_DIRECTORY",
                     })
                     .with_limits("2.0", "2048M")
                     .with_reservations("0.5", "1024M")
                     .with_port(6800, 6800, "osd")
                     .with_volume_mount(vol_osd, "/var/lib/ceph/osd")
-                    .with_volume_mount(vol_config, "/etc/ceph");
+                    .with_volume_mount(vol_osd_config, "/etc/ceph");
 
-            // RGW (RADOS Gateway) container - retries until cluster ready
+            // RGW (RADOS Gateway) container
             local rgw_container =
                 engine.container("ceph-rgw")
                     .with_image(images.ceph)
-                    .with_environment(common_env + {
+                    .with_environment(daemon_env + {
                         CEPH_DAEMON: "RGW",
                         RGW_NAME: "rgw0",
                         RGW_CIVETWEB_PORT: "7480",
@@ -92,7 +101,7 @@ local images = import "values/images.jsonnet";
                     .with_reservations("0.5", "512M")
                     .with_port(7480, 7480, "s3")
                     .with_volume_mount(vol_rgw, "/var/lib/ceph/radosgw")
-                    .with_volume_mount(vol_config, "/etc/ceph");
+                    .with_volume_mount(vol_rgw_config, "/etc/ceph");
 
             // Container sets
             local mon_containerSet = engine.containers("ceph-mon", [mon_container]);
@@ -125,7 +134,10 @@ local images = import "values/images.jsonnet";
                 vol_mgr,
                 vol_osd,
                 vol_rgw,
-                vol_config,
+                vol_mon_config,
+                vol_mgr_config,
+                vol_osd_config,
+                vol_rgw_config,
                 mon_containerSet,
                 mgr_containerSet,
                 osd_containerSet,
