@@ -83,12 +83,22 @@ local images = import "values/images.jsonnet";
             //
             // Production hardening: After cluster is stable, consider implementing
             // daemon-specific keyrings with limited capabilities.
+            //
+            // CRITICAL: Force entrypoint out of "static mode"
+            // The ceph/daemon entrypoint checks multiple variables to determine if it should
+            // fetch config from MON or expect it to already exist. These variables together
+            // trigger the network fetch logic instead of "static: does not generate config" error.
             local daemon_env = cluster_env + {
                 MON_HOST: "ceph-mon:6789",  // DNS-based service discovery
                 // Fetch config and admin keyring from MON for bootstrap
                 CEPH_GET_ADMIN_KEY: "1",
                 // Disable external discovery (Etcd/Consul) - prevents infinite hangs
                 KV_TYPE: "none",
+                // Force network mode - entrypoint checks for these to enable config fetch
+                MON_IP: "0.0.0.0",  // Triggers network logic even on non-MON daemons
+                CEPH_PUBLIC_NETWORK: "0.0.0.0/0",  // Must be explicit for network mode
+                // Ensure network auto-detection is enabled
+                NETWORK_AUTO_DETECT: "4",
             };
 
             // MGR-specific environment
