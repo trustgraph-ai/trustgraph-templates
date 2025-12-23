@@ -76,6 +76,10 @@ local images = import "values/images.jsonnet";
             // populate the daemon's own isolated config volume automatically
             local daemon_env = cluster_env + {
                 MON_HOST: "ceph-mon:6789",  // DNS-based service discovery
+                // Tell entrypoint to fetch config and admin keyring from MON
+                CEPH_GET_ADMIN_KEY: "1",
+                // No external KV store
+                KV_TYPE: "none",
             };
 
             // MGR-specific environment
