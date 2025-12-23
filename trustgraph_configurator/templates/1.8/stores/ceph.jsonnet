@@ -49,11 +49,26 @@ local images = import "values/images.jsonnet";
 
             // MON-specific environment
             // MON bootstraps the cluster and creates initial config in its own volume
+            //
+            // CRITICAL: MON_DATA_AVAIL="0" forces fresh cluster bootstrap
+            // The ceph/daemon entrypoint script (variables_stack.sh) uses this as a gate:
+            // - MON_DATA_AVAIL="0" -> run mkfs, create new cluster with our FSID
+            // - MON_DATA_AVAIL="1" -> attempt to join existing cluster (infinite probe loop)
+            //
+            // WARNING: If you change FSID, you MUST manually purge vol_mon volume
+            // The script will fail if it finds existing data with a different FSID
             local mon_env = cluster_env + {
                 CEPH_DAEMON: "MON",
                 MON_NAME: "mon0",
-                // MON_IP: 0.0.0.0 allows binding to container's local interface
-                MON_IP: "0.0.0.0",
+                MON_PORT: "6789",
+                // Force bootstrap mode - this is the kill switch for infinite probing
+                MON_DATA_AVAIL: "0",
+                // Network configuration for monmap generation
+                MON_IP: "0.0.0.0",  // Bind to all interfaces
+                NETWORK_AUTO_DETECT: "4",  // Auto-detect eth0 IPv4 for monmap
+                CEPH_PUBLIC_NETWORK: "0.0.0.0/0",
+                // No external key-value coordination service
+                KV_TYPE: "none",
             };
 
             // Daemon environment for services that discover and fetch config from MON
