@@ -27,11 +27,14 @@ local images = import "values/images.jsonnet";
             local vol_osd = engine.volume("ceph-osd").with_size("100G");
             local vol_rgw = engine.volume("ceph-rgw").with_size("20G");
 
-            // Shared config volume - SAFE with ceph/daemon image
-            // The MON daemon bootstraps /etc/ceph/ceph.conf and keyrings on first run
-            // Other daemons read the config but write to their own subdirectories
-            // The ceph/daemon entrypoint handles this coordination automatically
-            local vol_config = engine.volume("ceph-config").with_size("500M");
+            // Isolated config volumes per daemon (ReadWriteOnce compatible)
+            // Each daemon gets its own non-shared config volume to support
+            // multi-node scheduling in K8s and other orchestrators
+            local vol_mon_config = engine.volume("ceph-mon-config").with_size("500M");
+            local vol_mgr_config = engine.volume("ceph-mgr-config").with_size("500M");
+            local vol_osd_config = engine.volume("ceph-osd-config").with_size("500M");
+            local vol_rgw_config = engine.volume("ceph-rgw-config").with_size("500M");
+            local vol_init_config = engine.volume("ceph-init-config").with_size("500M");
 
             // Base cluster environment - shared across all daemons
             local cluster_env = {
@@ -45,15 +48,17 @@ local images = import "values/images.jsonnet";
             };
 
             // MON-specific environment
+            // MON bootstraps the cluster and creates initial config in its own volume
             local mon_env = cluster_env + {
                 CEPH_DAEMON: "MON",
                 MON_NAME: "mon0",
-                // MON_IP must be set to allow binding to local interface
-                // The ceph/daemon image uses this to determine which IP to bind to
+                // MON_IP: 0.0.0.0 allows binding to container's local interface
                 MON_IP: "0.0.0.0",
             };
 
-            // Daemon environment for services that discover MON
+            // Daemon environment for services that discover and fetch config from MON
+            // The ceph/daemon entrypoint will contact MON_HOST, authenticate, and
+            // populate the daemon's own isolated config volume automatically
             local daemon_env = cluster_env + {
                 MON_HOST: "ceph-mon:6789",  // DNS-based service discovery
             };
@@ -78,6 +83,7 @@ local images = import "values/images.jsonnet";
             };
 
             // MON (Monitor) container - cluster state and quorum
+            // Bootstraps cluster config in its own isolated volume
             local mon_container =
                 engine.container("ceph-mon")
                     .with_image(images.ceph)
@@ -87,9 +93,10 @@ local images = import "values/images.jsonnet";
                     .with_port(6789, 6789, "mon")
                     .with_port(3300, 3300, "mon-msgr2")
                     .with_volume_mount(vol_mon, "/var/lib/ceph/mon")
-                    .with_volume_mount(vol_config, "/etc/ceph");
+                    .with_volume_mount(vol_mon_config, "/etc/ceph");
 
             // MGR (Manager) container - cluster management and dashboard
+            // Fetches config from MON via MON_HOST and stores in its own volume
             local mgr_container =
                 engine.container("ceph-mgr")
                     .with_image(images.ceph)
@@ -100,10 +107,11 @@ local images = import "values/images.jsonnet";
                     .with_port(8443, 8443, "dashboard")
                     .with_port(9283, 9283, "prometheus")
                     .with_volume_mount(vol_mgr, "/var/lib/ceph/mgr")
-                    .with_volume_mount(vol_config, "/etc/ceph");
+                    .with_volume_mount(vol_mgr_config, "/etc/ceph");
 
             // OSD (Object Storage Daemon) - actual data storage
             // Increased resources to prevent OOM during recovery operations
+            // Fetches config from MON via MON_HOST and stores in its own volume
             local osd_container =
                 engine.container("ceph-osd")
                     .with_image(images.ceph)
@@ -112,9 +120,10 @@ local images = import "values/images.jsonnet";
                     .with_reservations("1.0", "2048M")
                     .with_port(6800, 6800, "osd")
                     .with_volume_mount(vol_osd, "/var/lib/ceph/osd")
-                    .with_volume_mount(vol_config, "/etc/ceph");
+                    .with_volume_mount(vol_osd_config, "/etc/ceph");
 
             // RGW (RADOS Gateway) - S3 API endpoint
+            // Fetches config from MON via MON_HOST and stores in its own volume
             local rgw_container =
                 engine.container("ceph-rgw")
                     .with_image(images.ceph)
@@ -123,11 +132,12 @@ local images = import "values/images.jsonnet";
                     .with_reservations("0.5", "1024M")
                     .with_port(7480, 7480, "s3")
                     .with_volume_mount(vol_rgw, "/var/lib/ceph/radosgw")
-                    .with_volume_mount(vol_config, "/etc/ceph");
+                    .with_volume_mount(vol_rgw_config, "/etc/ceph");
 
             // Init container - one-time S3 user provisioning
             // IMPORTANT: This container exits with code 0 after completion
             // Orchestrator must NOT restart it (use K8s Job or Compose restart: "no")
+            // Uses MON_HOST to fetch config into its own isolated volume
             local init_container =
                 engine.container("ceph-init")
                     .with_image(images.ceph)
@@ -139,7 +149,7 @@ local images = import "values/images.jsonnet";
                     })
                     .with_limits("0.5", "512M")
                     .with_reservations("0.25", "256M")
-                    .with_volume_mount(vol_config, "/etc/ceph")
+                    .with_volume_mount(vol_init_config, "/etc/ceph")
                     .with_command([
                         "bash", "-c", |||
                             set -e
@@ -220,12 +230,17 @@ local images = import "values/images.jsonnet";
                     .with_port(7480, 7480, "s3");
 
             engine.resources([
-                // Volumes
+                // Data volumes
                 vol_mon,
                 vol_mgr,
                 vol_osd,
                 vol_rgw,
-                vol_config,
+                // Config volumes (isolated, no sharing)
+                vol_mon_config,
+                vol_mgr_config,
+                vol_osd_config,
+                vol_rgw_config,
+                vol_init_config,
                 // Container sets
                 mon_containerSet,
                 mgr_containerSet,
