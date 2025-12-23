@@ -88,17 +88,23 @@ local images = import "values/images.jsonnet";
             // The ceph/daemon entrypoint checks multiple variables to determine if it should
             // fetch config from MON or expect it to already exist. These variables together
             // trigger the network fetch logic instead of "static: does not generate config" error.
+            //
+            // The entrypoint has orchestration detection logic that looks for:
+            // 1. MON_IP pointing to a resolvable target (not 0.0.0.0)
+            // 2. NETWORK_AUTO_DETECT to enable network mode
+            // 3. CEPH_PUBLIC_NETWORK to confirm network configuration
+            // Without all three, it falls back to "static mode" and refuses to fetch.
             local daemon_env = cluster_env + {
                 MON_HOST: "ceph-mon:6789",  // DNS-based service discovery
+                // Point to MON hostname - triggers network fetch logic
+                MON_IP: "ceph-mon",  // Must be hostname, not 0.0.0.0, for fetch to trigger
                 // Fetch config and admin keyring from MON for bootstrap
                 CEPH_GET_ADMIN_KEY: "1",
                 // Disable external discovery (Etcd/Consul) - prevents infinite hangs
                 KV_TYPE: "none",
-                // Force network mode - entrypoint checks for these to enable config fetch
-                MON_IP: "0.0.0.0",  // Triggers network logic even on non-MON daemons
+                // Force network mode - required for entrypoint to attempt config fetch
                 CEPH_PUBLIC_NETWORK: "0.0.0.0/0",  // Must be explicit for network mode
-                // Ensure network auto-detection is enabled
-                NETWORK_AUTO_DETECT: "4",
+                NETWORK_AUTO_DETECT: "4",  // Enable IPv4 auto-detection
             };
 
             // MGR-specific environment
@@ -135,10 +141,16 @@ local images = import "values/images.jsonnet";
 
             // MGR (Manager) container - cluster management and dashboard
             // Fetches config from MON via MON_HOST and stores in its own volume
+            // DNS wait wrapper prevents crash-loop before MON is ready
             local mgr_container =
                 engine.container("ceph-mgr")
                     .with_image(images.ceph)
                     .with_environment(mgr_env)
+                    .with_command([
+                        "bash", "-c",
+                        "until getent hosts ceph-mon; do echo 'Waiting for MON DNS...'; sleep 2; done; " +
+                        "exec /opt/ceph-container/bin/entrypoint.sh"
+                    ])
                     .with_limits("1.0", "1536M")
                     .with_reservations("0.5", "1024M")
                     .with_port(7000, 7000, "mgr")
@@ -150,10 +162,16 @@ local images = import "values/images.jsonnet";
             // OSD (Object Storage Daemon) - actual data storage
             // Increased resources to prevent OOM during recovery operations
             // Fetches config from MON via MON_HOST and stores in its own volume
+            // DNS wait wrapper prevents crash-loop before MON is ready
             local osd_container =
                 engine.container("ceph-osd")
                     .with_image(images.ceph)
                     .with_environment(osd_env)
+                    .with_command([
+                        "bash", "-c",
+                        "until getent hosts ceph-mon; do echo 'Waiting for MON DNS...'; sleep 2; done; " +
+                        "exec /opt/ceph-container/bin/entrypoint.sh"
+                    ])
                     .with_limits("2.0", "4096M")
                     .with_reservations("1.0", "2048M")
                     .with_port(6800, 6800, "osd")
@@ -162,10 +180,16 @@ local images = import "values/images.jsonnet";
 
             // RGW (RADOS Gateway) - S3 API endpoint
             // Fetches config from MON via MON_HOST and stores in its own volume
+            // DNS wait wrapper prevents crash-loop before MON is ready
             local rgw_container =
                 engine.container("ceph-rgw")
                     .with_image(images.ceph)
                     .with_environment(rgw_env)
+                    .with_command([
+                        "bash", "-c",
+                        "until getent hosts ceph-mon; do echo 'Waiting for MON DNS...'; sleep 2; done; " +
+                        "exec /opt/ceph-container/bin/entrypoint.sh"
+                    ])
                     .with_limits("1.0", "1536M")
                     .with_reservations("0.5", "1024M")
                     .with_port(7480, 7480, "s3")
