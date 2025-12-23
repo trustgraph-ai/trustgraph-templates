@@ -48,16 +48,10 @@ local images = import "values/images.jsonnet";
                 engine.container("ceph-mon")
                     .with_image(images.ceph)
                     .with_environment(mon_env + {
-                        MON_IP: "auto",
+                        CEPH_DAEMON: "MON",
+                        MON_IP: "0.0.0.0",
                         MON_NAME: "mon0",
                     })
-                    .with_command([
-                        "ceph-mon",
-                        "-f",
-                        "--cluster", $["ceph-cluster-id"],
-                        "--id", "mon0",
-                        "--public-addr", "0.0.0.0",
-                    ])
                     .with_limits("1.0", "1024M")
                     .with_reservations("0.5", "512M")
                     .with_port(6789, 6789, "mon")
@@ -70,14 +64,9 @@ local images = import "values/images.jsonnet";
                 engine.container("ceph-mgr")
                     .with_image(images.ceph)
                     .with_environment(daemon_env + {
+                        CEPH_DAEMON: "MGR",
                         MGR_NAME: "mgr0",
                     })
-                    .with_command([
-                        "ceph-mgr",
-                        "-f",
-                        "--cluster", $["ceph-cluster-id"],
-                        "--id", "mgr0",
-                    ])
                     .with_limits("1.0", "1024M")
                     .with_reservations("0.5", "512M")
                     .with_port(7000, 7000, "mgr")
@@ -90,13 +79,10 @@ local images = import "values/images.jsonnet";
             local osd_container =
                 engine.container("ceph-osd")
                     .with_image(images.ceph)
-                    .with_environment(daemon_env)
-                    .with_command([
-                        "ceph-osd",
-                        "-f",
-                        "--cluster", $["ceph-cluster-id"],
-                        "--id", "0",
-                    ])
+                    .with_environment(daemon_env + {
+                        CEPH_DAEMON: "OSD",
+                        OSD_TYPE: "directory",
+                    })
                     .with_limits("2.0", "2048M")
                     .with_reservations("0.5", "1024M")
                     .with_port(6800, 6800, "osd")
@@ -108,16 +94,10 @@ local images = import "values/images.jsonnet";
                 engine.container("ceph-rgw")
                     .with_image(images.ceph)
                     .with_environment(daemon_env + {
+                        CEPH_DAEMON: "RGW",
                         RGW_NAME: "rgw0",
-                        RGW_CIVETWEB_PORT: "7480",
+                        RGW_FRONTEND_PORT: "7480",
                     })
-                    .with_command([
-                        "radosgw",
-                        "-f",
-                        "--cluster", $["ceph-cluster-id"],
-                        "--name", "client.rgw.rgw0",
-                        "--rgw-frontends", "civetweb port=7480",
-                    ])
                     .with_limits("1.0", "1024M")
                     .with_reservations("0.5", "512M")
                     .with_port(7480, 7480, "s3")
