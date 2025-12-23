@@ -18,7 +18,7 @@ local images = import "values/images.jsonnet";
             // Data volumes
             local vol_mon = engine.volume("ceph-mon").with_size("20G");
             local vol_mgr = engine.volume("ceph-mgr").with_size("20G");
-            local vol_osd = engine.volume("ceph-osd").with_size("20G");
+            local vol_osd = engine.volume("ceph-osd").with_size("100G");
             local vol_rgw = engine.volume("ceph-rgw").with_size("20G");
 
             // Separate config volumes per daemon
@@ -103,11 +103,57 @@ local images = import "values/images.jsonnet";
                     .with_volume_mount(vol_rgw, "/var/lib/ceph/radosgw")
                     .with_volume_mount(vol_rgw_config, "/etc/ceph");
 
+            // Init container - creates S3 user, retries until success
+            local vol_init_config = engine.volume("ceph-init-config").with_size("100M");
+            local init_container =
+                engine.container("ceph-init")
+                    .with_image(images.ceph)
+                    .with_environment(daemon_env + {
+                        RGW_ACCESS_KEY: $["ceph-access-key"],
+                        RGW_SECRET_KEY: $["ceph-secret-key"],
+                    })
+                    .with_limits("0.5", "256M")
+                    .with_reservations("0.1", "128M")
+                    .with_volume_mount(vol_init_config, "/etc/ceph")
+                    .with_command([
+                        "bash", "-c", |||
+                            set -e
+                            echo "Waiting for Ceph cluster and RGW to be ready..."
+                            until ceph health | grep -q "HEALTH_OK\|HEALTH_WARN"; do
+                                echo "Cluster not ready, retrying in 5s..."
+                                sleep 5
+                            done
+                            echo "Cluster is healthy."
+
+                            until curl -sf http://ceph-rgw:7480 >/dev/null 2>&1; do
+                                echo "RGW not ready, retrying in 5s..."
+                                sleep 5
+                            done
+                            echo "RGW is ready."
+
+                            echo "Creating S3 user..."
+                            until radosgw-admin user create \
+                                --uid="${RGW_ACCESS_KEY}" \
+                                --display-name="Object Storage User" \
+                                --access-key="${RGW_ACCESS_KEY}" \
+                                --secret-key="${RGW_SECRET_KEY}" 2>/dev/null \
+                            || radosgw-admin user info --uid="${RGW_ACCESS_KEY}" >/dev/null 2>&1; do
+                                echo "User creation failed, retrying in 5s..."
+                                sleep 5
+                            done
+                            echo "S3 user ready."
+
+                            echo "Init complete. Sleeping forever..."
+                            exec sleep infinity
+                        |||,
+                    ]);
+
             // Container sets
             local mon_containerSet = engine.containers("ceph-mon", [mon_container]);
             local mgr_containerSet = engine.containers("ceph-mgr", [mgr_container]);
             local osd_containerSet = engine.containers("ceph-osd", [osd_container]);
             local rgw_containerSet = engine.containers("ceph-rgw", [rgw_container]);
+            local init_containerSet = engine.containers("ceph-init", [init_container]);
 
             // Services
             local mon_service =
@@ -138,10 +184,12 @@ local images = import "values/images.jsonnet";
                 vol_mgr_config,
                 vol_osd_config,
                 vol_rgw_config,
+                vol_init_config,
                 mon_containerSet,
                 mgr_containerSet,
                 osd_containerSet,
                 rgw_containerSet,
+                init_containerSet,
                 mon_service,
                 mgr_service,
                 osd_service,
