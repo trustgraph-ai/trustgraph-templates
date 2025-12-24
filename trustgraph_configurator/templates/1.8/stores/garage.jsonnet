@@ -66,7 +66,7 @@ local images = import "values/images.jsonnet";
                 engine.container("garage")
                     .with_image(images.garage)
                     .with_command([
-                        "/garage", "-c", "/etc/garage/garage.toml"
+                        "/garage", "-c", "/etc/garage/garage.toml", "server"
                     ])
                     .with_environment({
                         RUST_LOG: "garage=info",
