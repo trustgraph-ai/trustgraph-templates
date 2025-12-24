@@ -85,9 +85,10 @@ local images = import "values/images.jsonnet";
             // Init container - configures cluster layout and creates S3 credentials
             // IMPORTANT: This container exits with code 0 after completion
             // Orchestrator must NOT restart it (use K8s Job or Compose restart: "no")
+            // Uses Alpine base image since garage container has no shell
             local init_container =
                 engine.container("garage-init")
-                    .with_image(images.garage)
+                    .with_image("docker.io/alpine:latest")
                     .with_environment({
                         GARAGE_ACCESS_KEY: $["garage-access-key"],
                         GARAGE_SECRET_KEY: $["garage-secret-key"],
@@ -97,8 +98,17 @@ local images = import "values/images.jsonnet";
                     .with_reservations("0.25", "128M")
                     .with_volume_mount(cfgVol, "/etc/garage/")
                     .with_command([
-                        "bash", "-c", |||
+                        "sh", "-c", |||
                             set -e
+
+                            # Install required tools
+                            echo "Installing curl and downloading garage CLI..."
+                            apk add --no-cache curl
+
+                            # Download garage binary (v1.0.1)
+                            curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/v1.0.1/x86_64-unknown-linux-musl/garage" \
+                                -o /usr/local/bin/garage
+                            chmod +x /usr/local/bin/garage
 
                             echo "Waiting for Garage daemon to be ready..."
                             MAX_ATTEMPTS=60
@@ -114,10 +124,15 @@ local images = import "values/images.jsonnet";
                             done
                             echo "Garage daemon is ready."
 
-                            # Get the node ID
-                            echo "Getting Garage node ID..."
-                            NODE_ID=$(garage -c /etc/garage/garage.toml node id | grep -oP 'Node ID: \K\w+')
+                            # Get the node ID via admin API
+                            echo "Getting Garage node ID via admin API..."
+                            NODE_ID=$(curl -s http://garage:3903/v1/status | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
                             echo "Node ID: ${NODE_ID}"
+
+                            if [ -z "$NODE_ID" ]; then
+                                echo "ERROR: Failed to retrieve node ID"
+                                exit 1
+                            fi
 
                             # Check if layout is already configured
                             if garage -c /etc/garage/garage.toml layout show 2>&1 | grep -q "${NODE_ID}"; then
