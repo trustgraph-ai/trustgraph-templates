@@ -1,3 +1,110 @@
+
+//
+// This majorly does not work
+//
+
+// This configuration fails primarily because it tries to treat Ceph
+// like a stateless web app. You are currently pointing mon host to a
+// generic service name (ceph-mon), but you aren't telling the Monitor
+// process to assume that service identity.
+
+// To make this work with the "Service Name" approach across any
+// engine, you need to fix the binding logic and the messenger protocol.
+
+// 1. The ceph.conf Fix
+
+// Need to enable Messenger v2 (modern) and tell the cluster to use
+// the service names for its initial quorum.
+
+//Change this section:
+// Ini, TOML
+
+// [global]
+// fsid = %s
+// mon initial members = mon0
+// mon host = ceph-mon:6789
+// ...
+
+// To this:
+// Ini, TOML
+
+// [global]
+// fsid = %s
+// # Use the actual service names as members
+// mon initial members = ceph-mon
+// # Explicitly use the Service name (VIP)
+// mon host = ceph-mon
+// # Force modern protocol
+// ms_bind_msgr2 = true
+// ms_bind_msgr1 = true
+
+// 2. The MON Environment & Command Fix
+
+// This is the most critical part. Your current config sets MON_IP:
+// "0.0.0.0". This causes the MON to bind to the Pod IP, which breaks
+// when the Pod restarts. You must force it to bind to the Service IP.
+
+// Update mon_env:
+// Code snippet
+
+// local mon_env = cluster_env + {
+//     CEPH_DAEMON: "MON",
+//     MON_NAME: "mon0",
+//     # Remove MON_IP: "0.0.0.0"
+//     # Add these:
+//     MON_ADDR: "ceph-mon", // This says to resolve the service name
+// };
+
+// Update mon_container command: You are currently wiping the MON data
+// on every start (rm -rf /var/lib/ceph/mon/*). Stop doing that. If you
+// wipe the data, you lose the cluster state and the OSDs will refuse to
+// talk to the "new" MON.
+
+// Code snippet
+
+// .with_command([
+//     "bash", "-c",
+//     # 1. Resolve the Service IP at runtime
+//     "export MON_IP=$(getent hosts ceph-mon | awk '{ print $1 }'); " +
+//     inject_mon_config + 
+//     # 2. Start the daemon telling it its PUBLIC address is the Service VIP
+//     "exec /opt/ceph-container/bin/entrypoint.sh"
+// ])
+
+// 3. Why your current config "Majorly does not work"
+
+// The "Wipe" Logic: By running rm -rf /var/lib/ceph/mon/* in the
+// MON container, you are creating a "New Cluster" every time the
+// container starts. Since the OSDs store the fsid and cluster
+// secrets, they will reject the "new" MON.
+
+// DNS Race Condition: Your OSD/MGR/RGW containers wait for
+// ceph-mon DNS, which is good. However, if ceph-mon resolves to a
+// Round Robin IP (multiple pods) rather than a stable ClusterIP, the
+// connection will be flaky.
+
+// Messenger Protocol: Without ms_bind_msgr2, Ceph defaults to the
+// old v1 protocol which is much more sensitive to NAT/Container IP
+// mismatches.
+
+// SUMMARY
+
+// Component: ceph.conf
+// Change: Add ms_bind_msgr2 = true
+// Why: Supports modern container networking better.
+
+// Component: MON Start
+// Change: Remove rm -rf
+// Why: Ceph MONs must keep their database to maintain the cluster.
+
+// Component: MON Address
+// Change: Use getent hosts ceph-mon
+// Why: Forces the MON to advertise the Service VIP instead of its own Pod IP.
+
+// Component: MON Keyring
+// Change: Ensure /etc/ceph/ceph.mon.keyring exists
+// Why: MONs need their specific key to start.
+
 local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 
