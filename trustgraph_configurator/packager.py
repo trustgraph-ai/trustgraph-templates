@@ -260,8 +260,10 @@ class Packager:
                 output("trustgraph/config.json", tg_config_file)
 
             # Add generated config files from additionals
+            # Skip trustgraph/config.json since it's handled above
             for item in additionals:
-                output(item['path'], item['content'])
+                if item['path'] != 'trustgraph/config.json':
+                    output(item['path'], item['content'])
 
         logger.info("Generation complete.")
 
