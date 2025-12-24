@@ -11,7 +11,7 @@ local images = import "values/images.jsonnet";
     "ceph-access-key":: "object-user",
     "ceph-secret-key":: "object-password",
     "ceph-cluster-id":: "ceph",
-    "ceph-fsid":: "a7f64266-0894-4f1e-a635-d0aeaca0e993",
+    "ceph-fsid":: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
 
     // Pool redundancy settings
     // size: 2 = two replicas for fault tolerance
@@ -21,6 +21,49 @@ local images = import "values/images.jsonnet";
 
     ceph +: {
         create:: function(engine)
+            // Pre-Shared Cryptographic Material - Config-as-Code Approach
+            // These keys are generated once and distributed to all daemons
+            // This ensures cryptographic consistency across the shared-nothing architecture
+            local admin_key = "AQBpxSBlAAAAABAAU99V6D8vS7Uu9y1S8W0iBg==";
+            local mon_key = "AQBpxSBlAAAAABAAn7pL/pG9oT+X6vO7V1S6bg==";
+
+            // Ceph configuration file - rendered from Jsonnet variables
+            local ceph_conf = |||
+                [global]
+                fsid = %s
+                mon initial members = mon0
+                mon host = ceph-mon:6789
+                public network = 0.0.0.0/0
+                cluster network = 0.0.0.0/0
+                osd pool default size = %s
+                osd pool default min size = %s
+                osd crush chooseleaf type = 0
+                auth cluster required = cephx
+                auth service required = cephx
+                auth client required = cephx
+            ||| % [$["ceph-fsid"], $["ceph-pool-size"], $["ceph-pool-min-size"]];
+
+            // Admin keyring - distributed to all daemons
+            local admin_keyring = |||
+                [client.admin]
+                    key = %s
+                    caps mds = "allow *"
+                    caps mgr = "allow *"
+                    caps mon = "allow *"
+                    caps osd = "allow *"
+            ||| % [admin_key];
+
+            // Monitor keyring - used by MON for cluster operations
+            local mon_keyring = |||
+                [mon.]
+                    key = %s
+                    caps mon = "allow *"
+            ||| % [mon_key];
+
+            // Config injection command - writes files before entrypoint
+            local inject_config = "printf '%s' > /etc/ceph/ceph.conf; printf '%s' > /etc/ceph/ceph.client.admin.keyring; " % [ceph_conf, admin_keyring];
+            local inject_mon_config = inject_config + ("printf '%s' > /etc/ceph/ceph.mon.keyring; " % [mon_keyring]);
+
             // Data volumes - sized appropriately for production workloads
             local vol_mon = engine.volume("ceph-mon").with_size("20G");
             local vol_mgr = engine.volume("ceph-mgr").with_size("20G");
@@ -36,102 +79,70 @@ local images = import "values/images.jsonnet";
             local vol_rgw_config = engine.volume("ceph-rgw-config").with_size("500M");
             local vol_init_config = engine.volume("ceph-init-config").with_size("500M");
 
-            // Base cluster environment - shared across all daemons
+            // Simplified cluster environment - Config-as-Code model
+            // No fetch logic needed - config is injected before entrypoint runs
             local cluster_env = {
                 CLUSTER: $["ceph-cluster-id"],
                 FSID: $["ceph-fsid"],
-                CEPH_PUBLIC_NETWORK: "0.0.0.0/0",
-                CEPH_CLUSTER_NETWORK: "0.0.0.0/0",
-                CEPH_CONF_OSD_POOL_DEFAULT_SIZE: $["ceph-pool-size"],
-                CEPH_CONF_OSD_POOL_DEFAULT_MIN_SIZE: $["ceph-pool-min-size"],
-                CEPH_CONF_OSD_CRUSH_CHOOSELEAF_TYPE: "0",
+                KV_TYPE: "none",  // No external coordination
             };
 
             // MON-specific environment
-            // MON bootstraps the cluster and creates initial config in its own volume
+            // Config-as-Code: MON uses injected config files, not fetch logic
             //
             // CRITICAL: MON_DATA_AVAIL="0" forces fresh cluster bootstrap
             // The ceph/daemon entrypoint script (variables_stack.sh) uses this as a gate:
             // - MON_DATA_AVAIL="0" -> run mkfs, create new cluster with our FSID
             // - MON_DATA_AVAIL="1" -> attempt to join existing cluster (infinite probe loop)
             //
-            // WARNING: If you change FSID, you MUST manually purge vol_mon volume
-            // The script will fail if it finds existing data with a different FSID
+            // Network configuration for monmap generation
             local mon_env = cluster_env + {
                 CEPH_DAEMON: "MON",
                 MON_NAME: "mon0",
                 MON_PORT: "6789",
-                // Force bootstrap mode - this is the kill switch for infinite probing
                 MON_DATA_AVAIL: "0",
-                // Network configuration for monmap generation
-                MON_IP: "0.0.0.0",  // Bind to all interfaces
-                NETWORK_AUTO_DETECT: "4",  // Auto-detect eth0 IPv4 for monmap
+                MON_IP: "0.0.0.0",
+                NETWORK_AUTO_DETECT: "4",
                 CEPH_PUBLIC_NETWORK: "0.0.0.0/0",
-                // No external key-value coordination service
-                KV_TYPE: "none",
             };
 
-            // Daemon environment for services that discover and fetch config from MON
-            // The ceph/daemon entrypoint will contact MON_HOST, authenticate, and
-            // populate the daemon's own isolated config volume automatically
-            //
-            // SRE SECURITY NOTE: CEPH_GET_ADMIN_KEY="1" distributes client.admin keyring
-            // to all daemons (MGR, OSD, RGW). In strictly hardened environments, this grants
-            // broader privileges than necessary. However, for engine-agnostic portability
-            // across Docker/K8s with isolated volumes, this is the most reliable bootstrap
-            // method to ensure cluster startup without manual intervention.
-            //
-            // Production hardening: After cluster is stable, consider implementing
-            // daemon-specific keyrings with limited capabilities.
-            //
-            // CRITICAL: Force entrypoint out of "static mode"
-            // The ceph/daemon entrypoint checks multiple variables to determine if it should
-            // fetch config from MON or expect it to already exist. These variables together
-            // trigger the network fetch logic instead of "static: does not generate config" error.
-            //
-            // The entrypoint has orchestration detection logic that looks for:
-            // 1. MON_IP pointing to a resolvable target (not 0.0.0.0)
-            // 2. NETWORK_AUTO_DETECT to enable network mode
-            // 3. CEPH_PUBLIC_NETWORK to confirm network configuration
-            // Without all three, it falls back to "static mode" and refuses to fetch.
-            local daemon_env = cluster_env + {
-                MON_HOST: "ceph-mon:6789",  // DNS-based service discovery
-                // Point to MON hostname - triggers network fetch logic
-                MON_IP: "ceph-mon",  // Must be hostname, not 0.0.0.0, for fetch to trigger
-                // Fetch config and admin keyring from MON for bootstrap
-                CEPH_GET_ADMIN_KEY: "1",
-                // Disable external discovery (Etcd/Consul) - prevents infinite hangs
-                KV_TYPE: "none",
-                // Force network mode - required for entrypoint to attempt config fetch
-                CEPH_PUBLIC_NETWORK: "0.0.0.0/0",  // Must be explicit for network mode
-                NETWORK_AUTO_DETECT: "4",  // Enable IPv4 auto-detection
-            };
+            // Simplified daemon environments - Config-as-Code model
+            // All daemons receive config via injection, not fetch from MON
+            // This eliminates "static mode" errors and networking complexity
 
             // MGR-specific environment
-            local mgr_env = daemon_env + {
+            local mgr_env = cluster_env + {
                 CEPH_DAEMON: "MGR",
                 MGR_NAME: "mgr0",
             };
 
             // OSD-specific environment
-            local osd_env = daemon_env + {
+            local osd_env = cluster_env + {
                 CEPH_DAEMON: "OSD",
                 OSD_TYPE: "directory",
             };
 
             // RGW-specific environment
-            local rgw_env = daemon_env + {
+            local rgw_env = cluster_env + {
                 CEPH_DAEMON: "RGW",
                 RGW_NAME: "rgw0",
                 RGW_FRONTEND_PORT: "7480",
             };
 
             // MON (Monitor) container - cluster state and quorum
-            // Bootstraps cluster config in its own isolated volume
+            // Config-as-Code: Injects pre-shared keys before entrypoint
+            // CRITICAL: Wipes /var/lib/ceph/mon/* on every start to force fresh bootstrap
+            // This ensures MON always uses our FSID and doesn't inherit stale cluster state
             local mon_container =
                 engine.container("ceph-mon")
                     .with_image(images.ceph)
                     .with_environment(mon_env)
+                    .with_command([
+                        "bash", "-c",
+                        "rm -rf /var/lib/ceph/mon/*; " +
+                        inject_mon_config +
+                        "exec /opt/ceph-container/bin/entrypoint.sh"
+                    ])
                     .with_limits("1.0", "1536M")
                     .with_reservations("0.5", "1024M")
                     .with_port(6789, 6789, "mon")
@@ -140,8 +151,8 @@ local images = import "values/images.jsonnet";
                     .with_volume_mount(vol_mon_config, "/etc/ceph");
 
             // MGR (Manager) container - cluster management and dashboard
-            // Fetches config from MON via MON_HOST and stores in its own volume
-            // DNS wait wrapper prevents crash-loop before MON is ready
+            // Config-as-Code: Uses injected config files with pre-shared keys
+            // DNS wait ensures MON is available before MGR connects
             local mgr_container =
                 engine.container("ceph-mgr")
                     .with_image(images.ceph)
@@ -149,6 +160,7 @@ local images = import "values/images.jsonnet";
                     .with_command([
                         "bash", "-c",
                         "until getent hosts ceph-mon; do echo 'Waiting for MON DNS...'; sleep 2; done; " +
+                        inject_config +
                         "exec /opt/ceph-container/bin/entrypoint.sh"
                     ])
                     .with_limits("1.0", "1536M")
@@ -160,9 +172,9 @@ local images = import "values/images.jsonnet";
                     .with_volume_mount(vol_mgr_config, "/etc/ceph");
 
             // OSD (Object Storage Daemon) - actual data storage
+            // Config-as-Code: Uses injected config files with pre-shared keys
             // Increased resources to prevent OOM during recovery operations
-            // Fetches config from MON via MON_HOST and stores in its own volume
-            // DNS wait wrapper prevents crash-loop before MON is ready
+            // DNS wait ensures MON is available before OSD connects
             local osd_container =
                 engine.container("ceph-osd")
                     .with_image(images.ceph)
@@ -170,6 +182,7 @@ local images = import "values/images.jsonnet";
                     .with_command([
                         "bash", "-c",
                         "until getent hosts ceph-mon; do echo 'Waiting for MON DNS...'; sleep 2; done; " +
+                        inject_config +
                         "exec /opt/ceph-container/bin/entrypoint.sh"
                     ])
                     .with_limits("2.0", "4096M")
@@ -179,8 +192,8 @@ local images = import "values/images.jsonnet";
                     .with_volume_mount(vol_osd_config, "/etc/ceph");
 
             // RGW (RADOS Gateway) - S3 API endpoint
-            // Fetches config from MON via MON_HOST and stores in its own volume
-            // DNS wait wrapper prevents crash-loop before MON is ready
+            // Config-as-Code: Uses injected config files with pre-shared keys
+            // DNS wait ensures MON is available before RGW connects
             local rgw_container =
                 engine.container("ceph-rgw")
                     .with_image(images.ceph)
@@ -188,6 +201,7 @@ local images = import "values/images.jsonnet";
                     .with_command([
                         "bash", "-c",
                         "until getent hosts ceph-mon; do echo 'Waiting for MON DNS...'; sleep 2; done; " +
+                        inject_config +
                         "exec /opt/ceph-container/bin/entrypoint.sh"
                     ])
                     .with_limits("1.0", "1536M")
@@ -199,15 +213,13 @@ local images = import "values/images.jsonnet";
             // Init container - one-time S3 user provisioning
             // IMPORTANT: This container exits with code 0 after completion
             // Orchestrator must NOT restart it (use K8s Job or Compose restart: "no")
-            // Uses MON_HOST to fetch config into its own isolated volume
-            // Needs CEPH_GET_ADMIN_KEY to run radosgw-admin commands
+            // Config-as-Code: Uses injected config to run radosgw-admin commands
             local init_container =
                 engine.container("ceph-init")
                     .with_image(images.ceph)
                     .with_environment({
                         CLUSTER: $["ceph-cluster-id"],
-                        MON_HOST: "ceph-mon:6789",
-                        CEPH_GET_ADMIN_KEY: "1",
+                        FSID: $["ceph-fsid"],
                         KV_TYPE: "none",
                         RGW_ACCESS_KEY: $["ceph-access-key"],
                         RGW_SECRET_KEY: $["ceph-secret-key"],
@@ -216,7 +228,8 @@ local images = import "values/images.jsonnet";
                     .with_reservations("0.25", "256M")
                     .with_volume_mount(vol_init_config, "/etc/ceph")
                     .with_command([
-                        "bash", "-c", |||
+                        "bash", "-c",
+                        inject_config + |||
                             set -e
 
                             # Wait for cluster health
@@ -295,28 +308,33 @@ local images = import "values/images.jsonnet";
                     .with_port(7480, 7480, "s3");
 
             engine.resources([
+
                 // Data volumes
                 vol_mon,
                 vol_mgr,
                 vol_osd,
                 vol_rgw,
+
                 // Config volumes (isolated, no sharing)
                 vol_mon_config,
                 vol_mgr_config,
                 vol_osd_config,
                 vol_rgw_config,
                 vol_init_config,
+
                 // Container sets
                 mon_containerSet,
                 mgr_containerSet,
                 osd_containerSet,
                 rgw_containerSet,
                 init_containerSet,
+
                 // Services
                 mon_service,
                 mgr_service,
                 osd_service,
                 rgw_service,
+
             ])
     },
 }
