@@ -11,6 +11,7 @@ local images = import "values/images.jsonnet";
     "garage-access-key":: "object-user",
     "garage-secret-key":: "object-password",
     "garage-rpc-secret":: "bbba746a9e289bad64a9e7a36a4299dac8d6e0b8cc2a6c2937fe756df4492008",
+    // For a production system, override this value
     "garage-admin-token":: "batts-rockhearted-unpartially",
     "garage-region":: "garage",
     "garage-replication-factor":: "1",  // Set to 1 for single-node, 3 for production
@@ -95,6 +96,7 @@ local images = import "values/images.jsonnet";
                         GARAGE_ACCESS_KEY: $["garage-access-key"],
                         GARAGE_SECRET_KEY: $["garage-secret-key"],
                         GARAGE_REGION: $["garage-region"],
+                        GARAGE_ADMIN_TOKEN: $["garage-admin-token"],
                     })
                     .with_limits("0.5", "256M")
                     .with_reservations("0.25", "128M")
@@ -128,7 +130,8 @@ local images = import "values/images.jsonnet";
 
                             # Get the node ID via admin API
                             echo "Getting Garage node ID via admin API..."
-                            NODE_ID=$(curl -s http://garage:3903/v1/status | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+                            NODE_ID=$(curl -s -H "Authorization: Bearer ${GARAGE_ADMIN_TOKEN}" \
+                                http://garage:3903/v1/status | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
                             echo "Node ID: ${NODE_ID}"
 
                             if [ -z "$NODE_ID" ]; then
