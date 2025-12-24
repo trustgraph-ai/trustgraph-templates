@@ -90,14 +90,21 @@ local engine = {
 
 // Execute all component create() functions with our collecting engine
 // Note: create:: is a hidden field, so we must use objectHasAll not objectHas
+// Note: We can't execute all components from raw jsonnet because some need
+// dynamic imports like trustgraph/config.json. Filter to only components we care about.
+local collectableComponents = [
+    'prometheus', 'grafana', 'loki', 'garage'
+];
+
 local result = std.foldl(
-    function(state, p)
+    function(state, key)
+        local p = patterns[key];
         if std.objectHasAll(p, 'create') then
             // Pattern has create directly - call it
             p.create(state)
         else
             state,
-    std.objectValues(patterns),
+    [k for k in std.objectFields(patterns) if std.member(collectableComponents, k)],
     engine
 );
 
@@ -108,7 +115,7 @@ local debug = {
 };
 
 // Transform collected data into output format
-local additionals = std.flattenArrays([
+local allFiles = std.flattenArrays([
     [
         {
             path: std.join("/", [cv.dir, filename]),
@@ -119,8 +126,15 @@ local additionals = std.flattenArrays([
     for cv in result.configVolumes
 ]);
 
-// Output the array with debug info temporarily
-{
-    debug: debug,
-    additionals: additionals,
-}
+// Deduplicate by path - use a map to keep only unique paths
+local uniqueMap = std.foldl(
+    function(acc, item) acc + { [item.path]: item },
+    allFiles,
+    {}
+);
+
+// Convert back to array
+local additionals = std.objectValues(uniqueMap);
+
+// Output the array
+additionals
