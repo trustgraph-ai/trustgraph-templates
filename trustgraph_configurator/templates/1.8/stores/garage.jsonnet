@@ -10,7 +10,7 @@ local images = import "values/images.jsonnet";
     // Garage credentials and cluster settings
     "garage-access-key":: "object-user",
     "garage-secret-key":: "object-password",
-    "garage-rpc-secret":: "1799bccfd7411eddcf9ebd316bc1f5287ad12a68094e1c6ac6abde7e6feae1ec",
+    "garage-rpc-secret":: "bbba746a9e289bad64a9e7a36a4299dac8d6e0b8cc2a6c2937fe756df4492008",
     "garage-region":: "garage",
     "garage-replication-factor":: "1",  // Set to 1 for single-node, 3 for production
 

@@ -1,7 +1,7 @@
 local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local ceph = import "stores/ceph.jsonnet";
+local garage = import "stores/garage.jsonnet";
 local cassandra = import "stores/cassandra.jsonnet";
 
 {
@@ -38,6 +38,6 @@ local cassandra = import "stores/cassandra.jsonnet";
 
     },
 
-// Ceph and Cassandra are used by the Librarian
-} + ceph + cassandra
+// Garage and Cassandra are used by the Librarian
+} + garage + cassandra
 
