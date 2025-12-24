@@ -131,7 +131,7 @@ local images = import "values/images.jsonnet";
                             # Get the node ID via admin API
                             echo "Getting Garage node ID via admin API..."
                             NODE_ID=$(curl -s -H "Authorization: Bearer ${GARAGE_ADMIN_TOKEN}" \
-                                http://garage:3903/v1/status | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+                                http://garage:3903/v1/status | grep -o '"node": *"[^"]*"' | cut -d'"' -f4)
                             echo "Node ID: ${NODE_ID}"
 
                             if [ -z "$NODE_ID" ]; then
