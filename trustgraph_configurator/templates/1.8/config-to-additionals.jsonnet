@@ -118,7 +118,8 @@ local debug = {
 local allFiles = std.flattenArrays([
     [
         {
-            path: std.join("/", [cv.dir, filename]),
+            // Remove trailing slash from dir to avoid double slashes
+            path: std.join("/", [std.rstripChars(cv.dir, "/"), filename]),
             content: cv.parts[filename]
         }
         for filename in std.objectFields(cv.parts)
