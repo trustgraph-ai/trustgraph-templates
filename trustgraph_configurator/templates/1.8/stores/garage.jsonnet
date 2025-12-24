@@ -49,8 +49,13 @@ local images = import "values/images.jsonnet";
                 api_bind_addr = "[::]:3903"
             ||| % [$["garage-replication-factor"], $["garage-rpc-secret"], $["garage-region"]];
 
-            // Config injection command
-            local inject_config = "printf '%s' > /etc/garage.toml; " % [garage_conf];
+            // Config volume - contains the rendered garage.toml
+            local cfgVol = engine.configVolume(
+                "garage-cfg", "garage",
+                {
+                    "garage.toml": garage_conf,
+                }
+            );
 
             // Volumes - Garage stores metadata and data separately
             local vol_meta = engine.volume("garage-meta").with_size("5G");
@@ -60,11 +65,7 @@ local images = import "values/images.jsonnet";
             local garage_container =
                 engine.container("garage")
                     .with_image(images.garage)
-                    .with_command([
-                        "bash", "-c",
-                        inject_config +
-                        "exec garage server"
-                    ])
+                    .with_command(["garage", "server"])
                     .with_environment({
                         RUST_LOG: "garage=info",
                     })
@@ -75,6 +76,7 @@ local images = import "values/images.jsonnet";
                     .with_port(3902, 3902, "web")
                     .with_port(3903, 3903, "admin")
                     .with_port(3904, 3904, "k2v")
+                    .with_volume_mount(cfgVol, "/etc/garage/")
                     .with_volume_mount(vol_meta, "/var/lib/garage/meta")
                     .with_volume_mount(vol_data, "/var/lib/garage/data");
 
@@ -91,9 +93,9 @@ local images = import "values/images.jsonnet";
                     })
                     .with_limits("0.5", "256M")
                     .with_reservations("0.25", "128M")
+                    .with_volume_mount(cfgVol, "/etc/garage/")
                     .with_command([
-                        "bash", "-c",
-                        inject_config + |||
+                        "bash", "-c", |||
                             set -e
 
                             echo "Waiting for Garage daemon to be ready..."
@@ -112,30 +114,30 @@ local images = import "values/images.jsonnet";
 
                             # Get the node ID
                             echo "Getting Garage node ID..."
-                            NODE_ID=$(garage -c /etc/garage.toml node id | grep -oP 'Node ID: \K\w+')
+                            NODE_ID=$(garage -c /etc/garage/garage.toml node id | grep -oP 'Node ID: \K\w+')
                             echo "Node ID: ${NODE_ID}"
 
                             # Check if layout is already configured
-                            if garage -c /etc/garage.toml layout show 2>&1 | grep -q "${NODE_ID}"; then
+                            if garage -c /etc/garage/garage.toml layout show 2>&1 | grep -q "${NODE_ID}"; then
                                 echo "Layout already configured, skipping layout setup."
                             else
                                 echo "Configuring Garage cluster layout..."
                                 # Assign the node to zone "dc1" with 100GB capacity
-                                garage -c /etc/garage.toml layout assign ${NODE_ID} -z dc1 -c 100G
+                                garage -c /etc/garage/garage.toml layout assign ${NODE_ID} -z dc1 -c 100G
                                 # Apply the layout configuration
-                                garage -c /etc/garage.toml layout apply --version 1
+                                garage -c /etc/garage/garage.toml layout apply --version 1
                                 echo "Layout configured successfully."
                                 # Wait for layout to stabilize
                                 sleep 5
                             fi
 
                             # Check if key already exists (idempotent)
-                            if garage -c /etc/garage.toml key info "${GARAGE_ACCESS_KEY}" >/dev/null 2>&1; then
+                            if garage -c /etc/garage/garage.toml key info "${GARAGE_ACCESS_KEY}" >/dev/null 2>&1; then
                                 echo "Access key ${GARAGE_ACCESS_KEY} already exists, skipping creation."
                             else
                                 echo "Creating S3 access key: ${GARAGE_ACCESS_KEY}"
-                                garage -c /etc/garage.toml key create "${GARAGE_ACCESS_KEY}"
-                                garage -c /etc/garage.toml key import \
+                                garage -c /etc/garage/garage.toml key create "${GARAGE_ACCESS_KEY}"
+                                garage -c /etc/garage/garage.toml key import \
                                     "${GARAGE_ACCESS_KEY}" \
                                     "${GARAGE_SECRET_KEY}" \
                                     --yes
@@ -144,7 +146,7 @@ local images = import "values/images.jsonnet";
 
                             # Grant permissions to the key
                             echo "Granting permissions to ${GARAGE_ACCESS_KEY}..."
-                            garage -c /etc/garage.toml key allow \
+                            garage -c /etc/garage/garage.toml key allow \
                                 --create-bucket \
                                 --owner \
                                 "${GARAGE_ACCESS_KEY}"
@@ -171,6 +173,7 @@ local images = import "values/images.jsonnet";
                     .with_port(3904, 3904, "k2v");
 
             engine.resources([
+                cfgVol,
                 vol_meta,
                 vol_data,
                 garage_containerSet,
