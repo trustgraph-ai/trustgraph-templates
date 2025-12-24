@@ -11,6 +11,7 @@ local images = import "values/images.jsonnet";
     "garage-access-key":: "object-user",
     "garage-secret-key":: "object-password",
     "garage-rpc-secret":: "bbba746a9e289bad64a9e7a36a4299dac8d6e0b8cc2a6c2937fe756df4492008",
+    "garage-admin-token":: "batts-rockhearted-unpartially",
     "garage-region":: "garage",
     "garage-replication-factor":: "1",  // Set to 1 for single-node, 3 for production
 
@@ -47,7 +48,8 @@ local images = import "values/images.jsonnet";
 
                 [admin]
                 api_bind_addr = "[::]:3903"
-            ||| % [$["garage-replication-factor"], $["garage-rpc-secret"], $["garage-region"]];
+                admin_token = "%s"
+            ||| % [$["garage-replication-factor"], $["garage-rpc-secret"], $["garage-region"], $["garage-admin-token"]];
 
             // Config volume - contains the rendered garage.toml
             local cfgVol = engine.configVolume(
