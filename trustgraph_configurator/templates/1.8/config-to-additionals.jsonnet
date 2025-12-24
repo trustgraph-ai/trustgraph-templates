@@ -90,21 +90,14 @@ local engine = {
 
 // Execute all component create() functions with our collecting engine
 // Note: create:: is a hidden field, so we must use objectHasAll not objectHas
-// Note: We can't execute all components from raw jsonnet because some need
-// dynamic imports like trustgraph/config.json. Filter to only components we care about.
-local collectableComponents = [
-    'prometheus', 'grafana', 'loki', 'garage'
-];
-
 local result = std.foldl(
-    function(state, key)
-        local p = patterns[key];
+    function(state, p)
         if std.objectHasAll(p, 'create') then
             // Pattern has create directly - call it
             p.create(state)
         else
             state,
-    [k for k in std.objectFields(patterns) if std.member(collectableComponents, k)],
+    std.objectValues(patterns),
     engine
 );
 
