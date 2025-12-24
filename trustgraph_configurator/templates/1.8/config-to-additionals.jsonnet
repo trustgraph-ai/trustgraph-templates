@@ -74,8 +74,12 @@ local engine = {
         // Fold over resources and collect any configVolume state
         local collected = std.foldl(
             function(state, r)
-                if std.objectHas(r, 'getCollector') then
-                    r.getCollector()
+                if std.objectHasAll(r, 'getCollector') then
+                    // Merge the configVolumes from the volume's collector into our state
+                    local volumeCollector = r.getCollector();
+                    state + {
+                        configVolumes: state.configVolumes + volumeCollector.configVolumes
+                    }
                 else
                     state,
             res,
@@ -85,14 +89,23 @@ local engine = {
 };
 
 // Execute all component create() functions with our collecting engine
+// Note: create:: is a hidden field, so we must use objectHasAll not objectHas
 local result = std.foldl(
     function(state, p)
-        local created = p.create(state);
-        // Return the engine state (which accumulates configVolumes)
-        created,
+        if std.objectHasAll(p, 'create') then
+            // Pattern has create directly - call it
+            p.create(state)
+        else
+            state,
     std.objectValues(patterns),
     engine
 );
+
+// Debug: show what we collected
+local debug = {
+    numPatterns: std.length(std.objectValues(patterns)),
+    numConfigVolumes: std.length(result.configVolumes),
+};
 
 // Transform collected data into output format
 local additionals = std.flattenArrays([
@@ -106,5 +119,8 @@ local additionals = std.flattenArrays([
     for cv in result.configVolumes
 ]);
 
-// Output the array
-additionals
+// Output the array with debug info temporarily
+{
+    debug: debug,
+    additionals: additionals,
+}
