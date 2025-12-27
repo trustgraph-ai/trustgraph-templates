@@ -91,7 +91,7 @@ local images = import "values/images.jsonnet";
             // Uses Alpine base image since garage container has no shell
             local init_container =
                 engine.container("garage-init")
-                    .with_image("docker.io/alpine:latest")
+                    .with_image("docker.io/alpine:3.23.2")
                     .with_environment({
                         GARAGE_ACCESS_KEY: $["garage-access-key"],
                         GARAGE_SECRET_KEY: $["garage-secret-key"],
@@ -106,8 +106,8 @@ local images = import "values/images.jsonnet";
                             set -e
 
                             # Install required tools
-                            echo "Installing curl and downloading garage CLI..."
-                            apk add --no-cache curl
+                            echo "Installing curl, jq and downloading garage CLI..."
+                            apk add --no-cache curl jq
 
                             # Download garage binary (v1.0.1)
                             curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/v1.0.1/x86_64-unknown-linux-musl/garage" \
@@ -130,12 +130,17 @@ local images = import "values/images.jsonnet";
 
                             # Get the node ID via admin API
                             echo "Getting Garage node ID via admin API..."
-                            NODE_ID=$(curl -s -H "Authorization: Bearer ${GARAGE_ADMIN_TOKEN}" \
-                                http://garage:3903/v1/status | grep -o '"node": *"[^"]*"' | cut -d'"' -f4)
+                            curl -s -H "Authorization: Bearer ${GARAGE_ADMIN_TOKEN}" \
+                                http://garage:3903/v1/status > /tmp/garage-status.json
+
+                            # Parse node ID from JSON response
+                            NODE_ID=$(jq -r '.node' /tmp/garage-status.json)
                             echo "Node ID: ${NODE_ID}"
 
                             if [ -z "$NODE_ID" ]; then
                                 echo "ERROR: Failed to retrieve node ID"
+                                echo "DEBUG: Full curl command was:"
+                                echo "curl -s -H \"Authorization: Bearer \${GARAGE_ADMIN_TOKEN}\" http://garage:3903/v1/status"
                                 exit 1
                             fi
 

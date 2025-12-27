@@ -19,7 +19,15 @@
 
         with_user:: function(x) self + { user: x },
 
-        with_command:: function(x) self + { command: x },
+        with_command:: function(x) self + {
+            command:
+                if std.isString(x) then
+                    std.strReplace(x, "$", "$$")
+                else if std.isArray(x) then
+                    std.map(function(s) std.strReplace(s, "$", "$$"), x)
+                else
+                    x
+        },
 
         with_runtime:: function(x) self + { runtime: x },
 
