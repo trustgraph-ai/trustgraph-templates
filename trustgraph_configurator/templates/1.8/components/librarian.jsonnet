@@ -19,6 +19,12 @@ local cassandra = import "stores/cassandra.jsonnet";
                         url.pulsar,
                         "--log-level",
                         $["log-level"],
+                        "--object-store-endpoint",
+                        url.object_store,
+                        "--object-store-access-key",
+                        $["garage-access-key"],
+                        "--object-store-secret-key",
+                        $["garage-secret-key"],
                     ])
                     .with_limits("0.5", "256M")
                     .with_reservations("0.1", "256M");
