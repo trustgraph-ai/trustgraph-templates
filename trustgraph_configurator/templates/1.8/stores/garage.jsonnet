@@ -118,7 +118,8 @@ local images = import "values/images.jsonnet";
                             echo "Waiting for Garage daemon to be ready..."
                             MAX_ATTEMPTS=60
                             ATTEMPT=0
-                            until curl -sf http://garage:3903/health >/dev/null 2>&1; do
+                            # Wait for /health to respond (even 503 is fine - means daemon is up)
+                            until curl -s http://garage:3903/health >/dev/null 2>&1; do
                                 ATTEMPT=$((ATTEMPT+1))
                                 if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
                                     echo "ERROR: Garage failed to become ready after ${MAX_ATTEMPTS} attempts"
@@ -129,12 +130,13 @@ local images = import "values/images.jsonnet";
                             done
                             echo "Garage daemon is ready."
 
-                            # Get the node ID via Admin API
+                            # Get the node ID via v2 Admin API
                             echo "Getting Garage node ID via Admin API..."
                             curl -s -H "Authorization: Bearer ${GARAGE_ADMIN_TOKEN}" \
-                                http://garage:3903/v1/status > /tmp/garage-status.json
+                                "http://garage:3903/v2/GetNodeInfo?node=self" > /tmp/garage-node-info.json
 
-                            NODE_ID=$(jq -r '.node' /tmp/garage-status.json)
+                            # Extract node ID from response (the key in success map is the node ID)
+                            NODE_ID=$(jq -r '.success | to_entries[0].value.nodeId' /tmp/garage-node-info.json)
                             echo "Node ID: ${NODE_ID}"
 
                             if [ -z "$NODE_ID" ] || [ "$NODE_ID" = "null" ]; then
