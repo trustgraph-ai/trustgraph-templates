@@ -155,9 +155,11 @@ local images = import "values/images.jsonnet";
                             echo "Checking current cluster layout..."
                             LAYOUT_OUTPUT=$(garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" layout show 2>&1)
 
-                            # Check if node already has a role assigned (look for capacity assignment)
-                            if echo "$LAYOUT_OUTPUT" | grep -E "^\s+${NODE_ID:0:16}" | grep -q "100.0 GB"; then
-                                echo "Node ${NODE_ID} already assigned in layout with 100GB capacity, skipping."
+                            # Check if node already has a role assigned
+                            # Layout output shows abbreviated node ID (first 16 chars)
+                            NODE_ID_SHORT="${NODE_ID:0:16}"
+                            if echo "$LAYOUT_OUTPUT" | grep -q "$NODE_ID_SHORT"; then
+                                echo "Node ${NODE_ID_SHORT}... already assigned in layout, skipping."
                             else
                                 echo "Assigning node to cluster layout..."
                                 # Assign node to zone dc1 with 100GB capacity
@@ -184,13 +186,17 @@ local images = import "values/images.jsonnet";
 
                                 # Generate a deterministic Garage key ID from the access key name
                                 # Format: GK + 24 hex characters (12 bytes)
-                                # Use SHA256 hash of access key name, take first 12 bytes
                                 KEY_ID="GK$(echo -n "${GARAGE_ACCESS_KEY}" | sha256sum | cut -c1-24)"
                                 echo "Using Key ID: ${KEY_ID}"
 
+                                # Convert secret key to valid Garage format (64 hex chars = 32 bytes)
+                                # Hash the user's secret and take first 64 hex chars
+                                GARAGE_SECRET_HEX=$(echo -n "${GARAGE_SECRET_KEY}" | sha256sum | cut -c1-64)
+                                echo "Generated valid secret key from provided password"
+
                                 # Import key with custom secret (this creates the key)
                                 garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
-                                    key import "${KEY_ID}" "${GARAGE_SECRET_KEY}" --yes
+                                    key import "${KEY_ID}" "${GARAGE_SECRET_HEX}" --yes
 
                                 # Rename the key to our desired name
                                 garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
