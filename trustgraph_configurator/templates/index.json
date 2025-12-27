@@ -20,8 +20,8 @@
         },
 	{
             "name": "1.8",
-            "description": "Pluggable messaging fabric",
-            "version": "1.8.1",
+            "description": "Pluggable messaging fabric, switched to Garage for object store",
+            "version": "1.8.2",
             "status": "pre-release"
         }
     ],
