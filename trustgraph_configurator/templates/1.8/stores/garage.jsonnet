@@ -110,8 +110,8 @@ local images = import "values/images.jsonnet";
                             echo "Installing curl, jq and downloading garage CLI..."
                             apk add --no-cache curl jq
 
-                            # Download garage binary (v1.0.1) for remote management
-                            curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/v1.0.1/x86_64-unknown-linux-musl/garage" \
+                            # Download garage binary (v2.1.0) for remote management
+                            curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/v2.1.0/x86_64-unknown-linux-musl/garage" \
                                 -o /usr/local/bin/garage
                             chmod +x /usr/local/bin/garage
 
