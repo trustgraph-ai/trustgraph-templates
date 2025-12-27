@@ -1,7 +1,7 @@
 local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local minio = import "stores/minio.jsonnet";
+local garage = import "stores/garage.jsonnet";
 local cassandra = import "stores/cassandra.jsonnet";
 
 {
@@ -19,6 +19,14 @@ local cassandra = import "stores/cassandra.jsonnet";
                         url.pulsar,
                         "--log-level",
                         $["log-level"],
+                        "--object-store-endpoint",
+                        url.object_store,
+                        "--object-store-access-key",
+                        $["garage-access-key"],
+                        "--object-store-secret-key",
+                        $["garage-secret-key"],
+                        "--object-store-region",
+                        $["garage-region"],
                     ])
                     .with_limits("0.5", "256M")
                     .with_reservations("0.1", "256M");
@@ -38,6 +46,6 @@ local cassandra = import "stores/cassandra.jsonnet";
 
     },
 
-// Minio and Cassandra are used by the Librarian
-} + minio + cassandra
+// Garage and Cassandra are used by the Librarian
+} + garage + cassandra
 

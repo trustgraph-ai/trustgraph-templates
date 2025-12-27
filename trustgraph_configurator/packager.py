@@ -120,7 +120,22 @@ class Packager:
         processed = gen.process(wrapper)
 
         return processed
-    
+
+    def generate_additionals(self, config):
+
+        config = config.encode("utf-8")
+
+        gen = Generator(fetch=self.fetch)
+
+        path = self.templates.joinpath(
+            f"config-to-additionals.jsonnet"
+        )
+        wrapper = path.read_text()
+
+        processed = gen.process(wrapper)
+
+        return processed
+
     def generate_resources(self, config):
 
         config = config.encode("utf-8")
@@ -227,6 +242,13 @@ class Packager:
             tg_config_json = self.generate_trustgraph_config(config)
             tg_config_file = json.dumps(tg_config_json, indent=4)
 
+        # Check if config-to-additionals.jsonnet exists for this version
+        additionals_path = self.templates.joinpath("config-to-additionals.jsonnet")
+        has_additionals = os.path.isfile(additionals_path)
+
+        # Generate additional config files from configVolume parts (if supported)
+        additionals = self.generate_additionals(config) if has_additionals else []
+
         mem = BytesIO()
 
         with zipfile.ZipFile(mem, mode='w') as out:
@@ -241,12 +263,18 @@ class Packager:
             if version[:2] != "0." and version[:3] != "1.0":
                 output("trustgraph/config.json", tg_config_file)
 
-            # Walk the resources directory and add all files
-            if os.path.isdir(self.resources):
+            # Add generated config files from additionals (if available)
+            # Skip trustgraph/config.json since it's handled above
+            for item in additionals:
+                if item['path'] != 'trustgraph/config.json':
+                    output(item['path'], item['content'])
+
+            # Fallback: Walk resources directory if additionals not available
+            # This maintains backward compatibility with older versions
+            if not has_additionals and os.path.isdir(self.resources):
                 for root, dirs, files in os.walk(self.resources):
                     for file in files:
                         file_path = os.path.join(root, file)
-                        # Get relative path from resources directory
                         rel_path = os.path.relpath(file_path, self.resources)
                         with open(file_path, 'r') as f:
                             content = f.read()
