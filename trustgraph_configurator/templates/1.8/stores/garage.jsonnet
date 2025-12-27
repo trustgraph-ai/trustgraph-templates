@@ -19,6 +19,10 @@ local images = import "values/images.jsonnet";
     "garage-region":: "garage",
     "garage-replication-factor":: "1",  // Set to 1 for single-node, 3 for production
 
+    // Storage volume sizes
+    "garage-meta-size":: "5G",    // Metadata volume size
+    "garage-data-size":: "100G",  // Data volume size (also used for cluster layout capacity)
+
     garage +: {
         create:: function(engine)
 
@@ -64,8 +68,8 @@ local images = import "values/images.jsonnet";
             );
 
             // Volumes - Garage stores metadata and data separately
-            local vol_meta = engine.volume("garage-meta").with_size("5G");
-            local vol_data = engine.volume("garage-data").with_size("100G");
+            local vol_meta = engine.volume("garage-meta").with_size($["garage-meta-size"]);
+            local vol_data = engine.volume("garage-data").with_size($["garage-data-size"]);
 
             // Main Garage daemon container
             local garage_container =
@@ -101,6 +105,7 @@ local images = import "values/images.jsonnet";
                         GARAGE_REGION: $["garage-region"],
                         GARAGE_ADMIN_TOKEN: $["garage-admin-token"],
                         GARAGE_RPC_SECRET: $["garage-rpc-secret"],
+                        GARAGE_DATA_SIZE: $["garage-data-size"],
                     })
                     .with_limits("0.5", "256M")
                     .with_reservations("0.25", "128M")
@@ -167,9 +172,9 @@ local images = import "values/images.jsonnet";
                                 echo "Node ${NODE_ID_SHORT}... already assigned in layout, skipping."
                             else
                                 echo "Assigning node to cluster layout..."
-                                # Assign node to zone dc1 with 100GB capacity
+                                # Assign node to zone dc1 with configured capacity
                                 garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
-                                    layout assign ${NODE_ID} -z dc1 -c 100G
+                                    layout assign ${NODE_ID} -z dc1 -c ${GARAGE_DATA_SIZE}
 
                                 echo "Applying layout configuration..."
                                 # Get current staged version and apply
