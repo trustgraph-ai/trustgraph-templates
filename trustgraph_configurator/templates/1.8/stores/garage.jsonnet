@@ -7,9 +7,12 @@ local images = import "values/images.jsonnet";
             ["garage-" + key]:: value,
         },
 
-    // Garage credentials and cluster settings
-    "garage-access-key":: "object-user",
-    "garage-secret-key":: "object-password",
+    // Garage S3 credentials - these are the actual access key ID and secret key
+    // Access Key ID must be in format: GK + 24 hex characters (12 bytes)
+    // Secret Key must be 64 hex characters (32 bytes)
+    // For production, generate secure random values and override these defaults
+    "garage-access-key":: "GK000000000000000000000001",
+    "garage-secret-key":: "b171f00be9be4c32c734f4c05fe64c527a8ab5eb823b376cfa8c2531f70fc427",
     "garage-rpc-secret":: "bbba746a9e289bad64a9e7a36a4299dac8d6e0b8cc2a6c2937fe756df4492008",
     // For a production system, override this value
     "garage-admin-token":: "batts-rockhearted-unpartially",
@@ -181,40 +184,29 @@ local images = import "values/images.jsonnet";
                             # ===== KEY MANAGEMENT VIA REMOTE RPC =====
 
                             # Check if key already exists (idempotent)
+                            # GARAGE_ACCESS_KEY is already a valid Garage Key ID (GK + 24 hex chars)
                             if garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" key info "${GARAGE_ACCESS_KEY}" >/dev/null 2>&1; then
                                 echo "Access key ${GARAGE_ACCESS_KEY} already exists, skipping creation."
                             else
-                                echo "Creating S3 access key with custom secret: ${GARAGE_ACCESS_KEY}"
+                                echo "Importing S3 access key: ${GARAGE_ACCESS_KEY}"
 
-                                # Generate a deterministic Garage key ID from the access key name
-                                # Format: GK + 24 hex characters (12 bytes)
-                                KEY_ID="GK$(echo -n "${GARAGE_ACCESS_KEY}" | sha256sum | cut -c1-24)"
-                                echo "Using Key ID: ${KEY_ID}"
-
-                                # Convert secret key to valid Garage format (64 hex chars = 32 bytes)
-                                # Hash the user's secret and take first 64 hex chars
-                                GARAGE_SECRET_HEX=$(echo -n "${GARAGE_SECRET_KEY}" | sha256sum | cut -c1-64)
-                                echo "Generated valid secret key from provided password"
-
-                                # Import key with custom secret (this creates the key)
+                                # Import key with the provided credentials (both already in valid Garage format)
+                                # GARAGE_ACCESS_KEY = Key ID (GK + 24 hex chars)
+                                # GARAGE_SECRET_KEY = Secret (64 hex chars)
                                 garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
-                                    key import "${KEY_ID}" "${GARAGE_SECRET_HEX}" --yes
+                                    key import "${GARAGE_ACCESS_KEY}" "${GARAGE_SECRET_KEY}" --yes
 
-                                # Rename the key to our desired name
-                                garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
-                                    key rename "${KEY_ID}" "${GARAGE_ACCESS_KEY}"
-
-                                echo "Access key created and secret imported successfully."
+                                echo "Access key imported successfully."
                             fi
 
                             # Grant permissions to the key
-                            echo "Granting permissions to ${GARAGE_ACCESS_KEY}..."
+                            echo "Granting create-bucket permission to key..."
                             garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
                                 key allow --create-bucket "${GARAGE_ACCESS_KEY}"
 
-                            echo "Garage initialization complete. S3 endpoint ready at http://garage:3900"
-                            echo "Access Key: ${GARAGE_ACCESS_KEY}"
-                            echo "Secret Key: ${GARAGE_SECRET_KEY}"
+                            echo ""
+                            echo "Garage initialization complete!"
+                            echo "S3 Endpoint: http://garage:3900"
                             echo "Region: ${GARAGE_REGION}"
                             exit 0
                         |||,
