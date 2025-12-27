@@ -25,6 +25,8 @@ local cassandra = import "stores/cassandra.jsonnet";
                         $["garage-access-key"],
                         "--object-store-secret-key",
                         $["garage-secret-key"],
+                        "--object-store-region",
+                        $["garage-region"],
                     ])
                     .with_limits("0.5", "256M")
                     .with_reservations("0.1", "256M");
