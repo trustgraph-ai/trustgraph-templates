@@ -208,7 +208,7 @@ local images = import "values/images.jsonnet";
                             # Grant permissions to the key
                             echo "Granting permissions to ${GARAGE_ACCESS_KEY}..."
                             garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
-                                key allow --create-bucket --owner "${GARAGE_ACCESS_KEY}"
+                                key allow --create-bucket "${GARAGE_ACCESS_KEY}"
 
                             echo "Garage initialization complete. S3 endpoint ready at http://garage:3900"
                             echo "Access Key: ${GARAGE_ACCESS_KEY}"
