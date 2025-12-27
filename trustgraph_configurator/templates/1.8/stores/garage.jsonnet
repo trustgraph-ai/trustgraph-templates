@@ -153,7 +153,9 @@ local images = import "values/images.jsonnet";
 
                             # Check current layout to see if node is already assigned (idempotent)
                             echo "Checking current cluster layout..."
-                            if garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" layout show 2>&1 | grep -q "${NODE_ID}"; then
+                            LAYOUT_OUTPUT=$(garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" layout show 2>&1)
+
+                            if echo "$LAYOUT_OUTPUT" | grep -q "${NODE_ID}"; then
                                 echo "Node ${NODE_ID} already assigned in layout, skipping assignment."
                             else
                                 echo "Assigning node to cluster layout..."
@@ -162,6 +164,7 @@ local images = import "values/images.jsonnet";
                                     layout assign ${NODE_ID} -z dc1 -c 100G
 
                                 echo "Applying layout configuration..."
+                                # Get current staged version and apply
                                 garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
                                     layout apply --version 1
 
@@ -177,11 +180,19 @@ local images = import "values/images.jsonnet";
                                 echo "Access key ${GARAGE_ACCESS_KEY} already exists, skipping creation."
                             else
                                 echo "Creating S3 access key: ${GARAGE_ACCESS_KEY}"
+                                # Create key and capture the generated key ID
+                                KEY_OUTPUT=$(garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" key create "${GARAGE_ACCESS_KEY}")
+                                echo "$KEY_OUTPUT"
+
+                                # Extract the Key ID from output (format: "Key ID: GKxxxxxxxxxxxx")
+                                KEY_ID=$(echo "$KEY_OUTPUT" | grep "Key ID:" | awk '{print $3}')
+                                echo "Generated Key ID: ${KEY_ID}"
+
+                                # Import with custom secret using the generated key ID
+                                echo "Importing custom secret for key..."
                                 garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
-                                    key create "${GARAGE_ACCESS_KEY}"
-                                garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
-                                    key import "${GARAGE_ACCESS_KEY}" "${GARAGE_SECRET_KEY}" --yes
-                                echo "Access key created successfully."
+                                    key import "${KEY_ID}" "${GARAGE_SECRET_KEY}" --yes
+                                echo "Access key created and secret imported successfully."
                             fi
 
                             # Grant permissions to the key
