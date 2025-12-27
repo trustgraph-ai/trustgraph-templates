@@ -98,7 +98,6 @@ local images = import "values/images.jsonnet";
                         GARAGE_REGION: $["garage-region"],
                         GARAGE_ADMIN_TOKEN: $["garage-admin-token"],
                         GARAGE_RPC_SECRET: $["garage-rpc-secret"],
-                        GARAGE_RPC_HOST: "garage:3901",
                     })
                     .with_limits("0.5", "256M")
                     .with_reservations("0.25", "128M")
@@ -145,20 +144,25 @@ local images = import "values/images.jsonnet";
 
                             # ===== LAYOUT MANAGEMENT VIA REMOTE RPC =====
                             # Use garage CLI with -h and -s flags to connect remotely
-                            # -h specifies the RPC host, -s provides the RPC secret
+                            # -h requires format: <node-id>@<host>:<port>
+                            # -s provides the RPC secret
+
+                            # Construct full RPC identifier
+                            RPC_HOST="${NODE_ID}@garage:3901"
+                            echo "RPC Host: ${RPC_HOST}"
 
                             # Check current layout to see if node is already assigned (idempotent)
                             echo "Checking current cluster layout..."
-                            if garage -h "${GARAGE_RPC_HOST}" -s "${GARAGE_RPC_SECRET}" layout show 2>&1 | grep -q "${NODE_ID}"; then
+                            if garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" layout show 2>&1 | grep -q "${NODE_ID}"; then
                                 echo "Node ${NODE_ID} already assigned in layout, skipping assignment."
                             else
                                 echo "Assigning node to cluster layout..."
                                 # Assign node to zone dc1 with 100GB capacity
-                                garage -h "${GARAGE_RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
+                                garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
                                     layout assign ${NODE_ID} -z dc1 -c 100G
 
                                 echo "Applying layout configuration..."
-                                garage -h "${GARAGE_RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
+                                garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
                                     layout apply --version 1
 
                                 echo "Layout configured successfully."
@@ -169,20 +173,20 @@ local images = import "values/images.jsonnet";
                             # ===== KEY MANAGEMENT VIA REMOTE RPC =====
 
                             # Check if key already exists (idempotent)
-                            if garage -h "${GARAGE_RPC_HOST}" -s "${GARAGE_RPC_SECRET}" key info "${GARAGE_ACCESS_KEY}" >/dev/null 2>&1; then
+                            if garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" key info "${GARAGE_ACCESS_KEY}" >/dev/null 2>&1; then
                                 echo "Access key ${GARAGE_ACCESS_KEY} already exists, skipping creation."
                             else
                                 echo "Creating S3 access key: ${GARAGE_ACCESS_KEY}"
-                                garage -h "${GARAGE_RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
+                                garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
                                     key create "${GARAGE_ACCESS_KEY}"
-                                garage -h "${GARAGE_RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
+                                garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
                                     key import "${GARAGE_ACCESS_KEY}" "${GARAGE_SECRET_KEY}" --yes
                                 echo "Access key created successfully."
                             fi
 
                             # Grant permissions to the key
                             echo "Granting permissions to ${GARAGE_ACCESS_KEY}..."
-                            garage -h "${GARAGE_RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
+                            garage -h "${RPC_HOST}" -s "${GARAGE_RPC_SECRET}" \
                                 key allow --create-bucket --owner "${GARAGE_ACCESS_KEY}"
 
                             echo "Garage initialization complete. S3 endpoint ready at http://garage:3900"
