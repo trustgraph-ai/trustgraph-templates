@@ -8,7 +8,7 @@ local version = import "version.jsonnet";
     pulsar_manager: "docker.io/apachepulsar/pulsar-manager:v0.4.0",
     etcd: "quay.io/coreos/etcd:v3.6.4",
     minio: "docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z",
-    garage: "docker.io/dxflrs/garage:v1.0.1",
+    garage: "docker.io/dxflrs/garage:v2.1.0",
     milvus: "docker.io/milvusdb/milvus:v2.5.17",
     prometheus: "docker.io/prom/prometheus:v3.8.0",
     grafana: "docker.io/grafana/grafana:12.3.0",
