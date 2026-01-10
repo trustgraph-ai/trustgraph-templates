@@ -20,8 +20,8 @@ local images = import "values/images.jsonnet";
     "garage-replication-factor":: "1",  // Set to 1 for single-node, 3 for production
 
     // Storage volume sizes
-    "garage-meta-size":: "5G",    // Metadata volume size
-    "garage-data-size":: "100G",  // Data volume size (also used for cluster layout capacity)
+    "garage-meta-size":: "2G",    // Metadata volume size
+    "garage-data-size":: "5G",    // Data volume size (also used for cluster layout capacity)
 
     garage +: {
         create:: function(engine)
@@ -81,7 +81,7 @@ local images = import "values/images.jsonnet";
                     .with_environment({
                         RUST_LOG: "garage=info",
                     })
-                    .with_limits("1.0", "1024M")
+                    .with_limits("1.0", "512M")
                     .with_reservations("0.5", "512M")
                     .with_port(3900, 3900, "s3-api")
                     .with_port(3901, 3901, "rpc")
