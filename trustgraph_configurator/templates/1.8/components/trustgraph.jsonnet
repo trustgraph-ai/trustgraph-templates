@@ -59,8 +59,8 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
                         $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
-                    .with_limits("0.5", "256M")
-                    .with_reservations("0.1", "256M")
+                    .with_limits("0.5", "512M")
+                    .with_reservations("0.1", "512M")
                     .with_port(port, port, "api");
 
             local containerSet = engine.containers(
