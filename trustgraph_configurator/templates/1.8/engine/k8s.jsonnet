@@ -285,19 +285,7 @@
         with_size:: function(size) self + { size: size },
 
         add:: function() [
-                {
-                    apiVersion: "v1",
-                    kind: "Secret",
-                    metadata: {
-                        name: volume.name,
-                        namespace: "trustgraph",
-                    },
-                    data: {
-                        [item.key]: std.base64(item.value)
-                        for item in std.objectKeysValues(parts)
-                    }
-                },
-            ],
+        ],
 
         volRef:: function() {
             name: volume.name,
