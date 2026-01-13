@@ -1,14 +1,14 @@
 
-FROM docker.io/alpine:3.20 AS build
+FROM docker.io/alpine:3.23 AS build
 
-RUN apk add --update --no-cache --no-progress make g++ gcc linux-headers
+RUN apk add --update --no-cache --no-progress make g++ gcc linux-headers go
 
 RUN apk add --update --no-cache --no-progress python3 py3-pip py3-wheel \
    python3-dev git
 
 RUN mkdir /root/wheels
 
-RUN pip wheel -w /root/wheels --no-deps jsonnet
+RUN pip wheel -w /root/wheels --no-deps gojsonnet
 
 RUN mkdir -p /root/src
 
@@ -18,7 +18,7 @@ COPY README.md /root/build/README.md
 
 RUN (cd /root/build && pip wheel -w /root/wheels --no-deps .)
 
-FROM docker.io/alpine:3.20
+FROM docker.io/alpine:3.23
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
@@ -34,6 +34,6 @@ RUN \
     pip cache purge && \
     rm -rf /root/wheels
 
-CMD tg-config-svc
+CMD [ "tg-config-svc" ]
 EXPOSE 8080
 
