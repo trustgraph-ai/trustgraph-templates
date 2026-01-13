@@ -126,7 +126,7 @@
                                     { command: container.command }
                                     else {}) + 
 
-                                    (if ! std.isEmpty(container.environment) then
+                                    (if std.length(container.environment) > 0 then
                                     {
                                         env: container.environment,
                                     }
