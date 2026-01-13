@@ -22,7 +22,7 @@
             "name": "1.8",
             "description": "Pluggable messaging fabric, switched to Garage for object store",
             "version": "1.8.12",
-            "status": "beta"
+            "status": "stable"
         }
     ],
     "platforms": [
