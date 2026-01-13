@@ -1,5 +1,5 @@
 
-import _jsonnet as j
+import _gojsonnet as j
 import json
 import os
 import pathlib
