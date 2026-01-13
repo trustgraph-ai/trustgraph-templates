@@ -102,5 +102,6 @@ def run():
 
     except Exception as e:
 
-        print(f"Exception: {e}")
+        print(f"Exception: {e}", file=sys.stderr)
+        sys.exit(1)
 
