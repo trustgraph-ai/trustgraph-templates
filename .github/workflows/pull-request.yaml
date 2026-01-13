@@ -27,5 +27,5 @@ jobs:
       - name: Unit tests
         run: |
            . env/bin/activate
-           tests/scripts/test-template-compilation.sh
+           tests/scripts/test-all-platforms.sh
 
