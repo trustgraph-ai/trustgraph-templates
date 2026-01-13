@@ -1,16 +1,17 @@
+# --- STAGE 1: Build ---
+FROM python:3.14-slim AS build
 
-FROM docker.io/alpine:3.23 AS build
+# Install build tools (Debian uses apt)
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    golang \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apk add --update --no-cache --no-progress make g++ gcc linux-headers go
+RUN mkdir -p /root/wheels /root/build
 
-RUN apk add --update --no-cache --no-progress python3 py3-pip py3-wheel \
-   python3-dev git
-
-RUN mkdir /root/wheels
-
+# Build wheels
 RUN pip wheel -w /root/wheels --no-deps gojsonnet
-
-RUN mkdir -p /root/src
 
 COPY trustgraph_configurator/ /root/build/trustgraph_configurator/
 COPY pyproject.toml /root/build/pyproject.toml
@@ -18,22 +19,20 @@ COPY README.md /root/build/README.md
 
 RUN (cd /root/build && pip wheel -w /root/wheels --no-deps .)
 
-FROM docker.io/alpine:3.23
+# --- STAGE 2: Runtime ---
+FROM python:3.14-slim
 
-ENV PIP_BREAK_SYSTEM_PACKAGES=1
+# No need to install libstdc++ manually, it's included in python-slim
+RUN apt-get update && apt-get install -y \
+    && rm -rf /var/lib/apt/lists/*
 
+# aiohttp and others will be pulled from PyPI or handled via wheels
 COPY --from=build /root/wheels /root/wheels
 
-RUN apk add --update --no-cache --no-progress python3 py3-pip \
-      py3-aiohttp
-
-RUN ls /root/wheels
-
-RUN \
-    pip install /root/wheels/* && \
-    pip cache purge && \
+# Install your wheels plus regular dependencies
+RUN pip install --no-cache-dir /root/wheels/* aiohttp pyyaml tabulate && \
     rm -rf /root/wheels
 
-CMD [ "tg-config-svc" ]
+CMD ["tg-config-svc"]
 EXPOSE 8080
 
