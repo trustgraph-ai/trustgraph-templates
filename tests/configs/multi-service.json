@@ -22,7 +22,7 @@
         "parameters": {}
     },
     {
-        "name": "graph-store-memgraph",
+        "name": "triple-store-memgraph",
         "parameters": {}
     },
     {

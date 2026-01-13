@@ -21,18 +21,22 @@ echo "Validating Kubernetes manifest: $K8S_FILE"
 
 # Check if kubectl is available
 if ! command -v kubectl &> /dev/null; then
-    echo "Warning: kubectl not found, skipping validation"
-    exit 0
-fi
-
-# Validate syntax with kubectl
-echo "Checking syntax with kubectl..."
-if kubectl apply --dry-run=client -f "$K8S_FILE" > /dev/null 2>&1; then
-    echo "✓ Kubernetes manifest syntax is valid"
+    echo "Warning: kubectl not found, skipping kubectl validation"
 else
-    echo "✗ Kubernetes manifest syntax validation failed"
-    kubectl apply --dry-run=client -f "$K8S_FILE"
-    exit 1
+    # Check if cluster is accessible
+    if kubectl cluster-info &> /dev/null; then
+        # Validate syntax with kubectl
+        echo "Checking syntax with kubectl..."
+        if kubectl apply --dry-run=client -f "$K8S_FILE" > /dev/null 2>&1; then
+            echo "✓ Kubernetes manifest syntax is valid"
+        else
+            echo "✗ Kubernetes manifest syntax validation failed"
+            kubectl apply --dry-run=client -f "$K8S_FILE"
+            exit 1
+        fi
+    else
+        echo "⚠ kubectl validation skipped (no cluster available)"
+    fi
 fi
 
 # Check for common issues

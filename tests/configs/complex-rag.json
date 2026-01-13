@@ -24,7 +24,7 @@
         "parameters": {}
     },
     {
-        "name": "graph-store-neo4j",
+        "name": "triple-store-neo4j",
         "parameters": {}
     },
     {
@@ -32,7 +32,7 @@
         "parameters": {}
     },
     {
-        "name": "chunker-recursive",
+        "name": "override-recursive-chunker",
         "parameters": {
             "chunk-size": 2000,
             "chunk-overlap": 100
