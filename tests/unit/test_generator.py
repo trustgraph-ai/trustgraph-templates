@@ -86,8 +86,8 @@ class TestGenerator:
 
         def mock_fetch(base, rel):
             fetch_called.append((base, rel))
-            # Return simple jsonnet that defines a variable
-            return "config", '{ imported: true }'
+            # Return simple jsonnet that defines a variable (as bytes)
+            return "config", b'{ imported: true }'
 
         generator = Generator(mock_fetch)
         jsonnet_code = '''

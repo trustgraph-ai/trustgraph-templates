@@ -57,6 +57,6 @@ class TestRun:
         ])
 
         with pytest.raises(SystemExit) as exc_info:
-            run.run()
+            run()  # run is already the function
 
         assert exc_info.value.code == 1

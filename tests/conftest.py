@@ -53,7 +53,7 @@ def run_configurator(monkeypatch, capsys):
 
         exit_code = 0
         try:
-            run.run()
+            run()  # run is already the function, not a module
         except SystemExit as e:
             exit_code = e.code if e.code is not None else 0
 
