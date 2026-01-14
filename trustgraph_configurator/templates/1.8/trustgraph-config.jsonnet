@@ -9,7 +9,7 @@ local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
 local default_prompts = import "prompts/default-prompts.jsonnet";
 local token_costs = import "values/token-costs.jsonnet";
-local flow_classes = import "flows/flow-classes.jsonnet";
+local flow_blueprints = import "flows/flow-blueprints.jsonnet";
 local config_composer = import "config/config-composer.jsonnet";
 local interface_descriptions = import "config/interface-descriptions.jsonnet";
 local tools = import "config/tools.jsonnet";
@@ -29,7 +29,7 @@ local configuration = {
     mcp:: {},
 
     // Flow classes reference
-    "flow-classes":: flow_classes,
+    "flow-blueprints":: flow_blueprints,
 
     // LLM model parameters
     "llm-models" +:: {},
@@ -72,8 +72,8 @@ local configuration = {
 
     // Build the complete configuration using the composer
     configuration:: config_composer.build({
-        flow_classes: $["flow-classes"],
-        default_flow_class: "everything",
+        flow_blueprints: $["flow-blueprints"],
+        default_flow_blueprint: "everything",
         default_flow_id: "default",
         flow_init_parameters: $["flow_init_parameters"],
         prompts: $["prompts"],

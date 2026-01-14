@@ -44,7 +44,7 @@ local request_response = helpers.request_response;
         },
     },
 
-    // Class-level processors for document loading services
-    "class" +: {
+    // Blueprint-level processors for document loading services
+    "blueprint" +: {
     }
 }
