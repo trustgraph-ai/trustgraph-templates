@@ -1,21 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "TrustGraph Configuration",
-  "description": "Schema for TrustGraph service configuration",
-  "type": "array",
-  "items": {
-    "type": "object",
-    "required": ["name", "parameters"],
-    "properties": {
-      "name": {
-        "type": "string",
-        "description": "Service/module name"
-      },
-      "parameters": {
-        "type": "object",
-        "description": "Service-specific configuration parameters"
-      }
+  "title": "TrustGraph Configuration Output",
+  "description": "Schema for generated TrustGraph configuration",
+  "type": "object",
+  "properties": {
+    "collection": {
+      "type": "object",
+      "description": "Collection definitions"
+    },
+    "tools": {
+      "type": "object",
+      "description": "Tool definitions"
     }
-  },
-  "minItems": 1
+  }
 }

@@ -45,7 +45,7 @@ class TestErrorHandling:
             '-p', 'nonexistent-platform',
             '-i', config_file,
             '--latest-stable',
-            '-O'
+            '-R'  # Use -R to trigger platform-specific generation
         ])
         assert code == 1
 

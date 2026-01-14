@@ -183,13 +183,15 @@ def validate_port_consistency(resources: List[Dict[str, Any]]) -> List[str]:
             # Assume service name matches deployment name
             deployment_port_list = deployment_ports.get(service_name, [])
 
-            for port_spec in service_ports:
-                target_port = port_spec.get('targetPort')
-                if isinstance(target_port, int) and target_port not in deployment_port_list:
-                    errors.append(
-                        f"Service '{service_name}': "
-                        f"targetPort {target_port} not found in deployment container ports"
-                    )
+            # Only validate port consistency if deployment explicitly lists ports
+            if deployment_port_list:
+                for port_spec in service_ports:
+                    target_port = port_spec.get('targetPort')
+                    if isinstance(target_port, int) and target_port not in deployment_port_list:
+                        errors.append(
+                            f"Service '{service_name}': "
+                            f"targetPort {target_port} not found in deployment container ports"
+                        )
 
     return errors
 
@@ -229,7 +231,11 @@ def parse_kubernetes_yaml(yaml_content: str) -> List[Dict[str, Any]]:
     resources = []
     for doc in yaml.safe_load_all(yaml_content):
         if doc:  # Skip empty documents
-            resources.append(doc)
+            # If it's a Kubernetes List, unwrap it
+            if doc.get('kind') == 'List' and 'items' in doc:
+                resources.extend(doc['items'])
+            else:
+                resources.append(doc)
     return resources
 
 

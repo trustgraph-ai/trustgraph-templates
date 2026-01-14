@@ -90,9 +90,13 @@ def test_kubernetes_resources_match_schema(run_configurator, test_config_dir, sc
     with open(schema_file) as f:
         schema = json.load(f)
 
-    # Validate the resource (which might be a single resource or embedded in list)
+    # Validate the resource (which might be a single resource, list, or K8s List)
     if isinstance(resources, dict):
-        resources_to_validate = [resources]
+        # Check if it's a Kubernetes List resource
+        if resources.get('kind') == 'List' and 'items' in resources:
+            resources_to_validate = resources['items']
+        else:
+            resources_to_validate = [resources]
     elif isinstance(resources, list):
         resources_to_validate = resources
     else:

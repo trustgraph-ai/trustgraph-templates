@@ -21,14 +21,14 @@ class TestRun:
         assert code == 0
 
     def test_run_with_invalid_platform_fails(self, run_configurator, test_config_dir):
-        """Test that invalid platform fails."""
+        """Test that invalid platform fails during resource generation."""
         config_file = str(test_config_dir / "minimal.json")
         stdout, stderr, code = run_configurator([
             '-t', '1.8',
             '-p', 'invalid-platform',
             '-i', config_file,
             '--latest-stable',
-            '-O'
+            '-R'  # Use -R to trigger platform-specific generation
         ])
         assert code == 1
 

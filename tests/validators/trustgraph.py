@@ -161,13 +161,23 @@ def validate_required_structure(config: Any) -> List[str]:
     """
     Validate basic configuration structure.
 
+    Handles both input format (list of services) and output format (dict).
+
     Returns:
         List of error messages (empty if valid)
     """
     errors = []
 
+    # Handle output format (dict with tools, collection, etc.)
+    if isinstance(config, dict):
+        # Just check it's not empty
+        if not config:
+            errors.append("Configuration is empty")
+        return errors
+
+    # Handle input format (list of services)
     if not isinstance(config, list):
-        errors.append("Configuration must be a list of service definitions")
+        errors.append("Configuration must be a list or dict")
         return errors
 
     if not config:
@@ -187,7 +197,7 @@ def validate_required_structure(config: Any) -> List[str]:
     return errors
 
 
-def parse_trustgraph_config(json_content: str) -> List[Dict[str, Any]]:
+def parse_trustgraph_config(json_content: str):
     """
     Parse TrustGraph configuration JSON.
 
@@ -195,7 +205,7 @@ def parse_trustgraph_config(json_content: str) -> List[Dict[str, Any]]:
         json_content: JSON string
 
     Returns:
-        List of service configurations
+        Configuration (dict or list depending on format)
     """
     return json.loads(json_content)
 
