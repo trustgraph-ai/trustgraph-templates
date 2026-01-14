@@ -11,7 +11,7 @@ from . import Generator, Packager
 def list():
 
     parser = argparse.ArgumentParser(
-        prog="tg-configurations-list",
+        prog="tg-show-config-params",
         description=__doc__
     )
 

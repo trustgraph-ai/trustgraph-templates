@@ -37,7 +37,7 @@ This test strategy prioritizes **configuration correctness** and **deployability
   # Test all platform configurations for each template version
   for version in 0.21 0.22 0.23 1.0 1.1; do
     for platform in docker-compose podman-compose minikube-k8s gcp-k8s aks-k8s eks-k8s scw-k8s; do
-      ./scripts/tg-configurator --template $version --platform $platform --input test-configs/minimal.json -O > /dev/null
+      ./scripts/tg-build-deployment --template $version --platform $platform --input test-configs/minimal.json -O > /dev/null
     done
   done
   ```
@@ -64,7 +64,7 @@ This test strategy prioritizes **configuration correctness** and **deployability
 - **Test Process**:
   ```bash
   # Generate configuration
-  ./scripts/tg-configurator --template 1.1 --platform docker-compose --input test-config.json -R > docker-compose.yaml
+  ./scripts/tg-build-deployment --template 1.1 --platform docker-compose --input test-config.json -R > docker-compose.yaml
   
   # Validate syntax
   docker-compose config -q
@@ -84,7 +84,7 @@ This test strategy prioritizes **configuration correctness** and **deployability
 - **Test Process**:
   ```bash
   # Generate configuration
-  ./scripts/tg-configurator --template 1.1 --platform gcp-k8s --input test-config.json -R > resources.yaml
+  ./scripts/tg-build-deployment --template 1.1 --platform gcp-k8s --input test-config.json -R > resources.yaml
   
   # Validate syntax
   kubectl apply --dry-run=client -f resources.yaml
@@ -241,14 +241,14 @@ for version in $VERSIONS; do
       echo "Testing $version/$platform/$config"
       
       # Test TrustGraph config generation
-      ./scripts/tg-configurator --template $version --platform $platform \
+      ./scripts/tg-build-deployment --template $version --platform $platform \
         --input tests/configs/$config -O > /tmp/tg-config.json
       
       # Validate TrustGraph config
       ./tests/scripts/validate-tg-config.sh /tmp/tg-config.json
       
       # Test resource generation
-      ./scripts/tg-configurator --template $version --platform $platform \
+      ./scripts/tg-build-deployment --template $version --platform $platform \
         --input tests/configs/$config -R > /tmp/resources.yaml
       
       # Validate resources

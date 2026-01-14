@@ -1,190 +1,189 @@
 # TrustGraph Configurator Test Suite
 
-This test suite validates the correctness of TrustGraph configuration generation across all supported template versions and deployment platforms.
+Comprehensive pytest-based test suite for trustgraph-configurator.
 
-## Quick Start
+## Installation
 
-Run smoke tests (quick validation):
+Install with development dependencies:
+
 ```bash
-./tests/scripts/test-all-platforms.sh smoke
+pip install -e .[dev]
 ```
 
-Run all tests:
+## Running Tests
+
 ```bash
-./tests/scripts/test-all-platforms.sh all
+# All tests
+pytest
+
+# Specific category
+pytest tests/unit/
+pytest tests/integration/
+pytest tests/validation/
+
+# By marker
+pytest -m unit
+pytest -m integration
+pytest -m validation
+
+# Specific test file
+pytest tests/unit/test_generator.py
+
+# Parallel execution (faster)
+pytest -n auto
+
+# Verbose output
+pytest -v
+
+# Stop on first failure
+pytest -x
+
+# With coverage
+pytest --cov=trustgraph_configurator --cov-report=html
 ```
 
 ## Test Structure
 
 ```
 tests/
-├── configs/           # Test configuration files
-│   ├── minimal.json          # Basic configuration
-│   ├── complex-rag.json      # RAG with multiple stores
-│   ├── multi-service.json    # Multiple services + monitoring
-│   └── cloud-aws.json        # AWS Bedrock configuration
-├── scripts/           # Test execution scripts
-│   ├── test-all-platforms.sh     # Main test pipeline
-│   ├── test-template-compilation.sh  # Template compilation tests
-│   ├── validate-docker-compose.sh   # Docker Compose validation
-│   └── validate-kubernetes.sh       # Kubernetes validation
-├── golden/            # Reference configurations (future)
-└── schemas/           # Configuration schemas (future)
+├── conftest.py              # Shared fixtures
+├── unit/                    # Unit tests for Python modules
+│   ├── test_generator.py
+│   ├── test_packager.py
+│   ├── test_api.py
+│   └── test_run.py
+├── integration/             # Full workflow tests
+│   ├── test_compilation.py  # Template compilation matrix
+│   ├── test_cli.py          # CLI interface tests
+│   └── test_errors.py       # Error handling tests
+├── validation/              # Output validation tests
+│   ├── test_syntax.py       # Syntax validation
+│   ├── test_schema.py       # Schema validation
+│   ├── test_semantics_k8s.py
+│   ├── test_semantics_docker.py
+│   └── test_semantics_tg.py
+├── validators/              # Validation helper modules
+│   ├── kubernetes.py
+│   ├── docker_compose.py
+│   └── trustgraph.py
+├── schemas/                 # JSON schemas
+│   ├── trustgraph-config.schema.json
+│   ├── kubernetes-resource.schema.json
+│   └── docker-compose.schema.json
+└── configs/                 # Test input configs
+    ├── minimal.json
+    ├── complex-rag.json
+    ├── multi-service.json
+    └── cloud-aws.json
 ```
 
-## Test Scripts
+## Test Categories
 
-### Main Test Pipeline
-```bash
-./tests/scripts/test-all-platforms.sh [all|smoke|version <ver>|platform <plat>]
-```
+### Unit Tests (`tests/unit/`)
+Test individual Python modules in isolation:
+- Generator: Jsonnet template processing
+- Packager: Configuration assembly and zip creation
+- API: Template listing and version resolution
+- Run: CLI entry point and argument parsing
 
-- `all` - Run comprehensive tests (default)
-- `smoke` - Run quick smoke tests for key combinations
-- `version <ver>` - Test specific template version
-- `platform <plat>` - Test specific platform
+### Integration Tests (`tests/integration/`)
+Test full workflow end-to-end:
+- **Compilation**: Template compilation across all version/platform/config combinations (192 tests)
+- **CLI**: Command line interface functionality
+- **Errors**: Error handling and reporting
 
-### Template Compilation Tests
-```bash
-./tests/scripts/test-template-compilation.sh [all|version <ver>|platform <plat>|config <conf>]
-```
+### Validation Tests (`tests/validation/`)
+Verify correctness of generated outputs:
+- **Syntax**: JSON/YAML parsing validation
+- **Schema**: JSON Schema compliance
+- **Semantics**: Cross-references, consistency checks
 
-Tests that all templates compile without errors.
+## Test Matrix
 
-### Individual Validation Scripts
-```bash
-./tests/scripts/validate-docker-compose.sh <compose-file>
-./tests/scripts/validate-kubernetes.sh <k8s-manifest>
-```
+Integration tests cover:
+- **Versions**: 1.6, 1.7, 1.8
+- **Platforms**: docker-compose, podman-compose, minikube-k8s, gcp-k8s, aks-k8s, eks-k8s, scw-k8s, ovh-k8s
+- **Configs**: minimal, complex-rag, multi-service, cloud-aws
 
-## Test Configurations
+Total: 3 versions × 8 platforms × 4 configs × 2 outputs = 192 test combinations
 
-### minimal.json
-Basic configuration with OpenAI LLM and HuggingFace embeddings.
+## Validation Layers
 
-### complex-rag.json
-RAG configuration with multiple storage backends (Qdrant, Neo4j, Cassandra).
+### Syntax Validation
+- JSON parsing with `json.loads()`
+- YAML parsing with `yaml.safe_load()`
 
-### multi-service.json
-Configuration with Ollama, FastEmbed, monitoring enabled.
+### Schema Validation
+- TrustGraph config against `trustgraph-config.schema.json`
+- Docker Compose against `docker-compose.schema.json`
+- Kubernetes resources against `kubernetes-resource.schema.json`
 
-### cloud-aws.json
-AWS Bedrock configuration for cloud deployments.
+### Semantic Validation
 
-## Template Versions Tested
+**Kubernetes:**
+- Deployment selectors match pod labels
+- Service selectors match deployment labels
+- volumeMounts reference defined volumes
+- ConfigMap/Secret references exist
+- Service targetPorts match container ports
 
-- **0.21** - Mistral API, LM Studio, OCR options
-- **0.22** - Dynamic configuration
-- **1.0** - Flow API, Librarian (stable)
-- **1.1** - MCP support, agent upgrades (stable)
+**Docker Compose:**
+- depends_on references valid services
+- Volume names are defined
+- Network references are valid
+- No port conflicts
 
-## Platforms Tested
+**TrustGraph Config:**
+- Service references are valid
+- Parameter types are reasonable
+- Storage backends are consistent
+- LLM configuration is present
 
-- docker-compose
-- podman-compose
-- minikube-k8s
-- gcp-k8s
-- aks-k8s
-- eks-k8s
-- scw-k8s
+## Fixtures
 
-## Test Types
+Available in `conftest.py`:
+- `test_config_dir`: Path to test configs
+- `test_configs`: Loaded test configurations
+- `temp_output_dir`: Temporary directory for outputs
+- `run_configurator`: Function to execute configurator
+- `mock_config_file`: Create temporary config files
 
-### 1. Configuration Generation Tests
-- Validates that all template/platform/config combinations generate without errors
-- Tests both TrustGraph config (-O) and resource files (-R)
+## CI/CD
 
-### 2. Schema Validation Tests
-- Docker Compose: Validates syntax with `docker-compose config`
-- Kubernetes: Validates syntax with `kubectl apply --dry-run`
-- JSON: Validates TrustGraph config is valid JSON
+Tests run automatically on pull requests via GitHub Actions.
 
-### 3. Template Compilation Tests
-- Ensures all Jsonnet templates compile without syntax errors
-- Tests template resolution and imports
+See `.github/workflows/pull-request.yaml` for CI configuration.
 
-## Running Tests
+## Development
 
-### Prerequisites
-- Python 3.x with required dependencies
-- Docker and docker-compose (for Docker Compose validation)
-- kubectl (for Kubernetes validation)
+### Adding New Tests
 
-### Environment Setup
-```bash
-export PYTHONPATH=/path/to/trustgraph-templates
-cd /path/to/trustgraph-templates
-```
+1. Create test file in appropriate directory
+2. Use appropriate markers (`@pytest.mark.unit`, etc.)
+3. Use fixtures from `conftest.py`
+4. Follow naming convention: `test_*.py`, `test_*()` functions
 
-### Example Test Runs
-```bash
-# Quick smoke test
-./tests/scripts/test-all-platforms.sh smoke
+### Adding New Validation
 
-# Test latest stable version
-./tests/scripts/test-all-platforms.sh version 1.1
-
-# Test Docker Compose platform
-./tests/scripts/test-all-platforms.sh platform docker-compose
-
-# Test template compilation only
-./tests/scripts/test-template-compilation.sh all
-```
-
-## Interpreting Results
-
-### Test Output
-- ✓ Green checkmark = Test passed
-- ✗ Red X = Test failed
-- Error details shown for failed tests
-
-### Exit Codes
-- 0 = All tests passed
-- 1 = Some tests failed
-
-### Common Failures
-- Template compilation errors = Jsonnet syntax issues
-- Resource validation errors = Invalid Docker Compose/Kubernetes syntax
-- JSON validation errors = Malformed TrustGraph configuration
-
-## Adding New Tests
-
-### New Test Configuration
-1. Create new JSON file in `tests/configs/`
-2. Add to `CONFIGS` variable in test scripts
-3. Update this README
-
-### New Platform Support
-1. Add to `PLATFORMS` variable in test scripts
-2. Update validation logic if needed
-3. Add platform-specific validation script if required
-
-## Continuous Integration
-
-To integrate with CI/CD:
-```bash
-# In your CI pipeline
-./tests/scripts/test-all-platforms.sh smoke
-```
-
-For comprehensive testing:
-```bash
-./tests/scripts/test-all-platforms.sh all
-```
+1. Add validation logic to `tests/validators/`
+2. Create corresponding tests in `tests/validation/`
+3. Update schemas in `tests/schemas/` if needed
 
 ## Troubleshooting
 
-### Common Issues
-1. **PYTHONPATH not set**: Ensure `PYTHONPATH` includes the project root
-2. **Missing dependencies**: Install required Python packages
-3. **Docker/kubectl not found**: Install tools or tests will be skipped
-4. **Permission errors**: Ensure test scripts are executable
+**Test failures:**
+- Check stderr output for error messages
+- Run with `-v` for verbose output
+- Run with `--tb=long` for full tracebacks
 
-### Debug Mode
-Add `set -x` to any test script for detailed execution tracing.
+**Import errors:**
+- Ensure package is installed: `pip install -e .[dev]`
+- Check PYTHONPATH includes project root
 
-### Manual Testing
-```bash
-# Test specific combination manually
-./scripts/tg-configurator --template 1.1 --platform docker-compose --input tests/configs/minimal.json -O
-```
+**Slow tests:**
+- Use `-n auto` for parallel execution
+- Run specific test subsets instead of full suite
+
+## Documentation
+
+See `docs/tech-specs/tests.md` for detailed test specification.

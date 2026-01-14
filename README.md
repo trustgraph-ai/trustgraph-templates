@@ -23,7 +23,7 @@ pip install -e .
 To see all available templates and platforms:
 
 ```bash
-scripts/tg-configurations-list
+tg-show-config-params
 ```
 
 This will display:
@@ -36,13 +36,13 @@ This will display:
 To generate a configuration package:
 
 ```bash
-scripts/tg-configurator --template <template-name> --version <version> \
+scripts/tg-build-deployment --template <template-name> --version <version> \
     --input config.json --output output.zip --platform <platform>
 ```
 
 Example:
 ```bash
-scripts/tg-configurator --template 1.1 --version 1.1.9 \
+scripts/tg-build-deployment --template 1.1 --version 1.1.9 \
     --input config.json --output deployment.zip --platform docker-compose
 ```
 
@@ -50,18 +50,18 @@ scripts/tg-configurator --template 1.1 --version 1.1.9 \
 
 To output only the TrustGraph configuration:
 ```bash
-scripts/tg-configurator --template 1.1 --latest-stable \
+scripts/tg-build-deployment --template 1.1 --latest-stable \
     --input config.json -O > trustgraph-config.json
 ```
 
 To output only the platform resources (docker-compose.yaml or resources.yaml):
 ```bash
 # For Docker Compose
-scripts/tg-configurator --template 1.1 --latest-stable \
+scripts/tg-build-deployment --template 1.1 --latest-stable \
     --input config.json --platform docker-compose -R > docker-compose.yaml
 
 # For Kubernetes
-scripts/tg-configurator --template 1.1 --latest-stable \
+scripts/tg-build-deployment --template 1.1 --latest-stable \
     --input config.json --platform gcp-k8s -R > resources.yaml
 ```
 
@@ -101,15 +101,6 @@ The service provides the same functionality as the command-line tool but through
 - `aks-k8s`: Azure Kubernetes Service (AKS)
 - `eks-k8s`: AWS Elastic Kubernetes Service (EKS)
 - `scw-k8s`: Scaleway Kubernetes
-
-### Template Versions
-
-- **1.2** (stable): Structured data MVP
-- **1.1** (stable): MCP support and agent functionality upgrades
-- **1.0** (stable): Production release with Flow API and Librarian
-- **0.23** (alpha): Early release with dynamic flow processing
-- **0.22** (stable): Dynamic configuration without system restart
-- **0.21** (stable): Mistral API, LM Studio, multiple OCR options
 
 ## Python Architecture
 

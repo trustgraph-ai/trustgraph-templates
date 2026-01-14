@@ -9,7 +9,7 @@ from . import Generator, Packager
 def run():
 
     parser = argparse.ArgumentParser(
-        prog="tg-configurator",
+        prog="tg-build-deployment",
         description=__doc__
     )
 

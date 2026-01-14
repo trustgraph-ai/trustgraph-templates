@@ -22,10 +22,10 @@ jobs:
         run: |
             python3 -m venv env
             . env/bin/activate
-            pip install .
+            pip install -e .[dev]
 
-      - name: Unit tests
+      - name: Run pytest tests
         run: |
            . env/bin/activate
-           tests/scripts/test-template-compilation.sh
+           pytest -v --tb=short
 
