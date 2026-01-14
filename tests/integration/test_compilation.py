@@ -8,7 +8,7 @@ import yaml
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize("version", ["1.8"])
+@pytest.mark.parametrize("version", ["1.6", "1.7", "1.8"])
 @pytest.mark.parametrize("platform", [
     "docker-compose",
     "podman-compose",
@@ -51,7 +51,7 @@ def test_tg_config_generation(version, platform, config, run_configurator, test_
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize("version", ["1.8"])
+@pytest.mark.parametrize("version", ["1.6", "1.7", "1.8"])
 @pytest.mark.parametrize("platform", [
     "docker-compose",
     "podman-compose",
