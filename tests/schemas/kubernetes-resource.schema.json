@@ -12,7 +12,7 @@
     "kind": {
       "type": "string",
       "description": "Resource kind",
-      "enum": ["Deployment", "Service", "ConfigMap", "Secret", "PersistentVolumeClaim", "Namespace"]
+      "enum": ["Deployment", "Service", "ConfigMap", "Secret", "PersistentVolumeClaim", "PersistentVolume", "Namespace", "StorageClass"]
     },
     "metadata": {
       "type": "object",
