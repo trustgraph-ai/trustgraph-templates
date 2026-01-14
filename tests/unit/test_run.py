@@ -52,7 +52,7 @@ class TestRun:
 
         # Test error exit
         monkeypatch.setattr(sys, 'argv', [
-            'tg-configurator',
+            'tg-build-deployment',
             '-i', '/nonexistent/config.json'
         ])
 

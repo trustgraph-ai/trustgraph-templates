@@ -49,7 +49,7 @@ def run_configurator(monkeypatch, capsys):
         from trustgraph_configurator import run
 
         # Set sys.argv with the command and arguments
-        monkeypatch.setattr(sys, 'argv', ['tg-configurator'] + args)
+        monkeypatch.setattr(sys, 'argv', ['tg-build-deployment'] + args)
 
         exit_code = 0
         try:

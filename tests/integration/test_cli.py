@@ -13,7 +13,7 @@ class TestCLIInterface:
     def test_cli_executable_help(self):
         """Test that CLI executable --help works."""
         result = subprocess.run(
-            ['tg-configurator', '--help'],
+            ['tg-build-deployment', '--help'],
             capture_output=True,
             text=True
         )
@@ -21,9 +21,9 @@ class TestCLIInterface:
         assert 'usage' in result.stdout.lower()
 
     def test_cli_executable_exists(self):
-        """Test that tg-configurator is in PATH."""
+        """Test that tg-build-deployment is in PATH."""
         result = subprocess.run(
-            ['which', 'tg-configurator'],
+            ['which', 'tg-build-deployment'],
             capture_output=True,
             text=True
         )

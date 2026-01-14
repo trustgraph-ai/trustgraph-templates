@@ -36,7 +36,7 @@ dev = [
 Homepage = "https://github.com/trustgraph-ai/trustgraph-configurator"
 
 [project.scripts]
-tg-configurator = "trustgraph_configurator:run"
+tg-build-deployment = "trustgraph_configurator:run"
 tg-config-svc = "trustgraph_configurator:run_service"
 tg-configurations-list = "trustgraph_configurator:list"
 

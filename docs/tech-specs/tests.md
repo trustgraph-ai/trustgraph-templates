@@ -90,12 +90,12 @@ Store reference outputs for each test case:
 
 ### Compilation Tests
 For each (version, platform, config) combination:
-1. Run `tg-configurator -t {version} -p {platform} -i {config} -O`
+1. Run `tg-build-deployment -t {version} -p {platform} -i {config} -O`
 2. Assert exit code = 0
 3. Assert stdout contains valid JSON
 4. Parse and validate TrustGraph config structure
 
-5. Run `tg-configurator -t {version} -p {platform} -i {config} -R`
+5. Run `tg-build-deployment -t {version} -p {platform} -i {config} -R`
 6. Assert exit code = 0
 7. Assert stdout contains valid YAML
 8. Parse and validate resource manifest structure
@@ -143,7 +143,7 @@ def test_basic_compilation(monkeypatch, capsys):
     """Test compilation by calling run() directly"""
     # Mock sys.argv with CLI arguments
     monkeypatch.setattr(sys, 'argv', [
-        'tg-configurator',
+        'tg-build-deployment',
         '-t', '1.8',
         '-p', 'docker-compose',
         '-i', 'tests/configs/minimal.json',
@@ -170,7 +170,7 @@ def test_basic_compilation(monkeypatch, capsys):
 def test_error_handling(monkeypatch):
     """Test that errors exit with code 1"""
     monkeypatch.setattr(sys, 'argv', [
-        'tg-configurator',
+        'tg-build-deployment',
         '-i', 'nonexistent.json'
     ])
 
@@ -189,7 +189,7 @@ import subprocess
 def test_cli_executable_installed():
     """Verify the installed CLI entry point works"""
     result = subprocess.run(
-        ['tg-configurator', '--help'],
+        ['tg-build-deployment', '--help'],
         capture_output=True,
         text=True
     )
@@ -199,7 +199,7 @@ def test_cli_executable_installed():
 def test_cli_version_command():
     """Verify version command works from CLI"""
     result = subprocess.run(
-        ['tg-configurator', '--version'],
+        ['tg-build-deployment', '--version'],
         capture_output=True,
         text=True
     )
@@ -235,7 +235,7 @@ def run_configurator(monkeypatch, capsys):
         """
         from trustgraph_configurator import run
 
-        monkeypatch.setattr(sys, 'argv', ['tg-configurator'] + args)
+        monkeypatch.setattr(sys, 'argv', ['tg-build-deployment'] + args)
 
         exit_code = 0
         try:
