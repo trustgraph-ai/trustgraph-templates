@@ -29,7 +29,7 @@ local response = helpers.response;
         },
     },
 
-    // No class-level processors needed
-    "class" +: {
+    // No blueprint-level processors needed
+    "blueprint" +: {
     }
 }

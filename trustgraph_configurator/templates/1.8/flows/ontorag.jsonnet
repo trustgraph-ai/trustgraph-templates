@@ -101,7 +101,7 @@ local llm_parameters = import "llm-parameters.jsonnet";
         },
     },
 
-    // Class-level processors - shared across all flow instances of this class
-    "class" +: {
+    // Blueprint-level processors - shared across all flow instances of this blueprint
+    "blueprint" +: {
     }
 }

@@ -9,34 +9,34 @@ local interface_builder = import "interface-builder.jsonnet";
     // Main function to build the complete configuration
     build: function(config_spec)
         // Extract configuration parameters
-        local flow_classes = config_spec.flow_classes;
-        local default_flow_class = config_spec.default_flow_class;
+        local flow_blueprints = config_spec.flow_blueprints;
+        local default_flow_blueprint = config_spec.default_flow_blueprint;
         local default_flow_id = config_spec.default_flow_id;
         local flow_init_parameters = config_spec.flow_init_parameters;
 
         // Build all processors for the default flow
-        local class_processors = flow_builder.build_class_processors(
-            flow_classes,
-            default_flow_class,
+        local blueprint_processors = flow_builder.build_blueprint_processors(
+            flow_blueprints,
+            default_flow_blueprint,
             flow_init_parameters
         );
 
         local flow_processors = flow_builder.build_flow_processors(
-            flow_classes,
-            default_flow_class,
+            flow_blueprints,
+            default_flow_blueprint,
             default_flow_id,
             flow_init_parameters
         );
 
         // Combine processors into flow objects
-        local processor_array = class_processors + flow_processors;
+        local processor_array = blueprint_processors + flow_processors;
         local flow_objects = flow_builder.build_flow_objects(processor_array);
-        local flows_active = flow_builder.merge_flow_objects(flow_objects);
+        local active_flows = flow_builder.merge_flow_objects(flow_objects);
 
         // Build interfaces for the default flow
         local default_flow_interfaces = interface_builder.build_interfaces(
-            flow_classes,
-            default_flow_class,
+            flow_blueprints,
+            default_flow_blueprint,
             default_flow_id,
             flow_init_parameters
         );
@@ -66,28 +66,28 @@ local interface_builder = import "interface-builder.jsonnet";
                 // MCP configuration
                 mcp: config_spec.mcp,
 
-                // Flow classes reference
-                "flow-classes": flow_classes,
+                // Flow blueprints reference
+                "flow-blueprint": flow_blueprints,
 
                 // Interface descriptions
-                "interface-descriptions": config_spec.interface_descriptions,
+                "interface-description": config_spec.interface_descriptions,
 
                 // Flow instances
-                "flows": {
+                "flow": {
                     [default_flow_id]: {
                         "description": "Default processing flow",
-                        "class-name": default_flow_class,
+                        "blueprint-name": default_flow_blueprint,
                         "interfaces": default_flow_interfaces,
                         "parameters": flow_init_parameters,
                     },
                 },
 
                 // Active flow processors
-                "flows-active": flows_active,
+                "active-flow": active_flows,
 
                 // Token costs and parameter types
-                "token-costs": config_spec.token_costs,
-                "parameter-types": config_spec.parameter_types,
+                "token-cost": config_spec.token_costs,
+                "parameter-type": config_spec.parameter_types,
 
                 // Collections configuration
                 "collection": config_spec.collection,

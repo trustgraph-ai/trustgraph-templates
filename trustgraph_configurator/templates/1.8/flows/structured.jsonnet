@@ -102,7 +102,7 @@ local llm_parameters = import "llm-parameters.jsonnet";
             input: response("text-completion-rag:{id}"),
         },
     },
-    // Class-level processors for structured data operations
-    "class" +: {
+    // Blueprint-level processors for structured data operations
+    "blueprint" +: {
     }
 }

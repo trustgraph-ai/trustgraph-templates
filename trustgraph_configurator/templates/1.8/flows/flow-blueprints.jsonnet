@@ -1,6 +1,6 @@
-// TrustGraph Flow Classes Configuration
+// TrustGraph Flow Blueprints Configuration
 // Defines different flow combinations for various use cases
-// Each flow class combines multiple functional modules to create complete processing pipelines
+// Each flow blueprint combines multiple functional modules to create complete processing pipelines
 //
 // Available modules:
 // - graphrag: Graph-based RAG with knowledge graphs

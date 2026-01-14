@@ -94,7 +94,7 @@ local llm_parameters = import "llm-parameters.jsonnet";
         },
     },
 
-    // Class-level processors for document RAG operations
-    "class" +: {
+    // Blueprint-level processors for document RAG operations
+    "blueprint" +: {
     }
 }

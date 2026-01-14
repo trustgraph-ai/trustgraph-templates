@@ -1,39 +1,39 @@
 // Flow Builder Module
-// Processes flow classes and builds complete flow configurations
-// Handles {class}, {id}, and parameter substitutions
+// Processes flow blueprints and builds complete flow configurations
+// Handles {blueprint}, {id}, and parameter substitutions
 
 local param_processor = import "parameter-processor.jsonnet";
 
 {
-    // Builds class-level processors with parameter substitution
-    // Processes the 'class' section of flow classes
-    build_class_processors: function(flow_classes, class_name, parameters)
+    // Builds blueprint-level processors with parameter substitution
+    // Processes the 'blueprint' section of flow blueprints
+    build_blueprint_processors: function(flow_blueprints, blueprint_name, parameters)
         [
             [
-                // Replace {class} in the processor key
-                local key = std.strReplace(processor.key, "{class}", class_name);
+                // Replace {blueprint} in the processor key
+                local key = std.strReplace(processor.key, "{blueprint}", blueprint_name);
                 local parts = std.splitLimit(key, ":", 2);
                 parts,
                 {
                     // Process each field in the processor configuration
                     [field.key]:
-                        // First replace {class}, then substitute parameters
-                        local class_replaced = std.strReplace(field.value, "{class}", class_name);
-                        param_processor.substitute_parameters(class_replaced, parameters)
+                        // First replace {blueprint}, then substitute parameters
+                        local blueprint_replaced = std.strReplace(field.value, "{blueprint}", blueprint_name);
+                        param_processor.substitute_parameters(blueprint_replaced, parameters)
                     for field in std.objectKeysValuesAll(processor.value)
                 }
             ]
-            for processor in std.objectKeysValuesAll(flow_classes[class_name].class)
+            for processor in std.objectKeysValuesAll(flow_blueprints[blueprint_name].blueprint)
         ],
 
     // Builds flow-level processors with parameter substitution
-    // Processes the 'flow' section of flow classes
-    build_flow_processors: function(flow_classes, class_name, flow_id, parameters)
+    // Processes the 'flow' section of flow blueprints
+    build_flow_processors: function(flow_blueprints, blueprint_name, flow_id, parameters)
         [
             [
-                // Replace both {class} and {id} in the processor key
+                // Replace both {blueprint} and {id} in the processor key
                 local key = std.strReplace(
-                    std.strReplace(processor.key, "{class}", class_name),
+                    std.strReplace(processor.key, "{blueprint}", blueprint_name),
                     "{id}", flow_id
                 );
                 local parts = std.splitLimit(key, ":", 2);
@@ -41,17 +41,17 @@ local param_processor = import "parameter-processor.jsonnet";
                 {
                     // Process each field in the processor configuration
                     [field.key]:
-                        // Replace {class} and {id}, then substitute parameters
-                        local class_replaced = std.strReplace(field.value, "{class}", class_name);
-                        local id_replaced = std.strReplace(class_replaced, "{id}", flow_id);
+                        // Replace {blueprint} and {id}, then substitute parameters
+                        local blueprint_replaced = std.strReplace(field.value, "{blueprint}", blueprint_name);
+                        local id_replaced = std.strReplace(blueprint_replaced, "{id}", flow_id);
                         param_processor.substitute_parameters(id_replaced, parameters)
                     for field in std.objectKeysValuesAll(processor.value)
                 }
             ]
-            for processor in std.objectKeysValuesAll(flow_classes[class_name].flow)
+            for processor in std.objectKeysValuesAll(flow_blueprints[blueprint_name].flow)
         ],
 
-    // Combines class and flow processors into flow objects
+    // Combines blueprint and flow processors into flow objects
     build_flow_objects: function(processor_array)
         std.map(
             function(item) {

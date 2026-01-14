@@ -53,7 +53,7 @@ local request_response = helpers.request_response;
 
     },
 
-    // Class-level processors for agent-related services
-    "class" +: {
+    // Blueprint-level processors for agent-related services
+    "blueprint" +: {
     }
 }
