@@ -21,7 +21,7 @@
 	{
             "name": "1.8",
             "description": "Pluggable messaging fabric, switched to Garage for object store",
-            "version": "1.8.15",
+            "version": "1.8.17",
             "status": "stable"
         }
     ],
