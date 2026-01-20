@@ -96,4 +96,7 @@
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
 
+   // Model hosting
+   "hosting-intel-battlemage-vllm": import "model-hosting/intel-battlemage-vllm.jsonnet",
+
 }
