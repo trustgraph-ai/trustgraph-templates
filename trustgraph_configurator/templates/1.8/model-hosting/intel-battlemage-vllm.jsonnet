@@ -16,6 +16,8 @@ local images = import "values/images.jsonnet";
     "vllm-service-datatype":: "float16",
     "vllm-service-quantization":: "woq_int4",
     "vllm-service-hf-token":: null,
+    "vllm-service-max-model-len":: 8192,
+    "vllm-service-max-num-seqs":: 16,
 
     "vllm-service" +: {
     
@@ -45,9 +47,9 @@ local images = import "values/images.jsonnet";
                         $["vllm-service-datatype"],
                         "--enforce-eager",
                         "--max-model-len",
-                        "8192",
+                        std.toString($["vllm-service-max-model-len"]),
                         "--max-num-seqs",
-                        "16",
+                        std.toString($["vllm-service-max-num-seqs"]),
                         "--load-in-low-bit",
                         $["vllm-service-quantization"],
                         "--trust-remote-code",
@@ -62,7 +64,7 @@ local images = import "values/images.jsonnet";
                         SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS: "1",
                     } + (
                         if $["vllm-service-hf-token"] != null
-                            then $["vllm-service-hf-token"] 
+                            then { HF_TOKEN: $["vllm-service-hf-token"] }
                             else {}
                     ))
 // Not needed?
