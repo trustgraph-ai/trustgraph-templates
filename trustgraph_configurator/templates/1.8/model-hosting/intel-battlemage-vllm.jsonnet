@@ -59,8 +59,6 @@ local images = import "values/images.jsonnet";
                         "--disable-sliding-window",
                     ])
                     .with_environment({
-// Locks to v0 anyway.  XPU doesn't support v1.
-//                        VLLM_USE_V1: "1",
                         VLLM_WORKER_MULTIPROC_METHOD: "spawn",
                         SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS: "1",
                     } + (
