@@ -29,6 +29,7 @@ local images = import "values/images.jsonnet";
             local container =
                 engine.container("vllm-service")
                     .with_image(images["vllm-service-intel-battlemage"])
+                    .with_entrypoint("")  // Clear default entrypoint
                     .with_command([
                         "python",
                         "-m",
@@ -70,7 +71,6 @@ local images = import "values/images.jsonnet";
 // Not needed?
 //                    .with_privileged(true)
                     .with_device("/dev/dri", "/dev/dri")
-                    .with_device("/dev/dri/by-path", "/dev/dri/by-path")
                     .with_ipc("host")
                     .with_capability("SYS_NICE")
                     .with_limits(
@@ -80,6 +80,7 @@ local images = import "values/images.jsonnet";
                         $["vllm-service-cpus"], $["vllm-service-memory"]
                     )
                     .with_port(7000, 7000, "vllm")
+                    .with_volume_mount("/dev/dri/by-path", "/dev/dri/by-path")
                     .with_volume_mount(vol, "/root/.cache/huggingface");
 
             local containerSet = engine.containers(

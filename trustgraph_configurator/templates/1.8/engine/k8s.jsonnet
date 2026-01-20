@@ -18,6 +18,8 @@
 
         with_command:: function(x) self + { command: x },
 
+        with_entrypoint:: function(x) self + { entrypoint: x },
+
         with_environment:: function(x) self + {
             environment: super.environment + [
                 {
@@ -122,9 +124,20 @@
                                     } else
                                     {}) + 
 
-                                    (if std.objectHas(container, "command") then
-                                    { command: container.command }
-                                    else {}) + 
+                                    (if std.objectHas(container, "entrypoint") then
+                                        // Entrypoint is set - use command for entrypoint, args for command
+                                        (if std.isString(container.entrypoint) && container.entrypoint == "" then
+                                            { command: [] }
+                                        else if std.isArray(container.entrypoint) then
+                                            { command: container.entrypoint }
+                                        else
+                                            { command: [container.entrypoint] }
+                                        ) + (if std.objectHas(container, "command") then
+                                            { args: container.command }
+                                        else {})
+                                    else if std.objectHas(container, "command") then
+                                        { command: container.command }
+                                    else {}) +
 
                                     (if std.length(container.environment) > 0 then
                                     {

@@ -29,6 +29,8 @@
                     x
         },
 
+        with_entrypoint:: function(x) self + { entrypoint: x },
+
         with_runtime:: function(x) self + { runtime: x },
 
         with_privileged:: function(x) self + { privileged: x },
