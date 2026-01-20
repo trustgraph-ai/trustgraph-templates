@@ -80,7 +80,7 @@ local images = import "values/images.jsonnet";
                         $["vllm-service-cpus"], $["vllm-service-memory"]
                     )
                     .with_port(7000, 7000, "vllm")
-                    .with_volume_mount("/dev/dri/by-path", "/dev/dri/by-path")
+                    .with_bind_mount("/dev/dri/by-path", "/dev/dri/by-path")
                     .with_volume_mount(vol, "/root/.cache/huggingface");
 
             local containerSet = engine.containers(

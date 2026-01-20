@@ -10,6 +10,7 @@
         reservations: {},
         ports: [],
         volumes: [],
+        bindMounts: [],
         environment: [],
 
         with_image:: function(x) self + { image: x },
@@ -39,6 +40,15 @@
                 self + {
                     volumes: super.volumes + [{
                         volume: vol, mount: mnt
+                    }]
+                },
+
+        with_bind_mount::
+            function(src, dest)
+                local name = "bind-" + std.strReplace(std.strReplace(src, "/", "-"), ".", "-");
+                self + {
+                    bindMounts: super.bindMounts + [{
+                        name: name, src: src, dest: dest
                     }]
                 },
 
@@ -145,7 +155,7 @@
                                     }
                                     else {}) + 
 
-                (if std.length(container.volumes) > 0 then
+                (if std.length(container.volumes) > 0 || std.length(container.bindMounts) > 0 then
                 {
                     volumeMounts: [
                         {
@@ -153,6 +163,12 @@
                             name: vol.volume.name,
                         }
                         for vol in container.volumes
+                    ] + [
+                        {
+                            mountPath: bm.dest,
+                            name: bm.name,
+                        }
+                        for bm in container.bindMounts
                     ]
                 }
 
@@ -163,7 +179,12 @@
                             volumes: [
                         vol.volume.volRef()
                         for vol in container.volumes
-
+                    ] + [
+                        {
+                            name: bm.name,
+                            hostPath: { path: bm.src }
+                        }
+                        for bm in container.bindMounts
                             ]
                         }
                     },

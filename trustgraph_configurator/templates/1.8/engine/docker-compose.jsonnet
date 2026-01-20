@@ -70,7 +70,7 @@
         with_volume_mount::
             function(vol, mnt)
                 self + {
-                    volumes: 
+                    volumes:
                         if std.objectHas(container, "volumes") then
                             container.volumes + [
                                 "%s:%s" % [vol.volid, mnt]
@@ -78,6 +78,20 @@
                         else
                             [
                                 "%s:%s" % [vol.volid, mnt]
+                            ]
+                },
+
+        with_bind_mount::
+            function(src, dest)
+                self + {
+                    volumes:
+                        if std.objectHas(container, "volumes") then
+                            container.volumes + [
+                                "%s:%s" % [src, dest]
+                            ]
+                        else
+                            [
+                                "%s:%s" % [src, dest]
                             ]
                 },
 
