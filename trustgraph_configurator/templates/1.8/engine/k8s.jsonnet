@@ -20,6 +20,8 @@
 
         with_group:: function(x) self + { groups: super.groups + [x] },
 
+        with_privileged:: function(x) self + { privileged: x },
+
         with_command:: function(x) self + { command: x },
 
         with_entrypoint:: function(x) self + { entrypoint: x },
@@ -118,7 +120,11 @@
                                         securityContext: {
                                             runAsUser: 0,
                                             runAsGroup: 0,
-                                        },
+                                        } + (
+                                            if std.objectHas(container, "privileged") && container.privileged then
+                                            { privileged: true }
+                                            else {}
+                                        ),
 
                                         resources: {
                                             requests: container.reservations,

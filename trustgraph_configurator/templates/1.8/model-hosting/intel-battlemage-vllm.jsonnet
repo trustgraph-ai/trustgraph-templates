@@ -68,8 +68,7 @@ local images = import "values/images.jsonnet";
                             then { HF_TOKEN: $["vllm-service-hf-token"] }
                             else {}
                     ))
-// Not needed?
-//                    .with_privileged(true)
+                    .with_privileged(true)
                     .with_device("/dev/dri", "/dev/dri")
                     .with_ipc("host")
                     .with_group("video")
