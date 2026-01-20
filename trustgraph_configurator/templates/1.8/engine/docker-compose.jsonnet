@@ -49,7 +49,7 @@
 
         with_device:: function(hdev, cdev) self +
             if std.objectHas(container, "devices") then
-              { devices: container.devices + "%s:%s" % [hdev, cdev] }
+              { devices: container.devices + [ "%s:%s" % [hdev, cdev] ] }
             else
               { devices: [ "%s:%s" % [hdev, cdev] ], },
 
