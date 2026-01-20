@@ -19,6 +19,12 @@
 
         with_user:: function(x) self + { user: x },
 
+        with_group:: function(x) self +
+            if std.objectHas(container, "group_add") then
+              { group_add: container.group_add + [x] }
+            else
+              { group_add: [x] },
+
         with_command:: function(x) self + {
             command:
                 if std.isString(x) then

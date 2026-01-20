@@ -11,11 +11,14 @@
         ports: [],
         volumes: [],
         bindMounts: [],
+        groups: [],
         environment: [],
 
         with_image:: function(x) self + { image: x },
 
         with_user:: function(x) self + { user: x },
+
+        with_group:: function(x) self + { groups: super.groups + [x] },
 
         with_command:: function(x) self + { command: x },
 
@@ -186,7 +189,11 @@
                         }
                         for bm in container.bindMounts
                             ]
-                        }
+                        } + (
+                            if std.length(container.groups) > 0 then
+                            { securityContext: { supplementalGroups: container.groups } }
+                            else {}
+                        )
                     },
                 } + {}
 
