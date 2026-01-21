@@ -60,7 +60,7 @@ class Packager:
             path = self.templates.joinpath(dir, filename)
             return str(path), config.encode("utf-8")
         
-        if filename == "config.json" and dir == "":
+        if filename == "config.json":
             path = self.templates.joinpath(dir, filename)
             return str(path), self.config.encode("utf-8")
         
