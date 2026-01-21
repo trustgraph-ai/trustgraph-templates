@@ -3,7 +3,7 @@
    // Essentials
    "trustgraph-base": import "components/trustgraph.jsonnet",
    "rev-gateway": import "components/rev-gateway.jsonnet",
-   "pulsar": import "components/pulsar.jsonnet",
+   "pulsar": import "pulsar/pulsar.jsonnet",
 
    // LLMs
    "azure": import "llm/azure.jsonnet",
@@ -49,7 +49,7 @@
    "loki": import "components/loki.jsonnet",
 
    // Pulsar manager is a UI for Pulsar.  Uses a LOT of memory
-   "pulsar-manager": import "components/pulsar-manager.jsonnet",
+   "pulsar-manager": import "pulsar/pulsar-manager.jsonnet",
 
    "override-recursive-chunker": import "components/chunker-recursive.jsonnet",
 
