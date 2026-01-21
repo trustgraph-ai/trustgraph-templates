@@ -37,6 +37,27 @@ local url = import "values/url.jsonnet";
 
         create:: function(engine)
 
+            // Capture memory settings into locals (self refers to pulsar object here)
+            local zkMemLimit = self["zk-memory-limit"];
+            local zkMemReserv = self["zk-memory-reservation"];
+            local zkHeap = self["zk-heap"];
+            local zkDirect = self["zk-direct-memory"];
+
+            local bookieMemLimit = self["bookie-memory-limit"];
+            local bookieMemReserv = self["bookie-memory-reservation"];
+            local bookieHeap = self["bookie-heap"];
+            local bookieDirect = self["bookie-direct-memory"];
+
+            local brokerMemLimit = self["broker-memory-limit"];
+            local brokerMemReserv = self["broker-memory-reservation"];
+            local brokerHeap = self["broker-heap"];
+            local brokerDirect = self["broker-direct-memory"];
+
+            local initMemLimit = self["init-memory-limit"];
+            local initMemReserv = self["init-memory-reservation"];
+            local initHeap = self["init-heap"];
+            local initDirect = self["init-direct-memory"];
+
             // Zookeeper volume
             local zkVolume = engine.volume("zookeeper").with_size("1G");
 
@@ -49,16 +70,14 @@ local url = import "values/url.jsonnet";
                         "-c",
                         "bin/apply-config-from-env.py conf/zookeeper.conf && bin/generate-zookeeper-config.sh conf/zookeeper.conf && exec bin/pulsar zookeeper"
                     ])
-                    .with_limits("1", $.pulsar["zk-memory-limit"])
-                    .with_reservations("0.05", $.pulsar["zk-memory-reservation"])
+                    .with_limits("1", zkMemLimit)
+                    .with_reservations("0.05", zkMemReserv)
                     .with_user("0:1000")
                     .with_volume_mount(zkVolume, "/pulsar/data/zookeeper")
                     .with_environment({
                         "metadataStoreUrl": "zk:zookeeper:2181",
                         "PULSAR_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
-                            $.pulsar["zk-heap"],
-                            $.pulsar["zk-heap"],
-                            $.pulsar["zk-direct-memory"],
+                            zkHeap, zkHeap, zkDirect,
                         ],
                     })
                     .with_port(2181, 2181, "zookeeper")
@@ -74,13 +93,11 @@ local url = import "values/url.jsonnet";
                         "-c",
                         "sleep 10 && bin/pulsar initialize-cluster-metadata --cluster cluster-a --zookeeper zookeeper:2181 --configuration-store zookeeper:2181 --web-service-url http://pulsar:8080 --broker-service-url pulsar://pulsar:6650",
                     ])
-                    .with_limits("1", $.pulsar["init-memory-limit"])
-                    .with_reservations("0.05", $.pulsar["init-memory-reservation"])
+                    .with_limits("1", initMemLimit)
+                    .with_reservations("0.05", initMemReserv)
                     .with_environment({
                         "PULSAR_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
-                            $.pulsar["init-heap"],
-                            $.pulsar["init-heap"],
-                            $.pulsar["init-direct-memory"],
+                            initHeap, initHeap, initDirect,
                         ],
                     });
 
@@ -98,8 +115,8 @@ local url = import "values/url.jsonnet";
                         "bin/apply-config-from-env.py conf/bookkeeper.conf && exec bin/pulsar bookie"
                         // false ^ causes this to be a 'failure' exit.
                     ])
-                    .with_limits("1", $.pulsar["bookie-memory-limit"])
-                    .with_reservations("0.1", $.pulsar["bookie-memory-reservation"])
+                    .with_limits("1", bookieMemLimit)
+                    .with_reservations("0.1", bookieMemReserv)
                     .with_user("0:1000")
                     .with_volume_mount(bookieVolume, "/pulsar/data/bookkeeper")
                     .with_environment({
@@ -109,9 +126,7 @@ local url = import "values/url.jsonnet";
                         "metadataStoreUri": "metadata-store:zk:zookeeper:2181",
                         "advertisedAddress": "bookie",
                         "BOOKIE_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
-                            $.pulsar["bookie-heap"],
-                            $.pulsar["bookie-heap"],
-                            $.pulsar["bookie-direct-memory"],
+                            bookieHeap, bookieHeap, bookieDirect,
                         ],
                     })
                     .with_port(3181, 3181, "bookie");
@@ -125,8 +140,8 @@ local url = import "values/url.jsonnet";
                         "-c",
                         "bin/apply-config-from-env.py conf/broker.conf && exec bin/pulsar broker"
                     ])
-                    .with_limits("1", $.pulsar["broker-memory-limit"])
-                    .with_reservations("0.1", $.pulsar["broker-memory-reservation"])
+                    .with_limits("1", brokerMemLimit)
+                    .with_reservations("0.1", brokerMemReserv)
                     .with_environment({
                         "metadataStoreUrl": "zk:zookeeper:2181",
                         "zookeeperServers": "zookeeper:2181",
@@ -137,9 +152,7 @@ local url = import "values/url.jsonnet";
                         "advertisedAddress": "pulsar",
                         "advertisedListeners": "external:pulsar://pulsar:6650,localhost:pulsar://localhost:6650",
                         "PULSAR_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
-                            $.pulsar["broker-heap"],
-                            $.pulsar["broker-heap"],
-                            $.pulsar["broker-direct-memory"],
+                            brokerHeap, brokerHeap, brokerDirect,
                         ],
                     })
                     .with_port(6650, 6650, "pulsar")
@@ -207,4 +220,3 @@ local url = import "values/url.jsonnet";
     }
 
 }
-
