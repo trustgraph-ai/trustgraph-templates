@@ -13,50 +13,44 @@ local agent_manager = import "agent-manager-react.jsonnet";
 local structured_data = import "structured-data.jsonnet";
 local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
+// Helper to create a routing function for a target object
+local route = function(target)
+    function(prefix, k, v)
+        local suffix = std.substr(k, std.length(prefix), std.length(k) - std.length(prefix));
+        { [target] +: { [suffix]:: v } };
+
+// Parameter prefix -> target object routing table
+local routes = {
+    "prompt-rag-": route("prompt-rag"),
+    "prompt-": route("prompt"),
+    "text-completion-rag-": route("text-completion-rag"),
+    "text-completion-": route("text-completion"),
+    "embeddings-": route("embeddings"),
+    "api-gateway-": route("api-gateway"),
+    "chunk-": route("chunker"),
+    "graph-rag-": route("graph-rag"),
+    "kg-extract-definitions-": route("kg-extract-definitions"),
+    "kg-extract-relationships-": route("kg-extract-relationships"),
+    "kg-extract-agent-": route("kg-extract-agent"),
+    "kg-extract-ontology-": route("kg-extract-ontology"),
+    "kg-extract-objects-": route("kg-extract-objects"),
+    "garage-": route("garage"),
+};
+
+// Find longest matching prefix (most specific first)
+local findRoute = function(k)
+    local prefixes = std.objectFields(routes);
+    local matching = std.filter(function(p) std.startsWith(k, p), prefixes);
+    local sorted = std.sort(matching, function(a, b) std.length(b) < std.length(a));
+    if std.length(sorted) > 0 then sorted[0] else null;
+
 {
 
     // Route parameters to appropriate internal objects based on prefix
-    // Check more specific prefixes first
     with:: function(k, v)
-        if std.startsWith(k, "prompt-rag-") then
-            local suffix = std.substr(k, std.length("prompt-rag-"), std.length(k) - std.length("prompt-rag-"));
-            self + { "prompt-rag" +: { [suffix]:: v } }
-        else if std.startsWith(k, "prompt-") then
-            local suffix = std.substr(k, std.length("prompt-"), std.length(k) - std.length("prompt-"));
-            self + { prompt +: { [suffix]:: v } }
-        else if std.startsWith(k, "text-completion-rag-") then
-            local suffix = std.substr(k, std.length("text-completion-rag-"), std.length(k) - std.length("text-completion-rag-"));
-            self + { "text-completion-rag" +: { [suffix]:: v } }
-        else if std.startsWith(k, "text-completion-") then
-            local suffix = std.substr(k, std.length("text-completion-"), std.length(k) - std.length("text-completion-"));
-            self + { "text-completion" +: { [suffix]:: v } }
-        else if std.startsWith(k, "embeddings-") then
-            local suffix = std.substr(k, std.length("embeddings-"), std.length(k) - std.length("embeddings-"));
-            self + { embeddings +: { [suffix]:: v } }
-        else if std.startsWith(k, "api-gateway-") then
-            local suffix = std.substr(k, std.length("api-gateway-"), std.length(k) - std.length("api-gateway-"));
-            self + { "api-gateway" +: { [suffix]:: v } }
-        else if std.startsWith(k, "chunk-") then
-            local suffix = std.substr(k, std.length("chunk-"), std.length(k) - std.length("chunk-"));
-            self + { chunker +: { [suffix]:: v } }
-        else if std.startsWith(k, "graph-rag-") then
-            local suffix = std.substr(k, std.length("graph-rag-"), std.length(k) - std.length("graph-rag-"));
-            self + { "graph-rag" +: { [suffix]:: v } }
-        else if std.startsWith(k, "kg-extract-definitions-") then
-            local suffix = std.substr(k, std.length("kg-extract-definitions-"), std.length(k) - std.length("kg-extract-definitions-"));
-            self + { "kg-extract-definitions" +: { [suffix]:: v } }
-        else if std.startsWith(k, "kg-extract-relationships-") then
-            local suffix = std.substr(k, std.length("kg-extract-relationships-"), std.length(k) - std.length("kg-extract-relationships-"));
-            self + { "kg-extract-relationships" +: { [suffix]:: v } }
-        else if std.startsWith(k, "kg-extract-agent-") then
-            local suffix = std.substr(k, std.length("kg-extract-agent-"), std.length(k) - std.length("kg-extract-agent-"));
-            self + { "kg-extract-agent" +: { [suffix]:: v } }
-        else if std.startsWith(k, "kg-extract-ontology-") then
-            local suffix = std.substr(k, std.length("kg-extract-ontology-"), std.length(k) - std.length("kg-extract-ontology-"));
-            self + { "kg-extract-ontology" +: { [suffix]:: v } }
-        else if std.startsWith(k, "garage-") then
-            local suffix = std.substr(k, std.length("garage-"), std.length(k) - std.length("garage-"));
-            self + { garage +: { [suffix]:: v } }
+        local prefix = findRoute(k);
+        if prefix != null then
+            self + routes[prefix](prefix, k, v)
         else
             self + { [k]:: v },
 
