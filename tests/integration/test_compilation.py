@@ -6,9 +6,11 @@ import pytest
 import json
 import yaml
 
+from tests.conftest import TESTED_VERSIONS
+
 
 @pytest.mark.integration
-@pytest.mark.parametrize("version", ["1.6", "1.7", "1.8"])
+@pytest.mark.parametrize("version", TESTED_VERSIONS)
 @pytest.mark.parametrize("platform", [
     "docker-compose",
     "podman-compose",
@@ -51,7 +53,7 @@ def test_tg_config_generation(version, platform, config, run_configurator, test_
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize("version", ["1.6", "1.7", "1.8"])
+@pytest.mark.parametrize("version", TESTED_VERSIONS)
 @pytest.mark.parametrize("platform", [
     "docker-compose",
     "podman-compose",
@@ -98,13 +100,13 @@ def test_resources_generation(version, platform, config, run_configurator, test_
 
 
 @pytest.mark.integration
-def test_compilation_minimal_docker_compose(run_configurator, test_config_dir):
+def test_compilation_minimal_docker_compose(run_configurator, test_config_dir, primary_version):
     """Smoke test: minimal config on docker-compose."""
     config_file = str(test_config_dir / "minimal.json")
 
     # Test TG config
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'docker-compose',
         '-i', config_file,
         '--latest-stable',
@@ -117,7 +119,7 @@ def test_compilation_minimal_docker_compose(run_configurator, test_config_dir):
 
     # Test resources
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'docker-compose',
         '-i', config_file,
         '--latest-stable',
@@ -130,13 +132,13 @@ def test_compilation_minimal_docker_compose(run_configurator, test_config_dir):
 
 
 @pytest.mark.integration
-def test_compilation_minimal_k8s(run_configurator, test_config_dir):
+def test_compilation_minimal_k8s(run_configurator, test_config_dir, primary_version):
     """Smoke test: minimal config on k8s."""
     config_file = str(test_config_dir / "minimal.json")
 
     # Test TG config
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'minikube-k8s',
         '-i', config_file,
         '--latest-stable',
@@ -149,7 +151,7 @@ def test_compilation_minimal_k8s(run_configurator, test_config_dir):
 
     # Test resources
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'minikube-k8s',
         '-i', config_file,
         '--latest-stable',

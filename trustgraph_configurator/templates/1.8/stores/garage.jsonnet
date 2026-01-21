@@ -2,6 +2,10 @@ local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 
 {
+    with:: function(key, value)
+        self + {
+            ["garage-" + key]:: value,
+        },
 
     // Garage S3 credentials - these are the actual access key ID and secret key
     // Access Key ID must be in format: GK + 24 hex characters (12 bytes)

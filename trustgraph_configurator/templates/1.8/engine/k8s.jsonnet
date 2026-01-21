@@ -10,21 +10,13 @@
         reservations: {},
         ports: [],
         volumes: [],
-        bindMounts: [],
-        groups: [],
         environment: [],
 
         with_image:: function(x) self + { image: x },
 
         with_user:: function(x) self + { user: x },
 
-        with_group:: function(x) self + { groups: super.groups + [x] },
-
-        with_privileged:: function(x) self + { privileged: x },
-
         with_command:: function(x) self + { command: x },
-
-        with_entrypoint:: function(x) self + { entrypoint: x },
 
         with_environment:: function(x) self + {
             environment: super.environment + [
@@ -45,15 +37,6 @@
                 self + {
                     volumes: super.volumes + [{
                         volume: vol, mount: mnt
-                    }]
-                },
-
-        with_bind_mount::
-            function(src, dest)
-                local name = "bind-" + std.strReplace(std.strReplace(src, "/", "-"), ".", "-");
-                self + {
-                    bindMounts: super.bindMounts + [{
-                        name: name, src: src, dest: dest
                     }]
                 },
 
@@ -120,11 +103,7 @@
                                         securityContext: {
                                             runAsUser: 0,
                                             runAsGroup: 0,
-                                        } + (
-                                            if std.objectHas(container, "privileged") && container.privileged then
-                                            { privileged: true }
-                                            else {}
-                                        ),
+                                        },
 
                                         resources: {
                                             requests: container.reservations,
@@ -143,20 +122,9 @@
                                     } else
                                     {}) + 
 
-                                    (if std.objectHas(container, "entrypoint") then
-                                        // Entrypoint is set - use command for entrypoint, args for command
-                                        (if std.isString(container.entrypoint) && container.entrypoint == "" then
-                                            { command: [] }
-                                        else if std.isArray(container.entrypoint) then
-                                            { command: container.entrypoint }
-                                        else
-                                            { command: [container.entrypoint] }
-                                        ) + (if std.objectHas(container, "command") then
-                                            { args: container.command }
-                                        else {})
-                                    else if std.objectHas(container, "command") then
-                                        { command: container.command }
-                                    else {}) +
+                                    (if std.objectHas(container, "command") then
+                                    { command: container.command }
+                                    else {}) + 
 
                                     (if std.length(container.environment) > 0 then
                                     {
@@ -164,7 +132,7 @@
                                     }
                                     else {}) + 
 
-                (if std.length(container.volumes) > 0 || std.length(container.bindMounts) > 0 then
+                (if std.length(container.volumes) > 0 then
                 {
                     volumeMounts: [
                         {
@@ -172,12 +140,6 @@
                             name: vol.volume.name,
                         }
                         for vol in container.volumes
-                    ] + [
-                        {
-                            mountPath: bm.dest,
-                            name: bm.name,
-                        }
-                        for bm in container.bindMounts
                     ]
                 }
 
@@ -188,18 +150,9 @@
                             volumes: [
                         vol.volume.volRef()
                         for vol in container.volumes
-                    ] + [
-                        {
-                            name: bm.name,
-                            hostPath: { path: bm.src }
-                        }
-                        for bm in container.bindMounts
+
                             ]
-                        } + (
-                            if std.length(container.groups) > 0 then
-                            { securityContext: { supplementalGroups: container.groups } }
-                            else {}
-                        )
+                        }
                     },
                 } + {}
 

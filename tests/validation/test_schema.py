@@ -16,12 +16,12 @@ def schemas_dir():
 
 
 @pytest.mark.validation
-def test_tg_config_matches_schema(run_configurator, test_config_dir, schemas_dir):
+def test_tg_config_matches_schema(run_configurator, test_config_dir, schemas_dir, primary_version):
     """Test that TrustGraph config matches schema."""
     config_file = str(test_config_dir / "minimal.json")
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'docker-compose',
         '-i', config_file,
         '--latest-stable',
@@ -43,12 +43,12 @@ def test_tg_config_matches_schema(run_configurator, test_config_dir, schemas_dir
 
 
 @pytest.mark.validation
-def test_docker_compose_matches_schema(run_configurator, test_config_dir, schemas_dir):
+def test_docker_compose_matches_schema(run_configurator, test_config_dir, schemas_dir, primary_version):
     """Test that Docker Compose output matches schema."""
     config_file = str(test_config_dir / "minimal.json")
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'docker-compose',
         '-i', config_file,
         '--latest-stable',
@@ -70,12 +70,12 @@ def test_docker_compose_matches_schema(run_configurator, test_config_dir, schema
 
 
 @pytest.mark.validation
-def test_kubernetes_resources_match_schema(run_configurator, test_config_dir, schemas_dir):
+def test_kubernetes_resources_match_schema(run_configurator, test_config_dir, schemas_dir, primary_version):
     """Test that Kubernetes resources match schema."""
     config_file = str(test_config_dir / "minimal.json")
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'minikube-k8s',
         '-i', config_file,
         '--latest-stable',

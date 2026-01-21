@@ -10,12 +10,12 @@ import yaml
 @pytest.mark.validation
 @pytest.mark.parametrize("platform", ["docker-compose", "minikube-k8s"])
 @pytest.mark.parametrize("config", ["minimal.json"])
-def test_tg_config_is_valid_json(platform, config, run_configurator, test_config_dir):
+def test_tg_config_is_valid_json(platform, config, run_configurator, test_config_dir, primary_version):
     """Test that generated TrustGraph config is valid JSON."""
     config_file = str(test_config_dir / config)
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', platform,
         '-i', config_file,
         '--latest-stable',
@@ -35,12 +35,12 @@ def test_tg_config_is_valid_json(platform, config, run_configurator, test_config
 @pytest.mark.validation
 @pytest.mark.parametrize("platform", ["docker-compose", "minikube-k8s"])
 @pytest.mark.parametrize("config", ["minimal.json"])
-def test_resources_are_valid_yaml(platform, config, run_configurator, test_config_dir):
+def test_resources_are_valid_yaml(platform, config, run_configurator, test_config_dir, primary_version):
     """Test that generated resources are valid YAML."""
     config_file = str(test_config_dir / config)
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', platform,
         '-i', config_file,
         '--latest-stable',

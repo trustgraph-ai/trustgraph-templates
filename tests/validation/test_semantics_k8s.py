@@ -13,12 +13,12 @@ from validators import kubernetes
 
 @pytest.mark.validation
 @pytest.mark.parametrize("config", ["minimal.json", "complex-rag.json"])
-def test_k8s_semantic_validation(config, run_configurator, test_config_dir):
+def test_k8s_semantic_validation(config, run_configurator, test_config_dir, primary_version):
     """Test semantic validation of Kubernetes resources."""
     config_file = str(test_config_dir / config)
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'minikube-k8s',
         '-i', config_file,
         '--latest-stable',
@@ -35,12 +35,12 @@ def test_k8s_semantic_validation(config, run_configurator, test_config_dir):
 
 
 @pytest.mark.validation
-def test_k8s_selector_labels_match(run_configurator, test_config_dir):
+def test_k8s_selector_labels_match(run_configurator, test_config_dir, primary_version):
     """Test that Deployment selectors match pod labels."""
     config_file = str(test_config_dir / "minimal.json")
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'minikube-k8s',
         '-i', config_file,
         '--latest-stable',
@@ -57,12 +57,12 @@ def test_k8s_selector_labels_match(run_configurator, test_config_dir):
 
 
 @pytest.mark.validation
-def test_k8s_volume_references(run_configurator, test_config_dir):
+def test_k8s_volume_references(run_configurator, test_config_dir, primary_version):
     """Test that volumeMounts reference defined volumes."""
     config_file = str(test_config_dir / "minimal.json")
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'minikube-k8s',
         '-i', config_file,
         '--latest-stable',

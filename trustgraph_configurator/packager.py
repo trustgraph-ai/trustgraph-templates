@@ -60,7 +60,7 @@ class Packager:
             path = self.templates.joinpath(dir, filename)
             return str(path), config.encode("utf-8")
         
-        if filename == "config.json" and dir == "":
+        if filename == "config.json":
             path = self.templates.joinpath(dir, filename)
             return str(path), self.config.encode("utf-8")
         
@@ -106,50 +106,27 @@ class Packager:
                 logger.debug("Loaded: %s", path)
                 return str(path), f.read()
 
-    def generate_trustgraph_config(self, config):
-
-        config = config.encode("utf-8")
-
+    def process_renderer(self, renderer_name):
         gen = Generator(fetch=self.fetch)
+        renderers_dir = self.templates.joinpath("renderers")
+        if renderers_dir.exists():
+            path = self.templates.joinpath(f"renderers/{renderer_name}")
+            return gen.process_file(path)
+        else:
+            path = self.templates.joinpath(renderer_name)
+            return gen.process(path.read_text())
 
-        path = self.templates.joinpath(
-            f"config-to-tg-configuration.jsonnet"
-        )
-        wrapper = path.read_text()
-
-        processed = gen.process(wrapper)
-
-        return processed
+    def generate_trustgraph_config(self, config):
+        config = config.encode("utf-8")
+        return self.process_renderer("config-to-tg-configuration.jsonnet")
 
     def generate_additionals(self, config):
-
         config = config.encode("utf-8")
-
-        gen = Generator(fetch=self.fetch)
-
-        path = self.templates.joinpath(
-            f"config-to-additionals.jsonnet"
-        )
-        wrapper = path.read_text()
-
-        processed = gen.process(wrapper)
-
-        return processed
+        return self.process_renderer("config-to-additionals.jsonnet")
 
     def generate_resources(self, config):
-
         config = config.encode("utf-8")
-
-        gen = Generator(fetch=self.fetch)
-
-        path = self.templates.joinpath(
-            f"config-to-{self.platform}.jsonnet"
-        )
-        wrapper = path.read_text()
-
-        processed = gen.process(wrapper)
-
-        return processed
+        return self.process_renderer(f"config-to-{self.platform}.jsonnet")
     
     def write(self, config, output):
 
@@ -243,7 +220,11 @@ class Packager:
             tg_config_file = json.dumps(tg_config_json, indent=4)
 
         # Check if config-to-additionals.jsonnet exists for this version
-        additionals_path = self.templates.joinpath("config-to-additionals.jsonnet")
+        renderers_dir = self.templates.joinpath("renderers")
+        if renderers_dir.exists():
+            additionals_path = self.templates.joinpath("renderers/config-to-additionals.jsonnet")
+        else:
+            additionals_path = self.templates.joinpath("config-to-additionals.jsonnet")
         has_additionals = os.path.isfile(additionals_path)
 
         # Generate additional config files from configVolume parts (if supported)
