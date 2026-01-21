@@ -4,8 +4,14 @@ local url = import "values/url.jsonnet";
 {
 
     "prompt" +: {
-    
+
+        // Concurrency setting (can be overridden via "prompt-concurrency"
+        // parameter)
+        concurrency:: 1,
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
 
             local container =
                 engine.container("prompt")
@@ -15,7 +21,7 @@ local url = import "values/url.jsonnet";
                         "-p",
                         url.pulsar,
                         "--concurrency",
-                        std.toString($["prompt-concurrency"]),
+                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])
@@ -38,8 +44,12 @@ local url = import "values/url.jsonnet";
     },
 
     "prompt-rag" +: {
-    
+
+        concurrency:: 1,
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
 
             local container =
                 engine.container("prompt-rag")
@@ -51,7 +61,7 @@ local url = import "values/url.jsonnet";
                         "--id",
                         "prompt-rag",
                         "--concurrency",
-                        std.toString($["prompt-rag-concurrency"]),
+                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])

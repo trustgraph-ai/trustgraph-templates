@@ -13,40 +13,66 @@ local agent_manager = import "agent-manager-react.jsonnet";
 local structured_data = import "structured-data.jsonnet";
 local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
+// Helper to create a routing function for a target object
+local route = function(target)
+    function(prefix, k, v)
+        local suffix = std.substr(k, std.length(prefix), std.length(k) - std.length(prefix));
+        { [target] +: { [suffix]:: v } };
+
+// Parameter prefix -> target object routing table
+local routes = {
+    "prompt-rag-": route("prompt-rag"),
+    "prompt-": route("prompt"),
+    "text-completion-rag-": route("text-completion-rag"),
+    "text-completion-": route("text-completion"),
+    "embeddings-": route("embeddings"),
+    "api-gateway-": route("api-gateway"),
+    "chunk-": route("chunker"),
+    "graph-rag-": route("graph-rag"),
+    "kg-extract-definitions-": route("kg-extract-definitions"),
+    "kg-extract-relationships-": route("kg-extract-relationships"),
+    "kg-extract-agent-": route("kg-extract-agent"),
+    "kg-extract-ontology-": route("kg-extract-ontology"),
+    "kg-extract-objects-": route("kg-extract-objects"),
+    "garage-": route("garage"),
+};
+
+// Find longest matching prefix (most specific first)
+local findRoute = function(k)
+    local prefixes = std.objectFields(routes);
+    local matching = std.filter(function(p) std.startsWith(k, p), prefixes);
+    local sorted = std.sort(matching, function(a, b) std.length(b) < std.length(a));
+    if std.length(sorted) > 0 then sorted[0] else null;
+
 {
 
-    with:: function(key, value)
-        self + {
-            [key]:: value,
-        },
+    // Route parameters to appropriate internal objects based on prefix
+    with:: function(k, v)
+        local prefix = findRoute(k);
+        if prefix != null then
+            self + routes[prefix](prefix, k, v)
+        else
+            self + { [k]:: v },
 
     "log-level":: "DEBUG",
 
-    "api-gateway-port":: 8088,
-    "api-gateway-timeout":: 600,
-
-    "chunk-size":: 250,
-    "chunk-overlap":: 15,
-
-    "prompt-concurrency":: 1,
-    "prompt-rag-concurrency":: 1,
-
-    "text-completion-concurrency":: 1,
-    "text-completion-rag-concurrency":: 1,
-
-    "kg-extraction-concurrency":: 1,
-    "graph-rag-concurrency":: 1,
-
-    "embeddings-concurrency":: 1,
+    // Base objects with concurrency defaults (LLM/embeddings components merge into these)
+    "text-completion" +: { concurrency:: 1 },
+    "text-completion-rag" +: { concurrency:: 1 },
+    embeddings +: { concurrency:: 1 },
 
     "api-gateway" +: {
-    
+
+        port:: 8088,
+        timeout:: 600,
+
         create:: function(engine)
+
+            local port = self.port;
+            local timeout = self.timeout;
 
             local envSecrets = engine.envSecrets("gateway-secret")
                 .with_env_var("GATEWAY_SECRET", "gateway-secret");
-
-            local port = $["api-gateway-port"];
 
             local container =
                 engine.container("api-gateway")
@@ -56,7 +82,7 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
                         "-p",
                         url.pulsar,
                         "--timeout",
-                        std.toString($["api-gateway-timeout"]),
+                        std.toString(timeout),
                         "--port",
                         std.toString(port),
                         "--log-level",
@@ -85,8 +111,14 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
     },
 
     "chunker" +: {
-    
+
+        size:: 2000,
+        overlap:: 50,
+
         create:: function(engine)
+
+            local size = self.size;
+            local overlap = self.overlap;
 
             local container =
                 engine.container("chunker")
@@ -96,9 +128,9 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
                         "-p",
                         url.pulsar,
                         "--chunk-size",
-                        std.toString($["chunk-size"]),
+                        std.toString(size),
                         "--chunk-overlap",
-                        std.toString($["chunk-overlap"]),
+                        std.toString(overlap),
                         "--log-level",
                         $["log-level"],
                     ])

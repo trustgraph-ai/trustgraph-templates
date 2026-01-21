@@ -16,6 +16,8 @@ local prompts = import "prompts/mixtral.jsonnet";
 
         create:: function(engine)
 
+            local concurrency = self.concurrency;
+
             local envSecrets = engine.envSecrets("tgi-credentials")
                 .with_env_var("TGI_BASE_URL", "tgi-url");
 
@@ -27,7 +29,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "-p",
                         url.pulsar,
                         "--concurrency",
-                        std.toString($["text-completion-concurrency"]),
+                        std.toString(concurrency),
                         "-x",
                         std.toString($["tgi-max-output-tokens"]),
                         "-t",
@@ -59,6 +61,8 @@ local prompts = import "prompts/mixtral.jsonnet";
 
         create:: function(engine)
 
+            local concurrency = self.concurrency;
+
             local envSecrets = engine.envSecrets("tgi-credentials")
                 .with_env_var("TGI_BASE_URL", "tgi-url");
 
@@ -72,7 +76,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "--id",
                         "text-completion-rag",
                         "--concurrency",
-                        std.toString($["text-completion-rag-concurrency"]),
+                        std.toString(concurrency),
                         "-x",
                         std.toString($["tgi-max-output-tokens"]),
                         "-t",

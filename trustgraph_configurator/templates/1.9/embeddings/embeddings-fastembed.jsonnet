@@ -10,8 +10,10 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
     "embeddings-models" +:: $["fastembed-models"],
 
     embeddings +: {
-    
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
 
             local container =
                 engine.container("embeddings")
@@ -21,7 +23,7 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
                         "-p",
                         url.pulsar,
                         "--concurrency",
-                        std.toString($["embeddings-concurrency"]),
+                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])

@@ -21,11 +21,11 @@ local cassandra = import "backends/cassandra.jsonnet";
                         "--object-store-endpoint",
                         url.object_store,
                         "--object-store-access-key",
-                        $["garage-access-key"],
+                        $.garage["access-key"],
                         "--object-store-secret-key",
-                        $["garage-secret-key"],
+                        $.garage["secret-key"],
                         "--object-store-region",
-                        $["garage-region"],
+                        $.garage.region,
                     ])
                     .with_limits("0.5", "256M")
                     .with_reservations("0.1", "256M");

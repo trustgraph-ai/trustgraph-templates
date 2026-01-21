@@ -100,8 +100,12 @@ local url = import "values/url.jsonnet";
     },
 
     "kg-extract-objects" +: {
-    
+
+        concurrency:: 1,
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
 
             local container =
                 engine.container("kg-extract-objects")
@@ -111,7 +115,7 @@ local url = import "values/url.jsonnet";
                         "-p",
                         url.pulsar,
                         "--concurrency",
-                        std.toString($["kg-extraction-concurrency"]),
+                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])
