@@ -11,12 +11,16 @@ local images = import "values/images.jsonnet";
     "vllm-service-model":: "teknium/OpenHermes-2.5-Mistral-7B",
     "vllm-service-cpus":: "64.0",
     "vllm-service-memory":: "64G",
+    "vllm-service-storage":: "50G",
+    "vllm-service-tensor-parallel-size":: 8,
+    "vllm-service-hf-token":: null,
 
     "vllm-service" +: {
-    
+
         create:: function(engine)
 
-            local vol = engine.volume("vllm-storage").with_size("50G");
+            local vol = engine.volume("vllm-storage")
+                .with_size($["vllm-service-storage"]);
 
             local container =
                 engine.container("vllm-service")
@@ -24,17 +28,24 @@ local images = import "values/images.jsonnet";
                     .with_command([
                         "--model",
                         $["vllm-service-model"],
-                        "--tensor-parallel-size=8",
+                        "--served-model-name",
+                        "model",
+                        "--host",
+                        "0.0.0.0",
                         "--port",
-                        "8899",
+                        "7000",
+                        "--tensor-parallel-size",
+                        std.toString($["vllm-service-tensor-parallel-size"]),
                     ])
                     .with_runtime("habana")
                     .with_environment({
                         VLLM_SKIP_WARMUP: "true",
-                        HUGGING_FACE_HUB_TOKEN: $["hf-token"],
                         HABANA_VISIBLE_DEVICES: "all",
-                        VLLM_CACHE_ROOT: "/data",
-                    })
+                    } + (
+                        if $["vllm-service-hf-token"] != null
+                            then { HF_TOKEN: $["vllm-service-hf-token"] }
+                            else {}
+                    ))
                     .with_privileged(true)
                     .with_ipc("host")
                     .with_capability("SYS_NICE")
@@ -44,8 +55,8 @@ local images = import "values/images.jsonnet";
                     .with_reservations(
                         $["vllm-service-cpus"], $["vllm-service-memory"]
                     )
-                    .with_port(8899, 8899, "vllm")
-                    .with_volume_mount(vol, "/data");
+                    .with_port(7000, 7000, "vllm")
+                    .with_volume_mount(vol, "/root/.cache/huggingface");
 
             local containerSet = engine.containers(
                 "vllm-service", [ container ]
@@ -53,7 +64,7 @@ local images = import "values/images.jsonnet";
 
             local service =
                 engine.service(containerSet)
-                .with_port(8899, 8899, "vllm");
+                .with_port(7000, 7000, "vllm");
 
             engine.resources([
                 vol,

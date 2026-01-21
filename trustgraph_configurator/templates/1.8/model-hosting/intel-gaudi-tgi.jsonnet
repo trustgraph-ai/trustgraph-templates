@@ -11,12 +11,20 @@ local images = import "values/images.jsonnet";
     "tgi-service-model":: "meta-llama/Llama-3.3-70B-Instruct",
     "tgi-service-cpus":: "64.0",
     "tgi-service-memory":: "64G",
+    "tgi-service-storage":: "50G",
+    "tgi-service-num-shard":: 8,
+    "tgi-service-max-input-tokens":: 4096,
+    "tgi-service-max-total-tokens":: 4096,
+    "tgi-service-max-batch-size":: 128,
+    "tgi-service-max-concurrent-requests":: 512,
+    "tgi-service-hf-token":: null,
 
     "tgi-service" +: {
-    
+
         create:: function(engine)
 
-            local vol = engine.volume("tgi-storage").with_size("50G");
+            local vol = engine.volume("tgi-storage")
+                .with_size($["tgi-service-storage"]);
 
             local container =
                 engine.container("tgi-service")
@@ -24,43 +32,40 @@ local images = import "values/images.jsonnet";
                     .with_command([
                         "--model-id",
                         $["tgi-service-model"],
+                        "--hostname",
+                        "0.0.0.0",
+                        "--port",
+                        "7000",
                         "--sharded",
                         "true",
                         "--num-shard",
-                        "8",
+                        std.toString($["tgi-service-num-shard"]),
                         "--max-input-tokens",
-                        "4096",
+                        std.toString($["tgi-service-max-input-tokens"]),
                         "--max-total-tokens",
-                        "4096",
+                        std.toString($["tgi-service-max-total-tokens"]),
                         "--max-batch-size",
-                        "128",
-//                        "--max-batch-prefill-tokens",
-//                        "16384",
+                        std.toString($["tgi-service-max-batch-size"]),
                         "--max-waiting-tokens",
                         "7",
-//                        "--waiting-served-ratio",
-//                        "1.2",
                         "--max-concurrent-requests",
-                        "512",
+                        std.toString($["tgi-service-max-concurrent-requests"]),
                         "--cuda-graphs",
                         "0",
-                        "--port",
-                        "8899"
                     ])
                     .with_runtime("habana")
                     .with_environment({
                         HABANA_VISIBLE_DEVICES: "all",
                         OMPI_MCA_btl_vader_single_copy_mechanism: "none",
-                        HF_TOKEN: $["hf-token"],
-                        ENABLE_HPU_GRAPH: 'true',
-                        LIMIT_HPU_GRAPH: 'true',
-                        USE_FLASH_ATTENTION: 'true',
-                        FLASH_ATTENTION_RECOMPUTE: 'true',
-//                        PT_HPU_ENABLE_LAZY_COLLECTIVES: 'true',
-//                        PREFILL_BATCH_BUCKET_SIZE: "1",
-//                        BATCH_BUCKET_SIZE: "1",
-
-                    })
+                        ENABLE_HPU_GRAPH: "true",
+                        LIMIT_HPU_GRAPH: "true",
+                        USE_FLASH_ATTENTION: "true",
+                        FLASH_ATTENTION_RECOMPUTE: "true",
+                    } + (
+                        if $["tgi-service-hf-token"] != null
+                            then { HF_TOKEN: $["tgi-service-hf-token"] }
+                            else {}
+                    ))
                     .with_ipc("host")
                     .with_capability("SYS_NICE")
                     .with_limits(
@@ -69,8 +74,8 @@ local images = import "values/images.jsonnet";
                     .with_reservations(
                         $["tgi-service-cpus"], $["tgi-service-memory"]
                     )
-                    .with_port(8899, 8899, "tgi")
-                    .with_volume_mount(vol, "/data");
+                    .with_port(7000, 7000, "tgi")
+                    .with_volume_mount(vol, "/root/.cache/huggingface");
 
             local containerSet = engine.containers(
                 "tgi-service", [ container ]
@@ -78,7 +83,7 @@ local images = import "values/images.jsonnet";
 
             local service =
                 engine.service(containerSet)
-                .with_port(8899, 8899, "tgi");
+                .with_port(7000, 7000, "tgi");
 
             engine.resources([
                 vol,
