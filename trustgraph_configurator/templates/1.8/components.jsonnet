@@ -21,31 +21,6 @@
    "tgi": import "components/tgi.jsonnet",
    "vllm": import "components/vllm.jsonnet",
 
-   // LLMs for RAG.  RAG components have been collapsed into the core
-   // component, so gone away.
-   "azure-rag": {},
-   "azure-openai-rag": {},
-   "bedrock-rag": {},
-   "claude-rag": {},
-   "cohere-rag": {},
-   "googleaistudio-rag": {},
-   "llamafile-rag": {},
-   "lmstudio-rag": {},
-   "mistral-rag": {},
-   "ollama-rag": {},
-   "openai-rag": {},
-   "vertexai-rag": {},
-   "tgi-rag": import "components/tgi-rag.jsonnet",
-   "vllm-rag": {},
-
-   "tgi-service-cpu": import "components/tgi-service-cpu.jsonnet",
-   "tgi-service-intel-gpu": import "components/tgi-service-intel-gpu.jsonnet",
-   "tgi-service-gaudi": import "components/tgi-service-gaudi.jsonnet",
-
-   "vllm-service-intel-gpu": import "components/vllm-service-intel-gpu.jsonnet",
-   "vllm-service-gaudi": import "components/vllm-service-gaudi.jsonnet",
-   "vllm-service-nvidia": import "components/vllm-service-nvidia.jsonnet",
-
    // Embeddings
    "embeddings-ollama": import "components/embeddings-ollama.jsonnet",
    "embeddings-hf": import "components/embeddings-hf.jsonnet",
@@ -81,15 +56,6 @@
    // The prompt manager
    "prompt-overrides": import "components/prompt-overrides.jsonnet",
 
-   // Archaic - part of core system, just making sure these don't
-   // cause a failure
-   "workbench-ui": {},
-   "prompt-template": {},
-   "agent-manager-react": {},
-   "graph-rag": {},
-   "document-rag": {},
-   "librarian": {},
-
    // Extra MCP services
    "ddg-mcp-server": import "mcp/ddg-mcp-server.jsonnet",
 
@@ -97,6 +63,26 @@
    "null": {},
 
    // Model hosting
-   "hosting-intel-battlemage-vllm": import "model-hosting/intel-battlemage-vllm.jsonnet",
+
+   "hosting-intel-battlemage-vllm":
+       import "model-hosting/intel-battlemage-vllm.jsonnet",
+
+   "tgi-service-cpu":
+       import "model-hosting/cpu-tgi.jsonnet",
+
+   "tgi-service-intel-gpu":
+       import "model-hosting/intel-xpu-tgi.jsonnet",
+
+   "tgi-service-gaudi":
+       import "model-hosting/intel-gaudi-tgi.jsonnet",
+
+   "vllm-service-intel-gpu":
+       import "model-hosting/intel-xpu-vllm.jsonnet",
+
+   "vllm-service-gaudi":
+       import "model-hosting/intel-gaudi-vllm.jsonnet",
+
+   "vllm-service-nvidia":
+       import "model-hosting/nvidia-gpu-vllm.jsonnet",
 
 }
