@@ -29,6 +29,7 @@ local routes = {
     "api-gateway-": route("api-gateway"),
     "chunk-": route("chunker"),
     "graph-rag-": route("graph-rag"),
+    "graph-embeddings-": route("graph-embeddings"),
     "kg-extract-definitions-": route("kg-extract-definitions"),
     "kg-extract-relationships-": route("kg-extract-relationships"),
     "kg-extract-agent-": route("kg-extract-agent"),
@@ -36,6 +37,22 @@ local routes = {
     "kg-extract-objects-": route("kg-extract-objects"),
     "garage-": route("garage"),
     "config-svc-": route("config-svc"),
+    "pdf-decoder-": route("pdf-decoder"),
+    "mcp-tool-": route("mcp-tool"),
+    "mcp-server-": route("mcp-server"),
+    "metering-rag-": route("metering-rag"),
+    "metering-": route("metering"),
+    "kg-store-": route("kg-store"),
+    "kg-manager-": route("kg-manager"),
+    "librarian-": route("librarian"),
+    "agent-manager-": route("agent-manager"),
+    "document-rag-": route("document-rag"),
+    "document-embeddings-": route("document-embeddings"),
+    "rev-gateway-": route("rev-gateway"),
+    "nlp-query-": route("nlp-query"),
+    "structured-query-": route("structured-query"),
+    "structured-diag-": route("structured-diag"),
+    "init-trustgraph-": route("init-trustgraph"),
 };
 
 // Find longest matching prefix (most specific first)
@@ -66,11 +83,17 @@ local findRoute = function(k)
 
         port:: 8088,
         timeout:: 600,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "512M",
+        "memory-reservation":: "512M",
 
         create:: function(engine)
 
             local port = self.port;
             local timeout = self.timeout;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local envSecrets = engine.envSecrets("gateway-secret")
                 .with_env_var("GATEWAY_SECRET", "gateway-secret");
@@ -90,8 +113,8 @@ local findRoute = function(k)
                         $["log-level"],
                     ])
                     .with_env_var_secrets(envSecrets)
-                    .with_limits("0.5", "512M")
-                    .with_reservations("0.1", "512M")
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation)
                     .with_port(port, port, "api");
 
             local containerSet = engine.containers(
@@ -115,11 +138,17 @@ local findRoute = function(k)
 
         size:: 2000,
         overlap:: 50,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
 
         create:: function(engine)
 
             local size = self.size;
             local overlap = self.overlap;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("chunker")
@@ -135,8 +164,8 @@ local findRoute = function(k)
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "chunker", [ container ]
@@ -196,8 +225,16 @@ local findRoute = function(k)
     },
 
     "pdf-decoder" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "512M",
+        "memory-reservation":: "512M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("pdf-decoder")
@@ -209,8 +246,8 @@ local findRoute = function(k)
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "512M")
-                    .with_reservations("0.1", "512M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "pdf-decoder", [ container ]
@@ -228,8 +265,16 @@ local findRoute = function(k)
     },
 
     "mcp-tool" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("mcp-tool")
@@ -241,8 +286,8 @@ local findRoute = function(k)
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "mcp-tool", [ container ]
@@ -260,8 +305,16 @@ local findRoute = function(k)
     },
 
     "metering" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("metering")
@@ -273,8 +326,8 @@ local findRoute = function(k)
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "metering", [ container ]
@@ -292,8 +345,16 @@ local findRoute = function(k)
     },
 
     "metering-rag" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("metering-rag")
@@ -307,8 +368,8 @@ local findRoute = function(k)
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "metering-rag", [ container ]
@@ -326,8 +387,16 @@ local findRoute = function(k)
     },
 
     "kg-store" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("kg-store")
@@ -339,8 +408,8 @@ local findRoute = function(k)
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "kg-store", [ container ]
@@ -358,8 +427,16 @@ local findRoute = function(k)
     },
 
     "kg-manager" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("kg-manager")
@@ -371,8 +448,8 @@ local findRoute = function(k)
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "kg-manager", [ container ]

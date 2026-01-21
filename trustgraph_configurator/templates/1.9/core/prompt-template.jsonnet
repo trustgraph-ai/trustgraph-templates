@@ -5,13 +5,17 @@ local url = import "values/url.jsonnet";
 
     "prompt" +: {
 
-        // Concurrency setting (can be overridden via "prompt-concurrency"
-        // parameter)
         concurrency:: 1,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
 
         create:: function(engine)
 
             local concurrency = self.concurrency;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("prompt")
@@ -25,8 +29,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "prompt", [ container ]
@@ -46,10 +50,16 @@ local url = import "values/url.jsonnet";
     "prompt-rag" +: {
 
         concurrency:: 1,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
 
         create:: function(engine)
 
             local concurrency = self.concurrency;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("prompt-rag")
@@ -65,8 +75,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "prompt-rag", [ container ]

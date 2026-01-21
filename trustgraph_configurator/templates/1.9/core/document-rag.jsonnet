@@ -4,11 +4,19 @@ local prompts = import "prompts/mixtral.jsonnet";
 
 {
 
-    "document-rag-doc-limit":: 20,
-
     "document-rag" +: {
-    
+
+        "doc-limit":: 20,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local docLimit = self["doc-limit"];
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("document-rag")
@@ -18,12 +26,12 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "-p",
                         url.pulsar,
                         "--doc-limit",
-                        std.toString($["document-rag-doc-limit"]),
+                        std.toString(docLimit),
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "document-rag", [ container ]
@@ -41,8 +49,16 @@ local prompts = import "prompts/mixtral.jsonnet";
     },
 
     "document-embeddings" +: {
-    
+
+        "cpu-limit":: "1.0",
+        "cpu-reservation":: "0.5",
+        "memory-limit":: "512M",
+        "memory-reservation":: "512M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("document-embeddings")
@@ -54,8 +70,8 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("1.0", "512M")
-                    .with_reservations("0.5", "512M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "document-embeddings", [ container ]

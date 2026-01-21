@@ -6,8 +6,16 @@ local cassandra = import "backends/cassandra.jsonnet";
 {
 
     "librarian" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "256M",
+        "memory-reservation":: "256M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("librarian")
@@ -27,8 +35,8 @@ local cassandra = import "backends/cassandra.jsonnet";
                         "--object-store-region",
                         $.garage.region,
                     ])
-                    .with_limits("0.5", "256M")
-                    .with_reservations("0.1", "256M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "librarian", [ container ]
