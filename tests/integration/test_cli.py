@@ -5,7 +5,7 @@ Integration tests for CLI interface.
 import pytest
 import subprocess
 
-from tests.conftest import TESTED_VERSIONS
+from conftest import TESTED_VERSIONS
 
 
 @pytest.mark.integration
