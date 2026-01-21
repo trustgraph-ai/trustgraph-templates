@@ -36,10 +36,10 @@
    "vector-store-pinecone": import "components/vector-store-pinecone.jsonnet",
 
    // Triples stores
-   "triple-store-cassandra": import "components/triple-store-cassandra.jsonnet",
-   "triple-store-neo4j": import "components/triple-store-neo4j.jsonnet",
-   "triple-store-falkordb": import "components/triple-store-falkordb.jsonnet",
-   "triple-store-memgraph": import "components/triple-store-memgraph.jsonnet",
+   "triple-store-cassandra": import "triple-store/cassandra.jsonnet",
+   "triple-store-neo4j": import "triple-store/neo4j.jsonnet",
+   "triple-store-falkordb": import "triple-store/falkordb.jsonnet",
+   "triple-store-memgraph": import "triple-store/memgraph.jsonnet",
 
    // Object stores
    "object-store-cassandra": import "components/object-store-cassandra.jsonnet",
