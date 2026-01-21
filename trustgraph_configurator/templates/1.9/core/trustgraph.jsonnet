@@ -42,12 +42,22 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
         else if std.startsWith(k, "graph-rag-") then
             local suffix = std.substr(k, std.length("graph-rag-"), std.length(k) - std.length("graph-rag-"));
             self + { "graph-rag" +: { [suffix]:: v } }
+        else if std.startsWith(k, "kg-extract-definitions-") then
+            local suffix = std.substr(k, std.length("kg-extract-definitions-"), std.length(k) - std.length("kg-extract-definitions-"));
+            self + { "kg-extract-definitions" +: { [suffix]:: v } }
+        else if std.startsWith(k, "kg-extract-relationships-") then
+            local suffix = std.substr(k, std.length("kg-extract-relationships-"), std.length(k) - std.length("kg-extract-relationships-"));
+            self + { "kg-extract-relationships" +: { [suffix]:: v } }
+        else if std.startsWith(k, "kg-extract-agent-") then
+            local suffix = std.substr(k, std.length("kg-extract-agent-"), std.length(k) - std.length("kg-extract-agent-"));
+            self + { "kg-extract-agent" +: { [suffix]:: v } }
+        else if std.startsWith(k, "kg-extract-ontology-") then
+            local suffix = std.substr(k, std.length("kg-extract-ontology-"), std.length(k) - std.length("kg-extract-ontology-"));
+            self + { "kg-extract-ontology" +: { [suffix]:: v } }
         else
             self + { [k]:: v },
 
     "log-level":: "DEBUG",
-
-    "kg-extraction-concurrency":: 1,
 
     // Base objects with concurrency defaults (LLM/embeddings components merge into these)
     "text-completion" +: { concurrency:: 1 },
