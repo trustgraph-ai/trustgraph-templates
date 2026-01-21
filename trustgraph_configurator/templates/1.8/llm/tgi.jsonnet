@@ -1,7 +1,6 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
-local chunker = import "chunker-recursive.jsonnet";
 
 {
 
@@ -101,5 +100,5 @@ local chunker = import "chunker-recursive.jsonnet";
 
     },
 
-} + prompts + chunker
+} + prompts
 

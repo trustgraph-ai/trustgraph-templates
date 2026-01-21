@@ -13,10 +13,6 @@
         }
     },
     {
-        "name": "prompt-template",
-        "parameters": {}
-    },
-    {
         "name": "trustgraph-base",
         "parameters": {}
     },

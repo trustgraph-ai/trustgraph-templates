@@ -7,13 +7,6 @@
         }
     },
     {
-        "name": "openai-rag",
-        "parameters": {
-            "model": "gpt-4",
-            "temperature": 0.7
-        }
-    },
-    {
         "name": "embeddings-hf",
         "parameters": {
             "embeddings-model": "sentence-transformers/all-MiniLM-L6-v2"
@@ -37,18 +30,6 @@
             "chunk-size": 2000,
             "chunk-overlap": 100
         }
-    },
-    {
-        "name": "graph-rag",
-        "parameters": {}
-    },
-    {
-        "name": "document-rag",
-        "parameters": {}
-    },
-    {
-        "name": "prompt-template",
-        "parameters": {}
     },
     {
         "name": "trustgraph-base",

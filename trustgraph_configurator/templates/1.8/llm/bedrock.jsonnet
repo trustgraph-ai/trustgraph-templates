@@ -1,7 +1,6 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
-local chunker = import "chunker-recursive.jsonnet";
 local models = import "parameters/bedrock.jsonnet";
 
 {
@@ -101,5 +100,5 @@ local models = import "parameters/bedrock.jsonnet";
 
     },
 
-} + prompts + chunker
+} + prompts
 
