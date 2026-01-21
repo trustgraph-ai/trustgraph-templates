@@ -115,9 +115,8 @@ class Packager:
         path = self.templates.joinpath(
             f"renderers/config-to-tg-configuration.jsonnet"
         )
-        wrapper = path.read_text()
 
-        processed = gen.process(wrapper)
+        processed = gen.process_file(path)
 
         return processed
 
@@ -130,9 +129,8 @@ class Packager:
         path = self.templates.joinpath(
             f"renderers/config-to-additionals.jsonnet"
         )
-        wrapper = path.read_text()
 
-        processed = gen.process(wrapper)
+        processed = gen.process_file(path)
 
         return processed
 
@@ -145,9 +143,8 @@ class Packager:
         path = self.templates.joinpath(
             f"renderers/config-to-{self.platform}.jsonnet"
         )
-        wrapper = path.read_text()
 
-        processed = gen.process(wrapper)
+        processed = gen.process_file(path)
 
         return processed
     
