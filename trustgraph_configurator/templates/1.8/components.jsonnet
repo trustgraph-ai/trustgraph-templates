@@ -22,9 +22,9 @@
    "vllm": import "llm/vllm.jsonnet",
 
    // Embeddings
-   "embeddings-ollama": import "components/embeddings-ollama.jsonnet",
-   "embeddings-hf": import "components/embeddings-hf.jsonnet",
-   "embeddings-fastembed": import "components/embeddings-fastembed.jsonnet",
+   "embeddings-ollama": import "embeddings/embeddings-ollama.jsonnet",
+   "embeddings-hf": import "embeddings/embeddings-hf.jsonnet",
+   "embeddings-fastembed": import "embeddings/embeddings-fastembed.jsonnet",
 
    // OCR options
    "ocr": import "ocr/ocr.jsonnet",
