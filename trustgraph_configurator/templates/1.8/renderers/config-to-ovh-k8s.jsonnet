@@ -1,7 +1,7 @@
 
-local engine = import "engine/ovh-k8s.jsonnet";
-local decode = import "util/decode-config.jsonnet";
-local components = import "components.jsonnet";
+local engine = import "../engine/ovh-k8s.jsonnet";
+local decode = import "decode-config.jsonnet";
+local components = import "../components.jsonnet";
 
 // Import config
 local config = import "config.json";

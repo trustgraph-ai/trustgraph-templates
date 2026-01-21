@@ -1,5 +1,5 @@
 
-local components = import "components.jsonnet";
+local components = import "../components.jsonnet";
 
 local apply = function(p, components)
 

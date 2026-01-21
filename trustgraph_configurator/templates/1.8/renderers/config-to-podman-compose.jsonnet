@@ -1,7 +1,7 @@
 
-local engine = import "engine/noop.jsonnet";
-local decode = import "util/decode-config.jsonnet";
-local components = import "components.jsonnet";
+local engine = import "../engine/docker-compose.jsonnet";
+local decode = import "decode-config.jsonnet";
+local components = import "../components.jsonnet";
 
 // Import config
 local config = import "config.json";

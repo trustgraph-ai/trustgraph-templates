@@ -1,4 +1,4 @@
-local decode = import "util/decode-config.jsonnet";
+local decode = import "decode-config.jsonnet";
 
 // Import config
 local config = import "config.json";
