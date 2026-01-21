@@ -6,7 +6,7 @@ import pytest
 import json
 import yaml
 
-from tests.conftest import TESTED_VERSIONS
+from conftest import TESTED_VERSIONS
 
 
 @pytest.mark.integration
