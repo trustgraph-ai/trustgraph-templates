@@ -2,7 +2,6 @@
 // This puts the default configuration together.  References many things,
 // flow classes, a default flow, token costs, prompts, agent tools
 
-local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 

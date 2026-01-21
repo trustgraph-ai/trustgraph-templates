@@ -105,7 +105,6 @@
 // Change: Ensure /etc/ceph/ceph.mon.keyring exists
 // Why: MONs need their specific key to start.
 
-local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 
 {

@@ -3,7 +3,6 @@
 // Uses specialized modules for different aspects of config building
 
 // Import dependencies
-local base = import "base/base.jsonnet";
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";
