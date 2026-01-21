@@ -41,7 +41,7 @@ local routes = {
 local findRoute = function(k)
     local prefixes = std.objectFields(routes);
     local matching = std.filter(function(p) std.startsWith(k, p), prefixes);
-    local sorted = std.sort(matching, function(a, b) std.length(b) < std.length(a));
+    local sorted = std.sort(matching, function(x) -std.length(x));
     if std.length(sorted) > 0 then sorted[0] else null;
 
 {
@@ -153,7 +153,7 @@ local findRoute = function(k)
     },
 
     "config-svc" +: {
-    
+  
         create:: function(engine)
 
             local container =
