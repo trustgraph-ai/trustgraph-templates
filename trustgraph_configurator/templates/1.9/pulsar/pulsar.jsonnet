@@ -3,7 +3,7 @@ local url = import "values/url.jsonnet";
 
 // This is a Pulsar configuration.  Non-standalone mode so we deploy
 // individual components: bookkeeper, broker and zookeeper.
-// 
+//
 // This also deploys the TrustGraph 'admin' container which initialises
 // TrustGraph-specific namespaces etc.
 
@@ -11,13 +11,37 @@ local url = import "values/url.jsonnet";
 
     "pulsar" +: {
 
+        // Zookeeper memory settings (can be overridden by memory-profile)
+        "zk-memory-limit":: "512M",
+        "zk-memory-reservation":: "512M",
+        "zk-heap":: "256m",
+        "zk-direct-memory":: "256m",
+
+        // Bookie memory settings (can be overridden by memory-profile)
+        "bookie-memory-limit":: "1024M",
+        "bookie-memory-reservation":: "1024M",
+        "bookie-heap":: "256m",
+        "bookie-direct-memory":: "256m",
+
+        // Broker memory settings (can be overridden by memory-profile)
+        "broker-memory-limit":: "800M",
+        "broker-memory-reservation":: "800M",
+        "broker-heap":: "384m",
+        "broker-direct-memory":: "384m",
+
+        // Pulsar-init memory settings (can be overridden by memory-profile)
+        "init-memory-limit":: "256M",
+        "init-memory-reservation":: "256M",
+        "init-heap":: "128m",
+        "init-direct-memory":: "128m",
+
         create:: function(engine)
 
             // Zookeeper volume
             local zkVolume = engine.volume("zookeeper").with_size("1G");
 
             // Zookeeper container
-            local zkContainer = 
+            local zkContainer =
                 engine.container("zookeeper")
                     .with_image(images.pulsar)
                     .with_command([
@@ -25,13 +49,17 @@ local url = import "values/url.jsonnet";
                         "-c",
                         "bin/apply-config-from-env.py conf/zookeeper.conf && bin/generate-zookeeper-config.sh conf/zookeeper.conf && exec bin/pulsar zookeeper"
                     ])
-                    .with_limits("1", "512M")
-                    .with_reservations("0.05", "512M")
+                    .with_limits("1", $.pulsar["zk-memory-limit"])
+                    .with_reservations("0.05", $.pulsar["zk-memory-reservation"])
                     .with_user("0:1000")
                     .with_volume_mount(zkVolume, "/pulsar/data/zookeeper")
                     .with_environment({
                         "metadataStoreUrl": "zk:zookeeper:2181",
-                        "PULSAR_MEM": "-Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m",
+                        "PULSAR_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
+                            $.pulsar["zk-heap"],
+                            $.pulsar["zk-heap"],
+                            $.pulsar["zk-direct-memory"],
+                        ],
                     })
                     .with_port(2181, 2181, "zookeeper")
                     .with_port(2888, 2888, "zookeeper2")
@@ -46,10 +74,14 @@ local url = import "values/url.jsonnet";
                         "-c",
                         "sleep 10 && bin/pulsar initialize-cluster-metadata --cluster cluster-a --zookeeper zookeeper:2181 --configuration-store zookeeper:2181 --web-service-url http://pulsar:8080 --broker-service-url pulsar://pulsar:6650",
                     ])
-                    .with_limits("1", "256M")
-                    .with_reservations("0.05", "256M")
+                    .with_limits("1", $.pulsar["init-memory-limit"])
+                    .with_reservations("0.05", $.pulsar["init-memory-reservation"])
                     .with_environment({
-                        "PULSAR_MEM": "-Xms128m -Xmx128m -XX:MaxDirectMemorySize=128m",
+                        "PULSAR_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
+                            $.pulsar["init-heap"],
+                            $.pulsar["init-heap"],
+                            $.pulsar["init-direct-memory"],
+                        ],
                     });
 
 
@@ -57,7 +89,7 @@ local url = import "values/url.jsonnet";
             local bookieVolume = engine.volume("bookie").with_size("20G");
 
             // Bookkeeper container
-            local bookieContainer = 
+            local bookieContainer =
                 engine.container("bookie")
                     .with_image(images.pulsar)
                     .with_command([
@@ -66,8 +98,8 @@ local url = import "values/url.jsonnet";
                         "bin/apply-config-from-env.py conf/bookkeeper.conf && exec bin/pulsar bookie"
                         // false ^ causes this to be a 'failure' exit.
                     ])
-                    .with_limits("1", "1024M")
-                    .with_reservations("0.1", "1024M")
+                    .with_limits("1", $.pulsar["bookie-memory-limit"])
+                    .with_reservations("0.1", $.pulsar["bookie-memory-reservation"])
                     .with_user("0:1000")
                     .with_volume_mount(bookieVolume, "/pulsar/data/bookkeeper")
                     .with_environment({
@@ -76,12 +108,16 @@ local url = import "values/url.jsonnet";
                         "bookieId": "bookie",
                         "metadataStoreUri": "metadata-store:zk:zookeeper:2181",
                         "advertisedAddress": "bookie",
-                        "BOOKIE_MEM": "-Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m",
+                        "BOOKIE_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
+                            $.pulsar["bookie-heap"],
+                            $.pulsar["bookie-heap"],
+                            $.pulsar["bookie-direct-memory"],
+                        ],
                     })
                     .with_port(3181, 3181, "bookie");
 
             // Pulsar broker, stateless (uses ZK and Bookkeeper for state)
-            local brokerContainer = 
+            local brokerContainer =
                 engine.container("pulsar")
                     .with_image(images.pulsar)
                     .with_command([
@@ -89,8 +125,8 @@ local url = import "values/url.jsonnet";
                         "-c",
                         "bin/apply-config-from-env.py conf/broker.conf && exec bin/pulsar broker"
                     ])
-                    .with_limits("1", "800M")
-                    .with_reservations("0.1", "800M")
+                    .with_limits("1", $.pulsar["broker-memory-limit"])
+                    .with_reservations("0.1", $.pulsar["broker-memory-reservation"])
                     .with_environment({
                         "metadataStoreUrl": "zk:zookeeper:2181",
                         "zookeeperServers": "zookeeper:2181",
@@ -100,7 +136,11 @@ local url = import "values/url.jsonnet";
                         "managedLedgerDefaultAckQuorum": "1",
                         "advertisedAddress": "pulsar",
                         "advertisedListeners": "external:pulsar://pulsar:6650,localhost:pulsar://localhost:6650",
-                        "PULSAR_MEM": "-Xms384m -Xmx384m -XX:MaxDirectMemorySize=384m",
+                        "PULSAR_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
+                            $.pulsar["broker-heap"],
+                            $.pulsar["broker-heap"],
+                            $.pulsar["broker-direct-memory"],
+                        ],
                     })
                     .with_port(6650, 6650, "pulsar")
                     .with_port(8080, 8080, "admin");

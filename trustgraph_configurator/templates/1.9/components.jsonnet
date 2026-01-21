@@ -62,6 +62,9 @@
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
 
+   // Memory profiles
+   "memory-profile-low": import "profiles/memory-profile-low.jsonnet",
+
    // Model hosting
 
    "hosting-intel-battlemage-vllm":
