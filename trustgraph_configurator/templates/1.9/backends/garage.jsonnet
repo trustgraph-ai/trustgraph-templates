@@ -2,24 +2,34 @@ local images = import "values/images.jsonnet";
 
 {
 
-    // Garage S3 credentials - these are the actual access key ID and secret key
-    // Access Key ID must be in format: GK + 24 hex characters (12 bytes)
-    // Secret Key must be 64 hex characters (32 bytes)
-    // For production, generate secure random values and override these defaults
-    "garage-access-key":: "GK000000000000000000000001",
-    "garage-secret-key":: "b171f00be9be4c32c734f4c05fe64c527a8ab5eb823b376cfa8c2531f70fc427",
-    "garage-rpc-secret":: "bbba746a9e289bad64a9e7a36a4299dac8d6e0b8cc2a6c2937fe756df4492008",
-    // For a production system, override this value
-    "garage-admin-token":: "batts-rockhearted-unpartially",
-    "garage-region":: "garage",
-    "garage-replication-factor":: "1",  // Set to 1 for single-node, 3 for production
-
-    // Storage volume sizes
-    "garage-meta-size":: "2G",    // Metadata volume size
-    "garage-data-size":: "5G",    // Data volume size (also used for cluster layout capacity)
-
     garage +: {
+
+        // Garage S3 credentials - these are the actual access key ID and secret key
+        // Access Key ID must be in format: GK + 24 hex characters (12 bytes)
+        // Secret Key must be 64 hex characters (32 bytes)
+        // For production, generate secure random values and override these defaults
+        "access-key":: "GK000000000000000000000001",
+        "secret-key":: "b171f00be9be4c32c734f4c05fe64c527a8ab5eb823b376cfa8c2531f70fc427",
+        "rpc-secret":: "bbba746a9e289bad64a9e7a36a4299dac8d6e0b8cc2a6c2937fe756df4492008",
+        // For a production system, override this value
+        "admin-token":: "batts-rockhearted-unpartially",
+        region:: "garage",
+        "replication-factor":: "1",  // Set to 1 for single-node, 3 for production
+
+        // Storage volume sizes
+        "meta-size":: "2G",    // Metadata volume size
+        "data-size":: "5G",    // Data volume size (also used for cluster layout capacity)
+
         create:: function(engine)
+
+            local accessKey = self["access-key"];
+            local secretKey = self["secret-key"];
+            local rpcSecret = self["rpc-secret"];
+            local adminToken = self["admin-token"];
+            local region = self.region;
+            local replicationFactor = self["replication-factor"];
+            local metaSize = self["meta-size"];
+            local dataSize = self["data-size"];
 
             // Garage daemon configuration file - TOML format
             local garage_conf = |||
@@ -52,7 +62,7 @@ local images = import "values/images.jsonnet";
                 [admin]
                 api_bind_addr = "[::]:3903"
                 admin_token = "%s"
-            ||| % [$["garage-replication-factor"], $["garage-rpc-secret"], $["garage-region"], $["garage-admin-token"]];
+            ||| % [replicationFactor, rpcSecret, region, adminToken];
 
             // Config volume - contains the rendered garage.toml
             local cfgVol = engine.configVolume(
@@ -63,8 +73,8 @@ local images = import "values/images.jsonnet";
             );
 
             // Volumes - Garage stores metadata and data separately
-            local vol_meta = engine.volume("garage-meta").with_size($["garage-meta-size"]);
-            local vol_data = engine.volume("garage-data").with_size($["garage-data-size"]);
+            local vol_meta = engine.volume("garage-meta").with_size(metaSize);
+            local vol_data = engine.volume("garage-data").with_size(dataSize);
 
             // Main Garage daemon container
             local garage_container =
@@ -95,12 +105,12 @@ local images = import "values/images.jsonnet";
                 engine.container("garage-init")
                     .with_image("docker.io/alpine:3.23.2")
                     .with_environment({
-                        GARAGE_ACCESS_KEY: $["garage-access-key"],
-                        GARAGE_SECRET_KEY: $["garage-secret-key"],
-                        GARAGE_REGION: $["garage-region"],
-                        GARAGE_ADMIN_TOKEN: $["garage-admin-token"],
-                        GARAGE_RPC_SECRET: $["garage-rpc-secret"],
-                        GARAGE_DATA_SIZE: $["garage-data-size"],
+                        GARAGE_ACCESS_KEY: accessKey,
+                        GARAGE_SECRET_KEY: secretKey,
+                        GARAGE_REGION: region,
+                        GARAGE_ADMIN_TOKEN: adminToken,
+                        GARAGE_RPC_SECRET: rpcSecret,
+                        GARAGE_DATA_SIZE: dataSize,
                     })
                     .with_limits("0.5", "256M")
                     .with_reservations("0.25", "128M")

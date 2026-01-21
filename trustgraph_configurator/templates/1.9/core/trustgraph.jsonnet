@@ -54,6 +54,9 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
         else if std.startsWith(k, "kg-extract-ontology-") then
             local suffix = std.substr(k, std.length("kg-extract-ontology-"), std.length(k) - std.length("kg-extract-ontology-"));
             self + { "kg-extract-ontology" +: { [suffix]:: v } }
+        else if std.startsWith(k, "garage-") then
+            local suffix = std.substr(k, std.length("garage-"), std.length(k) - std.length("garage-"));
+            self + { garage +: { [suffix]:: v } }
         else
             self + { [k]:: v },
 
