@@ -10,10 +10,10 @@ import json
 class TestErrorHandling:
     """Tests for error handling and reporting."""
 
-    def test_nonexistent_config_file(self, run_configurator):
+    def test_nonexistent_config_file(self, run_configurator, primary_version):
         """Test error when config file doesn't exist."""
         stdout, stderr, code = run_configurator([
-            '-t', '1.8',
+            '-t', primary_version,
             '-p', 'docker-compose',
             '-i', '/nonexistent/config.json',
             '--latest-stable',
@@ -22,13 +22,13 @@ class TestErrorHandling:
         assert code == 1
         assert len(stderr) > 0  # Error should be in stderr
 
-    def test_invalid_json_config(self, run_configurator, tmp_path):
+    def test_invalid_json_config(self, run_configurator, tmp_path, primary_version):
         """Test error when config file has invalid JSON."""
         invalid_config = tmp_path / "invalid.json"
         invalid_config.write_text("{ invalid json")
 
         stdout, stderr, code = run_configurator([
-            '-t', '1.8',
+            '-t', primary_version,
             '-p', 'docker-compose',
             '-i', str(invalid_config),
             '--latest-stable',
@@ -36,12 +36,12 @@ class TestErrorHandling:
         ])
         assert code == 1
 
-    def test_invalid_platform(self, run_configurator, test_config_dir):
+    def test_invalid_platform(self, run_configurator, test_config_dir, primary_version):
         """Test error when platform is invalid."""
         config_file = str(test_config_dir / "minimal.json")
 
         stdout, stderr, code = run_configurator([
-            '-t', '1.8',
+            '-t', primary_version,
             '-p', 'nonexistent-platform',
             '-i', config_file,
             '--latest-stable',
@@ -61,14 +61,14 @@ class TestErrorHandling:
         ])
         assert code == 1
 
-    def test_malformed_config_structure(self, run_configurator, tmp_path):
+    def test_malformed_config_structure(self, run_configurator, tmp_path, primary_version):
         """Test error when config structure is invalid."""
         # Valid JSON but wrong structure
         invalid_config = tmp_path / "bad_structure.json"
         invalid_config.write_text('{"wrong": "structure"}')
 
         stdout, stderr, code = run_configurator([
-            '-t', '1.8',
+            '-t', primary_version,
             '-p', 'docker-compose',
             '-i', str(invalid_config),
             '--latest-stable',

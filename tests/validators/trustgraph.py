@@ -19,7 +19,7 @@ def validate_service_references(config: List[Dict[str, Any]]) -> List[str]:
     known_modules = {
         'pulsar', 'triple-store-cassandra', 'object-store-cassandra',
         'vector-store-qdrant', 'vector-store-milvus', 'vector-store-pinecone',
-        'graph-rag', 'prompt-template', 'text-completion',
+        'graph-rag', 'text-completion',
         'embeddings-hf', 'embeddings-fastembed', 'embeddings-openai',
         'openai', 'anthropic', 'ollama', 'bedrock', 'vertexai',
         'trustgraph-base', 'grafana', 'prometheus',

@@ -3,6 +3,12 @@ Pytest configuration and shared fixtures for trustgraph-configurator tests.
 """
 
 import pytest
+
+# =============================================================================
+# Version Configuration - Update these when adding new template versions
+# =============================================================================
+TESTED_VERSIONS = ["1.6", "1.7", "1.8", "1.9"]
+PRIMARY_VERSION = "1.8"  # Used when only one version is tested
 import sys
 import json
 import tempfile
@@ -73,7 +79,13 @@ def golden_dir():
 @pytest.fixture(scope="session")
 def test_versions():
     """List of template versions to test."""
-    return ["1.6", "1.7", "1.8"]
+    return TESTED_VERSIONS
+
+
+@pytest.fixture(scope="session")
+def primary_version():
+    """Primary version for tests that only need one version."""
+    return PRIMARY_VERSION
 
 
 @pytest.fixture(scope="session")

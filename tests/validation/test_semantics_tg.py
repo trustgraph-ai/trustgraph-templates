@@ -13,12 +13,12 @@ from validators import trustgraph
 
 @pytest.mark.validation
 @pytest.mark.parametrize("config", ["minimal.json", "complex-rag.json", "multi-service.json"])
-def test_tg_config_semantic_validation(config, run_configurator, test_config_dir):
+def test_tg_config_semantic_validation(config, run_configurator, test_config_dir, primary_version):
     """Test semantic validation of TrustGraph configuration."""
     config_file = str(test_config_dir / config)
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'docker-compose',
         '-i', config_file,
         '--latest-stable',
@@ -38,12 +38,12 @@ def test_tg_config_semantic_validation(config, run_configurator, test_config_dir
 
 
 @pytest.mark.validation
-def test_tg_config_has_llm(run_configurator, test_config_dir):
+def test_tg_config_has_llm(run_configurator, test_config_dir, primary_version):
     """Test that TrustGraph config includes LLM provider."""
     config_file = str(test_config_dir / "minimal.json")
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'docker-compose',
         '-i', config_file,
         '--latest-stable',
@@ -62,12 +62,12 @@ def test_tg_config_has_llm(run_configurator, test_config_dir):
 
 
 @pytest.mark.validation
-def test_tg_config_structure(run_configurator, test_config_dir):
+def test_tg_config_structure(run_configurator, test_config_dir, primary_version):
     """Test that TrustGraph config has required structure."""
     config_file = str(test_config_dir / "minimal.json")
 
     stdout, stderr, code = run_configurator([
-        '-t', '1.8',
+        '-t', primary_version,
         '-p', 'docker-compose',
         '-i', config_file,
         '--latest-stable',

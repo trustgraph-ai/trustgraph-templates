@@ -5,6 +5,8 @@ Integration tests for CLI interface.
 import pytest
 import subprocess
 
+from tests.conftest import TESTED_VERSIONS
+
 
 @pytest.mark.integration
 class TestCLIInterface:
@@ -29,13 +31,13 @@ class TestCLIInterface:
         )
         assert result.returncode == 0
 
-    def test_output_modes(self, run_configurator, test_config_dir):
+    def test_output_modes(self, run_configurator, test_config_dir, primary_version):
         """Test -O and -R output modes."""
         config_file = str(test_config_dir / "minimal.json")
 
         # Test -O mode
         stdout_o, _, code_o = run_configurator([
-            '-t', '1.8',
+            '-t', primary_version,
             '-p', 'docker-compose',
             '-i', config_file,
             '--latest-stable',
@@ -46,7 +48,7 @@ class TestCLIInterface:
 
         # Test -R mode
         stdout_r, _, code_r = run_configurator([
-            '-t', '1.8',
+            '-t', primary_version,
             '-p', 'docker-compose',
             '-i', config_file,
             '--latest-stable',
@@ -58,13 +60,13 @@ class TestCLIInterface:
         # Outputs should be different
         assert stdout_o != stdout_r
 
-    def test_platform_argument(self, run_configurator, test_config_dir):
+    def test_platform_argument(self, run_configurator, test_config_dir, primary_version):
         """Test -p/--platform argument."""
         config_file = str(test_config_dir / "minimal.json")
 
         for platform in ['docker-compose', 'minikube-k8s']:
             stdout, stderr, code = run_configurator([
-                '-t', '1.8',
+                '-t', primary_version,
                 '-p', platform,
                 '-i', config_file,
                 '--latest-stable',
@@ -76,7 +78,7 @@ class TestCLIInterface:
         """Test -t/--template argument."""
         config_file = str(test_config_dir / "minimal.json")
 
-        for template in ['1.6', '1.7', '1.8']:
+        for template in TESTED_VERSIONS:
             stdout, stderr, code = run_configurator([
                 '-t', template,
                 '-p', 'docker-compose',
