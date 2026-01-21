@@ -67,22 +67,22 @@
    "hosting-intel-battlemage-vllm":
        import "model-hosting/intel-battlemage-vllm.jsonnet",
 
-   "tgi-service-cpu":
+   "hosting-cpu-tgi":
        import "model-hosting/cpu-tgi.jsonnet",
 
-   "tgi-service-intel-gpu":
+   "hosting-intel-xpu-tgi":
        import "model-hosting/intel-xpu-tgi.jsonnet",
 
-   "tgi-service-gaudi":
+   "hosting-intel-gaudi-tgi":
        import "model-hosting/intel-gaudi-tgi.jsonnet",
 
-   "vllm-service-intel-gpu":
+   "hosting-intel-xpu-vllm":
        import "model-hosting/intel-xpu-vllm.jsonnet",
 
-   "vllm-service-gaudi":
+   "hosting-intel-gaudi-vllm":
        import "model-hosting/intel-gaudi-vllm.jsonnet",
 
-   "vllm-service-nvidia":
+   "hosting-nvidia-gpu-vllm":
        import "model-hosting/nvidia-gpu-vllm.jsonnet",
 
 }
