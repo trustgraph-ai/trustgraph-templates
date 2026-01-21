@@ -16,6 +16,11 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
 {
 
+    with:: function(key, value)
+        self + {
+            [key]:: value,
+        },
+
     "log-level":: "DEBUG",
 
     "api-gateway-port":: 8088,
