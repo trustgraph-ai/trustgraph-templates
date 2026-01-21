@@ -31,9 +31,9 @@
    "mistral-ocr": import "components/mistral-ocr.jsonnet",
 
    // Vector stores
-   "vector-store-milvus": import "components/vector-store-milvus.jsonnet",
-   "vector-store-qdrant": import "components/vector-store-qdrant.jsonnet",
-   "vector-store-pinecone": import "components/vector-store-pinecone.jsonnet",
+   "vector-store-milvus": import "vector-store/milvus.jsonnet",
+   "vector-store-qdrant": import "vector-store/qdrant.jsonnet",
+   "vector-store-pinecone": import "vector-store/pinecone.jsonnet",
 
    // Triples stores
    "triple-store-cassandra": import "triple-store/cassandra.jsonnet",
