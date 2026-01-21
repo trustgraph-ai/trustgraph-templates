@@ -113,7 +113,7 @@ class Packager:
         gen = Generator(fetch=self.fetch)
 
         path = self.templates.joinpath(
-            f"config-to-tg-configuration.jsonnet"
+            f"renderers/config-to-tg-configuration.jsonnet"
         )
         wrapper = path.read_text()
 
@@ -128,7 +128,7 @@ class Packager:
         gen = Generator(fetch=self.fetch)
 
         path = self.templates.joinpath(
-            f"config-to-additionals.jsonnet"
+            f"renderers/config-to-additionals.jsonnet"
         )
         wrapper = path.read_text()
 
@@ -143,7 +143,7 @@ class Packager:
         gen = Generator(fetch=self.fetch)
 
         path = self.templates.joinpath(
-            f"config-to-{self.platform}.jsonnet"
+            f"renderers/config-to-{self.platform}.jsonnet"
         )
         wrapper = path.read_text()
 
@@ -243,7 +243,7 @@ class Packager:
             tg_config_file = json.dumps(tg_config_json, indent=4)
 
         # Check if config-to-additionals.jsonnet exists for this version
-        additionals_path = self.templates.joinpath("config-to-additionals.jsonnet")
+        additionals_path = self.templates.joinpath("renderers/config-to-additionals.jsonnet")
         has_additionals = os.path.isfile(additionals_path)
 
         # Generate additional config files from configVolume parts (if supported)
