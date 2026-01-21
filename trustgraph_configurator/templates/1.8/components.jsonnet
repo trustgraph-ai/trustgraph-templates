@@ -45,7 +45,7 @@
    "object-store-cassandra": import "object-store/cassandra.jsonnet",
 
    // Observability support
-   "grafana": import "components/grafana.jsonnet",
+   "grafana": import "monitoring/grafana.jsonnet",
    "loki": import "components/loki.jsonnet",
 
    // Pulsar manager is a UI for Pulsar.  Uses a LOT of memory
