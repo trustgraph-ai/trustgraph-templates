@@ -35,6 +35,7 @@ local routes = {
     "kg-extract-ontology-": route("kg-extract-ontology"),
     "kg-extract-objects-": route("kg-extract-objects"),
     "garage-": route("garage"),
+    "config-svc-": route("config-svc"),
 };
 
 // Find longest matching prefix (most specific first)
@@ -153,8 +154,18 @@ local findRoute = function(k)
     },
 
     "config-svc" +: {
-  
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local cpuLimit = self["cpu-limit"];
+            local cpuReservation = self["cpu-reservation"];
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("config-svc")
@@ -166,8 +177,8 @@ local findRoute = function(k)
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation);
 
             local containerSet = engine.containers(
                 "config-svc", [ container ]

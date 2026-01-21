@@ -54,4 +54,8 @@
         "on-disk-payload":: "true",
     },
 
+    "config-svc" +: {
+        "memory-reservation":: "64M",
+    },
+
 }
