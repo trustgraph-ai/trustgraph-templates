@@ -2,7 +2,7 @@ local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 
 local config_initialiser = import "configuration.jsonnet";
-local config  = import "trustgraph-config.jsonnet";
+local config  = import "../runtime-config/trustgraph-config.jsonnet";
 local librarian = import "librarian.jsonnet";
 local mcp_server = import "mcp-server.jsonnet";
 local workbench = import "../ui/workbench-ui.jsonnet";

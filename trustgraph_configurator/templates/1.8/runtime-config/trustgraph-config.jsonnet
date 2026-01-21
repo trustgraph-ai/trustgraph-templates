@@ -3,17 +3,17 @@
 // Uses specialized modules for different aspects of config building
 
 // Import dependencies
-local images = import "values/images.jsonnet";
-local url = import "values/url.jsonnet";
-local prompts = import "prompts/mixtral.jsonnet";
-local default_prompts = import "prompts/default-prompts.jsonnet";
-local token_costs = import "values/token-costs.jsonnet";
-local flow_blueprints = import "flows/flow-blueprints.jsonnet";
-local config_composer = import "config/config-composer.jsonnet";
-local interface_descriptions = import "config/interface-descriptions.jsonnet";
-local tools = import "config/tools.jsonnet";
-local temperature_params = import "parameters/temperature-param-types.jsonnet";
-local chunking_params = import "parameters/chunking-param-types.jsonnet";
+local images = import "../values/images.jsonnet";
+local url = import "../values/url.jsonnet";
+local prompts = import "../prompts/mixtral.jsonnet";
+local default_prompts = import "../prompts/default-prompts.jsonnet";
+local token_costs = import "../values/token-costs.jsonnet";
+local flow_blueprints = import "../flows/flow-blueprints.jsonnet";
+local config_composer = import "config-composer.jsonnet";
+local interface_descriptions = import "interface-descriptions.jsonnet";
+local tools = import "tools.jsonnet";
+local temperature_params = import "../parameters/temperature-param-types.jsonnet";
+local chunking_params = import "../parameters/chunking-param-types.jsonnet";
 
 // Main configuration object
 local configuration = {
