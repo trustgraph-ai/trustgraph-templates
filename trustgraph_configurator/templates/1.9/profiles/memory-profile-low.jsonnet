@@ -119,10 +119,6 @@
         "memory-reservation":: "64M",   // 128M -> 64M
     },
 
-    "rev-gateway" +: {
-        "memory-reservation":: "128M",  // 256M -> 128M
-    },
-
     // Graph RAG services
     "kg-extract-definitions" +: {
         "memory-reservation":: "64M",   // 128M -> 64M
