@@ -11,8 +11,10 @@ local models = import "parameters/embeddings-ollama.jsonnet";
     "embeddings-models" +:: $["ollama-models"],
 
     embeddings +: {
-    
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
 
             local container =
                 engine.container("embeddings")
@@ -22,7 +24,7 @@ local models = import "parameters/embeddings-ollama.jsonnet";
                         "-p",
                         url.pulsar,
                         "--concurrency",
-                        std.toString($["embeddings-concurrency"]),
+                        std.toString(concurrency),
                         "-r",
                         $["ollama-url"],
                         "--log-level",

@@ -15,8 +15,10 @@ local models = import "parameters/ollama.jsonnet";
     "llm-models" +:: $["ollama-models"],
 
     "text-completion" +: {
-    
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
 
             local envSecrets = engine.envSecrets("ollama-credentials")
                 .with_env_var("OLLAMA_HOST", "ollama-host");
@@ -29,7 +31,7 @@ local models = import "parameters/ollama.jsonnet";
                         "-p",
                         url.pulsar,
                         "--concurrency",
-                        std.toString($["text-completion-concurrency"]),
+                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])
@@ -57,6 +59,8 @@ local models = import "parameters/ollama.jsonnet";
 
         create:: function(engine)
 
+            local concurrency = self.concurrency;
+
             local envSecrets = engine.envSecrets("ollama-credentials")
                 .with_env_var("OLLAMA_HOST", "ollama-host");
 
@@ -70,7 +74,7 @@ local models = import "parameters/ollama.jsonnet";
                         "--id",
                         "text-completion-rag",
                         "--concurrency",
-                        std.toString($["text-completion-rag-concurrency"]),
+                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])

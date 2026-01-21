@@ -21,6 +21,8 @@ local models = import "parameters/vllm.jsonnet";
 
         create:: function(engine)
 
+            local concurrency = self.concurrency;
+
             local envSecrets = engine.envSecrets("vllm-credentials")
                 .with_env_var("VLLM_BASE_URL", "vllm-url");
 
@@ -32,7 +34,7 @@ local models = import "parameters/vllm.jsonnet";
                         "-p",
                         url.pulsar,
                         "--concurrency",
-                        std.toString($["text-completion-concurrency"]),
+                        std.toString(concurrency),
                         "-x",
                         std.toString($["vllm-max-output-tokens"]),
                         "-t",
@@ -64,6 +66,8 @@ local models = import "parameters/vllm.jsonnet";
 
         create:: function(engine)
 
+            local concurrency = self.concurrency;
+
             local envSecrets = engine.envSecrets("vllm-credentials")
                 .with_env_var("VLLM_BASE_URL", "vllm-url");
 
@@ -77,7 +81,7 @@ local models = import "parameters/vllm.jsonnet";
                         "--id",
                         "text-completion-rag",
                         "--concurrency",
-                        std.toString($["text-completion-rag-concurrency"]),
+                        std.toString(concurrency),
                         "-x",
                         std.toString($["vllm-max-output-tokens"]),
                         "-t",

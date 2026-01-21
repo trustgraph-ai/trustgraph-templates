@@ -10,8 +10,10 @@ local models = import "parameters/embeddings-huggingface.jsonnet";
     "embeddings-models" +:: $["huggingface-embeddings-models"],
 
     embeddings +: {
-    
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
 
             local container =
                 engine.container("embeddings")
@@ -21,7 +23,7 @@ local models = import "parameters/embeddings-huggingface.jsonnet";
                         "-p",
                         url.pulsar,
                         "--concurrency",
-                        std.toString($["embeddings-concurrency"]),
+                        std.toString(concurrency),
                     ])
                     .with_limits("1.0", "400M")
                     .with_reservations("0.5", "400M");

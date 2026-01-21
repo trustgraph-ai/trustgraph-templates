@@ -15,38 +15,55 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
 {
 
-    with:: function(key, value)
-        self + {
-            [key]:: value,
-        },
+    // Route parameters to appropriate internal objects based on prefix
+    // Check more specific prefixes first
+    with:: function(k, v)
+        if std.startsWith(k, "prompt-rag-") then
+            local suffix = std.substr(k, std.length("prompt-rag-"), std.length(k) - std.length("prompt-rag-"));
+            self + { "prompt-rag" +: { [suffix]:: v } }
+        else if std.startsWith(k, "prompt-") then
+            local suffix = std.substr(k, std.length("prompt-"), std.length(k) - std.length("prompt-"));
+            self + { prompt +: { [suffix]:: v } }
+        else if std.startsWith(k, "text-completion-rag-") then
+            local suffix = std.substr(k, std.length("text-completion-rag-"), std.length(k) - std.length("text-completion-rag-"));
+            self + { "text-completion-rag" +: { [suffix]:: v } }
+        else if std.startsWith(k, "text-completion-") then
+            local suffix = std.substr(k, std.length("text-completion-"), std.length(k) - std.length("text-completion-"));
+            self + { "text-completion" +: { [suffix]:: v } }
+        else if std.startsWith(k, "embeddings-") then
+            local suffix = std.substr(k, std.length("embeddings-"), std.length(k) - std.length("embeddings-"));
+            self + { embeddings +: { [suffix]:: v } }
+        else if std.startsWith(k, "api-gateway-") then
+            local suffix = std.substr(k, std.length("api-gateway-"), std.length(k) - std.length("api-gateway-"));
+            self + { "api-gateway" +: { [suffix]:: v } }
+        else
+            self + { [k]:: v },
 
     "log-level":: "DEBUG",
 
-    "api-gateway-port":: 8088,
-    "api-gateway-timeout":: 600,
-
-    "chunk-size":: 250,
-    "chunk-overlap":: 15,
-
-    "prompt-concurrency":: 1,
-    "prompt-rag-concurrency":: 1,
-
-    "text-completion-concurrency":: 1,
-    "text-completion-rag-concurrency":: 1,
+    "chunk-size":: 2000,
+    "chunk-overlap":: 50,
 
     "kg-extraction-concurrency":: 1,
     "graph-rag-concurrency":: 1,
 
-    "embeddings-concurrency":: 1,
+    // Base objects with concurrency defaults (LLM/embeddings components merge into these)
+    "text-completion" +: { concurrency:: 1 },
+    "text-completion-rag" +: { concurrency:: 1 },
+    embeddings +: { concurrency:: 1 },
 
     "api-gateway" +: {
-    
+
+        port:: 8088,
+        timeout:: 600,
+
         create:: function(engine)
+
+            local port = self.port;
+            local timeout = self.timeout;
 
             local envSecrets = engine.envSecrets("gateway-secret")
                 .with_env_var("GATEWAY_SECRET", "gateway-secret");
-
-            local port = $["api-gateway-port"];
 
             local container =
                 engine.container("api-gateway")
@@ -56,7 +73,7 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
                         "-p",
                         url.pulsar,
                         "--timeout",
-                        std.toString($["api-gateway-timeout"]),
+                        std.toString(timeout),
                         "--port",
                         std.toString(port),
                         "--log-level",
