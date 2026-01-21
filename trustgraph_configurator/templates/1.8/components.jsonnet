@@ -1,8 +1,8 @@
 {
 
    // Essentials
-   "trustgraph-base": import "components/trustgraph.jsonnet",
-   "rev-gateway": import "components/rev-gateway.jsonnet",
+   "trustgraph-base": import "core/trustgraph.jsonnet",
+   "rev-gateway": import "core/rev-gateway.jsonnet",
    "pulsar": import "pulsar/pulsar.jsonnet",
 
    // LLMs
@@ -51,10 +51,10 @@
    // Pulsar manager is a UI for Pulsar.  Uses a LOT of memory
    "pulsar-manager": import "pulsar/pulsar-manager.jsonnet",
 
-   "override-recursive-chunker": import "components/chunker-recursive.jsonnet",
+   "override-recursive-chunker": import "core/chunker-recursive.jsonnet",
 
    // The prompt manager
-   "prompt-overrides": import "components/prompt-overrides.jsonnet",
+   "prompt-overrides": import "core/prompt-overrides.jsonnet",
 
    // Extra MCP services
    "ddg-mcp-server": import "mcp/ddg-mcp-server.jsonnet",
