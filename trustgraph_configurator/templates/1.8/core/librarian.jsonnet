@@ -1,7 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local garage = import "stores/garage.jsonnet";
-local cassandra = import "stores/cassandra.jsonnet";
+local garage = import "backends/garage.jsonnet";
+local cassandra = import "backends/cassandra.jsonnet";
 
 {
 

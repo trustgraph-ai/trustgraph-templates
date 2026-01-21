@@ -1,7 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local cassandra_hosts = "cassandra";
-local qdrant = import "stores/qdrant.jsonnet";
+local qdrant = import "backends/qdrant.jsonnet";
 
 qdrant + {
 

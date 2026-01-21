@@ -1,6 +1,6 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local neo4j = import "stores/neo4j.jsonnet";
+local neo4j = import "backends/neo4j.jsonnet";
 
 neo4j + {
 

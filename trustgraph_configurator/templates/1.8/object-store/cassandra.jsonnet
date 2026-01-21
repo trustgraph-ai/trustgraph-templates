@@ -1,7 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local cassandra_hosts = "cassandra";
-local cassandra = import "stores/cassandra.jsonnet";
+local cassandra = import "backends/cassandra.jsonnet";
 
 cassandra + {
 

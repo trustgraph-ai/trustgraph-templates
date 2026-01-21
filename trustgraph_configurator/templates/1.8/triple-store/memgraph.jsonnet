@@ -1,6 +1,6 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local memgraph = import "stores/memgraph.jsonnet";
+local memgraph = import "backends/memgraph.jsonnet";
 
 memgraph + {
 

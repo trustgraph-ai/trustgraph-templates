@@ -1,5 +1,5 @@
 local images = import "values/images.jsonnet";
-local minio = import "stores/minio.jsonnet";
+local minio = import "backends/minio.jsonnet";
 
 minio {
 

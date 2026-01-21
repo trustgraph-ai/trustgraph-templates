@@ -1,7 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local cassandra_hosts = "cassandra";
-local milvus = import "stores/milvus.jsonnet";
+local milvus = import "backends/milvus.jsonnet";
 
 milvus + {
 

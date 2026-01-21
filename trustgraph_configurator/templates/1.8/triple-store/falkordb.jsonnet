@@ -1,6 +1,6 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local falkordb = import "stores/falkordb.jsonnet";
+local falkordb = import "backends/falkordb.jsonnet";
 
 falkordb + {
 
