@@ -27,8 +27,8 @@
    "embeddings-fastembed": import "components/embeddings-fastembed.jsonnet",
 
    // OCR options
-   "ocr": import "components/ocr.jsonnet",
-   "mistral-ocr": import "components/mistral-ocr.jsonnet",
+   "ocr": import "ocr/ocr.jsonnet",
+   "mistral-ocr": import "ocr/mistral-ocr.jsonnet",
 
    // Vector stores
    "vector-store-milvus": import "vector-store/milvus.jsonnet",
