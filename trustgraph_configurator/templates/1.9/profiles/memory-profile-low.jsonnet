@@ -38,4 +38,20 @@
 
     },
 
+    // Override Cassandra memory settings: 1000M -> 600M
+    "cassandra" +: {
+        "memory-limit":: "600M",
+        "memory-reservation":: "500M",
+        "heap":: "200M",
+    },
+
+    // Override Qdrant memory settings: 1024M -> 600M
+    // Also enables mmap for vectors/payloads (trades latency for memory)
+    "qdrant" +: {
+        "memory-limit":: "600M",
+        "memory-reservation":: "500M",
+        "memmap-threshold-kb":: "1",
+        "on-disk-payload":: "true",
+    },
+
 }
