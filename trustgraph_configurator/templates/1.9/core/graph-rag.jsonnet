@@ -3,11 +3,6 @@ local url = import "values/url.jsonnet";
 
 {
 
-    "graph-rag-entity-limit":: 50,
-    "graph-rag-triple-limit":: 30,
-    "graph-rag-max-subgraph-size":: 400,
-    "graph-rag-max-path-length":: 2,
-
     "kg-extract-definitions" +: {
     
         create:: function(engine)
@@ -145,8 +140,20 @@ local url = import "values/url.jsonnet";
     },
 
     "graph-rag" +: {
-    
+
+        concurrency:: 1,
+        "entity-limit":: 50,
+        "triple-limit":: 30,
+        "max-subgraph-size":: 400,
+        "max-path-length":: 2,
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
+            local entityLimit = self["entity-limit"];
+            local tripleLimit = self["triple-limit"];
+            local maxSubgraphSize = self["max-subgraph-size"];
+            local maxPathLength = self["max-path-length"];
 
             local container =
                 engine.container("graph-rag")
@@ -155,16 +162,16 @@ local url = import "values/url.jsonnet";
                         "graph-rag",
                         "-p",
                         url.pulsar,
-//                        "--concurrency",
-//                        std.toString($["graph-rag-concurrency"]),
+                        "--concurrency",
+                        std.toString(concurrency),
                         "--entity-limit",
-                        std.toString($["graph-rag-entity-limit"]),
+                        std.toString(entityLimit),
                         "--triple-limit",
-                        std.toString($["graph-rag-triple-limit"]),
+                        std.toString(tripleLimit),
                         "--max-subgraph-size",
-                        std.toString($["graph-rag-max-subgraph-size"]),
+                        std.toString(maxSubgraphSize),
                         "--max-path-length",
-                        std.toString($["graph-rag-max-path-length"]),
+                        std.toString(maxPathLength),
                         "--log-level",
                         $["log-level"],
                     ])

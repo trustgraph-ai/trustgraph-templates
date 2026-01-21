@@ -36,16 +36,18 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
         else if std.startsWith(k, "api-gateway-") then
             local suffix = std.substr(k, std.length("api-gateway-"), std.length(k) - std.length("api-gateway-"));
             self + { "api-gateway" +: { [suffix]:: v } }
+        else if std.startsWith(k, "chunk-") then
+            local suffix = std.substr(k, std.length("chunk-"), std.length(k) - std.length("chunk-"));
+            self + { chunker +: { [suffix]:: v } }
+        else if std.startsWith(k, "graph-rag-") then
+            local suffix = std.substr(k, std.length("graph-rag-"), std.length(k) - std.length("graph-rag-"));
+            self + { "graph-rag" +: { [suffix]:: v } }
         else
             self + { [k]:: v },
 
     "log-level":: "DEBUG",
 
-    "chunk-size":: 2000,
-    "chunk-overlap":: 50,
-
     "kg-extraction-concurrency":: 1,
-    "graph-rag-concurrency":: 1,
 
     // Base objects with concurrency defaults (LLM/embeddings components merge into these)
     "text-completion" +: { concurrency:: 1 },
@@ -102,8 +104,14 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
     },
 
     "chunker" +: {
-    
+
+        size:: 2000,
+        overlap:: 50,
+
         create:: function(engine)
+
+            local size = self.size;
+            local overlap = self.overlap;
 
             local container =
                 engine.container("chunker")
@@ -113,9 +121,9 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
                         "-p",
                         url.pulsar,
                         "--chunk-size",
-                        std.toString($["chunk-size"]),
+                        std.toString(size),
                         "--chunk-overlap",
-                        std.toString($["chunk-overlap"]),
+                        std.toString(overlap),
                         "--log-level",
                         $["log-level"],
                     ])
