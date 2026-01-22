@@ -8,8 +8,16 @@ local url = import "values/url.jsonnet";
 {
 
     "init-trustgraph" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local cfgVol = engine.configVolume(
                 "trustgraph-cfg", "trustgraph",
@@ -30,8 +38,8 @@ local url = import "values/url.jsonnet";
                             "/trustgraph/config.json",
                         ]
                     )
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M")
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation)
                     .with_volume_mount(cfgVol, "/trustgraph/");
 
             local containerSet = engine.containers(

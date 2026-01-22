@@ -6,10 +6,16 @@ local url = import "values/url.jsonnet";
     "kg-extract-definitions" +: {
 
         concurrency:: 1,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
 
         create:: function(engine)
 
             local concurrency = self.concurrency;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("kg-extract-definitions")
@@ -23,8 +29,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "kg-extract-definitions", [ container ]
@@ -44,10 +50,16 @@ local url = import "values/url.jsonnet";
     "kg-extract-relationships" +: {
 
         concurrency:: 1,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
 
         create:: function(engine)
 
             local concurrency = self.concurrency;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("kg-extract-relationships")
@@ -61,8 +73,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "kg-extract-relationships", [ container ]
@@ -82,10 +94,16 @@ local url = import "values/url.jsonnet";
     "kg-extract-agent" +: {
 
         concurrency:: 1,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
 
         create:: function(engine)
 
             local concurrency = self.concurrency;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("kg-extract-agent")
@@ -99,8 +117,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "kg-extract-agent", [ container ]
@@ -120,10 +138,16 @@ local url = import "values/url.jsonnet";
     "kg-extract-ontology" +: {
 
         concurrency:: 1,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "300M",
+        "memory-reservation":: "300M",
 
         create:: function(engine)
 
             local concurrency = self.concurrency;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("kg-extract-ontology")
@@ -137,8 +161,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "300M")
-                    .with_reservations("0.1", "300M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "kg-extract-ontology", [ container ]
@@ -162,6 +186,10 @@ local url = import "values/url.jsonnet";
         "triple-limit":: 30,
         "max-subgraph-size":: 400,
         "max-path-length":: 2,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
 
         create:: function(engine)
 
@@ -170,6 +198,8 @@ local url = import "values/url.jsonnet";
             local tripleLimit = self["triple-limit"];
             local maxSubgraphSize = self["max-subgraph-size"];
             local maxPathLength = self["max-path-length"];
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("graph-rag")
@@ -191,8 +221,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "graph-rag", [ container ]
@@ -210,8 +240,16 @@ local url = import "values/url.jsonnet";
     },
 
     "graph-embeddings" +: {
-    
+
+        "cpu-limit":: "1.0",
+        "cpu-reservation":: "0.5",
+        "memory-limit":: "512M",
+        "memory-reservation":: "512M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("graph-embeddings")
@@ -223,8 +261,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("1.0", "512M")
-                    .with_reservations("0.5", "512M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "graph-embeddings", [ container ]

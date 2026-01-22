@@ -54,4 +54,116 @@
         "on-disk-payload":: "true",
     },
 
+    // TrustGraph core services - 50% memory reservations
+    "api-gateway" +: {
+        "memory-reservation":: "256M",  // 512M -> 256M
+    },
+
+    "chunker" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "config-svc" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "pdf-decoder" +: {
+        "memory-reservation":: "256M",  // 512M -> 256M
+    },
+
+    "mcp-tool" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "mcp-server" +: {
+        "memory-reservation":: "128M",  // 256M -> 128M
+    },
+
+    "metering" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "metering-rag" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "kg-store" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "kg-manager" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "prompt" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "prompt-rag" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "document-rag" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "document-embeddings" +: {
+        "memory-reservation":: "256M",  // 512M -> 256M
+    },
+
+    "librarian" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "agent-manager" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    // Graph RAG services
+    "kg-extract-definitions" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "kg-extract-relationships" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "kg-extract-agent" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "kg-extract-ontology" +: {
+        "memory-reservation":: "150M",  // 300M -> 150M
+    },
+
+    "kg-extract-objects" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "graph-rag" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "graph-embeddings" +: {
+        "memory-reservation":: "256M",  // 512M -> 256M
+    },
+
+    // Structured data services
+    "nlp-query" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "structured-query" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
+    "structured-diag" +: {
+        "memory-reservation":: "48M",   // 96M -> 48M
+    },
+
+    // Init service
+    "init-trustgraph" +: {
+        "memory-reservation":: "64M",   // 128M -> 64M
+    },
+
 }

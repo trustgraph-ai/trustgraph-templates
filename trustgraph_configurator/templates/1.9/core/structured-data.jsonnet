@@ -4,8 +4,16 @@ local url = import "values/url.jsonnet";
 {
 
     "nlp-query" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("nlp-query")
@@ -17,8 +25,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "nlp-query", [ container ]
@@ -36,8 +44,16 @@ local url = import "values/url.jsonnet";
     },
 
     "structured-query" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("structured-query")
@@ -49,8 +65,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "structured-query", [ container ]
@@ -68,8 +84,16 @@ local url = import "values/url.jsonnet";
     },
 
     "structured-diag" +: {
-    
+
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "96M",
+        "memory-reservation":: "96M",
+
         create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("structured-diag")
@@ -81,8 +105,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "96M")
-                    .with_reservations("0.1", "96M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "structured-diag", [ container ]
@@ -102,10 +126,16 @@ local url = import "values/url.jsonnet";
     "kg-extract-objects" +: {
 
         concurrency:: 1,
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "128M",
+        "memory-reservation":: "128M",
 
         create:: function(engine)
 
             local concurrency = self.concurrency;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
                 engine.container("kg-extract-objects")
@@ -119,8 +149,8 @@ local url = import "values/url.jsonnet";
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
                 "kg-extract-objects", [ container ]
