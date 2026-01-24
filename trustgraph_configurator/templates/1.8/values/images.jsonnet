@@ -32,4 +32,5 @@ local version = import "version.jsonnet";
     "vllm-service-intel-xpu": "docker.io/intel/vllm:0.8.0-xpu",
     "vllm-service-gaudi": "docker.io/trustgraph/vllm-hpu:027f5645",
     "vllm-service-nvidia": "docker.io/vllm/vllm-openai:latest",
+    "vllm-service-intel-battlemage": "docker.io/intelanalytics/ipex-llm-serving-xpu:0.2.0-b6",
 }

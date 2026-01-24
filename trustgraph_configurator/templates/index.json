@@ -23,12 +23,6 @@
             "description": "Pluggable messaging fabric, switched to Garage for object store",
             "version": "1.8.18",
             "status": "stable"
-        },
-	{
-            "name": "1.9",
-            "description": "Context graph schema support",
-            "version": "1.9.0",
-            "status": "pre-release"
         }
     ],
     "platforms": [

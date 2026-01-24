@@ -19,6 +19,12 @@
 
         with_user:: function(x) self + { user: x },
 
+        with_group:: function(x) self +
+            if std.objectHas(container, "group_add") then
+              { group_add: container.group_add + [x] }
+            else
+              { group_add: [x] },
+
         with_command:: function(x) self + {
             command:
                 if std.isString(x) then
@@ -28,6 +34,8 @@
                 else
                     x
         },
+
+        with_entrypoint:: function(x) self + { entrypoint: x },
 
         with_runtime:: function(x) self + { runtime: x },
 
@@ -49,7 +57,7 @@
 
         with_device:: function(hdev, cdev) self +
             if std.objectHas(container, "devices") then
-              { devices: container.devices + "%s:%s" % [hdev, cdev] }
+              { devices: container.devices + [ "%s:%s" % [hdev, cdev] ] }
             else
               { devices: [ "%s:%s" % [hdev, cdev] ], },
 
@@ -68,7 +76,7 @@
         with_volume_mount::
             function(vol, mnt)
                 self + {
-                    volumes: 
+                    volumes:
                         if std.objectHas(container, "volumes") then
                             container.volumes + [
                                 "%s:%s" % [vol.volid, mnt]
@@ -76,6 +84,20 @@
                         else
                             [
                                 "%s:%s" % [vol.volid, mnt]
+                            ]
+                },
+
+        with_bind_mount::
+            function(src, dest)
+                self + {
+                    volumes:
+                        if std.objectHas(container, "volumes") then
+                            container.volumes + [
+                                "%s:%s" % [src, dest]
+                            ]
+                        else
+                            [
+                                "%s:%s" % [src, dest]
                             ]
                 },
 
