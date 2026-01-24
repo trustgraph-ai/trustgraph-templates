@@ -31,6 +31,13 @@ class Api:
             web.get("/api/versions", self.versions),
         ])
 
+        self.app.add_routes([
+            web.get("/api/dialog-flow", self.get_dialog_flow),
+            web.get("/api/config-prepare", self.get_config_prepare),
+            web.get("/api/docs-manifest", self.get_docs_manifest),
+            web.get("/api/docs/{path:.*}", self.get_docs_fragment),
+        ])
+
     def latest(self, request):
 
         latest = Index.get_latest()
@@ -66,6 +73,39 @@ class Api:
             }
             for v in versions
         ])
+
+    def load_dialog_resource(self, filename):
+        """Load a dialog flow resource file from resources/dialog/"""
+        resources = importlib.resources.files().joinpath("resources").joinpath("dialog")
+        path = resources.joinpath(filename)
+        try:
+            return path.read_text()
+        except:
+            raise web.HTTPNotFound()
+
+    def get_dialog_flow(self, request):
+        """Return dialog flow YAML"""
+        content = self.load_dialog_resource("trustgraph-flow.yaml")
+        return web.Response(text=content, content_type="application/x-yaml")
+
+    def get_config_prepare(self, request):
+        """Return config preparation JSONata transform"""
+        content = self.load_dialog_resource("trustgraph-output.jsonata")
+        return web.Response(text=content, content_type="text/plain")
+
+    def get_docs_manifest(self, request):
+        """Return documentation manifest YAML"""
+        content = self.load_dialog_resource("trustgraph-docs.yaml")
+        return web.Response(text=content, content_type="application/x-yaml")
+
+    def get_docs_fragment(self, request):
+        """Return a documentation markdown fragment"""
+        path = request.match_info["path"]
+        # Validate path to prevent directory traversal
+        if ".." in path:
+            raise web.HTTPNotFound()
+        content = self.load_dialog_resource(f"docs/{path}")
+        return web.Response(text=content, content_type="text/markdown")
 
     def open(self, path):
 
