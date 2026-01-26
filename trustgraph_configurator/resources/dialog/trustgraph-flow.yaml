@@ -18,7 +18,7 @@ steps:
     input:
       type: select
       options:
-        - label: "TrustGraph 1.8.18"
+        - label: "TrustGraph 1.8.19"
           value: "1.8"
           description: "Pluggable messaging fabric, switched to Garage for object store"
           badge: stable
