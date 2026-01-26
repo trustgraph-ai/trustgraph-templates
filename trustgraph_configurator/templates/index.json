@@ -21,8 +21,14 @@
 	{
             "name": "1.8",
             "description": "Pluggable messaging fabric, switched to Garage for object store",
-            "version": "1.8.18",
+            "version": "1.8.19",
             "status": "stable"
+        },
+	{
+            "name": "1.9",
+            "description": "Ontology extraction update, JSONL output from prompts",
+            "version": "1.9.0",
+            "status": "pre-release"
         }
     ],
     "platforms": [
