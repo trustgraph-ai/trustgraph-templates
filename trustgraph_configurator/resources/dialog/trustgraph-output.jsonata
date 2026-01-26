@@ -98,7 +98,8 @@
    * ───────────────────────────────────────────────────────────── */
   $embeddings_map := {
     "fastembed": "fastembed",
-    "huggingface-sentence-transformers": "hf"
+    "huggingface-sentence-transformers": "hf",
+    "ollama": "ollama"
   };
 
   $embeddings_components := (

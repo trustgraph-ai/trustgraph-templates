@@ -316,6 +316,10 @@ steps:
           value: "huggingface-sentence-transformers"
           icon: "huggingface"
           description: "Support for a large number of open/community models. Use for non-standard models. Larger container image and longer start time due to PyTorch dependencies."
+        - label: "Ollama"
+          value: "ollama"
+          icon: "ollama"
+          description: "Use Ollama for embeddings. Requires Ollama to be running with an embedding model loaded."
     transitions:
       - next: review
 
