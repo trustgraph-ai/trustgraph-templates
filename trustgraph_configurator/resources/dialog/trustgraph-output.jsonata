@@ -85,10 +85,15 @@
   /* ─────────────────────────────────────────────────────────────
    * OCR Components (conditional)
    * ───────────────────────────────────────────────────────────── */
+  $ocr_map := {
+    "tesseract": "ocr",
+    "mistral": "mistral-ocr"
+  };
+
   $ocr_components := (
     ocr.enabled and ocr.engine != "pdf-decode"
     ? [
-        $component("ocr-" & ocr.engine)
+        $component($lookup($ocr_map, ocr.engine))
       ]
     : []
   );
