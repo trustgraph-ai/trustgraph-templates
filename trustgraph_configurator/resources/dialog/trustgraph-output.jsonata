@@ -96,10 +96,15 @@
   /* ─────────────────────────────────────────────────────────────
    * Embeddings Components (conditional)
    * ───────────────────────────────────────────────────────────── */
+  $embeddings_map := {
+    "fastembed": "fastembed",
+    "huggingface-sentence-transformers": "hf"
+  };
+
   $embeddings_components := (
     embeddings.enabled
     ? [
-        $component("embeddings-" & embeddings.engine)
+        $component("embeddings-" & $lookup($embeddings_map, embeddings.engine))
       ]
     : [
         /* Default embeddings if not customized */
