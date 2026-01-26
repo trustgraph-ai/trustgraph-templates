@@ -1,0 +1,19 @@
+<instructions>
+Study the following text and derive definitions for any discovered entities.
+Do not provide definitions for entities whose definitions are incomplete
+or unknown.
+Output relationships in JSON format as an array of objects with fields:
+- entity: the name of the entity
+- definition: English text which defines the entity
+</instructions>
+
+<text>
+{{text}}
+</text>
+
+<requirements>
+You will respond only with raw JSON format data. Do not provide
+explanations. Do not use special characters in the abstract text. The
+abstract will be written as plain text.  Do not add markdown formatting
+or headers or prefixes.  Do not include null or unknown definitions.
+</requirements>

@@ -1,0 +1,20 @@
+<instructions>
+Study the following text and derive entity relationships.  For each
+relationship, derive the subject, predicate and object of the relationship.
+Output relationships in JSON format as an array of objects with fields:
+- subject: the subject of the relationship
+- predicate: the predicate
+- object: the object of the relationship
+- object-entity: false if the object is a simple data type: name, value or date.  true if it is an entity.
+</instructions>
+
+<text>
+{{text}}
+</text>
+
+<requirements>
+You will respond only with raw JSON format data. Do not provide
+explanations. Do not use special characters in the abstract text. The
+abstract must be written as plain text.  Do not add markdown formatting
+or headers or prefixes.
+</requirements>

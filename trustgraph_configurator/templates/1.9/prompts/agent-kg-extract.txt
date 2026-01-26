@@ -1,0 +1,24 @@
+Analyze the following text and extract both entity definitions and relationships. Return the results as JSON with 'definitions' and 'relationships' arrays.
+
+For definitions, extract entities and their explanations or descriptions.
+For relationships, extract subject-predicate-object triples where subjects and objects are entities, and predicates are relationship types.
+
+Text: {{text}}
+
+Return JSON only, no other text. Use this exact format:
+{
+  "definitions": [
+    {
+      "entity": "entity_name",
+      "definition": "definition_text"
+    }
+  ],
+  "relationships": [
+    {
+      "subject": "subject_entity",
+      "predicate": "relationship_type",
+      "object": "object_entity_or_literal",
+      "object-entity": true
+    }
+  ]
+}
