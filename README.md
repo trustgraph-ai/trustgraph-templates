@@ -6,6 +6,40 @@ TrustGraph configurator is a Python-based tool that generates deployment configu
 
 The configurator uses Jsonnet templates to generate deployment configurations for various platforms including Docker Compose, Podman, and multiple Kubernetes environments. It packages the generated configurations into ZIP files containing all necessary deployment resources.
 
+## Configuration Process
+
+The TrustGraph configuration system uses a multi-stage pipeline to generate deployment packages:
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Dialog Flow    │     │    JSONata      │     │  Configuration  │     │   Deployment    │
+│  Configuration  │────▶│    Transform    │────▶│     Service     │────▶│    Package      │
+│                 │     │                 │     │                 │     │                 │
+│ (state object)  │     │ (config object) │     │   (templates)   │     │   (ZIP file)    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
+        │
+        │               ┌─────────────────┐     ┌─────────────────┐
+        └──────────────▶│  Documentation  │────▶│  Installation   │
+                        │     Flow        │     │     Guide       │
+                        └─────────────────┘     └─────────────────┘
+```
+
+### 1. Dialog Flow Configuration
+
+The dialog flow file (`trustgraph-flow.yaml`) describes configuration steps in a technology-neutral way. A UI wizard walks users through these steps, collecting choices about platform, model provider, storage backends, and features. The output is a **state object** - a simple key/value map representing all user selections.
+
+### 2. JSONata Transform
+
+The JSONata transform file (`trustgraph-output.jsonata`) converts the state object into a **configuration object**. This object understands how to invoke TrustGraph templates and contains the structured parameters needed by the template system.
+
+### 3. Configuration Service
+
+The configuration service receives the configuration object, invokes the appropriate Jsonnet templates, and runs the package builder. The output is a **deployment package** - a ZIP file containing all deployment resources (docker-compose.yaml or Kubernetes manifests, plus supporting files).
+
+### 4. Documentation Flow
+
+The original state object can also be used with the documentation manifest (`trustgraph-docs.yaml`) to generate a customised **installation guide** based on the user's specific configuration choices.
+
 ## Installation
 
 The configurator is distributed as a Python package. To use it:
@@ -207,6 +241,17 @@ GET /api/latest-stable                   # Get latest stable version info
 GET /api/versions                        # List all available versions
 ```
 
+#### Dialog Flow Resources
+
+These endpoints serve the dialog flow resources described in the Configuration Process section:
+
+```
+GET /api/dialog-flow     # Dialog flow state machine (YAML)
+GET /api/config-prepare  # JSONata transform for config preparation
+GET /api/docs-manifest   # Documentation manifest (YAML)
+GET /api/docs/{path}     # Documentation markdown fragments
+```
+
 Example usage:
 ```bash
 # Generate configuration via API
@@ -214,6 +259,12 @@ curl -X POST http://localhost:8080/api/generate/docker-compose/1.1 \
   -H "Content-Type: application/json" \
   -d @config.json \
   --output deployment.zip
+
+# Fetch dialog flow configuration
+curl http://localhost:8080/api/dialog-flow
+
+# Fetch a documentation fragment
+curl http://localhost:8080/api/docs/platform/docker-compose.md
 ```
 
 ## Output Structure
@@ -243,6 +294,11 @@ To extend or modify the configurator:
 2. Add new platforms by creating appropriate Jsonnet templates
 3. Update `templates/index.json` for new versions
 4. Resources (dashboards, configs) go in `trustgraph_configurator/resources/<version>/`
+5. Dialog flow resources are in `trustgraph_configurator/resources/dialog/`:
+   - `trustgraph-flow.yaml` - Dialog flow state machine
+   - `trustgraph-output.jsonata` - State-to-config transform
+   - `trustgraph-docs.yaml` - Documentation manifest
+   - `docs/` - Markdown documentation fragments
 
 ## Error Handling
 
