@@ -38,35 +38,17 @@ Extract the following from the text above:
 
 ## Output Format
 
-Return ONLY valid JSON (no markdown, no code blocks, no backticks) with this structure:
+Output format: JSONL (one JSON object per line, no array wrapper)
+Each line must include a "type" field to distinguish between entities, relationships, and attributes.
 
-```
-{
-  "entities": [
-    {
-      "entity": "entity name as it appears in text",
-      "type": "EntityType"
-    }
-  ],
-  "relationships": [
-    {
-      "subject": "subject entity name",
-      "subject-type": "SubjectType",
-      "relation": "relationship_name",
-      "object": "object entity name",
-      "object-type": "ObjectType"
-    }
-  ],
-  "attributes": [
-    {
-      "entity": "entity name",
-      "entity-type": "EntityType",
-      "attribute": "attribute_name",
-      "value": "literal value"
-    }
-  ]
-}
-```
+For entities, output:
+{"type": "entity", "entity": "entity name as it appears in text", "entity_type": "EntityType"}
+
+For relationships, output:
+{"type": "relationship", "subject": "subject entity name", "subject_type": "SubjectType", "relation": "relationship_name", "object": "object entity name", "object_type": "ObjectType"}
+
+For attributes, output:
+{"type": "attribute", "entity": "entity name", "entity_type": "EntityType", "attribute": "attribute_name", "value": "literal value"}
 
 ## Important Rules
 
@@ -74,53 +56,27 @@ Return ONLY valid JSON (no markdown, no code blocks, no backticks) with this str
 2. **Types**: Use the EXACT type identifiers from the schema above (e.g., "fo/Recipe", "fo/Food")
 3. **Relationships**: Use the EXACT relationship names from the schema (e.g., "fo/has_ingredient")
 4. **Attributes**: Use the EXACT attribute names from the schema (e.g., "fo/serves")
-5. **Type disambiguation**: If the same entity name appears with different types, list it separately for each type
-6. **All arrays can be empty** if nothing is found
+5. **No array brackets**: Output one JSON object per line, not an array
+6. **No markdown**: Do not wrap output in code blocks
+
+## Requirements
+
+- Each line must be a complete, valid JSON object
+- No commas between lines
+- No [ ] array brackets
+- No markdown formatting, code blocks, or prefixes
+- Do not provide explanations, only output JSONL
 
 ## Example
 
 Input text: "Cornish pasty is a savory pastry filled with beef and potatoes. This recipe serves 4 people."
 
 Expected output:
-{
-  "entities": [
-    {
-      "entity": "Cornish pasty",
-      "type": "fo/Recipe"
-    },
-    {
-      "entity": "beef",
-      "type": "fo/Food"
-    },
-    {
-      "entity": "potatoes",
-      "type": "fo/Food"
-    }
-  ],
-  "relationships": [
-    {
-      "subject": "Cornish pasty",
-      "subject-type": "fo/Recipe",
-      "relation": "fo/has_ingredient",
-      "object": "beef",
-      "object-type": "fo/Food"
-    },
-    {
-      "subject": "Cornish pasty",
-      "subject-type": "fo/Recipe",
-      "relation": "fo/has_ingredient",
-      "object": "potatoes",
-      "object-type": "fo/Food"
-    }
-  ],
-  "attributes": [
-    {
-      "entity": "Cornish pasty",
-      "entity-type": "fo/Recipe",
-      "attribute": "fo/serves",
-      "value": "4 people"
-    }
-  ]
-}
+{"type": "entity", "entity": "Cornish pasty", "entity_type": "fo/Recipe"}
+{"type": "entity", "entity": "beef", "entity_type": "fo/Food"}
+{"type": "entity", "entity": "potatoes", "entity_type": "fo/Food"}
+{"type": "relationship", "subject": "Cornish pasty", "subject_type": "fo/Recipe", "relation": "fo/has_ingredient", "object": "beef", "object_type": "fo/Food"}
+{"type": "relationship", "subject": "Cornish pasty", "subject_type": "fo/Recipe", "relation": "fo/has_ingredient", "object": "potatoes", "object_type": "fo/Food"}
+{"type": "attribute", "entity": "Cornish pasty", "entity_type": "fo/Recipe", "attribute": "fo/serves", "value": "4 people"}
 
 Now extract entities, relationships, and attributes from the text above.
