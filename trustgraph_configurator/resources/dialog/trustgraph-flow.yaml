@@ -236,9 +236,9 @@ steps:
     state_key: max_output_tokens
     input:
       type: number
-      default: 2048
+      default: 4096
       min: 256
-      max: 8192
+      max: 65536
       step: 256
     transitions:
       - next: ocr-enabled
