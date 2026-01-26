@@ -14,84 +14,75 @@
 
         "extract-definitions":: {
             "prompt": importstr "extract-definitions.txt",
-            "response-type": "json",
-            "schema": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "entity": {
-                            "type": "string"
-                        },
-                        "definition": {
-                            "type": "string"
-                        }
+            "response-type": "jsonl",
+            "object-schema": {
+                "type": "object",
+                "properties": {
+                    "entity": {
+                        "type": "string"
                     },
-                    "required": [
-                        "entity",
-                        "definition"
-                    ]
-                }
+                    "definition": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "entity",
+                    "definition"
+                ]
             }
         },
 
         "extract-relationships":: {
             "prompt": importstr "extract-relationships.txt",
-            "response-type": "json",
-            "schema": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "subject": {
-                            "type": "string"
-                        },
-                        "predicate": {
-                            "type": "string"
-                        },
-                        "object": {
-                            "type": "string"
-                        },
-                        "object-entity": {
-                            "type": "boolean"
-                        },
+            "response-type": "jsonl",
+            "object-schema": {
+                "type": "object",
+                "properties": {
+                    "subject": {
+                        "type": "string"
                     },
-                    "required": [
-                        "subject",
-                        "predicate",
-                        "object",
-                        "object-entity"
-                    ]
-                }
+                    "predicate": {
+                        "type": "string"
+                    },
+                    "object": {
+                        "type": "string"
+                    },
+                    "object-entity": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "subject",
+                    "predicate",
+                    "object",
+                    "object-entity"
+                ]
             }
         },
 
         "extract-topics":: {
             "prompt": importstr "extract-topics.txt",
-            "response-type": "json",
-            "schema": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "topic": {
-                            "type": "string"
-                        },
-                        "definition": {
-                            "type": "string"
-                        }
+            "response-type": "jsonl",
+            "object-schema": {
+                "type": "object",
+                "properties": {
+                    "topic": {
+                        "type": "string"
                     },
-                    "required": [
-                        "topic",
-                        "definition"
-                    ]
-                }
+                    "definition": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "topic",
+                    "definition"
+                ]
             }
         },
 
         "extract-rows":: {
             "prompt": importstr "extract-rows.txt",
-            "response-type": "json",
+            "response-type": "jsonl",
         },
 
         "kg-prompt":: {
@@ -111,57 +102,29 @@
 
         "agent-kg-extract":: {
             "prompt": importstr "agent-kg-extract.txt",
-            "response-type": "json",
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "definitions": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "entity": {
-                                    "type": "string"
-                                },
-                                "definition": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "entity",
-                                "definition"
-                            ]
-                        }
+            "response-type": "jsonl",
+            "object-schema": {
+                "oneOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": { "const": "definition" },
+                            "entity": { "type": "string" },
+                            "definition": { "type": "string" }
+                        },
+                        "required": ["type", "entity", "definition"]
                     },
-                    "relationships": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "subject": {
-                                    "type": "string"
-                                },
-                                "predicate": {
-                                    "type": "string"
-                                },
-                                "object": {
-                                    "type": "string"
-                                },
-                                "object-entity": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
-                                "subject",
-                                "predicate",
-                                "object"
-                            ]
-                        }
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": { "const": "relationship" },
+                            "subject": { "type": "string" },
+                            "predicate": { "type": "string" },
+                            "object": { "type": "string" },
+                            "object-entity": { "type": "boolean" }
+                        },
+                        "required": ["type", "subject", "predicate", "object"]
                     }
-                },
-                "required": [
-                    "definitions",
-                    "relationships"
                 ]
             }
         },
@@ -225,7 +188,43 @@
 
         "extract-with-ontologies":: {
             "prompt": importstr "ontology-prompt.txt",
-            "response-type": "json",
+            "response-type": "jsonl",
+            "object-schema": {
+                "oneOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": { "const": "entity" },
+                            "entity": { "type": "string" },
+                            "entity_type": { "type": "string" }
+                        },
+                        "required": ["type", "entity", "entity_type"]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": { "const": "relationship" },
+                            "subject": { "type": "string" },
+                            "subject_type": { "type": "string" },
+                            "relation": { "type": "string" },
+                            "object": { "type": "string" },
+                            "object_type": { "type": "string" }
+                        },
+                        "required": ["type", "subject", "subject_type", "relation", "object", "object_type"]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": { "const": "attribute" },
+                            "entity": { "type": "string" },
+                            "entity_type": { "type": "string" },
+                            "attribute": { "type": "string" },
+                            "value": { "type": "string" }
+                        },
+                        "required": ["type", "entity", "entity_type", "attribute", "value"]
+                    }
+                ]
+            }
         },
 
     }
