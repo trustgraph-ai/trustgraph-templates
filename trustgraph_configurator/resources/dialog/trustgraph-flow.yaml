@@ -69,6 +69,14 @@ steps:
           value: "aks"
           icon: "azure"
           description: "Azure Kubernetes Service on Microsoft infrastructure. Suitable for production deployment."
+        - label: "Scaleway Kubernetes"
+          value: "scw"
+          icon: "scaleway"
+          description: "Managed Kubernetes on Scaleway European cloud infrastructure. Suitable for production deployment."
+        - label: "OVHCloud Kubernetes"
+          value: "ovh"
+          icon: "ovhcloud"
+          description: "Managed Kubernetes on OVHCloud European infrastructure. Suitable for production deployment."
     transitions:
       - next: graph-store
 
@@ -91,6 +99,14 @@ steps:
           value: "neo4j"
           icon: "neo4j"
           description: "Native graph database with Cypher query language"
+        - label: "Memgraph"
+          value: "memgraph"
+          icon: "memgraph"
+          description: "In-memory graph database with Cypher query language. High performance for real-time analytics."
+        - label: "FalkorDB"
+          value: "falkordb"
+          icon: "falkordb"
+          description: "High-performance graph database optimized for low-latency queries. Based on GraphBLAS."
     transitions:
       - next: vector-db
 
@@ -199,6 +215,15 @@ steps:
           value: "vertex-ai"
           icon: "google-cloud"
           description: "Google Cloud platform for training and deploying ML models. Requires GCP account."
+        # Self-hosted inference servers
+        - label: "vLLM"
+          value: "vllm"
+          icon: "vllm"
+          description: "High-throughput LLM serving engine. Self-hosted with OpenAI-compatible API."
+        - label: "Text Generation Inference (TGI)"
+          value: "tgi"
+          icon: "huggingface"
+          description: "Hugging Face's production-ready inference server. Self-hosted with high performance."
     transitions:
       - next: max-output-tokens
 
@@ -291,6 +316,10 @@ steps:
           value: "huggingface-sentence-transformers"
           icon: "huggingface"
           description: "Support for a large number of open/community models. Use for non-standard models. Larger container image and longer start time due to PyTorch dependencies."
+        - label: "Ollama"
+          value: "ollama"
+          icon: "ollama"
+          description: "Use Ollama for embeddings. Requires Ollama to be running with an embedding model loaded."
     transitions:
       - next: review
 

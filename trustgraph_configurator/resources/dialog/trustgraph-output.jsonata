@@ -68,7 +68,9 @@
       "azure-openai": "azure-openai",
       "bedrock": "bedrock",
       "google-ai-studio": "googleaistudio",
-      "vertex-ai": "vertexai"
+      "vertex-ai": "vertexai",
+      "vllm": "vllm",
+      "tgi": "tgi"
     };
 
     $component_name := $lookup($deployment_map, model_deployment);
@@ -94,10 +96,16 @@
   /* ─────────────────────────────────────────────────────────────
    * Embeddings Components (conditional)
    * ───────────────────────────────────────────────────────────── */
+  $embeddings_map := {
+    "fastembed": "fastembed",
+    "huggingface-sentence-transformers": "hf",
+    "ollama": "ollama"
+  };
+
   $embeddings_components := (
     embeddings.enabled
     ? [
-        $component("embeddings-" & embeddings.engine)
+        $component("embeddings-" & $lookup($embeddings_map, embeddings.engine))
       ]
     : [
         /* Default embeddings if not customized */
@@ -138,7 +146,9 @@
     "minikube": "minikube-k8s",
     "gke": "gcp-k8s",
     "eks": "eks-k8s",
-    "aks": "aks-k8s"
+    "aks": "aks-k8s",
+    "scw": "scw-k8s",
+    "ovh": "ovh-k8s"
   };
   $api_platform := $lookup($platform_map, platform);
 

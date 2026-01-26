@@ -81,6 +81,20 @@ documentation:
       file: platform/aks.md
       when: "platform = 'aks'"
 
+    - id: platform-setup
+      goal: "Configure Scaleway Kubernetes"
+      category: platform
+      priority: 1
+      file: platform/scw.md
+      when: "platform = 'scw'"
+
+    - id: platform-setup
+      goal: "Configure OVHcloud Kubernetes"
+      category: platform
+      priority: 1
+      file: platform/ovh.md
+      when: "platform = 'ovh'"
+
     # ─────────────────────────────────────────────────────────────
     # Model Configuration - Compose variants
     # ─────────────────────────────────────────────────────────────
@@ -175,6 +189,13 @@ documentation:
       file: model/vllm-compose.md
       when: "model_deployment = 'vllm' and platform in ['docker-compose', 'podman-compose']"
 
+    - id: model-setup
+      goal: "Set up Text Generation Inference"
+      category: model
+      priority: 1
+      file: model/tgi-compose.md
+      when: "model_deployment = 'tgi' and platform in ['docker-compose', 'podman-compose']"
+
     # ─────────────────────────────────────────────────────────────
     # Model Configuration - Kubernetes variants
     # ─────────────────────────────────────────────────────────────
@@ -183,7 +204,7 @@ documentation:
       category: model
       priority: 1
       file: model/ollama-k8s.md
-      when: "model_deployment = 'ollama' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'ollama' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -192,7 +213,7 @@ documentation:
       category: model
       priority: 1
       file: model/openai-k8s.md
-      when: "model_deployment = 'openai' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'openai' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -201,7 +222,7 @@ documentation:
       category: model
       priority: 1
       file: model/claude-k8s.md
-      when: "model_deployment = 'claude' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'claude' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -210,7 +231,7 @@ documentation:
       category: model
       priority: 1
       file: model/mistral-k8s.md
-      when: "model_deployment = 'mistral' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'mistral' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -219,7 +240,7 @@ documentation:
       category: model
       priority: 1
       file: model/cohere-k8s.md
-      when: "model_deployment = 'cohere' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'cohere' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -228,7 +249,7 @@ documentation:
       category: model
       priority: 1
       file: model/azure-k8s.md
-      when: "model_deployment = 'azure' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'azure' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -237,7 +258,7 @@ documentation:
       category: model
       priority: 1
       file: model/azure-openai-k8s.md
-      when: "model_deployment = 'azure-openai' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'azure-openai' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -246,7 +267,7 @@ documentation:
       category: model
       priority: 1
       file: model/bedrock-k8s.md
-      when: "model_deployment = 'bedrock' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'bedrock' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -255,7 +276,7 @@ documentation:
       category: model
       priority: 1
       file: model/google-ai-studio-k8s.md
-      when: "model_deployment = 'google-ai-studio' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'google-ai-studio' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -264,7 +285,7 @@ documentation:
       category: model
       priority: 1
       file: model/vertex-ai-k8s.md
-      when: "model_deployment = 'vertex-ai' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'vertex-ai' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -273,7 +294,7 @@ documentation:
       category: model
       priority: 1
       file: model/llamafile-k8s.md
-      when: "model_deployment = 'llamafile' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'llamafile' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -282,7 +303,7 @@ documentation:
       category: model
       priority: 1
       file: model/lm-studio-k8s.md
-      when: "model_deployment = 'lm-studio' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'lm-studio' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -291,7 +312,16 @@ documentation:
       category: model
       priority: 1
       file: model/vllm-k8s.md
-      when: "model_deployment = 'vllm' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "model_deployment = 'vllm' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
+      vars:
+        namespace: "k8s.namespace"
+
+    - id: model-setup
+      goal: "Set up Text Generation Inference"
+      category: model
+      priority: 1
+      file: model/tgi-k8s.md
+      when: "model_deployment = 'tgi' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -310,7 +340,7 @@ documentation:
       category: storage
       priority: 1
       file: storage/pinecone-k8s.md
-      when: "vector_db = 'pinecone' and platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "vector_db = 'pinecone' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -329,7 +359,7 @@ documentation:
       category: gateway
       priority: 1
       file: gateway/gateway-k8s.md
-      when: "platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
 
@@ -355,7 +385,7 @@ documentation:
       category: deployment
       priority: 1
       file: deploy/k8s-deploy.md
-      when: "platform in ['gke', 'eks', 'aks', 'minikube']"
+      when: "platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
 
     # ─────────────────────────────────────────────────────────────
     # Verification & Testing
