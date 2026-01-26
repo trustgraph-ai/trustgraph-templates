@@ -10,8 +10,11 @@ while other fields use defaults.
 import yaml
 import json
 import argparse
+import zipfile
+import io
 from pathlib import Path
 import jsonata
+import requests
 
 
 RESOURCES_DIR = Path(__file__).parent / "trustgraph_configurator/resources/dialog"
@@ -33,6 +36,44 @@ def run_transform(state, transform_expr):
     """Run the JSONata transform on the state object."""
     expr = jsonata.Jsonata(transform_expr)
     return expr.evaluate(state)
+
+
+def call_config_service(config):
+    """
+    Call the configuration service to generate a deployment package.
+    Returns (success, message, zip_contents) tuple.
+
+    The API expects just the templates array, not the full config object.
+    """
+    url = config["api_url"]
+    templates = config["templates"]
+
+    try:
+        response = requests.post(
+            url,
+            json=templates,
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+
+        if response.status_code != 200:
+            return False, f"HTTP {response.status_code}: {response.text[:200]}", None
+
+        # Verify it's a valid ZIP
+        try:
+            zip_data = io.BytesIO(response.content)
+            with zipfile.ZipFile(zip_data, 'r') as zf:
+                file_list = zf.namelist()
+                return True, f"ZIP with {len(file_list)} files", file_list
+        except zipfile.BadZipFile:
+            return False, "Response is not a valid ZIP file", None
+
+    except requests.exceptions.ConnectionError:
+        return False, "Connection refused - is the service running?", None
+    except requests.exceptions.Timeout:
+        return False, "Request timed out", None
+    except Exception as e:
+        return False, f"Error: {e}", None
 
 
 def get_all_options(step):
@@ -199,16 +240,16 @@ def walk_flow(flow_data, overrides=None, verbose=True):
     return state, visited_steps
 
 
-def collect_all_fields(flow_data):
+def collect_fields_for_path(flow_data, overrides=None):
     """
-    Collect all fields and their possible values from the flow.
+    Collect all fields and their possible values for a given path.
     Returns a list of (step_name, state_key, options, default_value) tuples.
     """
     fields = []
     steps = flow_data.get("steps", {})
 
-    # Walk with defaults to find the baseline path
-    _, visited = walk_flow(flow_data, verbose=False)
+    # Walk with given overrides to find the path
+    _, visited = walk_flow(flow_data, overrides=overrides, verbose=False)
 
     for step_name in visited:
         step = steps.get(step_name, {})
@@ -222,83 +263,134 @@ def collect_all_fields(flow_data):
     return fields
 
 
-def run_test_matrix(flow_data, transform_expr):
+def collect_all_fields(flow_data):
+    """
+    Collect all fields from the baseline (default) path.
+    """
+    return collect_fields_for_path(flow_data, overrides=None)
+
+
+def run_single_test(flow_data, transform_expr, overrides, description, test_num, results, call_api=False):
+    """Run a single test case and record the result."""
+    print("-" * 70)
+    print(f"Test {test_num}: {description}")
+    print("-" * 70)
+
+    state, _ = walk_flow(flow_data, overrides=overrides, verbose=False)
+
+    try:
+        config = run_transform(state, transform_expr)
+        result = {
+            "test": test_num,
+            "description": description,
+            "overrides": overrides,
+            "state": state,
+            "config": config
+        }
+
+        print(f"State: {json.dumps(state, indent=2)}")
+        print(f"Templates: {[t['name'] for t in config['templates']]}")
+
+        # Optionally call the configuration service
+        if call_api:
+            success, message, files = call_config_service(config)
+            result["api_success"] = success
+            result["api_message"] = message
+            if files:
+                result["api_files"] = files
+
+            if success:
+                print(f"API: OK - {message}")
+            else:
+                print(f"API: FAILED - {message}")
+                result["error"] = f"API: {message}"
+
+        results.append(result)
+
+    except Exception as e:
+        results.append({
+            "test": test_num,
+            "description": description,
+            "overrides": overrides,
+            "state": state,
+            "error": str(e)
+        })
+        print(f"State: {json.dumps(state, indent=2)}")
+        print(f"ERROR: {e}")
+    print()
+
+    return test_num + 1
+
+
+def run_test_matrix(flow_data, transform_expr, call_api=False):
     """
     Run the test matrix - for each field, try all values while others use defaults.
+    When a toggle enables conditional fields, also test all options of those fields.
     """
-    fields = collect_all_fields(flow_data)
+    baseline_fields = collect_all_fields(flow_data)
+    baseline_keys = {f[1] for f in baseline_fields}
 
     print("=" * 70)
-    print("TEST MATRIX")
+    print("TEST MATRIX" + (" (with API validation)" if call_api else ""))
     print("=" * 70)
     print()
-    print(f"Found {len(fields)} fields with multiple options:")
-    for step_name, state_key, options, default in fields:
+    print(f"Found {len(baseline_fields)} fields with multiple options on baseline path:")
+    for step_name, state_key, options, default in baseline_fields:
         print(f"  - {state_key}: {len(options)} options (default: {default})")
     print()
 
     results = []
-    test_num = 0
+    test_num = 1
 
     # First, run the baseline (all defaults)
-    test_num += 1
-    print("-" * 70)
-    print(f"Test {test_num}: BASELINE (all defaults)")
-    print("-" * 70)
-    state, _ = walk_flow(flow_data, verbose=False)
-    config = run_transform(state, transform_expr)
-    results.append({
-        "test": test_num,
-        "description": "BASELINE (all defaults)",
-        "overrides": {},
-        "state": state,
-        "config": config
-    })
-    print(f"State: {json.dumps(state, indent=2)}")
-    print(f"Templates: {[t['name'] for t in config['templates']]}")
-    print()
+    test_num = run_single_test(
+        flow_data, transform_expr,
+        overrides={},
+        description="BASELINE (all defaults)",
+        test_num=test_num,
+        results=results,
+        call_api=call_api
+    )
 
     # For each field, try each non-default value
-    for step_name, state_key, options, default in fields:
+    for step_name, state_key, options, default in baseline_fields:
         for option in options:
             if option == default:
                 continue  # Skip default, already tested in baseline
 
-            test_num += 1
-            print("-" * 70)
-            print(f"Test {test_num}: {state_key} = {option}")
-            print("-" * 70)
-
-            # Build overrides - just this one field
             overrides = {state_key: option}
+            test_num = run_single_test(
+                flow_data, transform_expr,
+                overrides=overrides,
+                description=f"{state_key} = {option}",
+                test_num=test_num,
+                results=results,
+                call_api=call_api
+            )
 
-            # For toggles that enable conditional steps, we need defaults for those too
-            # The walk_flow will handle this automatically
+            # Check if this override unlocks new fields (conditional paths)
+            unlocked_fields = collect_fields_for_path(flow_data, overrides=overrides)
+            unlocked_keys = {f[1] for f in unlocked_fields}
+            new_keys = unlocked_keys - baseline_keys
 
-            state, _ = walk_flow(flow_data, overrides=overrides, verbose=False)
+            if new_keys:
+                # Test all non-default options of the newly unlocked fields
+                for uf_step, uf_key, uf_options, uf_default in unlocked_fields:
+                    if uf_key not in new_keys:
+                        continue
+                    for uf_option in uf_options:
+                        if uf_option == uf_default:
+                            continue  # Default already tested above
 
-            try:
-                config = run_transform(state, transform_expr)
-                results.append({
-                    "test": test_num,
-                    "description": f"{state_key} = {option}",
-                    "overrides": overrides,
-                    "state": state,
-                    "config": config
-                })
-                print(f"State: {json.dumps(state, indent=2)}")
-                print(f"Templates: {[t['name'] for t in config['templates']]}")
-            except Exception as e:
-                results.append({
-                    "test": test_num,
-                    "description": f"{state_key} = {option}",
-                    "overrides": overrides,
-                    "state": state,
-                    "error": str(e)
-                })
-                print(f"State: {json.dumps(state, indent=2)}")
-                print(f"ERROR: {e}")
-            print()
+                        combined_overrides = {state_key: option, uf_key: uf_option}
+                        test_num = run_single_test(
+                            flow_data, transform_expr,
+                            overrides=combined_overrides,
+                            description=f"{state_key} = {option}, {uf_key} = {uf_option}",
+                            test_num=test_num,
+                            results=results,
+                            call_api=call_api
+                        )
 
     return results
 
@@ -313,6 +405,11 @@ def main():
         help="Run test matrix (each field with all options)"
     )
     parser.add_argument(
+        "--api", "-a",
+        action="store_true",
+        help="Call the configuration service API to validate each config"
+    )
+    parser.add_argument(
         "--summary", "-s",
         action="store_true",
         help="Show summary only (with --matrix)"
@@ -323,7 +420,7 @@ def main():
     transform_expr = load_jsonata_transform()
 
     if args.matrix:
-        results = run_test_matrix(flow_data, transform_expr)
+        results = run_test_matrix(flow_data, transform_expr, call_api=args.api)
 
         # Summary
         print("=" * 70)
@@ -335,6 +432,12 @@ def main():
         print(f"Total tests: {len(results)}")
         print(f"Passed: {len(passed)}")
         print(f"Failed: {len(failed)}")
+
+        if args.api:
+            api_ok = [r for r in results if r.get("api_success")]
+            api_fail = [r for r in results if "api_success" in r and not r["api_success"]]
+            print(f"API OK: {len(api_ok)}")
+            print(f"API Failed: {len(api_fail)}")
 
         if failed:
             print()
@@ -370,6 +473,20 @@ def main():
         print("=" * 60)
         print()
         print(json.dumps(config, indent=2))
+
+        # Optionally call the API
+        if args.api:
+            print()
+            print("=" * 60)
+            print("Calling Configuration Service...")
+            print("=" * 60)
+            print()
+            success, message, files = call_config_service(config)
+            if success:
+                print(f"OK: {message}")
+                print(f"Files: {files}")
+            else:
+                print(f"FAILED: {message}")
 
 
 if __name__ == "__main__":

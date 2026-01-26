@@ -13,13 +13,13 @@ The TrustGraph configuration system uses a multi-stage pipeline to generate depl
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │  Dialog Flow    │     │    JSONata      │     │  Configuration  │     │   Deployment    │
-│  Configuration  │───▶│    Transform    │───▶│     Service     │───▶│    Package      │
+│  Configuration  │────▶│    Transform    │────▶│     Service     │────▶│    Package      │
 │                 │     │                 │     │                 │     │                 │
 │ (state object)  │     │ (config object) │     │   (templates)   │     │   (ZIP file)    │
 └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
         │
         │               ┌─────────────────┐     ┌─────────────────┐
-        └─────────────▶│  Documentation  │───▶│  Installation   │
+        └──────────────▶│  Documentation  │────▶│  Installation   │
                         │     Flow        │     │     Guide       │
                         └─────────────────┘     └─────────────────┘
 ```

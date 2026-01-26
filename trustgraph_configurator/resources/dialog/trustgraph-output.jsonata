@@ -59,7 +59,7 @@
     $deployment_map := {
       "ollama": "ollama",
       "llamafile": "llamafile",
-      "lm-studio": "lm-studio",
+      "lm-studio": "lmstudio",
       "openai": "openai",
       "claude": "claude",
       "mistral": "mistral",
@@ -130,17 +130,30 @@
   );
 
   /* ─────────────────────────────────────────────────────────────
+   * Platform Mapping (dialog values to API values)
+   * ───────────────────────────────────────────────────────────── */
+  $platform_map := {
+    "docker-compose": "docker-compose",
+    "podman-compose": "podman-compose",
+    "minikube": "minikube-k8s",
+    "gke": "gcp-k8s",
+    "eks": "eks-k8s",
+    "aks": "aks-k8s"
+  };
+  $api_platform := $lookup($platform_map, platform);
+
+  /* ─────────────────────────────────────────────────────────────
    * API Configuration
    * ───────────────────────────────────────────────────────────── */
   $api_base := "https://config-ui.demo.trustgraph.ai/api/generate";
-  $api_url := $api_base & "/" & platform & "/" & version;
+  $api_url := $api_base & "/" & $api_platform & "/" & version;
 
   /* ─────────────────────────────────────────────────────────────
    * Final Output
    * ───────────────────────────────────────────────────────────── */
   {
     "version": version,
-    "platform": platform,
+    "platform": $api_platform,
     "api_url": $api_url,
     "templates": $templates
   }
