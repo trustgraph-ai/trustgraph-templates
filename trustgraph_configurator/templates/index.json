@@ -29,6 +29,12 @@
             "description": "Ontology extraction update, JSONL output from prompts",
             "version": "1.9.0",
             "status": "pre-release"
+        },
+        {
+            "name": "2.0",
+            "description": "Graph support for reification, datasets and temporal information",
+            "version": "2.0.0",
+            "status": "pre-release"
         }
     ],
     "platforms": [

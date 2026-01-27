@@ -18,21 +18,27 @@ steps:
     input:
       type: select
       options:
+        - label: "TrustGraph 2.0"
+          value: "2.0"
+          description: "Graph support for reification, datasets and temporal information"
+          badge: pre-release
+          recommended: false
+
         - label: "TrustGraph 1.9"
           value: "1.9"
           description: "Improvements to ontology and knowledge extraction prompts"
           badge: pre-release
           recommended: false
-        - label: "TrustGraph 1.8.19"
+        - label: "TrustGraph 1.8"
           value: "1.8"
           description: "Pluggable messaging fabric, switched to Garage for object store"
           badge: stable
           recommended: true
-        - label: "TrustGraph 1.7.9"
+        - label: "TrustGraph 1.7"
           value: "1.7"
           description: "Additional agentic features, ontology extraction updates, Loki logging, additional multi-tenant support"
           badge: beta
-        - label: "TrustGraph 1.6.5"
+        - label: "TrustGraph 1.6"
           value: "1.6"
           description: "Streaming LLM responses, module API additions"
           badge: stable
