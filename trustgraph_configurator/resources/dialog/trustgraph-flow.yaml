@@ -304,10 +304,10 @@ steps:
     transitions:
       # Version gate: embeddings config not available before 1.6.0
       - when: "version < '1.6.0'"
-        next: review
+        next: self-hosting
       - when: "embeddings.enabled = true"
         next: embeddings-engine
-      - next: review
+      - next: self-hosting
 
   # ─────────────────────────────────────────────────────────────
   # Embeddings Engine (conditional)
@@ -331,6 +331,55 @@ steps:
           value: "ollama"
           icon: "ollama"
           description: "Use Ollama for embeddings. Requires Ollama to be running with an embedding model loaded."
+    transitions:
+      - next: self-hosting
+
+  # ─────────────────────────────────────────────────────────────
+  # Self-Hosting Toggle
+  # ─────────────────────────────────────────────────────────────
+  self-hosting:
+    title: "Self-hosting?"
+    description: "Are you hosting the deployment yourself?"
+    state_key: self_hosting
+    input:
+      type: toggle
+      default: false
+    transitions:
+      - when: "self_hosting = true"
+        next: host-model
+      - next: review
+
+  # ─────────────────────────────────────────────────────────────
+  # Host Your Own Model (conditional)
+  # ─────────────────────────────────────────────────────────────
+  host-model:
+    title: "Which model hosting configuration?"
+    description: "Choose your hardware and inference engine for self-hosted models"
+    state_key: host_model
+    input:
+      type: select
+      options:
+        - label: "CPU (TGI)"
+          value: "cpu-tgi"
+          description: "CPU-based inference using Text Generation Inference"
+        - label: "NVIDIA GPU (vLLM)"
+          value: "nvidia-gpu-vllm"
+          description: "NVIDIA GPU inference using vLLM"
+        - label: "Intel Gaudi (TGI)"
+          value: "intel-gaudi-tgi"
+          description: "Intel Gaudi accelerator with Text Generation Inference"
+        - label: "Intel Gaudi (vLLM)"
+          value: "intel-gaudi-vllm"
+          description: "Intel Gaudi accelerator with vLLM"
+        - label: "Intel XPU (TGI)"
+          value: "intel-xpu-tgi"
+          description: "Intel XPU with Text Generation Inference"
+        - label: "Intel XPU (vLLM)"
+          value: "intel-xpu-vllm"
+          description: "Intel XPU with vLLM"
+        - label: "Intel Battlemage (vLLM)"
+          value: "intel-battlemage-vllm"
+          description: "Intel Battlemage GPU with vLLM"
     transitions:
       - next: review
 
