@@ -17,6 +17,7 @@
    "mistral": import "llm/mistral.jsonnet",
    "ollama": import "llm/ollama.jsonnet",
    "openai": import "llm/openai.jsonnet",
+   "openvino": import "llm/openvino.jsonnet",
    "vertexai": import "llm/vertexai.jsonnet",
    "tgi": import "llm/tgi.jsonnet",
    "vllm": import "llm/vllm.jsonnet",
@@ -72,6 +73,9 @@
 
    "hosting-intel-gpu-llamacpp":
        import "model-hosting/intel-gpu-llamacpp.jsonnet",
+
+   "hosting-intel-gpu-openvino":
+       import "model-hosting/intel-gpu-openvino.jsonnet",
 
    "hosting-cpu-tgi":
        import "model-hosting/cpu-tgi.jsonnet",
