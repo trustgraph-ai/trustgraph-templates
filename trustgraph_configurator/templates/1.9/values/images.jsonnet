@@ -33,4 +33,6 @@ local version = import "version.jsonnet";
     "vllm-service-gaudi": "docker.io/trustgraph/vllm-hpu:027f5645",
     "vllm-service-nvidia": "docker.io/vllm/vllm-openai:latest",
     "vllm-service-intel-battlemage": "docker.io/intelanalytics/ipex-llm-serving-xpu:0.2.0-b6",
-    "llamacpp-service-intel": "ghcr.io/ggml-org/llama.cpp:server-intel-b7869",}
+    "llamacpp-service-intel": "ghcr.io/ggml-org/llama.cpp:server-intel-b7869",
+    "openvino-service-gpu": "docker.io/openvino/model_server:2025.4.1-gpu",
+}
