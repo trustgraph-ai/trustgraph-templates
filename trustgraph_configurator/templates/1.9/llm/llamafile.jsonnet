@@ -15,8 +15,10 @@ local models = import "parameters/llamafile.jsonnet";
     "llm-models" +:: $["llamafile-models"],
 
     "text-completion" +: {
-    
+
         create:: function(engine)
+
+            local concurrency = self.concurrency;
 
             local envSecrets = engine.envSecrets("llamafile-credentials")
                 .with_env_var("LLAMAFILE_URL", "llamafile-url");
@@ -28,6 +30,8 @@ local models = import "parameters/llamafile.jsonnet";
                         "text-completion-llamafile",
                         "-p",
                         url.pulsar,
+                        "--concurrency",
+                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])
@@ -55,6 +59,8 @@ local models = import "parameters/llamafile.jsonnet";
 
         create:: function(engine)
 
+            local concurrency = self.concurrency;
+
             local envSecrets = engine.envSecrets("llamafile-credentials")
                 .with_env_var("LLAMAFILE_URL", "llamafile-url");
 
@@ -67,6 +73,8 @@ local models = import "parameters/llamafile.jsonnet";
                         url.pulsar,
                         "--id",
                         "text-completion-rag",
+                        "--concurrency",
+                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])
