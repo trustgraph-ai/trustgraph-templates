@@ -8,7 +8,7 @@ local images = import "values/images.jsonnet";
         },
 
     "llamacpp-service-model"::
-        "bartowski/Mistral-Nemo-Instruct-2407-GGUF:Q8_0",
+        "bartowski/Mistral-Nemo-Instruct-2407-GGUF:Q4_K_M",
 
     "llamacpp-service-cpus":: "32.0",
     "llamacpp-service-memory":: "48G",
@@ -33,7 +33,11 @@ local images = import "values/images.jsonnet";
                       "--host",
                       "0.0.0.0",
                       "--port",
-                      "7000"
+                      "7000",
+                      "-fa",
+                      "off",
+                      "-np",
+                      "4",
                     ])
                     .with_environment({
                     } + (
