@@ -70,6 +70,9 @@
    "hosting-intel-battlemage-vllm":
        import "model-hosting/intel-battlemage-vllm.jsonnet",
 
+   "hosting-intel-gpu-llamacpp":
+       import "model-hosting/intel-gpu-llamacpp.jsonnet",
+
    "hosting-cpu-tgi":
        import "model-hosting/cpu-tgi.jsonnet",
 
