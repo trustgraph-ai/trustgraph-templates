@@ -119,6 +119,17 @@
   );
 
   /* ─────────────────────────────────────────────────────────────
+   * Self-Hosting Model Components (conditional)
+   * ───────────────────────────────────────────────────────────── */
+  $hosting_components := (
+    self_hosting
+    ? [
+        $component("hosting-" & host_model)
+      ]
+    : []
+  );
+
+  /* ─────────────────────────────────────────────────────────────
    * Base Configuration
    * ───────────────────────────────────────────────────────────── */
   $base_components := [
@@ -132,14 +143,17 @@
     $append(
       $append(
         $append(
-          $base_components,
-          $infrastructure
+          $append(
+            $base_components,
+            $infrastructure
+          ),
+          $model_components
         ),
-        $model_components
+        $ocr_components
       ),
-      $ocr_components
+      $embeddings_components
     ),
-    $embeddings_components
+    $hosting_components
   );
 
   /* ─────────────────────────────────────────────────────────────
