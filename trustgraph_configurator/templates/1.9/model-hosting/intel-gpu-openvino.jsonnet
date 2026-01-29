@@ -7,10 +7,11 @@ local images = import "values/images.jsonnet";
             ["openvino-service-" + key]:: value,
         },
 
-    "openvino-service-model":: "OpenVINO/Phi-3-mini-128k-instruct-int4-ov",
+    "openvino-service-model":: "llmware/mistral-nemo-instruct-2407-ov",
     "openvino-service-cpus":: "32.0",
     "openvino-service-memory":: "48G",
     "openvino-service-storage":: "48G",
+    "openvino-service-cache-size":: 2,
     "openvino-service-hf-token":: null,
 
     "openvino-service" +: {
@@ -24,14 +25,18 @@ local images = import "values/images.jsonnet";
                 engine.container("openvino-service")
                     .with_image(images["openvino-service-gpu"])
                     .with_command([
-                        "--model_name",
-                        "model",
-                        "--model_path",
+                        "--source_model",
                         $["openvino-service-model"],
-                        "--port",
+                        "--model_repository_path",
+                        "/models",
+                        "--task",
+                        "text_generation",
+                        "--rest_port",
                         "7000",
                         "--target_device",
                         "GPU",
+                        "--cache_size",
+                        std.toString($["openvino-service-cache-size"]),
                     ])
                     .with_environment({
                     } + (
@@ -42,8 +47,6 @@ local images = import "values/images.jsonnet";
                     .with_privileged(true)
                     .with_device("/dev/dri", "/dev/dri")
                     .with_ipc("host")
-                    .with_group("video")
-                    .with_group("render")
                     .with_capability("SYS_NICE")
                     .with_limits(
                         $["openvino-service-cpus"], $["openvino-service-memory"]
@@ -53,7 +56,7 @@ local images = import "values/images.jsonnet";
                     )
                     .with_port(7000, 7000, "openvino")
                     .with_bind_mount("/dev/dri/by-path", "/dev/dri/by-path")
-                    .with_volume_mount(vol, "/root/.cache/huggingface");
+                    .with_volume_mount(vol, "/models");
 
             local containerSet = engine.containers(
                 "openvino-service", [ container ]
