@@ -25,7 +25,6 @@ local images = import "values/images.jsonnet";
             local container =
                 engine.container("llamacpp-service")
                     .with_image(images["llamacpp-service-intel"])
-                    .with_entrypoint("")  // Clear default entrypoint
                     .with_command([
                       "--hf-repo",
                       $["llamacpp-service-model"],
@@ -37,7 +36,6 @@ local images = import "values/images.jsonnet";
                       "7000"
                     ])
                     .with_environment({
-                        HF_HOME: "/data",
                     } + (
                         if $["llamacpp-service-hf-token"] != null
                             then { HF_TOKEN: $["llamacpp-service-hf-token"] }
@@ -57,7 +55,7 @@ local images = import "values/images.jsonnet";
                     )
                     .with_port(7000, 7000, "llamacpp")
                     .with_bind_mount("/dev/dri/by-path", "/dev/dri/by-path")
-                    .with_volume_mount(vol, "/data");
+                    .with_volume_mount(vol, "/root/.cache/llama.cpp");
 
             local containerSet = engine.containers(
                 "llamacpp-service", [ container ]
