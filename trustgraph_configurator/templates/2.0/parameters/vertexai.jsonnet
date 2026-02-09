@@ -6,7 +6,17 @@
     "description": "LLM model to use",
     "default": "gemini-2.5-flash-lite",
     "enum": [
-        // Gemini 2.5 models (latest generation)
+        // Gemini 3 models (preview)
+        {
+            id: "gemini-3-pro-preview",
+            description: "Gemini 3 Pro (preview)"
+        },
+        {
+            id: "gemini-3-flash-preview",
+            description: "Gemini 3 Flash (preview)"
+        },
+
+        // Gemini 2.5 models
         {
             id: "gemini-2.5-pro",
             description: "Gemini 2.5 Pro"
@@ -22,45 +32,48 @@
 
         // Gemini 2.0 models
         {
-            id: "gemini-2.0-flash-exp",
-            description: "Gemini 2.0 Flash (experimental)"
+            id: "gemini-2.0-flash-001",
+            description: "Gemini 2.0 Flash"
+        },
+        {
+            id: "gemini-2.0-flash-lite-001",
+            description: "Gemini 2.0 Flash Lite"
         },
 
+        // Gemma models
+        {
+            id: "gemma-3-27b",
+            description: "Gemma 3 27B"
+        },
+        {
+            id: "gemma-3n-e4b",
+            description: "Gemma 3n E4B"
+        },
 
         // Claude models on VertexAI
         {
-            id: "claude-3-5-sonnet@20241022",
-            description: "Claude 3.5 Sonnet (via VertexAI)"
+            id: "claude-opus-4-6",
+            description: "Claude Opus 4.6"
         },
         {
-            id: "claude-3-5-haiku@20241022",
-            description: "Claude 3.5 Haiku (via VertexAI)"
+            id: "claude-opus-4-5",
+            description: "Claude Opus 4.5"
         },
         {
-            id: "claude-3-opus@20240229",
-            description: "Claude 3 Opus (via VertexAI)"
+            id: "claude-sonnet-4-5",
+            description: "Claude Sonnet 4.5"
         },
         {
-            id: "claude-3-sonnet@20240229",
-            description: "Claude 3 Sonnet (via VertexAI)"
+            id: "claude-haiku-4-5",
+            description: "Claude Haiku 4.5"
         },
         {
-            id: "claude-3-haiku@20240307",
-            description: "Claude 3 Haiku (via VertexAI)"
-        },
-
-        // Llama models on VertexAI
-        {
-            id: "llama3-405b-instruct-maas",
-            description: "Llama 3 405B Instruct (via VertexAI)"
+            id: "claude-opus-4-1",
+            description: "Claude Opus 4.1"
         },
         {
-            id: "llama3-70b-instruct-maas",
-            description: "Llama 3 70B Instruct (via VertexAI)"
-        },
-        {
-            id: "llama3-8b-instruct-maas",
-            description: "Llama 3 8B Instruct (via VertexAI)"
+            id: "claude-sonnet-4",
+            description: "Claude Sonnet 4"
         },
     ],
     "required": true

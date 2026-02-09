@@ -4,6 +4,6 @@
 {
     "type": "string",
     "description": "LLM model to use",
-    "default": "gpt-4o",
+    "default": "gpt-5.2",
     "required": true
 }
