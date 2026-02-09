@@ -27,13 +27,13 @@
 	{
             "name": "1.9",
             "description": "Ontology extraction update, JSONL output from prompts",
-            "version": "1.9.1",
+            "version": "1.9.2",
             "status": "pre-release"
         },
         {
             "name": "2.0",
             "description": "Graph support for reification, datasets and temporal information",
-            "version": "2.0.0",
+            "version": "2.0.2",
             "status": "pre-release"
         }
     ],
