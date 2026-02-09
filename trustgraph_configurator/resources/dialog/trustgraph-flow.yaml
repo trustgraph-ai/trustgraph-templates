@@ -179,7 +179,6 @@ steps:
           value: "ollama"
           icon: "ollama"
           description: "Run LLMs locally. Bundles model weights, configs, and data into a single package. No external API dependencies."
-          recommended: true
         - label: "Llamafile"
           value: "llamafile"
           icon: "llamafile"
