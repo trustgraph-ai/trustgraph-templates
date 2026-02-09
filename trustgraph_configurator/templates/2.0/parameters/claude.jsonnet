@@ -7,12 +7,16 @@
     "default": "claude-sonnet-4-5-20250929",
     "enum": [
         {
-            id: "claude-sonnet-4-5-20250929",
-            description: "Claude Sonnet 4.5 (complex agents + coding)"
+            id: "claude-opus-4-6",
+            description: "Claude Opus 4.6 (maximum intelligence)"
         },
         {
             id: "claude-opus-4-5-20251101",
-            description: "Claude Opus 4.5 (maximum intelligence)"
+            description: "Claude Opus 4.5 (frontier coding + agents)"
+        },
+        {
+            id: "claude-sonnet-4-5-20250929",
+            description: "Claude Sonnet 4.5 (complex agents + coding)"
         },
         {
             id: "claude-haiku-4-5-20251001",
@@ -20,7 +24,7 @@
         },
         {
             id: "claude-opus-4-1-20250805",
-            description: "Claude Opus 4.1 (specialized reasoning)"
+            description: "Claude Opus 4.1 (agentic search + reasoning)"
         },
         {
             id: "claude-sonnet-4-20250514",
