@@ -72,7 +72,7 @@ local findRoute = function(k)
         else
             self + { [k]:: v },
 
-    "log-level":: "DEBUG",
+    "log-level":: "INFO",
 
     // Base objects with concurrency defaults (LLM/embeddings components merge into these)
     "text-completion" +: { concurrency:: 1 },
