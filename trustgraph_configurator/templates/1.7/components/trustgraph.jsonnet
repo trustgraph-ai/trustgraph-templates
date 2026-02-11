@@ -16,7 +16,7 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
 {
 
-    "log-level":: "DEBUG",
+    "log-level":: "INFO",
 
     "api-gateway-port":: 8088,
     "api-gateway-timeout":: 600,
