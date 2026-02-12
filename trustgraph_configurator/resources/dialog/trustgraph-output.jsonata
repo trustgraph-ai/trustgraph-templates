@@ -11,7 +11,7 @@
    *   "platform": "docker-compose",
    *   "graph_store": "cassandra",
    *   "vector_db": "qdrant",
-   *   "object_store": "cassandra",
+   *   "row_store": "cassandra",
    *   "model_deployment": "ollama",
    *   "max_output_tokens": 2048,
    *   "ocr": { "enabled": true, "engine": "tesseract" },
@@ -37,8 +37,8 @@
     /* Graph store */
     $component("triple-store-" & graph_store),
 
-    /* Object store */
-    $component("object-store-" & object_store),
+    /* Row store */
+    $component("row-store-" & row_store),
 
     /* Vector database */
     $component("vector-store-" & vector_db),
