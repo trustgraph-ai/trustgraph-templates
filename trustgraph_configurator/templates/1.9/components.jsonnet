@@ -42,7 +42,7 @@
    "triple-store-memgraph": import "triple-store/memgraph.jsonnet",
 
    // Object stores
-   "object-store-cassandra": import "object-store/cassandra.jsonnet",
+   "row-store-cassandra": import "row-store/cassandra.jsonnet",
 
    // Observability support
    "grafana": import "monitoring/grafana.jsonnet",

@@ -67,7 +67,7 @@
    "triple-store-memgraph": import "components/triple-store-memgraph.jsonnet",
 
    // Object stores
-   "object-store-cassandra": import "components/object-store-cassandra.jsonnet",
+   "row-store-cassandra": import "components/row-store-cassandra.jsonnet",
 
    // Observability support
    "grafana": import "components/grafana.jsonnet",

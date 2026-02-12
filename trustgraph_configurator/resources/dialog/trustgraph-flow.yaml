@@ -145,22 +145,22 @@ steps:
           icon: "pinecone"
           description: "Managed vector database service (requires API key)"
     transitions:
-      - next: object-store
+      - next: row-store
 
   # ─────────────────────────────────────────────────────────────
-  # Object Store
+  # Row Store
   # ─────────────────────────────────────────────────────────────
-  object-store:
-    title: "Which object store?"
-    description: "Storage for documents and binary data"
-    state_key: object_store
+  row-store:
+    title: "Which row data store?"
+    description: "Storage for row/tabular data"
+    state_key: row_store
     input:
       type: select
       options:
         - label: "Apache Cassandra"
           value: "cassandra"
           icon: "cassandra"
-          description: "NoSQL database with fast read/write performance at scale. Used for object storage in TrustGraph."
+          description: "NoSQL database with fast read/write performance at scale. Used for row storage in TrustGraph."
     transitions:
       - next: model-deployment
 
