@@ -8,15 +8,16 @@ local request = helpers.request;
 local response = helpers.response;
 local request_response = helpers.request_response;
 
-{
+// Import shared services (agent requires LLM for reasoning, MCP for tools)
+local llm_services = import "llm-services.jsonnet";
+local mcp_service = import "mcp-service.jsonnet";
+
+// Merge shared services with agent-specific configuration
+llm_services + mcp_service + {
+
     // External interfaces for agent operations
     "interfaces" +: {
-        "agent": request_response("agent:{id}"),         // Main agent service interface
-        "mcp-tool": request_response("mcp-tool:{id}"), // MCP tool execution interface
-    },
-
-    // No configurable parameters for agent management
-    "parameters" +: {
+        "agent": request_response("agent:{id}"),
     },
 
     // Flow-level processors for agent management
@@ -24,36 +25,27 @@ local request_response = helpers.request_response;
         // Agent manager orchestrates agent conversations and tool usage
         "agent-manager:{id}": {
             // Agent communication channels
-            request: request("agent:{id}"),                    // Incoming agent requests
-            next: request("agent:{id}"),                      // Multi-turn conversation support
-            response: response("agent:{id}"),                  // Agent responses
+            request: request("agent:{id}"),
+            next: request("agent:{id}"),
+            response: response("agent:{id}"),
 
             // LLM and prompt services
-            "text-completion-request": request("text-completion:{id}"),   // LLM requests
-            "text-completion-response": response("text-completion:{id}"), // LLM responses
-            "prompt-request": request("prompt:{id}"),                     // Prompt processing
+            "text-completion-request": request("text-completion:{id}"),
+            "text-completion-response": response("text-completion:{id}"),
+            "prompt-request": request("prompt:{id}"),
             "prompt-response": response("prompt:{id}"),
 
             // Tool integrations
-            "mcp-tool-request": request("mcp-tool:{id}"),                 // MCP tool calls
+            "mcp-tool-request": request("mcp-tool:{id}"),
             "mcp-tool-response": response("mcp-tool:{id}"),
-            "graph-rag-request": request("graph-rag:{id}"),               // GraphRAG queries
+            "graph-rag-request": request("graph-rag:{id}"),
             "graph-rag-response": response("graph-rag:{id}"),
-            "structured-query-request": request("structured-query:{id}"), // Structured data queries
+            "structured-query-request": request("structured-query:{id}"),
             "structured-query-response": response("structured-query:{id}"),
         },
-
-        // MCP tool executor for agent tool usage
-        "mcp-tool:{id}": {
-            request: request("mcp-tool:{id}"),                            // Tool invocation requests
-            response: response("mcp-tool:{id}"),                          // Tool execution results
-            "text-completion-request": request("text-completion:{id}"),   // LLM for tool reasoning
-            "text-completion-response": response("text-completion:{id}"),
-        },
-
     },
 
     // Blueprint-level processors for agent-related services
     "blueprint" +: {
-    }
+    },
 }
