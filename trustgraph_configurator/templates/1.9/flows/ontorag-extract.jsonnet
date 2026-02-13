@@ -1,6 +1,6 @@
-// Knowledge Graph Base extraction module
-// Provides basic knowledge extraction capabilities from text chunks
-// Extracts entity definitions and relationships using prompt-based processing
+// OntologyRAG extraction module
+// Extraction method for OntologyRAG - extracts using ontology definitions
+// Mutually exclusive with GraphRAG extraction (both write to graph store)
 
 local helpers = import "helpers.jsonnet";
 local flow = helpers.flow;

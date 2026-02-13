@@ -1,5 +1,5 @@
-// Ontology RAG flow configuration module
-// Implements ontology-based retrieval augmented generation functionality
+// Graph store module
+// Shared infrastructure for graph-based RAG (used by both GraphRAG and OntologyRAG)
 // Handles knowledge graph storage, embeddings, and graph-based question answering
 
 local helpers = import "helpers.jsonnet";
@@ -12,10 +12,10 @@ local request_response = helpers.request_response;
 local llm_services = import "llm-services.jsonnet";
 local embeddings_service = import "embeddings-service.jsonnet";
 
-// Merge shared services with OntoRAG-specific configuration
+// Merge shared services with graph store configuration
 llm_services + embeddings_service + {
 
-    // External interfaces exposed by the OntoRAG flow
+    // External interfaces exposed by the graph store
     "interfaces" +: {
         // Data ingestion interfaces for graph construction
         "entity-contexts-load": flow("entity-contexts-load:{id}"),
