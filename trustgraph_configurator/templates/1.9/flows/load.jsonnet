@@ -8,43 +8,36 @@ local request = helpers.request;
 local response = helpers.response;
 local request_response = helpers.request_response;
 
-{
+// Import shared services (load requires embeddings for chunk processing)
+local embeddings_service = import "embeddings-service.jsonnet";
+
+// Merge shared services with load-specific configuration
+embeddings_service + {
 
     // External interfaces for document loading
     "interfaces" +: {
-        "document-load": flow("document-load:{id}"),       // Raw document input stream
-        "text-load": flow("text-document-load:{id}"),     // Text document stream
-        "embeddings": request_response("embeddings:{id}"), // Embedding service for chunks
-    },
-
-    // No configurable parameters for document loading
-    "parameters" +: {
+        "document-load": flow("document-load:{id}"),
+        "text-load": flow("text-document-load:{id}"),
     },
 
     // Flow-level processors for document preprocessing
     "flow" +: {
         // PDF decoder converts PDF documents to text
         "pdf-decoder:{id}": {
-            input: flow("document-load:{id}"),         // Raw PDF input
-            output: flow("text-document-load:{id}"),   // Extracted text output
+            input: flow("document-load:{id}"),
+            output: flow("text-document-load:{id}"),
         },
 
         // Chunker splits documents into smaller, processable pieces
         "chunker:{id}": {
-            input: flow("text-document-load:{id}"),    // Full text documents
-            output: flow("chunk-load:{id}"),            // Document chunks for processing
-            "chunk-size": "{chunk-size}",              // Chunk size
-            "chunk-overlap": "{chunk-overlap}",        // Overlap between chunks
-        },
-        // Embedding service for converting text chunks to vectors
-        "embeddings:{id}": {
-            request: request("embeddings:{id}"),   // Embedding requests
-            response: response("embeddings:{id}"),  // Embedding responses
-            model: "{embeddings-model}",
+            input: flow("text-document-load:{id}"),
+            output: flow("chunk-load:{id}"),
+            "chunk-size": "{chunk-size}",
+            "chunk-overlap": "{chunk-overlap}",
         },
     },
 
     // Blueprint-level processors for document loading services
     "blueprint" +: {
-    }
+    },
 }

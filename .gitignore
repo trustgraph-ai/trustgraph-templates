@@ -17,3 +17,6 @@ env/
 venv/
 ENV/
 *.log
+node_modules/
+trustgraph_configurator/version.py
+INSTALLATION.md
