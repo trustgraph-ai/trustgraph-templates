@@ -2,29 +2,32 @@
 // Defines different flow combinations for various use cases
 // Each flow blueprint combines multiple functional modules to create complete processing pipelines
 //
-// RAG Modes:
-// - Document RAG: Uses document chunk embeddings (can combine with Graph RAG or Ontology RAG)
+// RAG Modes (4 types):
+// - Document RAG: Uses document chunk embeddings (independent, can combine with others)
 // - Graph RAG: Extracts definitions + relationships to graph (mutually exclusive with Ontology RAG)
 // - Ontology RAG: Extracts using ontology definitions to graph (mutually exclusive with Graph RAG)
+// - Structured RAG: Extracts objects to object store (independent, can combine with others)
+//
+// Module structure:
+// - *-store: Storage and query infrastructure
+// - *-extract: Extraction methods
 //
 // Available modules:
-// - graph-store: Shared graph storage/query infrastructure
-// - document-store: Document embedding storage/query
-// - graphrag-extract: GraphRAG extraction (definitions + relationships)
-// - ontorag-extract: OntologyRAG extraction (ontology-based)
-// - agent-extract: Agent-based knowledge extraction
-// - structured: Structured data processing and NLP queries
-// - agent: AI agent orchestration and tool integration
+// - document-store + (no extraction needed - uses chunk embeddings directly)
+// - graph-store + graphrag-extract OR ontorag-extract OR agent-extract
+// - structured-store + structured-extract
+// - agent: AI agent orchestration
 // - load: Document loading and preprocessing
 // - kgcore: Knowledge graph core storage
 
 // Import all the modular flow components
 local graph_store = import "graph-store.jsonnet";
 local document_store = import "document-store.jsonnet";
+local structured_store = import "structured-store.jsonnet";
 local graphrag_extract = import "graphrag-extract.jsonnet";
 local ontorag_extract = import "ontorag-extract.jsonnet";
+local structured_extract = import "structured-extract.jsonnet";
 local agent_extract = import "agent-extract.jsonnet";
-local structured = import "structured.jsonnet";
 local agent = import "agent.jsonnet";
 local load = import "load.jsonnet";
 local kgcore = import "kgcore.jsonnet";
@@ -40,8 +43,8 @@ local kgcore = import "kgcore.jsonnet";
             "structured-data", "kgcore"
         ],
     } +
-      graph_store + document_store + agent + load +
-      graphrag_extract + structured,
+      graph_store + document_store + structured_store + agent + load +
+      graphrag_extract + structured_extract,
 
     // Dual RAG system without knowledge core creation
     // Combines both document and graph-based retrieval
@@ -98,7 +101,8 @@ local kgcore = import "kgcore.jsonnet";
         description: "GraphRAG + structured data",
         tags: ["graph-rag", "knowledge-extraction", "structured-data"],
     } +
-      graph_store + agent + load + structured,
+      graph_store + structured_store + agent + load +
+      graphrag_extract + structured_extract,
 
     // Structured data processing only
     // Handles structured data extraction and NLP queries
@@ -106,6 +110,6 @@ local kgcore = import "kgcore.jsonnet";
         description: "Structured data only",
         tags: ["knowledge-extraction", "structured-data"],
     } +
-      agent + load + structured,
+      structured_store + agent + load + structured_extract,
 
 }

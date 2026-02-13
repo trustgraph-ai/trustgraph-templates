@@ -1,7 +1,6 @@
-// Structured data processing module
-// Handles extraction and querying of structured data objects
-// Provides natural language to GraphQL query capabilities
-// Supports structured data storage and retrieval
+// Structured store module
+// Shared infrastructure for structured data RAG
+// Handles object storage, retrieval, and NLP query capabilities
 
 local helpers = import "helpers.jsonnet";
 local flow = helpers.flow;
@@ -13,12 +12,12 @@ local request_response = helpers.request_response;
 local llm_services = import "llm-services.jsonnet";
 local embeddings_service = import "embeddings-service.jsonnet";
 
-// Merge shared services with structured data-specific configuration
+// Merge shared services with structured store configuration
 llm_services + embeddings_service + {
 
-    // External interfaces for structured data operations
+    // External interfaces for structured store
     "interfaces" +: {
-        // Structured data storage and querying
+        // Object storage and querying
         "objects-store": flow("objects-store:{id}"),
         "objects": request_response("objects:{id}"),
 
@@ -28,15 +27,8 @@ llm_services + embeddings_service + {
         "structured-diag": request_response("structured-diag:{id}"),
     },
 
-    // Flow-level processors for structured data extraction
+    // Flow-level processors for structured storage and query
     "flow" +: {
-        "kg-extract-objects:{id}": {
-            input: flow("chunk-load:{id}"),
-            output: flow("objects-store:{id}"),
-            "entity-contexts": flow("entity-contexts-load:{id}"),
-            "prompt-request": request("prompt:{id}"),
-            "prompt-response": response("prompt:{id}"),
-        },
         "objects-write:{id}": {
             input: flow("objects-store:{id}"),
         },
@@ -66,7 +58,6 @@ llm_services + embeddings_service + {
         },
     },
 
-    // Blueprint-level processors for structured data operations
     "blueprint" +: {
     },
 }
