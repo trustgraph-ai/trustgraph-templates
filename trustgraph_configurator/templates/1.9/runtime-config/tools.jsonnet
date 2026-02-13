@@ -3,22 +3,6 @@
 // Each tool specifies its interface, arguments, and behavior
 
 [
-    // Knowledge extraction tool - extracts structured knowledge from text
-    {
-        id: "knowledge-extraction",
-        name: "Knowledge extraction",
-        description: "Takes a chunk of text and extracts knowledge in definition and relationship formats. The input is a text chunk",
-        type: "prompt",
-        template: "agent-kg-extract",
-        arguments: [
-            {
-                "name": "text",
-                "type": "string",
-                "description": "The text chunk",
-            }
-        ],
-    },
-
     // Knowledge query tool - queries the knowledge base
     {
         id: "knowledge-query",
