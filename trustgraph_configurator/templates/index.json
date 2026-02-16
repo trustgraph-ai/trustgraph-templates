@@ -33,7 +33,7 @@
         {
             "name": "2.0",
             "description": "Graph support for reification, datasets and temporal information",
-            "version": "2.0.3",
+            "version": "2.0.6",
             "status": "pre-release"
         }
     ],
