@@ -1,6 +1,6 @@
 local version = import "version.jsonnet";
 {
-    cassandra: "docker.io/cassandra:4.1.10",
+    cassandra: "docker.io/cassandra:5.0.6",
 // Not working
 //    ceph: "quay.io/ceph/daemon:latest-reef",
     neo4j: "docker.io/neo4j:2025.08.0-community-bullseye",
