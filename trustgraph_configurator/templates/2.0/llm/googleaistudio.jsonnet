@@ -25,7 +25,7 @@ local models = import "parameters/googleaistudio.jsonnet";
 
             local container =
                 engine.container("text-completion")
-                    .with_image(images.trustgraph_flow)
+                    .with_image(images.trustgraph_vertexai)
                     .with_command([
                         "text-completion-googleaistudio",
                         "-p",
@@ -66,7 +66,7 @@ local models = import "parameters/googleaistudio.jsonnet";
 
             local containerRag =
                 engine.container("text-completion-rag")
-                    .with_image(images.trustgraph_flow)
+                    .with_image(images.trustgraph_vertexai)
                     .with_command([
                         "text-completion-googleaistudio",
                         "-p",
