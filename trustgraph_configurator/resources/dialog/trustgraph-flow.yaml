@@ -106,18 +106,18 @@ steps:
           icon: "cassandra"
           description: "NoSQL database with fast read/write at scale. TrustGraph integrates a graph schema."
           recommended: true
-        - label: "Neo4j"
-          value: "neo4j"
-          icon: "neo4j"
-          description: "Native graph database with Cypher query language"
-        - label: "Memgraph"
-          value: "memgraph"
-          icon: "memgraph"
-          description: "In-memory graph database with Cypher query language. High performance for real-time analytics."
-        - label: "FalkorDB"
-          value: "falkordb"
-          icon: "falkordb"
-          description: "High-performance graph database optimized for low-latency queries. Based on GraphBLAS."
+        # - label: "Neo4j"
+        #   value: "neo4j"
+        #   icon: "neo4j"
+        #   description: "Native graph database with Cypher query language"
+        # - label: "Memgraph"
+        #   value: "memgraph"
+        #   icon: "memgraph"
+        #   description: "In-memory graph database with Cypher query language. High performance for real-time analytics."
+        # - label: "FalkorDB"
+        #   value: "falkordb"
+        #   icon: "falkordb"
+        #   description: "High-performance graph database optimized for low-latency queries. Based on GraphBLAS."
     transitions:
       - next: vector-db
 
@@ -136,14 +136,14 @@ steps:
           icon: "qdrant"
           description: "High RPS, minimal latency, fast indexing with accuracy control"
           recommended: true
-        - label: "Milvus"
-          value: "milvus"
-          icon: "milvus"
-          description: "Open-source vector database built for scale"
-        - label: "Pinecone"
-          value: "pinecone"
-          icon: "pinecone"
-          description: "Managed vector database service (requires API key)"
+        # - label: "Milvus"
+        #   value: "milvus"
+        #   icon: "milvus"
+        #   description: "Open-source vector database built for scale"
+        # - label: "Pinecone"
+        #   value: "pinecone"
+        #   icon: "pinecone"
+        #   description: "Managed vector database service (requires API key)"
     transitions:
       - next: row-store
 
