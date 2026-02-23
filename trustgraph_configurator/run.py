@@ -26,8 +26,8 @@ def run():
 
     parser.add_argument(
         '-o', '--output',
-        default="output.zip",
-        help=f'Output file name (default: output.zip)'
+        default="deploy.zip",
+        help=f'Output file name (default: deploy.zip)'
     )
 
     parser.add_argument(
