@@ -178,11 +178,17 @@ scrape_configs:
       - targets:
         - 'query-graph-embeddings:8000'
 
-  - job_name: 'query-objects'
+  - job_name: 'query-row-embeddings'
     scrape_interval: 5s
     static_configs:
       - targets:
-        - 'query-objects:8000'
+        - 'query-row-embeddings:8000'
+
+  - job_name: 'query-rows'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'query-rows:8000'
 
   - job_name: 'query-triples'
     scrape_interval: 5s
@@ -202,11 +208,17 @@ scrape_configs:
       - targets:
         - 'store-graph-embeddings:8000'
 
-  - job_name: 'store-objects'
+  - job_name: 'store-row-embeddings'
     scrape_interval: 5s
     static_configs:
       - targets:
-        - 'store-objects:8000'
+        - 'store-row-embeddings:8000'
+
+  - job_name: 'store-rows'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'store-rows:8000'
 
   - job_name: 'store-triples'
     scrape_interval: 5s
@@ -224,7 +236,7 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets:
-        - 'structured-query:8000'
+        - 'structured-diag:8000'
 
   - job_name: 'text-completion'
     scrape_interval: 5s
