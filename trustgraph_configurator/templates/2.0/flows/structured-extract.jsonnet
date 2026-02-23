@@ -18,7 +18,7 @@ local response = helpers.response;
     "flow" +: {
         "kg-extract-rows:{id}": {
             input: flow("chunk-load:{id}"),
-            output: flow("rows-store:{id}"),
+            output: flow("extracted-rows:{id}"),
             "entity-contexts": flow("entity-contexts-load:{id}"),
             "prompt-request": request("prompt:{id}"),
             "prompt-response": response("prompt:{id}"),
