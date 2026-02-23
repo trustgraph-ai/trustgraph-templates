@@ -167,5 +167,45 @@ local url = import "values/url.jsonnet";
 
     },
 
+    "row-embeddings" +: {
+
+        "cpu-limit":: "1.0",
+        "cpu-reservation":: "0.5",
+        "memory-limit":: "256M",
+        "memory-reservation":: "256M",
+
+        create:: function(engine)
+
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
+
+            local container =
+                engine.container("row-embeddings")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "row-embeddings",
+                        "-p",
+                        url.pulsar,
+                        "--log-level",
+                        $["log-level"],
+                    ])
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
+
+            local containerSet = engine.containers(
+                "row-embeddings", [ container ]
+            );
+
+            local service =
+                engine.internalService(containerSet)
+                .with_port(8000, 8000, "metrics");
+
+            engine.resources([
+                containerSet,
+                service,
+            ])
+
+    },
+
 }
 
