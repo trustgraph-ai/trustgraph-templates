@@ -196,6 +196,12 @@ scrape_configs:
       - targets:
         - 'query-triples:8000'
 
+  - job_name: 'row-embeddings'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'row-embeddings:8000'
+
   - job_name: 'store-doc-embeddings'
     scrape_interval: 5s
     static_configs:
