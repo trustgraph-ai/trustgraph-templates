@@ -123,7 +123,7 @@ local url = import "values/url.jsonnet";
 
     },
 
-    "kg-extract-objects" +: {
+    "kg-extract-rows" +: {
 
         concurrency:: 1,
         "cpu-limit":: "0.5",
@@ -138,10 +138,10 @@ local url = import "values/url.jsonnet";
             local memoryReservation = self["memory-reservation"];
 
             local container =
-                engine.container("kg-extract-objects")
+                engine.container("kg-extract-rows")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "kg-extract-objects",
+                        "kg-extract-rows",
                         "-p",
                         url.pulsar,
                         "--concurrency",
@@ -153,7 +153,7 @@ local url = import "values/url.jsonnet";
                     .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
-                "kg-extract-objects", [ container ]
+                "kg-extract-rows", [ container ]
             );
 
             local service =
