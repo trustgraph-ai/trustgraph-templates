@@ -243,8 +243,8 @@ local url = import "values/url.jsonnet";
 
         "cpu-limit":: "1.0",
         "cpu-reservation":: "0.5",
-        "memory-limit":: "512M",
-        "memory-reservation":: "512M",
+        "memory-limit":: "256M",
+        "memory-reservation":: "256M",
 
         create:: function(engine)
 

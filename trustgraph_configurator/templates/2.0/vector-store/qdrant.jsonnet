@@ -13,7 +13,7 @@ qdrant + {
                 engine.container("store-graph-embeddings")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "ge-write-qdrant",
+                        "graph-embeddings-write-qdrant",
                         "-p",
                         url.pulsar,
                         "-t",
@@ -47,7 +47,7 @@ qdrant + {
                 engine.container("query-graph-embeddings")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "ge-query-qdrant",
+                        "graph-embeddings-query-qdrant",
                         "-p",
                         url.pulsar,
                         "-t",
@@ -81,7 +81,7 @@ qdrant + {
                 engine.container("store-doc-embeddings")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "de-write-qdrant",
+                        "doc-embeddings-write-qdrant",
                         "-p",
                         url.pulsar,
                         "-t",
@@ -115,7 +115,7 @@ qdrant + {
                 engine.container("query-doc-embeddings")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "de-query-qdrant",
+                        "doc-embeddings-query-qdrant",
                         "-p",
                         url.pulsar,
                         "-t",
@@ -140,7 +140,76 @@ qdrant + {
             ])
 
 
-    }
+    },
+
+    "store-row-embeddings" +: {
+    
+        create:: function(engine)
+
+            local container =
+                engine.container("store-row-embeddings")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "row-embeddings-write-qdrant",
+                        "-p",
+                        url.pulsar,
+                        "-t",
+                        url.qdrant,
+                        "--log-level",
+                        $["log-level"],
+                    ])
+                    .with_limits("0.5", "128M")
+                    .with_reservations("0.1", "128M");
+
+            local containerSet = engine.containers(
+                "store-row-embeddings", [ container ]
+            );
+
+            local service =
+                engine.internalService(containerSet)
+                .with_port(8000, 8000, "metrics");
+
+            engine.resources([
+                containerSet,
+                service,
+            ])
+
+    },
+
+    "query-row-embeddings" +: {
+    
+        create:: function(engine)
+
+            local container =
+                engine.container("query-row-embeddings")
+                    .with_image(images.trustgraph_flow)
+                    .with_command([
+                        "row-embeddings-query-qdrant",
+                        "-p",
+                        url.pulsar,
+                        "-t",
+                        url.qdrant,
+                        "--log-level",
+                        $["log-level"],
+                    ])
+                    .with_limits("0.5", "128M")
+                    .with_reservations("0.1", "128M");
+
+            local containerSet = engine.containers(
+                "query-row-embeddings", [ container ]
+            );
+
+            local service =
+                engine.internalService(containerSet)
+                .with_port(8000, 8000, "metrics");
+
+            engine.resources([
+                containerSet,
+                service,
+            ])
+
+
+    },
 
 }
 

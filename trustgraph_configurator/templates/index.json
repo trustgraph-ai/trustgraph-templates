@@ -21,19 +21,19 @@
 	{
             "name": "1.8",
             "description": "Pluggable messaging fabric, switched to Garage for object store",
-            "version": "1.8.19",
+            "version": "1.8.20",
             "status": "stable"
         },
 	{
             "name": "1.9",
             "description": "Ontology extraction update, JSONL output from prompts",
-            "version": "1.9.2",
+            "version": "1.9.3",
             "status": "pre-release"
         },
         {
             "name": "2.0",
             "description": "Graph support for reification, datasets and temporal information",
-            "version": "2.0.9",
+            "version": "2.0.11",
             "status": "pre-release"
         }
     ],
