@@ -39,7 +39,7 @@ llm_services + embeddings_service + {
         "triples-write:{id}": {
             input: flow("triples-store:{id}"),
         },
-        "ge-write:{id}": {
+        "graph-embeddings-write:{id}": {
             input: flow("graph-embeddings-store:{id}"),
         },
         "graph-rag:{id}": {
@@ -58,7 +58,7 @@ llm_services + embeddings_service + {
             request: request("triples:{id}"),
             response: response("triples:{id}"),
         },
-        "ge-query:{id}": {
+        "graph-embeddings-query:{id}": {
             request: request("graph-embeddings:{id}"),
             response: response("graph-embeddings:{id}"),
         },

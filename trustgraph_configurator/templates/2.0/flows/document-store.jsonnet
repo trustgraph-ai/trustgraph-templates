@@ -31,7 +31,7 @@ llm_services + embeddings_service + {
             "embeddings-request": request("embeddings:{id}"),
             "embeddings-response": response("embeddings:{id}"),
         },
-        "de-write:{id}": {
+        "doc-embeddings-write:{id}": {
             input: flow("document-embeddings-store:{id}"),
         },
         "document-rag:{id}": {
@@ -44,7 +44,7 @@ llm_services + embeddings_service + {
             "document-embeddings-request": request("document-embeddings:{id}"),
             "document-embeddings-response": response("document-embeddings:{id}"),
         },
-        "de-query:{id}": {
+        "doc-embeddings-query:{id}": {
             request: request("document-embeddings:{id}"),
             response: response("document-embeddings:{id}"),
         },

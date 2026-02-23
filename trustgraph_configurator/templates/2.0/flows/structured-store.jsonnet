@@ -1,6 +1,6 @@
 // Structured store module
 // Shared infrastructure for structured data RAG
-// Handles object storage, retrieval, and NLP query capabilities
+// Handles row storage, retrieval, and NLP query capabilities
 
 local helpers = import "helpers.jsonnet";
 local flow = helpers.flow;
@@ -17,9 +17,11 @@ llm_services + embeddings_service + {
 
     // External interfaces for structured store
     "interfaces" +: {
-        // Object storage and querying
-        "objects-store": flow("objects-store:{id}"),
-        "objects": request_response("objects:{id}"),
+        // Row storage and querying
+        "rows-store": flow("rows-store:{id}"),
+        "row-embeddings-store": flow("row-embeddings-store:{id}"),
+        "rows": request_response("rows:{id}"),
+        "row-embeddings": request_response("row-embeddings:{id}"),
 
         // Query interfaces
         "nlp-query": request_response("nlp-query:{id}"),
@@ -29,12 +31,25 @@ llm_services + embeddings_service + {
 
     // Flow-level processors for structured storage and query
     "flow" +: {
-        "objects-write:{id}": {
-            input: flow("objects-store:{id}"),
+        "row-embeddings:{id}": {
+            input: flow("rows-store:{id}"),
+            output: flow("row-embeddings-store:{id}"),
+            "embeddings-request": request("embeddings:{id}"),
+            "embeddings-response": response("embeddings:{id}"),
         },
-        "objects-query:{id}": {
-            request: request("objects:{id}"),
-            response: response("objects:{id}"),
+        "rows-write:{id}": {
+            input: flow("rows-store:{id}"),
+        },
+        "row-embeddings-write:{id}": {
+            input: flow("row-embeddings-store:{id}"),
+        },
+        "rows-query:{id}": {
+            request: request("rows:{id}"),
+            response: response("rows:{id}"),
+        },
+        "row-embeddings-query:{id}": {
+            request: request("row-embeddings:{id}"),
+            response: response("row-embeddings:{id}"),
         },
         "nlp-query:{id}": {
             request: request("nlp-query:{id}"),
@@ -47,8 +62,8 @@ llm_services + embeddings_service + {
             response: response("structured-query:{id}"),
             "nlp-query-request": request("nlp-query:{id}"),
             "nlp-query-response": response("nlp-query:{id}"),
-            "objects-query-request": request("objects:{id}"),
-            "objects-query-response": response("objects:{id}"),
+            "rows-query-request": request("rows:{id}"),
+            "rows-query-response": response("rows:{id}"),
         },
         "structured-diag:{id}": {
             request: request("structured-diag:{id}"),
