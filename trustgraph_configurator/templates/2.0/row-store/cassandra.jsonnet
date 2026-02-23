@@ -5,15 +5,15 @@ local cassandra = import "backends/cassandra.jsonnet";
 
 cassandra + {
 
-    "store-objects" +: {
+    "store-rows" +: {
     
         create:: function(engine)
 
             local container =
-                engine.container("store-objects")
+                engine.container("store-rows")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "objects-write-cassandra",
+                        "rows-write-cassandra",
                         "-p",
                         url.pulsar,
                         "--cassandra-host",
@@ -25,7 +25,7 @@ cassandra + {
                     .with_reservations("0.1", "128M");
 
             local containerSet = engine.containers(
-                "store-objects", [ container ]
+                "store-rows", [ container ]
             );
 
             local service =
@@ -39,15 +39,15 @@ cassandra + {
 
     },
 
-    "query-objects" +: {
+    "query-rows" +: {
     
         create:: function(engine)
 
             local container =
-                engine.container("query-objects")
+                engine.container("query-rows")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "objects-query-cassandra",
+                        "rows-query-cassandra",
                         "-p",
                         url.pulsar,
                         "--cassandra-host",
@@ -59,7 +59,7 @@ cassandra + {
                     .with_reservations("0.1", "512M");
 
             local containerSet = engine.containers(
-                "query-objects", [ container ]
+                "query-rows", [ container ]
             );
 
             local service =

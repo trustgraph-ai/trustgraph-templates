@@ -41,7 +41,7 @@
    "triple-store-falkordb": import "triple-store/falkordb.jsonnet",
    "triple-store-memgraph": import "triple-store/memgraph.jsonnet",
 
-   // Object stores
+   // Row stores
    "row-store-cassandra": import "row-store/cassandra.jsonnet",
 
    // Observability support
