@@ -150,7 +150,7 @@ qdrant + {
                 engine.container("store-row-embeddings")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "doc-embeddings-write-qdrant",
+                        "row-embeddings-write-qdrant",
                         "-p",
                         url.pulsar,
                         "-t",
@@ -184,7 +184,7 @@ qdrant + {
                 engine.container("query-row-embeddings")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "doc-embeddings-query-qdrant",
+                        "row-embeddings-query-qdrant",
                         "-p",
                         url.pulsar,
                         "-t",
