@@ -18,7 +18,7 @@ llm_services + embeddings_service + {
     // External interfaces for structured store
     "interfaces" +: {
         // Row storage and querying
-        "extracted-rows": flow("extracted-rows:{id}"),
+        "rows-store": flow("rows-store:{id}"),
         "row-embeddings-store": flow("row-embeddings-store:{id}"),
         "rows": request_response("rows:{id}"),
         "row-embeddings": request_response("row-embeddings:{id}"),
@@ -32,13 +32,13 @@ llm_services + embeddings_service + {
     // Flow-level processors for structured storage and query
     "flow" +: {
         "row-embeddings:{id}": {
-            input: flow("extracted-rows:{id}"),
+            input: flow("rows-store:{id}"),
             output: flow("row-embeddings-store:{id}"),
             "embeddings-request": request("embeddings:{id}"),
             "embeddings-response": response("embeddings:{id}"),
         },
         "rows-write:{id}": {
-            input: flow("extracted-rows:{id}"),
+            input: flow("rows-store:{id}"),
         },
         "row-embeddings-write:{id}": {
             input: flow("row-embeddings-store:{id}"),
