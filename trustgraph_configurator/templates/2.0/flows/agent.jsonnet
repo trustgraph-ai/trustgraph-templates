@@ -24,6 +24,7 @@ llm_services + mcp_service + {
     "flow" +: {
         // Agent manager orchestrates agent conversations and tool usage
         "agent-manager:{id}": {
+
             // Agent communication channels
             request: request("agent:{id}"),
             next: request("agent:{id}"),
@@ -42,6 +43,10 @@ llm_services + mcp_service + {
             "graph-rag-response": response("graph-rag:{id}"),
             "structured-query-request": request("structured-query:{id}"),
             "structured-query-response": response("structured-query:{id}"),
+            "embeddings-request": request("embeddings:{id}"),
+            "embeddings-response": response("embeddings:{id}"),
+            "row-embeddings-query-request": request("row-embeddings:{id}"),
+            "row-embeddings-query-response": response("row-embeddings:{id}"),
         },
     },
 

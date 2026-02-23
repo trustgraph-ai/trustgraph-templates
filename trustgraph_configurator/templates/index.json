@@ -32,8 +32,8 @@
         },
         {
             "name": "2.0",
-            "description": "Graph support for reification, datasets and temporal information",
-            "version": "2.0.11",
+            "description": "Major refactor of graph infrastructure with the Entity-Centric Graph.  Overhaul of the row-based data processing.  Graph support for reification, datasets and temporal information",
+            "version": "2.0.12",
             "status": "pre-release"
         }
     ],
