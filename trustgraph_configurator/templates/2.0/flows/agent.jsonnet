@@ -45,8 +45,8 @@ llm_services + mcp_service + {
             "structured-query-response": response("structured-query:{id}"),
             "embeddings-request": request("embeddings:{id}"),
             "embeddings-response": response("embeddings:{id}"),
-            "row-embeddings-query-request": request("row-embeddings-query:{id}"),
-            "row-embeddings-query-response": response("row-embeddings-query:{id}"),
+            "row-embeddings-query-request": request("row-embeddings:{id}"),
+            "row-embeddings-query-response": response("row-embeddings:{id}"),
         },
     },
 
