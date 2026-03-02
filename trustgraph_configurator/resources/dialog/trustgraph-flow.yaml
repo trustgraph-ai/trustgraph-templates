@@ -23,7 +23,6 @@ steps:
           description: "Graph support for reification, datasets and temporal information"
           badge: pre-release
           recommended: false
-
         - label: "TrustGraph 1.9"
           value: "1.9"
           description: "Improvements to ontology and knowledge extraction prompts"
