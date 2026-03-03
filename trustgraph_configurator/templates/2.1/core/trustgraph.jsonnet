@@ -154,7 +154,7 @@ local findRoute = function(k)
                 engine.container("chunker")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "chunker-token",
+                        "chunker-recursive",
                         "-p",
                         url.pulsar,
                         "--chunk-size",
