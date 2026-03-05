@@ -163,6 +163,12 @@ class Api:
 
             config = await request.text()
 
+            # **************************************************************
+            # This is a security boundary!  This is used by jsonnet, so if
+            # a user can provide jsonnet, they can execute anything server
+            # side.
+            # **************************************************************
+
             # This verifies/forces that the input is JSON.  Important because
             # input is user-supplied, don't want to trust it.
             try:

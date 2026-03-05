@@ -63,8 +63,33 @@
    "null": {},
 
    // Passthrough: returns parameters directly, preserving +: merge syntax
+   // Also supports JSON-safe routing with prefixed parameters like "cassandra-heap"
    "override": {
-       with_params:: function(pars) pars,
+       local route = function(target)
+           function(prefix, k, v)
+               local suffix = std.substr(k, std.length(prefix), std.length(k) - std.length(prefix));
+               { [target] +: { [suffix]:: v } },
+
+       local routes = {
+           "cassandra-": route("cassandra"),
+           "pulsar-": route("pulsar"),
+           "qdrant-": route("qdrant"),
+           "api-gateway-": route("api-gateway"),
+           "librarian-": route("librarian"),
+       },
+
+       with_params:: function(pars)
+           std.foldl(
+               function(acc, k)
+                   local matchingPrefixes = [p for p in std.objectFields(routes) if std.startsWith(k, p)];
+                   if std.length(matchingPrefixes) > 0 then
+                       local prefix = matchingPrefixes[0];
+                       acc + routes[prefix](prefix, k, pars[k])
+                   else
+                       acc + { [k]:: pars[k] },
+               std.objectFields(pars),
+               {}
+           ),
    },
 
    // Memory profiles
