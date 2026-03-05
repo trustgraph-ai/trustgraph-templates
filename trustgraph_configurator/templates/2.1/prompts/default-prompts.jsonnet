@@ -12,6 +12,11 @@
             "prompt": "{{question}}",
         },
 
+        "extract-concepts":: {
+            "prompt": importstr "extract-concepts.txt",
+            "response-type": "text",
+        },
+
         "extract-definitions":: {
             "prompt": importstr "extract-definitions.txt",
             "response-type": "jsonl",
