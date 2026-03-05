@@ -23,15 +23,23 @@ embeddings_service + {
     // Flow-level processors for document preprocessing
     "flow" +: {
         // PDF decoder converts PDF documents to text
+        // Also emits page provenance triples and saves pages via librarian
         "pdf-decoder:{id}": {
             input: flow("document-load:{id}"),
             output: flow("text-document-load:{id}"),
+            triples: flow("triples-store:{id}"),
+            "librarian-request": request("librarian"),
+            "librarian-response": response("librarian"),
         },
 
         // Chunker splits documents into smaller, processable pieces
+        // Also emits chunk provenance triples and saves chunks via librarian
         "chunker:{id}": {
             input: flow("text-document-load:{id}"),
             output: flow("chunk-load:{id}"),
+            triples: flow("triples-store:{id}"),
+            "librarian-request": request("librarian"),
+            "librarian-response": response("librarian"),
             "chunk-size": "{chunk-size}",
             "chunk-overlap": "{chunk-overlap}",
         },
