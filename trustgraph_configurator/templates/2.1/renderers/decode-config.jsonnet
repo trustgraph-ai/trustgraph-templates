@@ -6,7 +6,7 @@ local apply = function(p, components)
     local base = {
 
         with:: function(k, v) self + {
-            [k]:: v
+            [k] +:: v
         },
 
         with_params:: function(pars)

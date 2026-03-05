@@ -62,6 +62,11 @@
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
 
+   // Passthrough: returns parameters directly, preserving +: merge syntax
+   "override": {
+       with_params:: function(pars) pars,
+   },
+
    // Memory profiles
    "memory-profile-low": import "profiles/memory-profile-low.jsonnet",
 
