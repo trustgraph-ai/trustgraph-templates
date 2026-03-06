@@ -20,7 +20,9 @@ local sc = {
     provisioner: "ebs.csi.aws.com",
     parameters: {
         type: "gp3",
-        "encrypted": "true",
+        encrypted: "true",
+        iops: "6000",
+        throughput: "400",
     },
     reclaimPolicy: "Delete",
     volumeBindingMode: "WaitForFirstConsumer",
