@@ -1,0 +1,13 @@
+Study the following knowledge statements in Cypher format, extracted from a knowledge graph. Each relationship has an id property.
+
+Here are the knowledge statements:
+{% for edge in knowledge %}({{edge.s}})-[{{edge.p}} {id: "{{edge.id}}"}]->({{edge.o}})
+{% endfor %}
+
+Select the knowledge statements that are relevant to answering the following question. Return only a JSON object in this format, with no other text:
+{
+  "relevant_edges": ["id1", "id2", ...],
+  "reasoning": "Brief explanation of why these edges are relevant"
+}
+
+Question: {{query}}
