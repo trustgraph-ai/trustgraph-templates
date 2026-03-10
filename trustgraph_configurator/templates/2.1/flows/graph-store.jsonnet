@@ -53,6 +53,9 @@ llm_services + embeddings_service + {
             "graph-embeddings-response": response("graph-embeddings:{id}"),
             "triples-request": request("triples:{id}"),
             "triples-response": response("triples:{id}"),
+            explainability: flow("triples-store:{id}"),
+            "librarian-request": request("librarian"),
+            "librarian-response": response("librarian"),
         },
         "triples-query:{id}": {
             request: request("triples:{id}"),

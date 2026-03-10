@@ -95,6 +95,16 @@
             "response-type": "text",
         },
 
+        "kg-edge-selection":: {
+            "prompt": importstr "kg-edge-selection.txt",
+            "response-type": "jsonl",
+        },
+
+        "kg-synthesis":: {
+            "prompt": importstr "kg-synthesis.txt",
+            "response-type": "text",
+        },
+
         "document-prompt":: {
             "prompt": importstr "document-prompt.txt",
             "response-type": "text",
