@@ -44,13 +44,6 @@ local configuration = {
         "description": "Default collection",
         "tags": ["default"],
       },
-      "trustgraph:explainability": {
-        "user": "default-user",
-        "collection": "explainability",
-        "name": "Explainability",
-        "description": "Explainability and provenance",
-        "tags": ["explainability", "provenance"],
-      },
     },
 
     // Default model and flow parameters
