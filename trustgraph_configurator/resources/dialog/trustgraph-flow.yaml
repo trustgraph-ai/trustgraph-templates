@@ -18,6 +18,11 @@ steps:
     input:
       type: select
       options:
+        - label: "TrustGraph 2.1"
+          value: "2.1"
+          description: "Explainability and provenance support"
+          badge: pre-release
+          recommended: false
         - label: "TrustGraph 2.0"
           value: "2.0"
           description: "Graph support for reification, datasets and temporal information"
