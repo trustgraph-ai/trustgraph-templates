@@ -98,11 +98,43 @@
         "kg-edge-reasoning":: {
             "prompt": importstr "kg-edge-reasoning.txt",
             "response-type": "jsonl",
+            "object-schema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "reasoning": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "reasoning"
+                ]
+            }
         },
 
         "kg-edge-scoring":: {
             "prompt": importstr "kg-edge-scoring.txt",
             "response-type": "jsonl",
+            "object-schema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "score": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10
+                    }
+                },
+                "required": [
+                    "id",
+                    "score"
+                ]
+            }
         },
 
         "kg-synthesis":: {
