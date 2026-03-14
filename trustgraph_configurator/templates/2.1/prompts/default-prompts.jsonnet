@@ -95,8 +95,13 @@
             "response-type": "text",
         },
 
-        "kg-edge-selection":: {
-            "prompt": importstr "kg-edge-selection.txt",
+        "kg-edge-reasoning":: {
+            "prompt": importstr "kg-edge-reasoning.txt",
+            "response-type": "jsonl",
+        },
+
+        "kg-edge-scoring":: {
+            "prompt": importstr "kg-edge-scoring.txt",
             "response-type": "jsonl",
         },
 

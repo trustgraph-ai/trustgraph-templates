@@ -43,6 +43,7 @@ llm_services + embeddings_service + {
             "prompt-response": response("prompt-rag:{id}"),
             "document-embeddings-request": request("document-embeddings:{id}"),
             "document-embeddings-response": response("document-embeddings:{id}"),
+            explainability: flow("triples-store:{id}"),
         },
         "doc-embeddings-query:{id}": {
             request: request("document-embeddings:{id}"),
