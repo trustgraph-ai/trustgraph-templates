@@ -4,6 +4,7 @@
 // Supports MCP tools, GraphRAG, and structured queries
 
 local helpers = import "helpers.jsonnet";
+local flow = helpers.flow;
 local request = helpers.request;
 local response = helpers.response;
 local request_response = helpers.request_response;
@@ -47,6 +48,9 @@ llm_services + mcp_service + {
             "embeddings-response": response("embeddings:{id}"),
             "row-embeddings-query-request": request("row-embeddings:{id}"),
             "row-embeddings-query-response": response("row-embeddings:{id}"),
+
+            // Explainability
+            explainability: flow("triples-store:{id}"),
         },
     },
 
