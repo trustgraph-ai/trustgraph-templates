@@ -39,8 +39,8 @@
         {
             "name": "2.1",
             "description": "Provenance and explainability",
-            "version": "2.1.13",
-            "status": "pre-release"
+            "version": "2.1.23",
+            "status": "beta"
         }
     ],
     "platforms": [
