@@ -38,8 +38,8 @@
         },
         {
             "name": "2.1",
-            "description": "Provenance and explainability",
-            "version": "2.1.23",
+            "description": "End-to-end provenance tracking and explainability across the knowledge pipeline — from document ingestion through extraction to query-time retrieval - every answer traceable to its source evidence",
+            "version": "2.1.24",
             "status": "beta"
         }
     ],
