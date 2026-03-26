@@ -352,13 +352,39 @@ documentation:
       when: "graph_store = 'falkordb'"
 
     # ─────────────────────────────────────────────────────────────
-    # API Gateway (Kubernetes only)
+    # API Gateway
     # ─────────────────────────────────────────────────────────────
     - id: gateway-setup
       goal: "Configure API gateway secret"
       category: gateway
       priority: 1
+      file: gateway/gateway-compose.md
+      when: "platform in ['docker-compose', 'podman-compose']"
+
+    - id: gateway-setup
+      goal: "Configure API gateway secret"
+      category: gateway
+      priority: 1
       file: gateway/gateway-k8s.md
+      when: "platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
+      vars:
+        namespace: "k8s.namespace"
+
+    # ─────────────────────────────────────────────────────────────
+    # MCP Server
+    # ─────────────────────────────────────────────────────────────
+    - id: mcp-setup
+      goal: "Configure MCP server secrets"
+      category: gateway
+      priority: 2
+      file: gateway/mcp-compose.md
+      when: "platform in ['docker-compose', 'podman-compose']"
+
+    - id: mcp-setup
+      goal: "Configure MCP server secrets"
+      category: gateway
+      priority: 2
+      file: gateway/mcp-k8s.md
       when: "platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh']"
       vars:
         namespace: "k8s.namespace"
