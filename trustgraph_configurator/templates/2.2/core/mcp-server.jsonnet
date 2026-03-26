@@ -18,7 +18,8 @@ local url = import "values/url.jsonnet";
             local memoryReservation = self["memory-reservation"];
 
             local envSecrets = engine.envSecrets("mcp-server-secret")
-                .with_env_var("MCP_SERVER_SECRET", "mcp-server-secret");
+                .with_env_var("MCP_SERVER_SECRET", "mcp-server-secret")
+                .with_env_var("GATEWAY_SECRET", "gateway-secret");
 
             local container =
                 engine.container("mcp-server")
