@@ -3,25 +3,25 @@
 	{
             "name": "1.8",
             "description": "Pluggable messaging fabric, switched to Garage for object store",
-            "version": "1.8.20",
+            "version": "1.8.21",
             "status": "stable"
         },
 	{
             "name": "1.9",
             "description": "Ontology extraction update, JSONL output from prompts",
-            "version": "1.9.3",
+            "version": "1.9.4",
             "status": "beta"
         },
         {
             "name": "2.1",
             "description": "End-to-end provenance tracking and explainability across the knowledge pipeline — from document ingestion through extraction to query-time retrieval - every answer traceable to its source evidence",
-            "version": "2.1.25",
+            "version": "2.1.26",
             "status": "stable"
         },
         {
             "name": "2.2",
             "description": "Orchestration updates, more document types",
-            "version": "2.2.2",
+            "version": "2.2.3",
             "status": "pre-release"
         }
     ],
