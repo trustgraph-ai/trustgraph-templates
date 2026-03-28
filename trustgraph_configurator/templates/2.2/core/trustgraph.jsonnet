@@ -238,7 +238,7 @@ local findRoute = function(k)
 
             local container =
                 engine.container("document-decoder")
-                    .with_image(images.trustgraph_flow)
+                    .with_image(images.trustgraph_unstructured)
                     .with_command([
                         "universal-decoder",
                         "-p",
