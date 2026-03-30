@@ -184,7 +184,9 @@ local url = import "values/url.jsonnet";
         concurrency:: 1,
         "entity-limit":: 50,
         "triple-limit":: 30,
-        "max-subgraph-size":: 400,
+        "edge-limit":: 30,
+        "edge-score-limit":: 10,
+        "max-subgraph-size":: 100,
         "max-path-length":: 2,
         "cpu-limit":: "0.5",
         "cpu-reservation":: "0.1",
@@ -196,6 +198,8 @@ local url = import "values/url.jsonnet";
             local concurrency = self.concurrency;
             local entityLimit = self["entity-limit"];
             local tripleLimit = self["triple-limit"];
+            local edgeLimit = self["edge-limit"];
+            local edgeScoreLimit = self["edge-score-limit"];
             local maxSubgraphSize = self["max-subgraph-size"];
             local maxPathLength = self["max-path-length"];
             local memoryLimit = self["memory-limit"];
@@ -214,6 +218,10 @@ local url = import "values/url.jsonnet";
                         std.toString(entityLimit),
                         "--triple-limit",
                         std.toString(tripleLimit),
+                        "--edge-limit",
+                        std.toString(edgeLimit),
+                        "--edge-score-limit",
+                        std.toString(edgeScoreLimit),
                         "--max-subgraph-size",
                         std.toString(maxSubgraphSize),
                         "--max-path-length",

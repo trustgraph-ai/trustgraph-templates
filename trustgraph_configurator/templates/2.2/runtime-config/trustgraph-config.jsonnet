@@ -69,6 +69,10 @@ local configuration = {
     // Token costs
     "token-costs":: token_costs,
 
+    // Agent orchestator configuration
+    "agent-patterns":: import "agent-patterns.jsonnet",
+    "agent-task-types":: import "agent-task-types.jsonnet",
+
     // Build the complete configuration using the composer
     configuration:: config_composer.build({
         flow_blueprints: $["flow-blueprints"],
@@ -82,6 +86,8 @@ local configuration = {
         parameter_types: $["parameter-types"],
         token_costs: $["token-costs"],
         collection: $["collections"],
+        agent_patterns: $["agent-patterns"],
+        agent_task_types: $["agent-task-types"],
     }),
 
 } + default_prompts;

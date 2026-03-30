@@ -34,8 +34,8 @@ llm_services + mcp_service + {
             // LLM and prompt services
             "text-completion-request": request("text-completion:{id}"),
             "text-completion-response": response("text-completion:{id}"),
-            "prompt-request": request("prompt:{id}"),
-            "prompt-response": response("prompt:{id}"),
+            "prompt-request": request("prompt-rag:{id}"),
+            "prompt-response": response("prompt-rag:{id}"),
 
             // Tool integrations
             "mcp-tool-request": request("mcp-tool:{id}"),
