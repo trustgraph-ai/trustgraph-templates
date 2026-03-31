@@ -66,6 +66,10 @@ local interface_builder = import "interface-builder.jsonnet";
                 // MCP configuration
                 mcp: config_spec.mcp,
 
+                // Agent orchestrator
+                "agent-pattern": config_spec.agent_patterns,
+                "agent-task-type": config_spec.agent_task_types,
+
                 // Flow blueprints reference
                 "flow-blueprint": flow_blueprints,
 

@@ -9,7 +9,7 @@ local workbench = import "../ui/workbench-ui.jsonnet";
 local graphrag = import "graph-rag.jsonnet";
 local documentrag = import "document-rag.jsonnet";
 local prompt_template = import "prompt-template.jsonnet";
-local agent_manager = import "agent-manager-react.jsonnet";
+local agent_manager = import "agent-orchestrator.jsonnet";
 local structured_data = import "structured-data.jsonnet";
 local ddg = import "mcp/ddg-mcp-server.jsonnet";
 

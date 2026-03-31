@@ -1,37 +1,35 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local prompts = import "prompts/mixtral.jsonnet";
-local models = import "parameters/embeddings-fastembed.jsonnet";
 
 {
 
-    "fastembed-models":: models,
+    "agent-manager" +: {
 
-    "embeddings-models" +:: $["fastembed-models"],
-
-    embeddings +: {
+        "cpu-limit":: "0.5",
+        "cpu-reservation":: "0.1",
+        "memory-limit":: "256M",
+        "memory-reservation":: "256M",
 
         create:: function(engine)
 
-            local concurrency = self.concurrency;
+            local memoryLimit = self["memory-limit"];
+            local memoryReservation = self["memory-reservation"];
 
             local container =
-                engine.container("embeddings")
+                engine.container("agent-manager")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "embeddings-fastembed",
+                        "agent-orchestrator",
                         "-p",
                         url.pulsar,
-                        "--concurrency",
-                        std.toString(concurrency),
                         "--log-level",
                         $["log-level"],
                     ])
-                    .with_limits("2.0", "600M")
-                    .with_reservations("1.0", "600M");
+                    .with_limits(self["cpu-limit"], memoryLimit)
+                    .with_reservations(self["cpu-reservation"], memoryReservation);
 
             local containerSet = engine.containers(
-                "embeddings", [ container ]
+                "agent-manager", [ container ]
             );
 
             local service =

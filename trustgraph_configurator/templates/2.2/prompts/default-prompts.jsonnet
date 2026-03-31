@@ -279,6 +279,69 @@
             }
         },
 
+        "task-type-classify":: {
+            "prompt": importstr "task-type-classify.txt",
+            "response-type": "text",
+        },
+
+        "pattern-select":: {
+            "prompt": importstr "pattern-select.txt",
+            "response-type": "text",
+        },
+
+        "plan-create":: {
+            "prompt": importstr "plan-create.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "goal": {"type": "string"},
+                        "tool_hint": {"type": "string"},
+                        "depends_on": {
+                            "type": "array",
+                            "items": {"type": "integer"},
+                        },
+                    },
+                    "required": ["goal"],
+                },
+            }
+        },
+
+
+        "plan-step-execute": {
+            "prompt": importstr "plan-step-execute.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "tool": {"type": "string"},
+                    "arguments": {"type": "object"}
+                },
+                "required": ["tool", "arguments"]
+              }
+        },
+
+        "plan-synthesise":: {
+            "prompt": importstr "plan-synthesise.txt",
+            "response-type": "text",
+        },
+
+        "supervisor-decompose":: {
+            "prompt": importstr "supervisor-decompose.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "array",
+                "items": {"type": "string"},
+            }
+        },
+
+        "supervisor-synthesise":: {
+            "prompt": importstr "supervisor-synthesise.txt",
+            "response-type": "text",
+        },
+
     }
 
 }
