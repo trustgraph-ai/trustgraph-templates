@@ -21,7 +21,7 @@
         {
             "name": "2.2",
             "description": "Orchestration updates, more document types",
-            "version": "2.2.10",
+            "version": "2.2.12",
             "status": "pre-release"
         }
     ],

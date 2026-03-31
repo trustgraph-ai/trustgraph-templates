@@ -17,6 +17,9 @@ tools, create a step-by-step plan.
 
 {{ question }}
 
+Do not include a final synthesis step — synthesis of results is performed
+automatically after all steps complete.
+
 Produce a JSON array of plan steps. Each step is an object with:
 - `goal` (string): what this step aims to achieve
 - `tool_hint` (string): suggested tool name, or empty string if none
