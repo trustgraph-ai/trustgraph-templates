@@ -22,8 +22,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-definitions",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--log-level",
@@ -66,8 +65,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-relationships",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--log-level",
@@ -110,8 +108,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-agent",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--log-level",
@@ -154,8 +151,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-ontology",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--log-level",
@@ -210,8 +206,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "graph-rag",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--entity-limit",
@@ -264,8 +259,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "graph-embeddings",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])

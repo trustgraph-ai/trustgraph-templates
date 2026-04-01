@@ -15,8 +15,7 @@ neo4j + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "triples-write-neo4j",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-g",
                         $["neo4j-url"],
                         "--log-level",
@@ -49,8 +48,7 @@ neo4j + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "triples-query-neo4j",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-g",
                         $["neo4j-url"],
                         "--log-level",

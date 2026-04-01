@@ -23,8 +23,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "document-rag",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--doc-limit",
                         std.toString(docLimit),
                         "--log-level",
@@ -65,8 +64,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "document-embeddings",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])

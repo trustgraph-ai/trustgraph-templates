@@ -22,8 +22,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "prompt-template",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--log-level",
@@ -66,8 +65,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "prompt-template",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "prompt-rag",
                         "--concurrency",

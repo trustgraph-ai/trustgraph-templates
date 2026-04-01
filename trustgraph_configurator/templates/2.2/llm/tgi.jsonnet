@@ -26,8 +26,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-tgi",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "-x",
@@ -71,8 +70,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-tgi",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "--concurrency",

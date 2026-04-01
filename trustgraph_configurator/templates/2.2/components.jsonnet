@@ -3,7 +3,8 @@
    // Essentials
    "trustgraph-base": import "core/trustgraph.jsonnet",
    "rev-gateway": import "core/rev-gateway.jsonnet",
-   "pulsar": import "pulsar/pulsar.jsonnet",
+   "pulsar": import "pubsub/pulsar.jsonnet",
+   "rabbitmq": import "pubsub/rabbitmq.jsonnet",
 
    // LLMs
    "azure": import "llm/azure.jsonnet",

@@ -12,8 +12,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_ocr)
                     .with_command([
                         "pdf-ocr",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                     ])
                     .with_limits("1.0", "512M")
                     .with_reservations("0.1", "512M");

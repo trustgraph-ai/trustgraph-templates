@@ -14,8 +14,7 @@ milvus + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "ge-write-milvus",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.milvus,
                         "--log-level",
@@ -48,8 +47,7 @@ milvus + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "ge-query-milvus",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.milvus,
                         "--log-level",
@@ -82,8 +80,7 @@ milvus + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "de-write-milvus",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.milvus,
                         "--log-level",
@@ -116,8 +113,7 @@ milvus + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "de-query-milvus",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.milvus,
                         "--log-level",

@@ -29,8 +29,7 @@ local models = import "parameters/azure.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-azure",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "-x",
                         std.toString($["azure-max-output-tokens"]),
                         "-t",
@@ -71,8 +70,7 @@ local models = import "parameters/azure.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-azure",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "-x",

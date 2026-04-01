@@ -32,8 +32,7 @@ local url = import "values/url.jsonnet";
                     .with_command(
                         [
                             "tg-init-trustgraph",
-                            "-p",
-                            url.pulsar_admin,
+                        ] + $["pub-sub-args"] + $["pub-sub-init-args"] + [
                             "--config-file",
                             "/trustgraph/config.json",
                         ]

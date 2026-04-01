@@ -16,8 +16,7 @@ memgraph + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "triples-write-memgraph",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-g",
                         $["memgraph-url"],
                         "--database",
@@ -52,8 +51,7 @@ memgraph + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "triples-query-memgraph",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-g",
                         $["memgraph-url"],
                         "--database",

@@ -20,8 +20,7 @@ qdrant + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "graph-embeddings-write-qdrant",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.qdrant,
                         "--log-level",
@@ -60,8 +59,7 @@ qdrant + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "graph-embeddings-query-qdrant",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.qdrant,
                         "--log-level",
@@ -100,8 +98,7 @@ qdrant + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "doc-embeddings-write-qdrant",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.qdrant,
                         "--log-level",
@@ -140,8 +137,7 @@ qdrant + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "doc-embeddings-query-qdrant",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.qdrant,
                         "--log-level",
@@ -181,8 +177,7 @@ qdrant + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "row-embeddings-write-qdrant",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.qdrant,
                         "--log-level",
@@ -221,8 +216,7 @@ qdrant + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "row-embeddings-query-qdrant",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-t",
                         url.qdrant,
                         "--log-level",

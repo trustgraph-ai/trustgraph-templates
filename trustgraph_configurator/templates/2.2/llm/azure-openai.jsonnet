@@ -34,8 +34,7 @@ local models = import "parameters/azure-openai.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-azure-openai",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "-x",
                         std.toString($["azure-openai-max-output-tokens"]),
                         "-t",
@@ -77,8 +76,7 @@ local models = import "parameters/azure-openai.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-azure-openai",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "-x",

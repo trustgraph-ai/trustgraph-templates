@@ -1,5 +1,4 @@
 local images = import "values/images.jsonnet";
-local url = import "values/url.jsonnet";
 
 local config_initialiser = import "configuration.jsonnet";
 local config  = import "../runtime-config/trustgraph-config.jsonnet";
@@ -74,7 +73,8 @@ local findRoute = function(k)
 
     "log-level":: "INFO",
 
-    // Base objects with concurrency defaults (LLM/embeddings components merge into these)
+    // Base objects with concurrency defaults (LLM/embeddings components
+    // merge into these)
     "text-completion" +: { concurrency:: 1 },
     "text-completion-rag" +: { concurrency:: 1 },
     embeddings +: { concurrency:: 1 },
@@ -103,8 +103,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "api-gateway",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--timeout",
                         std.toString(timeout),
                         "--port",
@@ -155,8 +154,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "chunker-recursive",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--chunk-size",
                         std.toString(size),
                         "--chunk-overlap",
@@ -201,8 +199,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "config-svc",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -241,8 +238,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_unstructured)
                     .with_command([
                         "universal-decoder",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -281,8 +277,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "mcp-tool",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -321,8 +316,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "metering",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -361,8 +355,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "metering",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "metering-rag",
                         "--log-level",
@@ -403,8 +396,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-store",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -443,8 +435,7 @@ local findRoute = function(k)
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-manager",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])

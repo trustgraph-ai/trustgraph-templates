@@ -20,8 +20,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "nlp-query",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -60,8 +59,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "structured-query",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -100,8 +98,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "structured-diag",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -142,8 +139,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "kg-extract-rows",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--log-level",
@@ -184,8 +180,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "row-embeddings",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])

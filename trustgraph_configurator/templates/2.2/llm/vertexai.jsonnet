@@ -35,8 +35,7 @@ local models = import "parameters/vertexai.jsonnet";
                     .with_image(images.trustgraph_vertexai)
                     .with_command([
                         "text-completion-vertexai",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "-k",
                         $["vertexai-private-key"],
                         "-r",
@@ -83,8 +82,7 @@ local models = import "parameters/vertexai.jsonnet";
                     .with_image(images.trustgraph_vertexai)
                     .with_command([
                         "text-completion-vertexai",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "-k",

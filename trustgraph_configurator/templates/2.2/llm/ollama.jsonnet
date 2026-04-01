@@ -28,8 +28,7 @@ local models = import "parameters/ollama.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-ollama",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--log-level",
@@ -69,8 +68,7 @@ local models = import "parameters/ollama.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-ollama",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "--concurrency",

@@ -20,8 +20,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "pdf-ocr-mistral",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])

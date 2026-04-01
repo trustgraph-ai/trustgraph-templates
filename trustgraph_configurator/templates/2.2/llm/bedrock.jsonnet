@@ -30,8 +30,7 @@ local models = import "parameters/bedrock.jsonnet";
                     .with_image(images.trustgraph_bedrock)
                     .with_command([
                         "text-completion-bedrock",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "-x",
                         std.toString($["bedrock-max-output-tokens"]),
                         "-t",
@@ -71,8 +70,7 @@ local models = import "parameters/bedrock.jsonnet";
                     .with_image(images.trustgraph_bedrock)
                     .with_command([
                         "text-completion-bedrock",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "-x",
