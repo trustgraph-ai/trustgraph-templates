@@ -19,8 +19,7 @@ local cassandra_hosts = "cassandra";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "ge-write-pinecone",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -56,8 +55,7 @@ local cassandra_hosts = "cassandra";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "ge-query-pinecone",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -93,8 +91,7 @@ local cassandra_hosts = "cassandra";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "de-write-pinecone",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -130,8 +127,7 @@ local cassandra_hosts = "cassandra";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "de-query-pinecone",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])

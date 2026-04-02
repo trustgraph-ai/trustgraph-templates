@@ -22,8 +22,7 @@ local cassandra = import "backends/cassandra.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "librarian",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                         "--object-store-endpoint",

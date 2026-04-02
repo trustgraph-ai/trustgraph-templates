@@ -28,8 +28,7 @@ local models = import "parameters/mistral.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-mistral",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "-x",
                         std.toString($["mistral-max-output-tokens"]),
                         "-t",
@@ -69,8 +68,7 @@ local models = import "parameters/mistral.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-mistral",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "-x",

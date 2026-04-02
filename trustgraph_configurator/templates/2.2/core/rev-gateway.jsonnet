@@ -28,8 +28,7 @@ local url = import "values/url.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "rev-gateway",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--websocket-uri",
                         std.toString(uri),
                         "--log-level",

@@ -9,6 +9,18 @@ local url = import "values/url.jsonnet";
 
 {
 
+    "pub-sub-args":: [
+        "--pubsub-backend",
+        "pulsar",
+        "--pulsar-host",
+        url.pulsar,
+    ],
+
+    "pub-sub-init-args":: [
+        "--pulsar-admin-url",
+        url.pulsar_admin,
+    ],
+    
     "pulsar" +: {
 
         // Zookeeper memory settings (can be overridden by memory-profile)

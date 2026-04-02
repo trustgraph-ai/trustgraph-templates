@@ -7,6 +7,8 @@ local flow = helpers.flow;
 local request = helpers.request;
 local response = helpers.response;
 local request_response = helpers.request_response;
+local librarian_request = helpers.librarian_request;
+local librarian_response = helpers.librarian_response;
 
 // Import shared services
 local llm_services = import "llm-services.jsonnet";
@@ -54,8 +56,8 @@ llm_services + embeddings_service + {
             "triples-request": request("triples:{id}"),
             "triples-response": response("triples:{id}"),
             explainability: flow("triples-store:{id}"),
-            "librarian-request": request("librarian"),
-            "librarian-response": response("librarian"),
+            "librarian-request": librarian_request,
+            "librarian-response": librarian_response,
         },
         "triples-query:{id}": {
             request: request("triples:{id}"),

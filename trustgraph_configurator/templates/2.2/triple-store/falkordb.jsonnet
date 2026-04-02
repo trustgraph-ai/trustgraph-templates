@@ -15,8 +15,7 @@ falkordb + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "triples-write-falkordb",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-g",
                         $["falkordb-url"],
                         "--log-level",
@@ -49,8 +48,7 @@ falkordb + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "triples-query-falkordb",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "-g",
                         $["falkordb-url"],
                         "--log-level",

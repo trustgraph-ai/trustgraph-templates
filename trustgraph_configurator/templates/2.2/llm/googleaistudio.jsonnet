@@ -28,8 +28,7 @@ local models = import "parameters/googleaistudio.jsonnet";
                     .with_image(images.trustgraph_vertexai)
                     .with_command([
                         "text-completion-googleaistudio",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "-x",
                         std.toString($["googleaistudio-max-output-tokens"]),
                         "-t",
@@ -69,8 +68,7 @@ local models = import "parameters/googleaistudio.jsonnet";
                     .with_image(images.trustgraph_vertexai)
                     .with_command([
                         "text-completion-googleaistudio",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "-x",

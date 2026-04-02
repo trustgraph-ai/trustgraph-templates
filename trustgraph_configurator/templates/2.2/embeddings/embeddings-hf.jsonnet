@@ -20,8 +20,7 @@ local models = import "parameters/embeddings-huggingface.jsonnet";
                     .with_image(images.trustgraph_hf)
                     .with_command([
                         "embeddings-hf",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                     ])

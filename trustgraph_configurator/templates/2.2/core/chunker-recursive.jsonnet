@@ -24,8 +24,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "chunker-recursive",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--chunk-size",
                         std.toString($["chunk-size"]),
                         "--chunk-overlap",

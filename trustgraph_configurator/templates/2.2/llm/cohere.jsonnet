@@ -27,8 +27,7 @@ local models = import "parameters/cohere.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-cohere",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "-t",
                         "%0.3f" % $["cohere-temperature"],
                         "--log-level",
@@ -65,8 +64,7 @@ local models = import "parameters/cohere.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-cohere",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "-t",

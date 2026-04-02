@@ -7,6 +7,8 @@ local flow = helpers.flow;
 local request = helpers.request;
 local response = helpers.response;
 local request_response = helpers.request_response;
+local librarian_request = helpers.librarian_request;
+local librarian_response = helpers.librarian_response;
 
 // Import shared services (load requires embeddings for chunk processing)
 local embeddings_service = import "embeddings-service.jsonnet";
@@ -28,8 +30,8 @@ embeddings_service + {
             input: flow("document-load:{id}"),
             output: flow("text-document-load:{id}"),
             triples: flow("triples-store:{id}"),
-            "librarian-request": request("librarian"),
-            "librarian-response": response("librarian"),
+            "librarian-request": librarian_request,
+            "librarian-response": librarian_response,
         },
 
         // Chunker splits documents into smaller, processable pieces
@@ -38,8 +40,8 @@ embeddings_service + {
             input: flow("text-document-load:{id}"),
             output: flow("chunk-load:{id}"),
             triples: flow("triples-store:{id}"),
-            "librarian-request": request("librarian"),
-            "librarian-response": response("librarian"),
+            "librarian-request": librarian_request,
+            "librarian-response": librarian_response,
             "chunk-size": "{chunk-size}",
             "chunk-overlap": "{chunk-overlap}",
         },

@@ -26,8 +26,7 @@ local models = import "parameters/llamafile.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-llamafile",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--log-level",
                         $["log-level"],
                     ])
@@ -63,8 +62,7 @@ local models = import "parameters/llamafile.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "text-completion-llamafile",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--id",
                         "text-completion-rag",
                         "--log-level",

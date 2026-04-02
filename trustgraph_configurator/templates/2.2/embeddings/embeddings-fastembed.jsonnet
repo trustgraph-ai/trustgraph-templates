@@ -20,8 +20,7 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "embeddings-fastembed",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "--log-level",

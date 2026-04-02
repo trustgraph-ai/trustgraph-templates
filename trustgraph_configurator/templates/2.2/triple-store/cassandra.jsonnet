@@ -14,8 +14,7 @@ cassandra + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "triples-write-cassandra",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--cassandra-host",
                         cassandra_hosts,
                         "--log-level",
@@ -48,8 +47,7 @@ cassandra + {
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "triples-query-cassandra",
-                        "-p",
-                        url.pulsar,
+] + $["pub-sub-args"] + [
                         "--cassandra-host",
                         cassandra_hosts,
                         "--log-level",

@@ -21,8 +21,7 @@ local models = import "parameters/embeddings-ollama.jsonnet";
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "embeddings-ollama",
-                        "-p",
-                        url.pulsar,
+                    ] + $["pub-sub-args"] + [
                         "--concurrency",
                         std.toString(concurrency),
                         "-r",
