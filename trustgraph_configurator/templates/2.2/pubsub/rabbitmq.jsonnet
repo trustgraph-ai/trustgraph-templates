@@ -48,7 +48,8 @@ local url = import "values/url.jsonnet";
                         "RABBITMQ_DEFAULT_PASS": "guest",
                     })
                     .with_port(5672, 5672, "amqp")
-                    .with_port(15672, 15672, "management");
+                    .with_port(15672, 15672, "management")
+                    .with_port(15692, 15692, "metrics");
 
             local containerSet = engine.containers(
                 "rabbitmq", [ container ]

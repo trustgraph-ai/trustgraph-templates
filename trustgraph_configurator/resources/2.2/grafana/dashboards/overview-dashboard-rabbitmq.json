@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 4,
   "links": [],
   "panels": [
     {
@@ -670,12 +670,12 @@
             "uid": "f6b18033-5918-4e05-a1ca-4cb30343b129"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "pulsar_msg_backlog{topic!=\"persistent://tg/config/config\"}",
+          "editorMode": "code",
+          "expr": "  label_replace(                                                                                                                                                                                                             \n    rabbitmq_queue_messages{queue!~\"tg.state.config.*|amq.gen-.*\"},                                                                                                                                                          \n    \"short\", \"$2:$1:$3\", \"queue\", \"^([^.]+)\\\\.([^.]+)\\\\.([^.]+)\\\\..+$\"                                                                                                                                                       \n  )                                                                                                                                                                                                                          \n",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{topic}}",
+          "legendFormat": "{{short}}",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -1392,12 +1392,12 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Overview",
-  "uid": "b5c8abf8-fe79-496b-b028-10bde917d1f0",
+  "title": "Overview (RabbitMQ)",
+  "uid": "adkxj6x",
   "version": 1
 }
