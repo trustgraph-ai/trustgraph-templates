@@ -12,7 +12,7 @@ local loki = import "loki.jsonnet";
             local cfgVol = engine.configVolume(
                 "prometheus-cfg", "prometheus",
 		{
-		    "prometheus.yml": importstr "prometheus/prometheus.yml",
+		    "prometheus.yml": $["prometheus-config"],
 		}
             );
 
@@ -70,7 +70,7 @@ local loki = import "loki.jsonnet";
                 "dashboards", "grafana/dashboards/",
 		{
 		    "overview-dashboard.json":
-                        importstr "grafana/dashboards/overview-dashboard.json",
+                        $["overview-dashboard"],
 		    "log-dashboard.json":
                         importstr "grafana/dashboards/log-dashboard.json",
 		}

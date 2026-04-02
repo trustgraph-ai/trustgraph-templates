@@ -17,7 +17,13 @@ local url = import "values/url.jsonnet";
         "--pulsar-admin-url",
         url.pulsar_admin,
     ],
-    
+
+    "overview-dashboard"::
+        importstr "grafana/dashboards/overview-dashboard-rabbitmq.json",
+
+    "prometheus-config"::
+        importstr "prometheus/prometheus-rabbitmq.yml",
+
     "rabbitmq" +: {
 
         // Memory settings (can be overridden by memory-profile)
