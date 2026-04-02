@@ -257,9 +257,16 @@ scrape_configs:
         - 'text-completion-rag:8000'
 
   # Non-Trustgraph services
-  - job_name: 'pulsar'
+  - job_name: 'garage'
+    metrics_path: '/metrics'
     scrape_interval: 5s
     static_configs:
       - targets:
-        - 'pulsar:8080'
+        - 'garage:3903'
 
+  - job_name: 'rabbitmq'
+    metrics_path: '/metrics/per-object'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'rabbitmq:15692'

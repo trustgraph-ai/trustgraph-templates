@@ -17,7 +17,13 @@ local url = import "values/url.jsonnet";
         "--pulsar-admin-url",
         url.pulsar_admin,
     ],
-    
+
+    "overview-dashboard"::
+        importstr "grafana/dashboards/overview-dashboard-rabbitmq.json",
+
+    "prometheus-config"::
+        importstr "prometheus/prometheus-rabbitmq.yml",
+
     "rabbitmq" +: {
 
         // Memory settings (can be overridden by memory-profile)
@@ -48,7 +54,8 @@ local url = import "values/url.jsonnet";
                         "RABBITMQ_DEFAULT_PASS": "guest",
                     })
                     .with_port(5672, 5672, "amqp")
-                    .with_port(15672, 15672, "management");
+                    .with_port(15672, 15672, "management")
+                    .with_port(15692, 15692, "metrics");
 
             local containerSet = engine.containers(
                 "rabbitmq", [ container ]

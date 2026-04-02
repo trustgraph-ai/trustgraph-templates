@@ -20,7 +20,13 @@ local url = import "values/url.jsonnet";
         "--pulsar-admin-url",
         url.pulsar_admin,
     ],
-    
+
+    "overview-dashboard"::
+        importstr "grafana/dashboards/overview-dashboard-pulsar.json",
+
+    "prometheus-config"::
+        importstr "prometheus/prometheus-pulsar.yml",
+
     "pulsar" +: {
 
         // Zookeeper memory settings (can be overridden by memory-profile)
