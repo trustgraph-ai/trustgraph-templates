@@ -28,6 +28,7 @@ llm_services + embeddings_service + {
         "graph-rag": request_response("graph-rag:{id}"),
         "triples": request_response("triples:{id}"),
         "graph-embeddings": request_response("graph-embeddings:{id}"),
+        "sparql": request_response("sparql:{id}"),
     },
 
     // Flow-level processors - handle data streams for a specific flow instance
@@ -58,6 +59,12 @@ llm_services + embeddings_service + {
             explainability: flow("triples-store:{id}"),
             "librarian-request": librarian_request,
             "librarian-response": librarian_response,
+        },
+        "sparql-query:{id}": {
+            request: request("sparql:{id}"),
+            response: response("sparql:{id}"),
+            "triples-request": request("triples:{id}"),
+            "triples-response": response("triples:{id}"),
         },
         "triples-query:{id}": {
             request: request("triples:{id}"),
