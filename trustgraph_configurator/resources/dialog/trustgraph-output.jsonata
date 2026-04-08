@@ -43,8 +43,8 @@
     /* Vector database */
     $component("vector-store-" & vector_db),
 
-    /* Messaging - always included */
-    $component("pulsar"),
+    /* Messaging */
+    $component(pubsub ? pubsub : "pulsar"),
 
     /* Monitoring - always included */
     $component("grafana")

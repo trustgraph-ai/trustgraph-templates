@@ -85,6 +85,30 @@ steps:
           icon: "ovhcloud"
           description: "Managed Kubernetes on OVHCloud European infrastructure. Suitable for production deployment."
     transitions:
+      - when: "version >= '2.2'"
+        next: pubsub
+      - next: graph-store
+
+  # ─────────────────────────────────────────────────────────────
+  # Pub/Sub Messaging (>= 2.2 only)
+  # ─────────────────────────────────────────────────────────────
+  pubsub:
+    title: "Which pub/sub messaging system?"
+    description: "The messaging fabric used for communication between TrustGraph services"
+    state_key: pubsub
+    input:
+      type: select
+      options:
+        - label: "Apache Pulsar"
+          value: "pulsar"
+          icon: "pulsar"
+          description: "Distributed messaging and streaming platform. Feature-rich and scalable, but higher resource usage."
+          recommended: true
+        - label: "RabbitMQ"
+          value: "rabbitmq"
+          icon: "rabbitmq"
+          description: "Lightweight, widely-adopted message broker. Lower resource usage, good for smaller deployments."
+    transitions:
       - next: graph-store
 
   # ─────────────────────────────────────────────────────────────
