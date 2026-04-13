@@ -18,6 +18,11 @@ steps:
     input:
       type: select
       options:
+        - label: "TrustGraph 2.3"
+          value: "2.3"
+          description: "Agent explainability analytics"
+          badge: stable
+          recommended: true
         - label: "TrustGraph 2.2"
           value: "2.2"
           description: "Additional document format support, new agent orchestration framework"
