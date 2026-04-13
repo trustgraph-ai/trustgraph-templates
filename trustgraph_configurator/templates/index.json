@@ -23,6 +23,12 @@
             "description": "Multi-pattern agent orchestration with explainability, extended document processing for cover many document types",
             "version": "2.2.26",
             "status": "stable"
+        },
+        {
+            "name": "2.3",
+            "description": "Agent explainability analytics",
+            "version": "2.3.1",
+            "status": "pre-release"
         }
     ],
     "platforms": [
