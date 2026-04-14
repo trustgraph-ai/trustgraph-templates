@@ -21,7 +21,7 @@
         {
             "name": "2.2",
             "description": "Multi-pattern agent orchestration with explainability, extended document processing for cover many document types",
-            "version": "2.2.26",
+            "version": "2.2.27",
             "status": "stable"
         },
         {
