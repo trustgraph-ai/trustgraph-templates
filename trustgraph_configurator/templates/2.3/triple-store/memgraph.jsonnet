@@ -1,6 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local memgraph = import "backends/memgraph.jsonnet";
+local logLevel = $.parameters["log-level"];
 
 memgraph + {
 
@@ -22,7 +23,7 @@ memgraph + {
                         "--database",
                         $["memgraph-database"],
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -57,7 +58,7 @@ memgraph + {
                         "--database",
                         $["memgraph-database"],
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

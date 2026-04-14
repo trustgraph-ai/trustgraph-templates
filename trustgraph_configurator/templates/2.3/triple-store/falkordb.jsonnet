@@ -1,6 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local falkordb = import "backends/falkordb.jsonnet";
+local logLevel = $.parameters["log-level"];
 
 falkordb + {
 
@@ -19,7 +20,7 @@ falkordb + {
                         "-g",
                         $["falkordb-url"],
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -52,7 +53,7 @@ falkordb + {
                         "-g",
                         $["falkordb-url"],
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

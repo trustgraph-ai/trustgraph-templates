@@ -9,6 +9,11 @@ local url = import "values/url.jsonnet";
 
 {
 
+    "pub-sub-params":: {
+        pubsub_backend: "pulsar",
+        pulsar_host: url.pulsar,
+    },
+
     "pub-sub-args":: [
         "--pubsub-backend",
         "pulsar",

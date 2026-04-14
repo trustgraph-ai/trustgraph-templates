@@ -1,5 +1,6 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
+local logLevel = $.parameters["log-level"];
 local cassandra_hosts = "cassandra";
 
 {
@@ -21,7 +22,7 @@ local cassandra_hosts = "cassandra";
                         "ge-write-pinecone",
 ] + $["pub-sub-args"] + [
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")
@@ -57,7 +58,7 @@ local cassandra_hosts = "cassandra";
                         "ge-query-pinecone",
 ] + $["pub-sub-args"] + [
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")
@@ -93,7 +94,7 @@ local cassandra_hosts = "cassandra";
                         "de-write-pinecone",
 ] + $["pub-sub-args"] + [
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")
@@ -129,7 +130,7 @@ local cassandra_hosts = "cassandra";
                         "de-query-pinecone",
 ] + $["pub-sub-args"] + [
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits("0.5", "128M")

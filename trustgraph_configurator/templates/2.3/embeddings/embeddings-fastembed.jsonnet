@@ -1,33 +1,82 @@
 local images = import "values/images.jsonnet";
-local url = import "values/url.jsonnet";
-local prompts = import "prompts/mixtral.jsonnet";
 local models = import "parameters/embeddings-fastembed.jsonnet";
 
 {
+
+    parameters +:: {
+        "embeddings-concurrency": 1,
+        "embeddings-cpu-limit": "4.0",
+        "embeddings-cpu-reservation": "0.5",
+        "embeddings-memory-limit": "256M",
+        "embeddings-memory-reservation": "256M",
+    },
 
     "fastembed-models":: models,
 
     "embeddings-models" +:: $["fastembed-models"],
 
-    embeddings +: {
+    local logLevel = $.parameters["log-level"],
+
+    "embeddings" +: {
+
+        local pars = $.parameters,
+
+        local embeddingsConc = pars["embeddings-concurrency"],
+        local cpuLimit = pars["embeddings-cpu-limit"],
+        local cpuReservation = pars["embeddings-cpu-reservation"],
+        local memoryLimit = pars["embeddings-memory-limit"],
+        local memoryReservation = pars["embeddings-memory-reservation"],
 
         create:: function(engine)
 
-            local concurrency = self.concurrency;
+            local cfgVol = engine.configVolume(
+                "embeddings-launch-cfg", "launch/embeddings",
+		{
+		    "launch.yaml": std.manifestYamlDoc({
+                        processors: [
+                            {
+                                class: "trustgraph.embeddings.fastembed.Processor",
+                                params: {
+                                    id: "embeddings",
+                                    concurrency: embeddingsConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: "trustgraph.embeddings.document_embeddings.Processor",
+                                params: {
+                                    id: "document-embeddings",
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: "trustgraph.embeddings.graph_embeddings.Processor",
+                                params: {
+                                    id: "graph-embeddings",
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: "trustgraph.embeddings.row_embeddings.Processor",
+                                params: {
+                                    id: "row-embeddings",
+                                } + $["pub-sub-params"],
+                            },
+                        ]
+                    })
+		}
+            );
 
             local container =
                 engine.container("embeddings")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "embeddings-fastembed",
-                    ] + $["pub-sub-args"] + [
-                        "--concurrency",
-                        std.toString(concurrency),
+                        "processor-group",
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
+                        "-c",
+                        "/etc/trustgraph/launch.yaml"
                     ])
-                    .with_limits("2.0", "600M")
-                    .with_reservations("1.0", "600M");
+                    .with_volume_mount(cfgVol, "/etc/trustgraph/")
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation);
 
             local containerSet = engine.containers(
                 "embeddings", [ container ]
@@ -38,11 +87,11 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
+                cfgVol,
                 containerSet,
                 service,
             ])
 
-    },
+    }
 
 }
-

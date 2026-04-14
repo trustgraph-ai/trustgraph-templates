@@ -18,11 +18,63 @@ local models = import "parameters/vertexai.jsonnet";
 
     "llm-models" +:: $["vertexai-models"],
 
+    parameters +:: {
+        "text-completion-cpu-limit": "0.5",
+        "text-completion-cpu-reservation": "0.1",
+        "text-completion-memory-limit": "256M",
+        "text-completion-memory-reservation": "256M",
+        "text-completion-concurrency": 1,
+        "text-completion-rag-concurrency": 1,
+    },
+
+    local logLevel = $.parameters["log-level"],
+
     "text-completion" +: {
-    
+
+        local pars = $.parameters,
+        local cpuLimit = pars["text-completion-cpu-limit"],
+        local cpuReservation = pars["text-completion-cpu-reservation"],
+        local memoryLimit = pars["text-completion-memory-limit"],
+        local memoryReservation = pars["text-completion-memory-reservation"],
+        local textCompletionConc = pars["text-completion-concurrency"],
+        local textCompletionRagConc = pars["text-completion-rag-concurrency"],
+
+
         create:: function(engine)
 
-            local cfgVol = engine.secretVolume(
+            local cfgVol = engine.configVolume(
+                "text-completion-launch-cfg", "launch/text-completion",
+		{
+		    "launch.yaml": std.manifestYamlDoc({
+                        processors: [
+                            {
+                                class: "trustgraph.model.text_completion.vertexai.Processor",
+                                params: {
+                                    id: "text-completion",
+                                    concurrency: textCompletionConc,
+                                    private_key: $["vertexai-private-key"],
+                                    region: $["vertexai-region"],
+                                    max_output_tokens: $["vertexai-max-output-tokens"],
+                                    temperature: $["vertexai-temperature"],
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: "trustgraph.model.text_completion.vertexai.Processor",
+                                params: {
+                                    id: "text-completion-rag",
+                                    concurrency: textCompletionRagConc,
+                                    private_key: $["vertexai-private-key"],
+                                    region: $["vertexai-region"],
+                                    max_output_tokens: $["vertexai-max-output-tokens"],
+                                    temperature: $["vertexai-temperature"],
+                                } + $["pub-sub-params"],
+                            },
+                        ]
+                    })
+		}
+            );
+
+            local credsVol = engine.secretVolume(
 	        "vertexai-creds",
 	        "./vertexai",
 		{
@@ -34,20 +86,19 @@ local models = import "parameters/vertexai.jsonnet";
                 engine.container("text-completion")
                     .with_image(images.trustgraph_vertexai)
                     .with_command([
-                        "text-completion-vertexai",
-                    ] + $["pub-sub-args"] + [
-                        "-k",
-                        $["vertexai-private-key"],
-                        "-r",
-                        $["vertexai-region"],
-                        "-x",
-                        std.toString($["vertexai-max-output-tokens"]),
-                        "-t",
-                        "%0.3f" % $["vertexai-temperature"],
+                        "processor-group",
+                        "--log-level",
+                        logLevel,
+                        "-c",
+                        "/etc/trustgraph/launch.yaml"
                     ])
-                    .with_limits("0.5", "256M")
-                    .with_reservations("0.1", "256M")
-                    .with_volume_mount(cfgVol, "/vertexai");
+                    .with_volume_mount(cfgVol, "/etc/trustgraph/")
+                    .with_volume_mount(credsVol, "/vertexai")
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(
+                        cpuReservation,
+                        memoryReservation
+                    );
 
             local containerSet = engine.containers(
                 "text-completion", [ container ]
@@ -59,55 +110,7 @@ local models = import "parameters/vertexai.jsonnet";
 
             engine.resources([
                 cfgVol,
-                containerSet,
-                service,
-            ])
-
-    },
-
-    "text-completion-rag" +: {
-    
-        create:: function(engine)
-
-            local cfgVol = engine.secretVolume(
-	        "vertexai-creds",
-	        "./vertexai",
-		{
-		    "private.json": importstr "vertexai/private.json",
-		}
-            );
-
-            local container =
-                engine.container("text-completion-rag")
-                    .with_image(images.trustgraph_vertexai)
-                    .with_command([
-                        "text-completion-vertexai",
-                    ] + $["pub-sub-args"] + [
-                        "--id",
-                        "text-completion-rag",
-                        "-k",
-                        $["vertexai-private-key"],
-                        "-r",
-                        $["vertexai-region"],
-                        "-x",
-                        std.toString($["vertexai-max-output-tokens"]),
-                        "-t",
-                        "%0.3f" % $["vertexai-temperature"],
-                    ])
-                    .with_limits("0.5", "256M")
-                    .with_reservations("0.1", "256M")
-                    .with_volume_mount(cfgVol, "/vertexai");
-
-            local containerSet = engine.containers(
-                "text-completion-rag", [ container ]
-            );
-
-            local service =
-                engine.internalService(containerSet)
-                .with_port(8000, 8000, "metrics");
-
-            engine.resources([
-                cfgVol,
+                credsVol,
                 containerSet,
                 service,
             ])
@@ -115,4 +118,3 @@ local models = import "parameters/vertexai.jsonnet";
     },
 
 } + prompts
-
