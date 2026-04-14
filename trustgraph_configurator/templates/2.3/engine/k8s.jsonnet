@@ -108,6 +108,7 @@
                                 }
                             },
                             spec: {
+                                enableServiceLinks: false,
                                 containers: [
                                     {
                                         name: container.name,
