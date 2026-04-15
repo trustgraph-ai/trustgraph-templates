@@ -63,6 +63,7 @@ markers = [
     "unit: Unit tests",
     "integration: Integration tests",
     "validation: Output validation tests",
+    "features: Per-component feature contract tests",
     "slow: Slow-running tests",
 ]
 
