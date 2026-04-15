@@ -3,6 +3,8 @@ local url = import "values/url.jsonnet";
 
 {
 
+    local logLevel = $.parameters["log-level"],
+
     "agent-manager" +: {
 
         "cpu-limit":: "0.5",
@@ -22,7 +24,7 @@ local url = import "values/url.jsonnet";
                         "agent-manager-react",
                     ] + $["pub-sub-args"] + [
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits(self["cpu-limit"], memoryLimit)
                     .with_reservations(self["cpu-reservation"], memoryReservation);

@@ -2,6 +2,7 @@ local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local cassandra_hosts = "cassandra";
 local milvus = import "backends/milvus.jsonnet";
+local logLevel = $.parameters["log-level"];
 
 milvus + {
 
@@ -18,7 +19,7 @@ milvus + {
                         "-t",
                         url.milvus,
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -51,7 +52,7 @@ milvus + {
                         "-t",
                         url.milvus,
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -84,7 +85,7 @@ milvus + {
                         "-t",
                         url.milvus,
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -117,7 +118,7 @@ milvus + {
                         "-t",
                         url.milvus,
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

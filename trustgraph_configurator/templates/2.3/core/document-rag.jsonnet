@@ -12,6 +12,8 @@ local prompts = import "prompts/mixtral.jsonnet";
         "memory-limit":: "128M",
         "memory-reservation":: "128M",
 
+        local logLevel = $.parameters["log-level"],
+
         create:: function(engine)
 
             local docLimit = self["doc-limit"];
@@ -27,7 +29,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "--doc-limit",
                         std.toString(docLimit),
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits(self["cpu-limit"], memoryLimit)
                     .with_reservations(self["cpu-reservation"], memoryReservation);
@@ -66,7 +68,7 @@ local prompts = import "prompts/mixtral.jsonnet";
                         "document-embeddings",
 ] + $["pub-sub-args"] + [
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits(self["cpu-limit"], memoryLimit)
                     .with_reservations(self["cpu-reservation"], memoryReservation);

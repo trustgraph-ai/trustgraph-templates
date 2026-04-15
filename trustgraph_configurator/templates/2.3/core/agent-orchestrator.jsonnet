@@ -10,6 +10,8 @@ local url = import "values/url.jsonnet";
         "memory-limit":: "256M",
         "memory-reservation":: "256M",
 
+        local logLevel = $.parameters["log-level"],
+
         create:: function(engine)
 
             local memoryLimit = self["memory-limit"];
@@ -22,7 +24,7 @@ local url = import "values/url.jsonnet";
                         "agent-orchestrator",
                     ] + $["pub-sub-args"] + [
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits(self["cpu-limit"], memoryLimit)
                     .with_reservations(self["cpu-reservation"], memoryReservation);

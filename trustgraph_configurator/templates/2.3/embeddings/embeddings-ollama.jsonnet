@@ -1,6 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local models = import "parameters/embeddings-ollama.jsonnet";
+local logLevel = $.parameters["log-level"];
 
 {
 
@@ -27,7 +28,7 @@ local models = import "parameters/embeddings-ollama.jsonnet";
                         "-r",
                         $["ollama-url"],
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

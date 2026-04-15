@@ -16,9 +16,57 @@ local models = import "parameters/claude.jsonnet";
 
     "llm-models" +:: $["claude-models"],
 
+    parameters +:: {
+        "text-completion-cpu-limit": "0.5",
+        "text-completion-cpu-reservation": "0.1",
+        "text-completion-memory-limit": "128M",
+        "text-completion-memory-reservation": "128M",
+        "text-completion-concurrency": 1,
+        "text-completion-rag-concurrency": 1,
+    },
+
+    local logLevel = $.parameters["log-level"],
+
     "text-completion" +: {
-    
+
+        local pars = $.parameters,
+        local cpuLimit = pars["text-completion-cpu-limit"],
+        local cpuReservation = pars["text-completion-cpu-reservation"],
+        local memoryLimit = pars["text-completion-memory-limit"],
+        local memoryReservation = pars["text-completion-memory-reservation"],
+        local textCompletionConc = pars["text-completion-concurrency"],
+        local textCompletionRagConc = pars["text-completion-rag-concurrency"],
+
+
         create:: function(engine)
+
+            local cfgVol = engine.configVolume(
+                "text-completion-launch-cfg", "launch/text-completion",
+		{
+		    "launch.yaml": std.manifestYamlDoc({
+                        processors: [
+                            {
+                                class: "trustgraph.model.text_completion.claude.Processor",
+                                params: {
+                                    id: "text-completion",
+                                    concurrency: textCompletionConc,
+                                    max_output_tokens: $["claude-max-output-tokens"],
+                                    temperature: $["claude-temperature"],
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: "trustgraph.model.text_completion.claude.Processor",
+                                params: {
+                                    id: "text-completion-rag",
+                                    concurrency: textCompletionRagConc,
+                                    max_output_tokens: $["claude-max-output-tokens"],
+                                    temperature: $["claude-temperature"],
+                                } + $["pub-sub-params"],
+                            },
+                        ]
+                    })
+		}
+            );
 
             local envSecrets = engine.envSecrets("claude-credentials")
                 .with_env_var("CLAUDE_KEY", "claude-key");
@@ -27,18 +75,19 @@ local models = import "parameters/claude.jsonnet";
                 engine.container("text-completion")
                     .with_image(images.trustgraph_flow)
                     .with_command([
-                        "text-completion-claude",
-                    ] + $["pub-sub-args"] + [
-                        "-x",
-                        std.toString($["claude-max-output-tokens"]),
-                        "-t",
-                        "%0.3f" % $["claude-temperature"],
+                        "processor-group",
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
+                        "-c",
+                        "/etc/trustgraph/launch.yaml"
                     ])
+                    .with_volume_mount(cfgVol, "/etc/trustgraph/")
                     .with_env_var_secrets(envSecrets)
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(
+                        cpuReservation,
+                        memoryReservation
+                    );
 
             local containerSet = engine.containers(
                 "text-completion", [ container ]
@@ -50,53 +99,11 @@ local models = import "parameters/claude.jsonnet";
 
             engine.resources([
                 envSecrets,
+                cfgVol,
                 containerSet,
                 service,
             ])
 
     },
 
-    "text-completion-rag" +: {
-
-        create:: function(engine)
-
-            local envSecrets = engine.envSecrets("claude-credentials")
-                .with_env_var("CLAUDE_KEY", "claude-key");
-
-            local containerRag =
-                engine.container("text-completion-rag")
-                    .with_image(images.trustgraph_flow)
-                    .with_command([
-                        "text-completion-claude",
-                    ] + $["pub-sub-args"] + [
-                        "--id",
-                        "text-completion-rag",
-                        "-x",
-                        std.toString($["claude-max-output-tokens"]),
-                        "-t",
-                        "%0.3f" % $["claude-temperature"],
-                        "--log-level",
-                        $["log-level"],
-                    ])
-                    .with_env_var_secrets(envSecrets)
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M");
-
-            local containerSetRag = engine.containers(
-                "text-completion-rag", [ containerRag ]
-            );
-
-            local serviceRag =
-                engine.internalService(containerSetRag)
-                .with_port(8000, 8000, "metrics");
-
-            engine.resources([
-                envSecrets,
-                containerSetRag,
-                serviceRag,
-            ])
-
-    },
-
 } + prompts
-

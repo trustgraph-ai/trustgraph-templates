@@ -1,6 +1,7 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local neo4j = import "backends/neo4j.jsonnet";
+local logLevel = $.parameters["log-level"];
 
 neo4j + {
 
@@ -19,7 +20,7 @@ neo4j + {
                         "-g",
                         $["neo4j-url"],
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");
@@ -52,7 +53,7 @@ neo4j + {
                         "-g",
                         $["neo4j-url"],
                         "--log-level",
-                        $["log-level"],
+                        logLevel,
                     ])
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M");

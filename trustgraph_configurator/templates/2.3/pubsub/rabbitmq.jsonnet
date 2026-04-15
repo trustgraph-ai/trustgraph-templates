@@ -6,6 +6,11 @@ local url = import "values/url.jsonnet";
 
 {
 
+    "pub-sub-params":: {
+        pubsub_backend: "rabbitmq",
+        rabbitmq_host: "rabbitmq",
+    },
+
     "pub-sub-args":: [
         "--pubsub-backend",
         "rabbitmq",
