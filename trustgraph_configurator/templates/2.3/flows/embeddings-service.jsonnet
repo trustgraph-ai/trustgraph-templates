@@ -5,12 +5,12 @@
 local helpers = import "helpers.jsonnet";
 local request = helpers.request;
 local response = helpers.response;
-local request_response = helpers.request_response;
+local request_response_if = helpers.request_response_if;
 
 {
     // Interfaces exposed by embeddings service
     "interfaces" +: {
-        "embeddings": request_response("embeddings:{id}"),
+        "embeddings": request_response_if("embeddings:{id}"),
     },
 
     "parameters" +: {
@@ -19,9 +19,13 @@ local request_response = helpers.request_response;
     // Flow-level processor for embeddings
     "flow" +: {
         "embeddings:{id}": {
-            request: request("embeddings:{id}"),
-            response: response("embeddings:{id}"),
-            model: "{embeddings-model}",
+            topics: {
+                request: request("embeddings:{id}"),
+                response: response("embeddings:{id}"),
+            },
+            parameters: {
+                model: "{embeddings-model}",
+            },
         },
     },
 

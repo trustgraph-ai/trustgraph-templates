@@ -40,6 +40,12 @@ local cassandra = import "backends/cassandra.jsonnet";
                                 } + $["pub-sub-params"],
                             },
                             {
+                                class: "trustgraph.flow.service.Processor",
+                                params:  {
+                                    id: "flow-svc",
+                                } + $["pub-sub-params"],
+                            },
+                            {
                                 class: "trustgraph.cores.service.Processor",
                                 params: {
                                     id: "knowledge",

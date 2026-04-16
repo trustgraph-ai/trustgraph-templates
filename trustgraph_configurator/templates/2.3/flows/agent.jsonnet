@@ -7,7 +7,7 @@ local helpers = import "helpers.jsonnet";
 local flow = helpers.flow;
 local request = helpers.request;
 local response = helpers.response;
-local request_response = helpers.request_response;
+local request_response_if = helpers.request_response_if;
 
 // Import shared services (agent requires LLM for reasoning, MCP for tools)
 local llm_services = import "llm-services.jsonnet";
@@ -18,39 +18,33 @@ llm_services + mcp_service + {
 
     // External interfaces for agent operations
     "interfaces" +: {
-        "agent": request_response("agent:{id}"),
+        "agent": request_response_if("agent:{id}"),
     },
 
     // Flow-level processors for agent management
     "flow" +: {
         // Agent manager orchestrates agent conversations and tool usage
         "agent-manager:{id}": {
-
-            // Agent communication channels
-            request: request("agent:{id}"),
-            next: request("agent:{id}"),
-            response: response("agent:{id}"),
-
-            // LLM and prompt services
-            "text-completion-request": request("text-completion:{id}"),
-            "text-completion-response": response("text-completion:{id}"),
-            "prompt-request": request("prompt-rag:{id}"),
-            "prompt-response": response("prompt-rag:{id}"),
-
-            // Tool integrations
-            "mcp-tool-request": request("mcp-tool:{id}"),
-            "mcp-tool-response": response("mcp-tool:{id}"),
-            "graph-rag-request": request("graph-rag:{id}"),
-            "graph-rag-response": response("graph-rag:{id}"),
-            "structured-query-request": request("structured-query:{id}"),
-            "structured-query-response": response("structured-query:{id}"),
-            "embeddings-request": request("embeddings:{id}"),
-            "embeddings-response": response("embeddings:{id}"),
-            "row-embeddings-query-request": request("row-embeddings:{id}"),
-            "row-embeddings-query-response": response("row-embeddings:{id}"),
-
-            // Explainability
-            explainability: flow("triples-store:{id}"),
+            topics: {
+                request: request("agent:{id}"),
+                next: request("agent:{id}"),
+                response: response("agent:{id}"),
+                "text-completion-request": request("text-completion:{id}"),
+                "text-completion-response": response("text-completion:{id}"),
+                "prompt-request": request("prompt-rag:{id}"),
+                "prompt-response": response("prompt-rag:{id}"),
+                "mcp-tool-request": request("mcp-tool:{id}"),
+                "mcp-tool-response": response("mcp-tool:{id}"),
+                "graph-rag-request": request("graph-rag:{id}"),
+                "graph-rag-response": response("graph-rag:{id}"),
+                "structured-query-request": request("structured-query:{id}"),
+                "structured-query-response": response("structured-query:{id}"),
+                "embeddings-request": request("embeddings:{id}"),
+                "embeddings-response": response("embeddings:{id}"),
+                "row-embeddings-query-request": request("row-embeddings:{id}"),
+                "row-embeddings-query-response": response("row-embeddings:{id}"),
+                explainability: flow("triples-store:{id}"),
+            },
         },
     },
 

@@ -27,6 +27,12 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
         local memoryLimit = pars["embeddings-memory-limit"],
         local memoryReservation = pars["embeddings-memory-reservation"],
 
+        local embeds = "trustgraph.embeddings",
+        local fastEmbedProc = "%s.fastembed.Processor" % embeds,
+        local docEmbedProc = "%s.document_embeddings.Processor" % embeds,
+        local graphEmbedProc = "%s.graph_embeddings.Processor" % embeds,
+        local rowEmbedProc = "%s.row_embeddings.Processor" % embeds,
+
         create:: function(engine)
 
             local cfgVol = engine.configVolume(
@@ -35,26 +41,26 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
 		    "launch.yaml": std.manifestYamlDoc({
                         processors: [
                             {
-                                class: "trustgraph.embeddings.fastembed.Processor",
+                                class: fastEmbedProc,
                                 params: {
                                     id: "embeddings",
                                     concurrency: embeddingsConc,
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.embeddings.document_embeddings.Processor",
+                                class: docEmbedProc,
                                 params: {
                                     id: "document-embeddings",
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.embeddings.graph_embeddings.Processor",
+                                class: graphEmbedProc,
                                 params: {
                                     id: "graph-embeddings",
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.embeddings.row_embeddings.Processor",
+                                class: rowEmbedProc,
                                 params: {
                                     id: "row-embeddings",
                                 } + $["pub-sub-params"],

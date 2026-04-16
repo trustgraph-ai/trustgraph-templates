@@ -17,11 +17,13 @@ local response = helpers.response;
     // Flow-level processor for structured row extraction
     "flow" +: {
         "kg-extract-rows:{id}": {
-            input: flow("chunk-load:{id}"),
-            output: flow("rows-store:{id}"),
-            "entity-contexts": flow("entity-contexts-load:{id}"),
-            "prompt-request": request("prompt:{id}"),
-            "prompt-response": response("prompt:{id}"),
+            topics: {
+                input: flow("chunk-load:{id}"),
+                output: flow("rows-store:{id}"),
+                "entity-contexts": flow("entity-contexts-load:{id}"),
+                "prompt-request": request("prompt:{id}"),
+                "prompt-response": response("prompt:{id}"),
+            },
         },
     },
 

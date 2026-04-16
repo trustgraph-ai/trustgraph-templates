@@ -86,8 +86,10 @@ local interface_builder = import "interface-builder.jsonnet";
                     },
                 },
 
-                // Active flow processors
-                "active-flow": active_flows,
+                // Active flow processors — each processor is its own
+                // config type keyed as "processor:<name>", with flow
+                // variants (e.g. "default", "flow2") as sub-keys.
+                } + active_flows + {
 
                 // Token costs and parameter types
                 "token-cost": config_spec.token_costs,

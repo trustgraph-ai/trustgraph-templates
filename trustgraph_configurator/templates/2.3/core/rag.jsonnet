@@ -39,6 +39,17 @@ local url = import "values/url.jsonnet";
         local memoryLimit = pars["rag-memory-limit"],
         local memoryReservation = pars["rag-memory-reservation"],
 
+        local retrieval = "trustgraph.retrieval",
+        local agentOrchestrator = "trustgraph.agent.orchestrator.Processor",
+        local graphRag = "%s.graph_rag.Processor" % retrieval,
+        local documentRag = "%s.document_rag.Processor" % retrieval,
+        local nlpQuery = "%s.nlp_query.Processor" % retrieval,
+        local structuredQuery = "%s.structured_query.Processor" % retrieval,
+        local structuredDiag = "%s.structured_diag.Processor" % retrieval,
+        local sparql = "trustgraph.query.sparql.Processor",
+        local promptProc = "trustgraph.prompt.template.Processor",
+        local mcpTool = "trustgraph.agent.mcp_tool.Service",
+
         create:: function(engine)
 
             local cfgVol = engine.configVolume(
@@ -47,13 +58,13 @@ local url = import "values/url.jsonnet";
 		    "launch.yaml": std.manifestYamlDoc({
                         processors: [
                             {
-                                class: "trustgraph.agent.orchestrator.Processor",
+                                class: agentOrchestrator,
                                 params: {
                                     id: "agent-manager",
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.retrieval.graph_rag.Processor",
+                                class: graphRag,
                                 params: {
                                     id: "graph-rag",
                                     concurrency: graphRagConc,
@@ -66,45 +77,45 @@ local url = import "values/url.jsonnet";
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.retrieval.document_rag.Processor",
+                                class: documentRag,
                                 params: {
                                     id: "document-rag",
                                     doc_limit: docLimit,
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.retrieval.nlp_query.Processor",
+                                class: nlpQuery,
                                 params: {
                                     id: "nlp-query",
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.retrieval.structured_query.Processor",
+                                class: structuredQuery,
                                 params: {
                                     id: "structured-query",
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.retrieval.structured_diag.Processor",
+                                class: structuredDiag,
                                 params: {
                                     id: "structured-diag",
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.query.sparql.Processor",
+                                class: sparql,
                                 params: {
                                     id: "sparql-query",
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.prompt.template.Processor",
+                                class: promptProc,
                                 params: {
                                     id: "prompt-rag",
                                     concurrency: promptRagConc,
                                 } + $["pub-sub-params"],
                             },
                             {
-                                class: "trustgraph.agent.mcp_tool.Service",
+                                class: mcpTool,
                                 params: {
                                     id: "mcp-tool",
                                 } + $["pub-sub-params"],
