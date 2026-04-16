@@ -5,12 +5,12 @@
 local helpers = import "helpers.jsonnet";
 local request = helpers.request;
 local response = helpers.response;
-local request_response = helpers.request_response;
+local request_response_if = helpers.request_response_if;
 
 {
     // Interfaces exposed by MCP service
     "interfaces" +: {
-        "mcp-tool": request_response("mcp-tool:{id}"),
+        "mcp-tool": request_response_if("mcp-tool:{id}"),
     },
 
     "parameters" +: {
@@ -19,10 +19,12 @@ local request_response = helpers.request_response;
     // Flow-level processor for MCP tool execution
     "flow" +: {
         "mcp-tool:{id}": {
-            request: request("mcp-tool:{id}"),
-            response: response("mcp-tool:{id}"),
-            "text-completion-request": request("text-completion:{id}"),
-            "text-completion-response": response("text-completion:{id}"),
+            topics: {
+                request: request("mcp-tool:{id}"),
+                response: response("mcp-tool:{id}"),
+                "text-completion-request": request("text-completion:{id}"),
+                "text-completion-response": response("text-completion:{id}"),
+            },
         },
     },
 

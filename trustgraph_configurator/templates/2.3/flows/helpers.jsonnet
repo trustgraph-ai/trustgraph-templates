@@ -13,27 +13,32 @@ local request(x) = "request:tg:" + x;
 // Creates a non-persistent response URI for request-response patterns
 local response(x) = "response:tg:" + x;
 
-// State broadcast queue — persistent, last-value semantics
-local state(x) = "state:tg:" + x;
-
 local librarian_request = request("librarian");
 local librarian_response = request("librarian");
 
 // Creates a request-response pair for bidirectional communication
 // Returns an object with both request and response URIs
-local request_response(x) = {
+local flow_if(x) = {
+  flow: flow(x),
+};
+
+local request_response_if(x) = {
   request: request(x),
   response: response(x),
 };
 
 // Export all helper functions for use in other modules
 {
+
     flow: flow,
     request: request,
     response: response,
-    request_response: request_response,
-    state: state,
+
+    flow_if: flow_if,
+    request_response_if: request_response_if,
+
     librarian_request: librarian_request,
     librarian_response: librarian_response,
+
 }
 

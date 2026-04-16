@@ -17,11 +17,11 @@ local flow = helpers.flow;
 
     // Flow-level processors for knowledge graph storage
     "flow" +: {
-        // Knowledge graph store consolidates extracted knowledge
-        // Takes processed triples and embeddings and stores them permanently
         "kg-store:{id}": {
-            "triples-input": flow("triples-store:{id}"),           // Input RDF triples stream
-            "graph-embeddings-input": flow("graph-embeddings-store:{id}"), // Input graph embeddings
+            topics: {
+                "triples-input": flow("triples-store:{id}"),
+                "graph-embeddings-input": flow("graph-embeddings-store:{id}"),
+            },
         },
     },
 
