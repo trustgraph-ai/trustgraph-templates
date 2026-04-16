@@ -1,3 +1,17 @@
+// Emits the list of `launch/*/launch.yaml` files (and any other
+// configVolume parts) that ship alongside the compose / k8s output.
+//
+// This renderer is unusual: instead of running `create` against a
+// target-shaped engine, it uses a *collecting engine* whose methods are
+// mostly no-ops except for `configVolume`, which captures the `parts`
+// argument into `configVolumes` on the accumulating state. The renderer
+// then walks that list and converts it into an `[{path, content}, ...]`
+// array for the Packager to drop into the zip at the right paths.
+//
+// Unlike the compose renderers, this one guards with
+// `std.objectHasAll(p, 'create')` so hidden-only sub-objects (e.g.
+// `parameters`) don't crash the fold.
+
 local decode = import "decode-config.jsonnet";
 
 // Import config
