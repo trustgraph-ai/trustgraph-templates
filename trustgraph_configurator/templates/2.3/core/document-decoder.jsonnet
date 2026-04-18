@@ -1,3 +1,6 @@
+// Document decoder processor — turns uploaded files (PDF, etc.)
+// into the text representation consumed by the ingest pipeline.
+
 local images = import "values/images.jsonnet";
 
 {

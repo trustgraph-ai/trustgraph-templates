@@ -1,3 +1,13 @@
+"""
+Jsonnet snippet evaluator.
+
+Wraps the gojsonnet native bindings to evaluate a Jsonnet template
+(either a string snippet or a file) and return the rendered JSON as
+a Python object. Import resolution is delegated to a fetch callback
+supplied by the caller (typically Packager), which lets templates
+reference bundled resources and dynamically-injected files such as
+config.json and version.jsonnet.
+"""
 
 import _gojsonnet as j
 import json

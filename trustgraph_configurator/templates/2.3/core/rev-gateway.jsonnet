@@ -1,3 +1,6 @@
+// Reverse gateway processor — ingress front-end that terminates
+// external connections and forwards to internal services.
+
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 

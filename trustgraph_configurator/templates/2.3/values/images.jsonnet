@@ -1,3 +1,8 @@
+// Container image references used across the templates.
+// TrustGraph images are tagged with the version from
+// version.jsonnet (injected by the packager); third-party
+// images are pinned explicitly here.
+
 local version = import "version.jsonnet";
 {
     cassandra: "docker.io/cassandra:5.0.6",

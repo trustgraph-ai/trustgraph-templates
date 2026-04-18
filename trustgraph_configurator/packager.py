@@ -1,3 +1,17 @@
+"""
+Deployment package builder.
+
+Given a template name, version and target platform, locates the
+bundled Jsonnet templates, feeds a user-supplied config.json through
+the platform-specific renderer (config-to-docker-compose.jsonnet,
+config-to-<k8s-flavour>.jsonnet, etc.) and emits a zip containing
+the deployment artefacts: docker-compose.yaml or resources.yaml,
+plus any trustgraph/config.json and additional files declared by
+the template's config-to-additionals.jsonnet renderer.
+
+Also exposes write_tg_config / write_resources for writing a single
+artefact to stdout instead of producing a zip.
+"""
 
 import pathlib
 import yaml

@@ -1,3 +1,5 @@
+// External HTTP/WebSocket API gateway processor definition.
+
 local images = import "values/images.jsonnet";
 
 {

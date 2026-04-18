@@ -1,3 +1,6 @@
+// Helpers for overriding individual prompt templates from the
+// default set without copying the full default-prompts.jsonnet.
+
 local default_prompts = import "prompts/default-prompts.jsonnet";
 
 {

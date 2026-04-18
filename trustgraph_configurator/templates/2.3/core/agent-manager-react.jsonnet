@@ -1,3 +1,5 @@
+// ReAct-style agent manager processor definition.
+
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 

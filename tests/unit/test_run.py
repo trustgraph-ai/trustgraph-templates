@@ -45,7 +45,7 @@ class TestRun:
 
     def test_exit_code_propagates(self, monkeypatch):
         """Test that exit codes are properly set."""
-        from trustgraph_configurator import run
+        from trustgraph_configurator import generate_deployment
 
         # Test successful exit (no exception)
         # This would require a valid config, so we'll just test the error path
@@ -57,6 +57,6 @@ class TestRun:
         ])
 
         with pytest.raises(SystemExit) as exc_info:
-            run()  # run is already the function
+            generate_deployment()
 
         assert exc_info.value.code == 1

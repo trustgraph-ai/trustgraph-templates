@@ -1,3 +1,7 @@
+// Per-model input/output token prices (USD per token), keyed by
+// provider-qualified model id. Consumed by the runtime config so
+// downstream accounting can attribute cost per LLM call.
+
 {
   "mistral.mistral-large-2407-v1:0": {
     "model_name": "mistral.mistral-large-2407-v1:0",

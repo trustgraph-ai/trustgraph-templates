@@ -52,14 +52,14 @@ def run_configurator(monkeypatch, capsys):
         tuple: (stdout, stderr, exit_code)
     """
     def _run(args):
-        from trustgraph_configurator import run
+        from trustgraph_configurator import generate_deployment
 
         # Set sys.argv with the command and arguments
         monkeypatch.setattr(sys, 'argv', ['tg-build-deployment'] + args)
 
         exit_code = 0
         try:
-            run()  # run is already the function, not a module
+            generate_deployment()
         except SystemExit as e:
             exit_code = e.code if e.code is not None else 0
 

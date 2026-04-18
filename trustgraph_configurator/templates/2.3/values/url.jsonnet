@@ -1,3 +1,7 @@
+// Internal service URLs used by processors to reach infrastructure
+// components (pulsar, object store, vector stores). Hostnames assume
+// the deployment-internal DNS names produced by the renderers.
+
 {
     pulsar: "pulsar://pulsar:6650",
     pulsar_admin: "http://pulsar:8080",
