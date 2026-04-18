@@ -5,6 +5,7 @@
    "rev-gateway": import "core/rev-gateway.jsonnet",
    "pulsar": import "pubsub/pulsar.jsonnet",
    "rabbitmq": import "pubsub/rabbitmq.jsonnet",
+   "kafka": import "pubsub/kafka.jsonnet",
 
    // LLMs
    "azure": import "llm/azure.jsonnet",
