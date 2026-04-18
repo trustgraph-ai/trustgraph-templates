@@ -74,6 +74,7 @@ local images = import "values/images.jsonnet";
                         "KAFKA_AUTO_CREATE_TOPICS_ENABLE": "true",
                         "KAFKA_MESSAGE_MAX_BYTES": "10485760",
                         "KAFKA_REPLICA_FETCH_MAX_BYTES": "10485760",
+                        "KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS": "30",
                     })
                     .with_port(9092, 9092, "kafka");
 
