@@ -11,6 +11,7 @@ local version = import "version.jsonnet";
     neo4j: "docker.io/neo4j:2025.08.0-community-bullseye",
     pulsar: "docker.io/apachepulsar/pulsar:4.1.0",
     rabbitmq: "docker.io/rabbitmq:4.1-management",
+    kafka: "docker.io/apache/kafka:4.1.2",
     pulsar_manager: "docker.io/apachepulsar/pulsar-manager:v0.4.0",
     etcd: "quay.io/coreos/etcd:v3.6.4",
     minio: "docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z",
