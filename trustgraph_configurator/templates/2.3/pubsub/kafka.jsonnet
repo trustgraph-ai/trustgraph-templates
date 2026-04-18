@@ -46,11 +46,15 @@ local images = import "values/images.jsonnet";
             local memoryReservation = self["memory-reservation"];
             local clusterId = self["cluster-id"];
 
+            // Kafka volume for persistent KRaft log data
+            local volume = engine.volume("kafka").with_size("10G");
+
             local container =
                 engine.container("kafka")
                     .with_image(images.kafka)
                     .with_limits(self["cpu-limit"], memoryLimit)
                     .with_reservations(self["cpu-reservation"], memoryReservation)
+                    .with_volume_mount(volume, "/var/lib/kafka/data")
                     .with_environment({
                         "KAFKA_NODE_ID": "1",
                         "KAFKA_PROCESS_ROLES": "broker,controller",
@@ -61,8 +65,15 @@ local images = import "values/images.jsonnet";
                             "PLAINTEXT://:9092,CONTROLLER://:9093",
                         "KAFKA_INTER_BROKER_LISTENER_NAME": "PLAINTEXT",
                         "KAFKA_CONTROLLER_LISTENER_NAMES": "CONTROLLER",
-                        "KAFKA_LOG_DIRS": "/tmp/kraft-combined-logs",
+                        "KAFKA_LOG_DIRS": "/var/lib/kafka/data",
                         "CLUSTER_ID": clusterId,
+                        "KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR": "1",
+                        "KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS": "12",
+                        "KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR": "1",
+                        "KAFKA_TRANSACTION_STATE_LOG_MIN_ISR": "1",
+                        "KAFKA_AUTO_CREATE_TOPICS_ENABLE": "true",
+                        "KAFKA_MESSAGE_MAX_BYTES": "10485760",
+                        "KAFKA_REPLICA_FETCH_MAX_BYTES": "10485760",
                     })
                     .with_port(9092, 9092, "kafka");
 
@@ -75,6 +86,7 @@ local images = import "values/images.jsonnet";
                 .with_port(9092, 9092, "kafka");
 
             engine.resources([
+                volume,
                 containerSet,
                 service,
             ])
