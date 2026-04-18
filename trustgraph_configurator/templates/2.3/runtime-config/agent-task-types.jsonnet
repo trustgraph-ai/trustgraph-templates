@@ -1,3 +1,6 @@
+// Agent task-type definitions — domain framings plus the set of
+// reasoning patterns (see agent-patterns.jsonnet) that are valid
+// for each task type.
 
 {
     "general": {

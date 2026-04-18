@@ -1,3 +1,5 @@
+// Plan-then-execute / supervisor agent orchestrator processor.
+
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 

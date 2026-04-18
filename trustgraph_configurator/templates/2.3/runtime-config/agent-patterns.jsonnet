@@ -1,3 +1,6 @@
+// Agent reasoning patterns available to the agent manager.
+// Each entry describes one strategy (ReAct, plan-then-execute,
+// supervisor) and the iteration / tool-use contract it follows.
 
 {
     "react": {

@@ -135,12 +135,12 @@ For each (version, platform, config) combination:
 Most tests call the Python entry point function directly rather than invoking the subprocess:
 
 ```python
-from trustgraph_configurator import run
+from trustgraph_configurator import generate_deployment
 import sys
 import json
 
 def test_basic_compilation(monkeypatch, capsys):
-    """Test compilation by calling run() directly"""
+    """Test compilation by calling generate_deployment() directly"""
     # Mock sys.argv with CLI arguments
     monkeypatch.setattr(sys, 'argv', [
         'tg-build-deployment',
@@ -151,7 +151,7 @@ def test_basic_compilation(monkeypatch, capsys):
     ])
 
     # Call the entry point directly
-    run.run()
+    generate_deployment()
 
     # Capture and validate output
     captured = capsys.readouterr()
@@ -233,13 +233,13 @@ def run_configurator(monkeypatch, capsys):
         Run configurator with args list.
         Returns (stdout, stderr, exit_code)
         """
-        from trustgraph_configurator import run
+        from trustgraph_configurator import generate_deployment
 
         monkeypatch.setattr(sys, 'argv', ['tg-build-deployment'] + args)
 
         exit_code = 0
         try:
-            run.run()
+            generate_deployment()
         except SystemExit as e:
             exit_code = e.code or 0
 

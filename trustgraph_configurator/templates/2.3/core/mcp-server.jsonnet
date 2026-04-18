@@ -1,3 +1,6 @@
+// MCP (Model Context Protocol) server processor — exposes
+// TrustGraph tools to MCP-capable clients.
+
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 

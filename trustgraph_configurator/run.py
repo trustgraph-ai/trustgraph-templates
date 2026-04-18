@@ -1,3 +1,12 @@
+"""
+CLI entry point for `tg-build-deployment`.
+
+Parses command-line arguments, loads an input config.json and drives
+Packager to emit a deployment zip (default) or, with -O / -R, a
+single artefact (TrustGraph config JSON or the compose/k8s resources
+YAML) to stdout. Logging is suppressed when writing to stdout so the
+output remains machine-parseable.
+"""
 
 import json
 import logging
@@ -6,7 +15,7 @@ import sys
 
 from . import Generator, Packager
 
-def run():
+def generate_deployment():
 
     parser = argparse.ArgumentParser(
         prog="tg-build-deployment",

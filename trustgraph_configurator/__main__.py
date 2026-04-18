@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from . import run
+from . import generate_deployment
 
 if __name__ == '__main__':
-    run()
+    generate_deployment()
 

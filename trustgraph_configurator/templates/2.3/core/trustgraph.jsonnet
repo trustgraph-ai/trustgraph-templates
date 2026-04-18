@@ -1,3 +1,9 @@
+// Core TrustGraph assembly.
+// Composes the always-on processor set (control plane, ingest, RAG,
+// API gateway, MCP server, workbench UI, runtime config) into a
+// single object that the platform renderers consume. Individual
+// processor definitions live in sibling files in this directory.
+
 local images = import "values/images.jsonnet";
 
 local config_initialiser = import "configuration.jsonnet";

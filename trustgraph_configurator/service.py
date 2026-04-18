@@ -1,3 +1,11 @@
+"""
+CLI entry point for `tg-config-svc`.
+
+Starts the aiohttp-based HTTP service (see api.py) that exposes the
+configurator as a REST API: POST /api/generate/{platform}/{template}
+to build a deployment zip from a supplied config, plus GET endpoints
+for version discovery and the bundled dialog-flow / docs resources.
+"""
 
 import logging
 

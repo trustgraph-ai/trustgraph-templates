@@ -1,3 +1,6 @@
+// Document-RAG processor — retrieves text chunks by vector
+// similarity and synthesises answers from the retrieved context.
+
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local prompts = import "prompts/mixtral.jsonnet";

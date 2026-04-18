@@ -1,3 +1,11 @@
+"""
+CLI entry point for `tg-show-config-params`.
+
+Prints the platforms and template versions bundled with this package
+as two tables, plus the current `latest` and `latest stable`
+pointers resolved from templates/index.json. Used to discover valid
+-t/-p values for `tg-build-deployment`.
+"""
 
 import json
 import logging
@@ -8,7 +16,7 @@ from . import Index
 
 from . import Generator, Packager
 
-def list():
+def list_templates():
 
     parser = argparse.ArgumentParser(
         prog="tg-show-config-params",

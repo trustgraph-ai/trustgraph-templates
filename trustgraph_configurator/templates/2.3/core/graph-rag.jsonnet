@@ -1,3 +1,6 @@
+// Graph-RAG processor — retrieves sub-graphs from the knowledge
+// graph and synthesises answers grounded in the traversed nodes.
+
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 

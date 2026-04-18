@@ -1,3 +1,6 @@
+// Document ingest pipeline: loaders and pre-processing that feed
+// the extraction and embedding stages.
+
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 

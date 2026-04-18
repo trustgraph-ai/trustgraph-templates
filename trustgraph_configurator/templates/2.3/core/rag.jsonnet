@@ -1,3 +1,6 @@
+// RAG query path: graph- and document-RAG processors plus their
+// supporting prompt / LLM interfaces.
+
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 
