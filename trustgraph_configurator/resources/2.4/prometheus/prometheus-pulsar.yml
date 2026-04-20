@@ -1,0 +1,97 @@
+global:
+
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'trustgraph'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+
+  # The job name is added as a label `job=<job_name>` to any timeseries
+  # scraped from this config.
+
+  # TrustGraph services in processor groups
+  - job_name: 'control'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'control:8000'
+
+  - job_name: 'ingest'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'ingest:8000'
+
+  - job_name: 'rag'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'rag:8000'
+
+  - job_name: 'embeddings'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'embeddings:8000'
+
+  - job_name: 'vector-store'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'vector-store:8000'
+
+  - job_name: 'row-store'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'row-store:8000'
+
+  - job_name: 'triple-store'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'triple-store:8000'
+
+  - job_name: 'text-completion'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'text-completion:8000'
+
+  # TrustGraph services standalone
+  - job_name: 'api-gateway'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'api-gateway:8000'
+
+  - job_name: 'mcp-server'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'mcp-server:8000'
+
+  - job_name: 'document-decoder'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'document-decoder:8000'
+
+  # Non-Trustgraph services
+  - job_name: 'garage'
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'garage:3903'
+
+  - job_name: 'pulsar'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        - 'pulsar:8080'
