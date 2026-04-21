@@ -7,8 +7,8 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
         "embeddings-concurrency": 1,
         "embeddings-cpu-limit": "4.0",
         "embeddings-cpu-reservation": "0.5",
-        "embeddings-memory-limit": "256M",
-        "embeddings-memory-reservation": "256M",
+        "embeddings-memory-limit": "640M",
+        "embeddings-memory-reservation": "640M",
     },
 
     "fastembed-models":: models,
