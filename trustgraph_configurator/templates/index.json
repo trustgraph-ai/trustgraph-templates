@@ -29,6 +29,12 @@
             "description": "Agent explainability analytics",
             "version": "2.3.13",
             "status": "pre-release"
+        },
+        {
+            "name": "2.4",
+            "description": "Data separation through workspaces",
+            "version": "2.4.0",
+            "status": "pre-release"
         }
     ],
     "platforms": [

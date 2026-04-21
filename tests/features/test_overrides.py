@@ -103,7 +103,7 @@ CASES = [
      _launch_param("embeddings", "embeddings", "concurrency")),
     ("embeddings-cpu-limit", "4.0", "8.0",
      _service_limit("embeddings", "cpu-limit")),
-    ("embeddings-memory-limit", "256M", "1G",
+    ("embeddings-memory-limit", "640M", "1G",
      _service_limit("embeddings", "memory-limit")),
 
     # --- llm (openai is in baseline) ---
