@@ -26,6 +26,41 @@ local cassandra = import "backends/cassandra.jsonnet";
                  object_store_region: $.garage.region,
             } + $["pub-sub-params"];
 
+            local init = "trustgraph.bootstrap.initialisers";
+
+            local initialisers = [
+                {
+                    "class": "%s.TemplateSeed" % init,
+                    "name": "template-seed",
+                    "flag": "v1",
+                    "params": {
+                        "config_file": "/etc/trustgraph/template/config.json",
+                        "overwrite": false,
+                    }
+                },
+                {
+                    "class": "%s.WorkspaceInit" % init,
+                    "name": "default-workspace",
+                    "flag": "v1",
+                    "params": {
+                        "workspace": "default",
+                        "source": "template",
+                        "overwrite": false,
+                    }
+                },
+                {
+                    "class": "%s.DefaultFlowStart" % init,
+                    "name": "default-flow",
+                    "flag": "v1",
+                    "params": {
+                        "workspace": "default",
+                        "flow_id": "default",
+                        "blueprint": "everything",
+                        "description": "Default",
+                    }
+                }
+            ];
+
             local cfgVol = engine.configVolume(
                 "control-launch-cfg", "launch/control",
 		{
@@ -71,8 +106,24 @@ local cassandra = import "backends/cassandra.jsonnet";
                                     id: "metering-rag",
                                 } + $["pub-sub-params"],
                             },
+                            {
+                                class: "trustgraph.bootstrap.bootstrapper.Processor",
+                                "params": {
+                                    "id": "bootstrap",
+                                    "initialisers": initialisers,
+                                } + $["pub-sub-params"]
+                            }
                         ]
                     })
+		}
+            );
+
+            local templateVol = engine.configVolume(
+                "template-cfg", "trustgraph",
+		{
+                    // This is a virtual import?  Will be caught by the
+                    // wrapper
+		    "config.json": importstr "trustgraph/config.json",
 		}
             );
 
@@ -87,9 +138,14 @@ local cassandra = import "backends/cassandra.jsonnet";
                         "--log-level",
                         logLevel,
                         "-c",
-                        "/etc/trustgraph/launch.yaml"
+                        "/etc/trustgraph/launch/launch.yaml"
                     ])
-                    .with_volume_mount(cfgVol, "/etc/trustgraph/")
+                    .with_volume_mount(
+                        cfgVol, "/etc/trustgraph/launch/"
+                    )
+                    .with_volume_mount(
+                        templateVol, "/etc/trustgraph/template/"
+                    )
                     .with_limits(self["cpu-limit"], memoryLimit)
                     .with_reservations(
                         self["cpu-reservation"],

@@ -6,7 +6,6 @@
 
 local images = import "values/images.jsonnet";
 
-local config_initialiser = import "configuration.jsonnet";
 local config  = import "../runtime-config/trustgraph-config.jsonnet";
 local control = import "control.jsonnet";
 local ingest = import "ingest.jsonnet";
@@ -23,5 +22,5 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
     },
 
 } + control + ingest + rag + api_gateway + mcp_server + document_decoder
-  + workbench + config_initialiser + config + ddg
+  + workbench + config + ddg
 
