@@ -1,9 +1,10 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local logLevel = $.parameters["log-level"];
 local cassandra_hosts = "cassandra";
 
 {
+
+    local logLevel = $.parameters["log-level"],
 
     "pinecone-cloud":: "aws",
     "pinecone-region":: "us-east-1",
