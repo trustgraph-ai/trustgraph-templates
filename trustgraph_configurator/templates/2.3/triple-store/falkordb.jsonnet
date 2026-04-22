@@ -1,9 +1,10 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local falkordb = import "backends/falkordb.jsonnet";
-local logLevel = $.parameters["log-level"];
 
 falkordb + {
+
+    local logLevel = $.parameters["log-level"],
 
     "falkordb-url":: "falkor://falkordb:6379",
 

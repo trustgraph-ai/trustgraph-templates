@@ -1,9 +1,10 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local memgraph = import "backends/memgraph.jsonnet";
-local logLevel = $.parameters["log-level"];
 
 memgraph + {
+
+    local logLevel = $.parameters["log-level"],
 
     "memgraph-url":: "bolt://memgraph:7687",
     "memgraph-database":: "memgraph",

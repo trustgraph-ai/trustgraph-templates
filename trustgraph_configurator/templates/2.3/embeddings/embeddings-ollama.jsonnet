@@ -1,9 +1,10 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local models = import "parameters/embeddings-ollama.jsonnet";
-local logLevel = $.parameters["log-level"];
 
 {
+
+    local logLevel = $.parameters["log-level"],
 
     "ollama-url":: "${OLLAMA_HOST}",
 
@@ -12,6 +13,8 @@ local logLevel = $.parameters["log-level"];
     "embeddings-models" +:: $["ollama-models"],
 
     embeddings +: {
+
+        concurrency:: 1,
 
         create:: function(engine)
 

@@ -2,9 +2,10 @@ local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local cassandra_hosts = "cassandra";
 local milvus = import "backends/milvus.jsonnet";
-local logLevel = $.parameters["log-level"];
 
 milvus + {
+
+    local logLevel = $.parameters["log-level"],
 
     "store-graph-embeddings" +: {
     

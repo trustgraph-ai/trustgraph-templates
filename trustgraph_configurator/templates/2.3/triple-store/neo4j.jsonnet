@@ -1,9 +1,10 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
 local neo4j = import "backends/neo4j.jsonnet";
-local logLevel = $.parameters["log-level"];
 
 neo4j + {
+
+    local logLevel = $.parameters["log-level"],
 
     "neo4j-url":: "bolt://neo4j:7687",
 
