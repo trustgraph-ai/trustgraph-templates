@@ -11,6 +11,8 @@ local models = import "parameters/embeddings-huggingface.jsonnet";
 
     embeddings +: {
 
+        concurrency:: 1,
+
         create:: function(engine)
 
             local concurrency = self.concurrency;

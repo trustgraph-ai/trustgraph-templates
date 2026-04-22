@@ -13,6 +13,8 @@ local logLevel = $.parameters["log-level"];
 
     embeddings +: {
 
+        concurrency:: 1,
+
         create:: function(engine)
 
             local concurrency = self.concurrency;
