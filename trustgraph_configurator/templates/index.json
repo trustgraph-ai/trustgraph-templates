@@ -26,14 +26,14 @@
         },
         {
             "name": "2.3",
-            "description": "Agent explainability analytics",
-            "version": "2.3.13",
-            "status": "pre-release"
+            "description": "Agent explainability analytics.  Reduced container footprint",
+            "version": "2.3.20",
+            "status": "stable"
         },
         {
             "name": "2.4",
-            "description": "Data separation through workspaces",
-            "version": "2.4.0",
+            "description": "IAM & data separation through workspaces",
+            "version": "2.4.2",
             "status": "pre-release"
         }
     ],
