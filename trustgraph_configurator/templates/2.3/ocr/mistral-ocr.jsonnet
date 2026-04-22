@@ -1,8 +1,9 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local logLevel = $.parameters["log-level"];
 
 {
+
+    local logLevel = $.parameters["log-level"],
 
     with:: function(key, value)
         self + {
