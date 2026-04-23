@@ -10,7 +10,7 @@
             "name": "1.9",
             "description": "Ontology extraction update, JSONL output from prompts",
             "version": "1.9.4",
-            "status": "beta"
+            "status": "stable"
         },
         {
             "name": "2.1",
