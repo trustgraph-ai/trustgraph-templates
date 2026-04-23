@@ -4,23 +4,28 @@ local images = import "values/images.jsonnet";
 
 {
 
+    parameters +:: {
+        "api-gateway-port": 8088,
+        "api-gateway-timeout": 600,
+        "api-gateway-cpu-limit": "0.5",
+        "api-gateway-cpu-reservation": "0.1",
+        "api-gateway-memory-limit": "512M",
+        "api-gateway-memory-reservation": "512M",
+    },
+
     "api-gateway" +: {
 
-        port:: 8088,
-        timeout:: 600,
-        "cpu-limit":: "0.5",
-        "cpu-reservation":: "0.1",
-        "memory-limit":: "512M",
-        "memory-reservation":: "512M",
+        local pars = $.parameters,
 
-        local logLevel = $.parameters["log-level"],
+        local logLevel = pars["log-level"],
+        local port = pars["api-gateway-port"],
+        local timeout = pars["api-gateway-timeout"],
+        local cpuLimit = pars["api-gateway-cpu-limit"],
+        local cpuReservation = pars["api-gateway-cpu-reservation"],
+        local memoryLimit = pars["api-gateway-memory-limit"],
+        local memoryReservation = pars["api-gateway-memory-reservation"],
 
         create:: function(engine)
-
-            local port = self.port;
-            local timeout = self.timeout;
-            local memoryLimit = self["memory-limit"];
-            local memoryReservation = self["memory-reservation"];
 
             local envSecrets = engine.envSecrets("gateway-secret")
                 .with_env_var("GATEWAY_SECRET", "gateway-secret");
@@ -39,8 +44,8 @@ local images = import "values/images.jsonnet";
                         logLevel,
                     ])
                     .with_env_var_secrets(envSecrets)
-                    .with_limits(self["cpu-limit"], memoryLimit)
-                    .with_reservations(self["cpu-reservation"], memoryReservation)
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation)
                     .with_port(port, port, "api");
 
             local containerSet = engine.containers(

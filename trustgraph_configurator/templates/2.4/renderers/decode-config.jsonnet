@@ -14,12 +14,13 @@
 // are component instances carrying `create::` methods.
 //
 // `base` supplies a default `with_params` that plants each param as a
-// hidden top-level field via `self + { [k] +:: v }`. Components can
-// override `with_params` to route params elsewhere — the `override`
-// component in components.jsonnet replaces the default with a
-// passthrough into the top-level `parameters +::` block, which is the
-// mechanism every tunable in the template tree reads from via
-// `$.parameters[...]`.
+// hidden top-level field via `self + { [k]:: v }` (replace, not
+// accumulate — `+::` would concatenate strings when a user override
+// collides with a default). Components can override `with_params` (or
+// `with`) to route params elsewhere — the `override` component in
+// components.jsonnet replaces the default with a passthrough into the
+// top-level `parameters +::` block, which is the mechanism every
+// tunable in the template tree reads from via `$.parameters[...]`.
 //
 // Note the init value of the inner foldl is `self`, not `{}`. With
 // empty pars (the common case for non-override components), the fold
@@ -32,7 +33,7 @@ local apply = function(p, components)
     local base = {
 
         with:: function(k, v) self + {
-            [k] +:: v
+            [k]:: v
         },
 
         with_params:: function(pars)
