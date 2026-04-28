@@ -6,19 +6,25 @@ local url = import "values/url.jsonnet";
 
 {
 
+    parameters +:: {
+        "mcp-server-port": 8000,
+        "mcp-server-cpu-limit": "0.5",
+        "mcp-server-cpu-reservation": "0.1",
+        "mcp-server-memory-limit": "256M",
+        "mcp-server-memory-reservation": "256M",
+    },
+
     "mcp-server" +: {
 
-        port:: 8000,
-        "cpu-limit":: "0.5",
-        "cpu-reservation":: "0.1",
-        "memory-limit":: "256M",
-        "memory-reservation":: "256M",
+        local pars = $.parameters,
+
+        local port = pars["mcp-server-port"],
+        local cpuLimit = pars["mcp-server-cpu-limit"],
+        local cpuReservation = pars["mcp-server-cpu-reservation"],
+        local memoryLimit = pars["mcp-server-memory-limit"],
+        local memoryReservation = pars["mcp-server-memory-reservation"],
 
         create:: function(engine)
-
-            local port = self.port;
-            local memoryLimit = self["memory-limit"];
-            local memoryReservation = self["memory-reservation"];
 
             local envSecrets = engine.envSecrets("mcp-server-secret")
                 .with_env_var("MCP_SERVER_SECRET", "mcp-server-secret")
@@ -33,8 +39,8 @@ local url = import "values/url.jsonnet";
                         std.toString(port),
                     ])
                     .with_env_var_secrets(envSecrets)
-                    .with_limits(self["cpu-limit"], memoryLimit)
-                    .with_reservations(self["cpu-reservation"], memoryReservation)
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation)
                     .with_port(port, port, "mcp");
 
             local containerSet = engine.containers(

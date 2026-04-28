@@ -6,30 +6,36 @@ local url = import "values/url.jsonnet";
 
 {
 
+    parameters +:: {
+        // Invalid default — rev-gateway won't connect to anything it
+        // shouldn't until the operator sets a real relay URI.
+        "rev-gateway-token": "INVALID_TOKEN",
+        "rev-gateway-uri":
+            "wss://127.0.0.1/api/v1/relay?token=INVALID_TOKEN",
+        "rev-gateway-cpu-limit": "0.5",
+        "rev-gateway-cpu-reservation": "0.1",
+        "rev-gateway-memory-limit": "256M",
+        "rev-gateway-memory-reservation": "256M",
+    },
+
     "rev-gateway" +: {
 
-        // Invalid, but at least means the rev-gateway won't connect to anything
-        // it shouldn't.
-        token:: "INVALID_TOKEN",
-        uri:: "wss://127.0.0.1/api/v1/relay?token=" + self.token,
-        "cpu-limit":: "0.5",
-        "cpu-reservation":: "0.1",
-        "memory-limit":: "256M",
-        "memory-reservation":: "256M",
+        local pars = $.parameters,
 
-        local logLevel = $.parameters["log-level"],
+        local logLevel = pars["log-level"],
+        local uri = pars["rev-gateway-uri"],
+        local cpuLimit = pars["rev-gateway-cpu-limit"],
+        local cpuReservation = pars["rev-gateway-cpu-reservation"],
+        local memoryLimit = pars["rev-gateway-memory-limit"],
+        local memoryReservation = pars["rev-gateway-memory-reservation"],
 
         create:: function(engine)
-
-            local uri = self.uri;
-            local memoryLimit = self["memory-limit"];
-            local memoryReservation = self["memory-reservation"];
 
             local envSecrets = engine.envSecrets("rev-gateway-secret")
                 .with_env_var("REV_GATEWAY_SECRET", "rev-gateway-secret");
 
             local container =
-                engine.container("api-gateway")
+                engine.container("rev-gateway")
                     .with_image(images.trustgraph_flow)
                     .with_command([
                         "rev-gateway",
@@ -40,19 +46,17 @@ local url = import "values/url.jsonnet";
                         logLevel,
                     ])
                     .with_env_var_secrets(envSecrets)
-                    .with_limits(self["cpu-limit"], memoryLimit)
-                    .with_reservations(self["cpu-reservation"], memoryReservation)
-                    .with_port(8000, 8000, "metrics")
-                    .with_port(port, port, "api");
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation)
+                    .with_port(8000, 8000, "metrics");
 
             local containerSet = engine.containers(
-                "api-gateway", [ container ]
+                "rev-gateway", [ container ]
             );
 
             local service =
                 engine.internalService(containerSet)
-                .with_port(8000, 8000, "metrics")
-                .with_port(port, port, "api");
+                .with_port(8000, 8000, "metrics");
 
             engine.resources([
                 envSecrets,

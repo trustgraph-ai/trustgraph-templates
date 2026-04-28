@@ -17,6 +17,12 @@ local workbench = import "../ui/workbench-ui.jsonnet";
 local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
 {
+
+    with:: function(key, value)
+        self + {
+            ["trustgraph-" + key]:: value,
+        },
+
     parameters +:: {
         "log-level":: "INFO",
     },

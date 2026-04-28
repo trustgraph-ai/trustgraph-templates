@@ -7,16 +7,27 @@ local cassandra = import "backends/cassandra.jsonnet";
 
 {
 
+    parameters +:: {
+        "control-cpu-limit": "0.5",
+        "control-cpu-reservation": "0.1",
+        "control-memory-limit": "256M",
+        "control-memory-reservation": "256M",
+    },
+
     "control" +: {
 
-        "cpu-limit":: "0.5",
-        "cpu-reservation":: "0.1",
-        "memory-limit":: "256M",
-        "memory-reservation":: "256M",
+        local pars = $.parameters,
 
-        local logLevel = $.parameters["log-level"],
+        local logLevel = pars["log-level"],
+        local cpuLimit = pars["control-cpu-limit"],
+        local cpuReservation = pars["control-cpu-reservation"],
+        local memoryLimit = pars["control-memory-limit"],
+        local memoryReservation = pars["control-memory-reservation"],
 
         create:: function(engine)
+
+            local envSecrets = engine.envSecrets("iam-bootstrap-token")
+                .with_env_var("IAM_BOOTSTRAP_TOKEN", "token");
 
             local librarianParams = {
                  id: "librarian",
@@ -107,12 +118,22 @@ local cassandra = import "backends/cassandra.jsonnet";
                                 } + $["pub-sub-params"],
                             },
                             {
+                                class: "trustgraph.iam.service.Processor",
+                                params: {
+                                    id: "iam-svc",
+                                    bootstrap_mode: "token",
+                                    // Bootstrap token is set by
+                                    // IAM_BOOTSTRAP_TOKEN
+                                } + $["pub-sub-params"],
+                            },
+                            {
                                 class: "trustgraph.bootstrap.bootstrapper.Processor",
                                 "params": {
                                     "id": "bootstrap",
                                     "initialisers": initialisers,
                                 } + $["pub-sub-params"]
-                            }
+                            },
+
                         ]
                     })
 		}
@@ -127,9 +148,6 @@ local cassandra = import "backends/cassandra.jsonnet";
 		}
             );
 
-            local memoryLimit = self["memory-limit"];
-            local memoryReservation = self["memory-reservation"];
-
             local container =
                 engine.container("control")
                     .with_image(images.trustgraph_flow)
@@ -140,17 +158,15 @@ local cassandra = import "backends/cassandra.jsonnet";
                         "-c",
                         "/etc/trustgraph/launch/launch.yaml"
                     ])
+                    .with_env_var_secrets(envSecrets)
                     .with_volume_mount(
                         cfgVol, "/etc/trustgraph/launch/"
                     )
                     .with_volume_mount(
                         templateVol, "/etc/trustgraph/template/"
                     )
-                    .with_limits(self["cpu-limit"], memoryLimit)
-                    .with_reservations(
-                        self["cpu-reservation"],
-                        memoryReservation
-                    );
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation);
 
             local containerSet = engine.containers(
                 "control", [ container ]
@@ -161,6 +177,7 @@ local cassandra = import "backends/cassandra.jsonnet";
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
+                envSecrets,
                 cfgVol,
                 containerSet,
                 service,
