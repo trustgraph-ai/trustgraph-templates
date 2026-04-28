@@ -27,7 +27,7 @@
         {
             "name": "2.3",
             "description": "Agent explainability analytics.  Reduced container footprint",
-            "version": "2.3.20",
+            "version": "2.3.21",
             "status": "stable"
         },
         {
