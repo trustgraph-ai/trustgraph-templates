@@ -65,8 +65,8 @@ local images = import "values/images.jsonnet";
                     .with_privileged(true)
                     .with_device("/dev/dri", "/dev/dri")
                     .with_ipc("host")
-                    .with_group("video")
-                    .with_group("render")
+                    .with_supplemental_group("video")
+                    .with_supplemental_group("render")
                     .with_capability("SYS_NICE")
                     .with_limits(
                         $["vllm-service-cpus"], $["vllm-service-memory"]

@@ -21,6 +21,8 @@ local images = import "values/images.jsonnet";
             local container =
                 engine.container("cassandra")
                     .with_image(images.cassandra)
+                    .with_user(999)
+                    .with_group(999)
                     .with_environment({
                         JVM_OPTS: "-Xms%s -Xmx%s -Dcassandra.skip_wait_for_gossip_to_settle=0" % [
                             heap, heap,

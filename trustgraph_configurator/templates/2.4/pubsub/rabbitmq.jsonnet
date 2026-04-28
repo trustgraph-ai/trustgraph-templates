@@ -51,12 +51,15 @@ local url = import "values/url.jsonnet";
             local container =
                 engine.container("rabbitmq")
                     .with_image(images.rabbitmq)
+                    .with_user(999)
+                    .with_group(999)
                     .with_limits(self["cpu-limit"], memoryLimit)
                     .with_reservations(self["cpu-reservation"], memoryReservation)
-                    .with_volume_mount(volume, "/var/lib/rabbitmq")
+                    .with_volume_mount(volume, "/var/lib/rabbitmq/mnesia")
                     .with_environment({
                         "RABBITMQ_DEFAULT_USER": "guest",
                         "RABBITMQ_DEFAULT_PASS": "guest",
+                        "RABBITMQ_ERLANG_COOKIE": "trustgraph-rabbitmq-cookie",
                     })
                     .with_port(5672, 5672, "amqp")
                     .with_port(15672, 15672, "management")

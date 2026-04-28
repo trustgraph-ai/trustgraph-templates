@@ -11,14 +11,22 @@
         ports: [],
         volumes: [],
         bindMounts: [],
-        groups: [],
+        supplementalGroups: [],
         environment: [],
 
         with_image:: function(x) self + { image: x },
 
-        with_user:: function(x) self + { user: x },
+        // k8s deliberately ignores `with_user`: the running UID is
+        // determined by the image's USER directive. `with_group(gid)`
+        // is wired to fsGroup so the kubelet chowns mounted PVCs to
+        // a GID the container can access.
+        with_user:: function(x) self,
 
-        with_group:: function(x) self + { groups: super.groups + [x] },
+        with_group:: function(x) self + { gid: x },
+
+        with_supplemental_group:: function(x) self + {
+            supplementalGroups: super.supplementalGroups + [x],
+        },
 
         with_privileged:: function(x) self + { privileged: x },
 
@@ -114,24 +122,15 @@
                                         name: container.name,
                                         image: container.image,
 
-                                        // FIXME: Make everything run as
-                                        // root.  Needed to get filesystems
-                                        // to be accessible.  There's a
-                                        // better way of doing this?
-                                        securityContext: {
-                                            runAsUser: 0,
-                                            runAsGroup: 0,
-                                        } + (
-                                            if std.objectHas(container, "privileged") && container.privileged then
-                                            { privileged: true }
-                                            else {}
-                                        ),
-
                                         resources: {
                                             requests: container.reservations,
                                             limits: container.limits
                                         },
                                     } + (
+                                        if std.objectHas(container, "privileged") && container.privileged then
+                                        { securityContext: { privileged: true } }
+                                        else {}
+                                    ) + (
                                     if std.length(container.ports) > 0 then
                                     {
                                         ports:  [
@@ -197,8 +196,20 @@
                         for bm in container.bindMounts
                             ]
                         } + (
-                            if std.length(container.groups) > 0 then
-                            { securityContext: { supplementalGroups: container.groups } }
+                            local hasFsGroup = std.objectHas(container, "gid");
+                            local hasSuppGroups =
+                                std.length(container.supplementalGroups) > 0;
+                            if hasFsGroup || hasSuppGroups then
+                            {
+                                securityContext:
+                                    (if hasFsGroup
+                                     then { fsGroup: container.gid }
+                                     else {}) +
+                                    (if hasSuppGroups then {
+                                        supplementalGroups:
+                                            container.supplementalGroups,
+                                    } else {}),
+                            }
                             else {}
                         )
                     },
@@ -229,6 +240,8 @@
                         { src: src, dest: dest, name: name  }
                     ]
                 },
+
+        with_external:: function() self,
 
         add:: function() [
 

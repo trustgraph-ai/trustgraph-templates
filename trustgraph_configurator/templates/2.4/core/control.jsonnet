@@ -179,6 +179,7 @@ local cassandra = import "backends/cassandra.jsonnet";
             engine.resources([
                 envSecrets,
                 cfgVol,
+                templateVol,
                 containerSet,
                 service,
             ])

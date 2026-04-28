@@ -80,6 +80,8 @@ local images = import "values/images.jsonnet";
             local garage_container =
                 engine.container("garage")
                     .with_image(images.garage)
+                    .with_user(1000)
+                    .with_group(1000)
                     .with_command([
                         "/garage", "-c", "/etc/garage/garage.toml", "server"
                     ])

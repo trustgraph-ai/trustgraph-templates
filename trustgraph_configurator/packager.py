@@ -180,6 +180,10 @@ class Packager:
                 data = self.generate_k8s(
                     self.platform, self.version, config
                 )
+            elif self.platform == "aca":
+                data = self.generate_aca(
+                    self.platform, self.version, config
+                )
             else:
                 raise RuntimeError("Bad platform")
 
@@ -216,6 +220,9 @@ class Packager:
                 processed = self.generate_resources(config)
                 y = yaml.dump(processed)
                 print(y)
+            elif self.platform == "aca":
+                processed = self.generate_resources(config)
+                print(json.dumps(processed, indent=2))
             else:
                 raise RuntimeError("Bad platform")
                 
@@ -296,6 +303,26 @@ class Packager:
             fname = "resources.yaml"
 
             output(fname, y)
+
+        logger.info("Generation complete.")
+
+        return mem.getvalue()
+
+    def generate_aca(self, platform, version, config):
+
+        processed = self.generate_resources(config)
+
+        j = json.dumps(processed, indent=2)
+
+        mem = BytesIO()
+
+        with zipfile.ZipFile(mem, mode='w') as out:
+
+            def output(name, content):
+                logger.info(f"Adding {name}...")
+                out.writestr(name, content)
+
+            output("azuredeploy.json", j)
 
         logger.info("Generation complete.")
 
