@@ -11,7 +11,6 @@ local control = import "control.jsonnet";
 local ingest = import "ingest.jsonnet";
 local rag = import "rag.jsonnet";
 local api_gateway = import "api-gateway.jsonnet";
-local mcp_server = import "mcp-server.jsonnet";
 local document_decoder = import "document-decoder.jsonnet";
 local workbench = import "../ui/workbench-ui.jsonnet";
 local ddg = import "mcp/ddg-mcp-server.jsonnet";
@@ -27,6 +26,6 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
         "log-level":: "INFO",
     },
 
-} + control + ingest + rag + api_gateway + mcp_server + document_decoder
+} + control + ingest + rag + api_gateway + document_decoder
   + workbench + config + ddg
 
