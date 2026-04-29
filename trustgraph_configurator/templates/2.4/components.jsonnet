@@ -61,6 +61,9 @@
    // Extra MCP services
    "ddg-mcp-server": import "mcp/ddg-mcp-server.jsonnet",
 
+   // Optional MCP server
+   "mcp-server": import "core/mcp-server.jsonnet",
+
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
 

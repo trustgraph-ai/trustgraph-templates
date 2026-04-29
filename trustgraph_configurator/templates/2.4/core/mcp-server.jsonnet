@@ -26,10 +26,6 @@ local url = import "values/url.jsonnet";
 
         create:: function(engine)
 
-            local envSecrets = engine.envSecrets("mcp-server-secret")
-                .with_env_var("MCP_SERVER_SECRET", "mcp-server-secret")
-                .with_env_var("GATEWAY_SECRET", "gateway-secret");
-
             local container =
                 engine.container("mcp-server")
                     .with_image(images.trustgraph_mcp)
@@ -38,7 +34,6 @@ local url = import "values/url.jsonnet";
                         "--port",
                         std.toString(port),
                     ])
-                    .with_env_var_secrets(envSecrets)
                     .with_limits(cpuLimit, memoryLimit)
                     .with_reservations(cpuReservation, memoryReservation)
                     .with_port(port, port, "mcp");
@@ -52,7 +47,6 @@ local url = import "values/url.jsonnet";
                 .with_port(port, port, "mcp");
 
             engine.resources([
-                envSecrets,
                 containerSet,
                 service,
             ])

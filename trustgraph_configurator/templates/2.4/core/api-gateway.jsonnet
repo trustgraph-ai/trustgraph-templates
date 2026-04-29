@@ -27,9 +27,6 @@ local images = import "values/images.jsonnet";
 
         create:: function(engine)
 
-            local envSecrets = engine.envSecrets("gateway-secret")
-                .with_env_var("GATEWAY_SECRET", "gateway-secret");
-
             local container =
                 engine.container("api-gateway")
                     .with_image(images.trustgraph_flow)
@@ -43,7 +40,6 @@ local images = import "values/images.jsonnet";
                         "--log-level",
                         logLevel,
                     ])
-                    .with_env_var_secrets(envSecrets)
                     .with_limits(cpuLimit, memoryLimit)
                     .with_reservations(cpuReservation, memoryReservation)
                     .with_port(port, port, "api");
@@ -58,7 +54,6 @@ local images = import "values/images.jsonnet";
                 .with_port(port, port, "api");
 
             engine.resources([
-                envSecrets,
                 containerSet,
                 service,
             ])
