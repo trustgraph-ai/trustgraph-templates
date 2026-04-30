@@ -37,7 +37,7 @@ local configuration = {
     "embeddings-models" +:: {},
 
     collections +:: {
-      "trustgraph:default": {
+      "default": {
         "user": "default-user",
         "collection": "default",
         "name": "Default Collection",
