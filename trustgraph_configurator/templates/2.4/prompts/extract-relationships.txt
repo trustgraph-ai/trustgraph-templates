@@ -1,21 +1,27 @@
 <instructions>
-Study the following text and derive entity relationships. For each
-relationship, derive the subject, predicate and object of the relationship.
+Study the following text and extract important entity relationships.  For each relationship, derive the subject, predicate and object.
 
-Output each relationship as a separate JSON object on its own line (JSONL format).
+Focus on relationships that capture key facts: definitions, causes, types, comparisons, properties, and classifications.
+
+Guidelines for high-quality relationships:
+- Use specific, meaningful predicates (avoid vague verbs like "is", "has", "can be")                                                           
+- Resolve pronouns and references to their concrete entities
+- Prefer one clear fact per relationship over compound statements
+- Skip trivial or self-evident relationships
+</instructions>
+
+<text>
+{{text}}        
+</text>
+
+<requirements>
+Output format: JSONL (one JSON object per line, no array wrapper)
 Each object must have fields:
 - subject: the subject of the relationship
 - predicate: the predicate
 - object: the object of the relationship
 - object-entity: false if the object is a simple data type (name, value, date). true if it is an entity.
-</instructions>
 
-<text>
-{{text}}
-</text>
-
-<requirements>
-Output format: JSONL (one JSON object per line, no array wrapper)
 - Each line must be a complete, valid JSON object
 - No commas between lines
 - No [ ] array brackets
@@ -25,4 +31,5 @@ Output format: JSONL (one JSON object per line, no array wrapper)
 Example output format:
 {"subject": "Earth", "predicate": "orbits", "object": "Sun", "object-entity": true}
 {"subject": "Earth", "predicate": "has diameter", "object": "12742 km", "object-entity": false}
+{"subject": "basal cell carcinoma", "predicate": "is more common than", "object": "melanoma", "object-entity": true}
 </requirements>

@@ -36,6 +36,11 @@ Extract the following from the text above:
 2. **Relationships**: How entities relate to each other
 3. **Attributes**: Properties of entities (like quantities, descriptions, etc.)
 
+## Guidelines
+
+- Resolve pronouns and vague references to their concrete entity names
+- Focus on relationships that capture key facts: definitions, causes, types, comparisons, and classifications
+
 ## Output Format
 
 Output format: JSONL (one JSON object per line, no array wrapper)
