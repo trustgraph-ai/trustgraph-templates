@@ -19,7 +19,8 @@ local images = import "values/images.jsonnet";
 
             local service =
                 engine.internalService(containerSet)
-                .with_port(8888, 8888, "ui");
+                .with_port(8888, 8888, "ui")
+                .with_external();
 
             engine.resources([
                 containerSet,

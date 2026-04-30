@@ -17,9 +17,20 @@
 
         with_image:: function(x) self + { image: x },
 
-        with_user:: function(x) self + { user: x },
+        // user/group combine into compose's "uid[:gid]" string field;
+        // call order is user-then-group (a later with_user would
+        // overwrite the combined value, but patterns conventionally
+        // declare user before group).
+        with_user:: function(x) self + { user: "" + x },
 
-        with_group:: function(x) self +
+        with_group:: function(x) self + {
+            user:
+                if std.objectHas(container, "user")
+                then container.user + ":" + x
+                else "0:" + x,
+        },
+
+        with_supplemental_group:: function(x) self +
             if std.objectHas(container, "group_add") then
               { group_add: container.group_add + [x] }
             else
@@ -141,6 +152,8 @@
         with_port:: function(src, dest, name)
             self + { port: [src, dest] },
 
+        with_external:: function() self,
+
         add:: function() {
         }
 
@@ -155,6 +168,8 @@
 
         with_port:: function(src, dest, name)
             self + { port: [src, dest] },
+
+        with_external:: function() self,
 
         add:: function() {
         }

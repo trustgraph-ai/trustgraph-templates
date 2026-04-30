@@ -11,6 +11,8 @@ local images = import "values/images.jsonnet";
             local container =
                 engine.container("falkordb")
                     .with_image(images.falkordb)
+                    .with_user(999)
+                    .with_group(999)
                     .with_limits("1.0", "768M")
                     .with_reservations("0.5", "768M")
                     .with_port(6379, 6379, "api")

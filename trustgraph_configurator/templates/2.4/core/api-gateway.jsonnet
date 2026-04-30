@@ -50,8 +50,9 @@ local images = import "values/images.jsonnet";
 
             local service =
                 engine.internalService(containerSet)
+                .with_port(port, port, "api")
                 .with_port(8000, 8000, "metrics")
-                .with_port(port, port, "api");
+                .with_external();
 
             engine.resources([
                 containerSet,

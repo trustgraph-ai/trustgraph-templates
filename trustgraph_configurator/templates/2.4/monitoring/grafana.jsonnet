@@ -19,6 +19,8 @@ local loki = import "loki.jsonnet";
             local container =
                 engine.container("prometheus")
                     .with_image(images.prometheus)
+                    .with_user(65534)
+                    .with_group(65534)
                     .with_limits("0.5", "128M")
                     .with_reservations("0.1", "128M")
                     .with_port(9090, 9090, "http")
@@ -80,6 +82,8 @@ local loki = import "loki.jsonnet";
             local container =
                 engine.container("grafana")
                     .with_image(images.grafana)
+                    .with_user(472)
+                    .with_group(472)
                     .with_environment({
                         // GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin",
                         // GF_AUTH_ANONYMOUS_ENABLED: "true",
@@ -107,7 +111,8 @@ local loki = import "loki.jsonnet";
 
             local service =
                 engine.service(containerSet)
-                .with_port(3000, 3000, "http");
+                .with_port(3000, 3000, "http")
+                .with_external();
 
             engine.resources([
                 vol,

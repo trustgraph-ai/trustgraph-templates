@@ -11,6 +11,8 @@ local images = import "values/images.jsonnet";
             local container =
                 engine.container("neo4j")
                     .with_image(images.neo4j)
+                    .with_user(7474)
+                    .with_group(7474)
                     .with_environment({
                         NEO4J_AUTH: "neo4j/password",
                         NEO4J_server_memory_pagecache_size: "512m",

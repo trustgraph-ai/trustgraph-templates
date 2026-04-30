@@ -36,6 +36,8 @@ local engine = {
         with_port:: function(src, dest, name) self,
         with_volume_mount:: function(vol, mnt) self,
         with_user:: function(x) self,
+        with_group:: function(x) self,
+        with_supplemental_group:: function(x) self,
         with_runtime:: function(x) self,
         with_privileged:: function(x) self,
         with_ipc:: function(x) self,
@@ -78,10 +80,12 @@ local engine = {
 
     service:: function(containers) {
         with_port:: function(src, dest, name) self,
+        with_external:: function() self,
     },
 
     internalService:: function(containers) {
         with_port:: function(src, dest, name) self,
+        with_external:: function() self,
     },
 
     resources:: function(res)

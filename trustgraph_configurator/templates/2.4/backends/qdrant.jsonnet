@@ -36,6 +36,8 @@ local images = import "values/images.jsonnet";
             local container =
                 engine.container("qdrant")
                     .with_image(images.qdrant)
+                    .with_user(1000)
+                    .with_group(1000)
                     .with_limits("1.0", memLimit)
                     .with_reservations("0.5", memReserv)
                     .with_port(6333, 6333, "api")

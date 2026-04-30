@@ -12,6 +12,8 @@ minio {
             local container =
                 engine.container("etcd")
                     .with_image(images.etcd)
+                    .with_user(0)
+                    .with_group(0)
                     .with_command([
                         "etcd",
                         "-advertise-client-urls=http://127.0.0.1:2379",
@@ -56,6 +58,8 @@ minio {
             local container =
                 engine.container("milvus")
                     .with_image(images.milvus)
+                    .with_user(0)
+                    .with_group(0)
                     .with_command([
                         "milvus", "run", "standalone"
                     ])

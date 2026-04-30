@@ -11,6 +11,8 @@ local images = import "values/images.jsonnet";
             local container =
                 engine.container("minio")
                     .with_image(images.minio)
+                    .with_user(1000)
+                    .with_group(1000)
                     .with_command([
                         "minio",
                         "server",

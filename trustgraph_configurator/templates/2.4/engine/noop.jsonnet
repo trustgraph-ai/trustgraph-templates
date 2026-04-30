@@ -9,6 +9,10 @@
 
         with_user:: function(x) self + {},
 
+        with_group:: function(x) self + {},
+
+        with_supplemental_group:: function(x) self + {},
+
         with_command:: function(x) self + {},
 
         with_runtime:: function(x) self + {},
@@ -38,11 +42,13 @@
 
     internalService:: function(containers) {
         with_port:: function(src, dest, name) self + {},
+        with_external:: function() self + {},
         add:: function() {},
     },
 
     service:: function(containers) {
         with_port:: function(src, dest, name) self + {},
+        with_external:: function() self + {},
         add:: function() {},
     },
 
