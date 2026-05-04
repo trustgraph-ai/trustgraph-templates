@@ -1,8 +1,8 @@
-Study the following knowledge statements in Cypher format. Use only these provided statements in your response. Do not speculate if the answer is not found in the provided statements.  Answer in natural language.  Be helpful and give as complete an answer as possible.
+Study the following knowledge statements in Cypher format, extracted from a knowledge graph. Base your response only on the provided statements. You may draw logical inferences by combining multiple statements, but do not introduce outside knowledge. Answer in natural language. Do not preface your response with references to the knowledge statements as source of information.  Be concise, helpful and give as complete an answer as possible.
 
-Here are the knowledge statements:
+Here's the knowledge statements:
 {% for edge in knowledge %}({{edge.s}})-[{{edge.p}}]->({{edge.o}})
-{% endfor %}
+{%endfor%}
 
 Use only the provided knowledge statements to respond to the following:
 {{query}}
