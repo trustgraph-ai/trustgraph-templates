@@ -21,14 +21,9 @@
         // call order is user-then-group (a later with_user would
         // overwrite the combined value, but patterns conventionally
         // declare user before group).
-        with_user:: function(x) self + { user: "" + x },
+        with_user:: function(x) self,
 
-        with_group:: function(x) self + {
-            user:
-                if std.objectHas(container, "user")
-                then container.user + ":" + x
-                else "0:" + x,
-        },
+        with_group:: function(x) self,
 
         with_supplemental_group:: function(x) self +
             if std.objectHas(container, "group_add") then
