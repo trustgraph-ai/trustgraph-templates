@@ -33,7 +33,7 @@
         {
             "name": "2.4",
             "description": "IAM & data separation through workspaces",
-            "version": "2.4.4",
+            "version": "2.4.11",
             "status": "pre-release"
         }
     ],
