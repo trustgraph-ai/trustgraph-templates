@@ -614,7 +614,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 ],
                 properties: {
                     shareQuota: quotaGib(m.size),
-                    accessTier: "TransactionOptimized",
+                    accessTier: "Premium",
                 },
             }
             for m in azureFileMarkers
