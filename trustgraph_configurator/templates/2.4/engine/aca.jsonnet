@@ -590,7 +590,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
         };
         local quotaGib = function(s)
             local g = parseMemGib(s);
-            if g < 1 then 1 else std.ceil(g);
+            if g < 100 then 100 else std.ceil(g);
         local storageAccount =
             if std.length(azureFileMarkers) > 0 then [{
                 type: "Microsoft.Storage/storageAccounts",
