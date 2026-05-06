@@ -8,6 +8,8 @@ local flow = helpers.flow;
 local request = helpers.request;
 local response = helpers.response;
 local request_response_if = helpers.request_response_if;
+local librarian_request = helpers.librarian_request;
+local librarian_response = helpers.librarian_response;
 
 // Import shared services (agent requires LLM for reasoning, MCP for tools)
 local llm_services = import "llm-services.jsonnet";
@@ -44,6 +46,8 @@ llm_services + mcp_service + {
                 "row-embeddings-query-request": request("row-embeddings:{workspace}:{id}"),
                 "row-embeddings-query-response": response("row-embeddings:{workspace}:{id}"),
                 explainability: flow("triples-store:{workspace}:{id}"),
+                "librarian-request": librarian_request,
+                "librarian-response": librarian_response,
             },
         },
     },

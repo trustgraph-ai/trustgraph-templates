@@ -13,8 +13,8 @@ local request(x) = "request:tg:" + x;
 // Creates a non-persistent response URI for request-response patterns
 local response(x) = "response:tg:" + x;
 
-local librarian_request = request("librarian");
-local librarian_response = response("librarian");
+local librarian_request = request("librarian:{workspace}");
+local librarian_response = response("librarian:{workspace}");
 
 // Creates a request-response pair for bidirectional communication
 // Returns an object with both request and response URIs
