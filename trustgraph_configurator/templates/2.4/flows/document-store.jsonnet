@@ -8,6 +8,8 @@ local flow_if = helpers.flow_if;
 local request = helpers.request;
 local response = helpers.response;
 local request_response_if = helpers.request_response_if;
+local librarian_request = helpers.librarian_request;
+local librarian_response = helpers.librarian_response;
 
 // Import shared services
 local llm_services = import "llm-services.jsonnet";
@@ -50,6 +52,8 @@ llm_services + embeddings_service + {
                 "document-embeddings-request": request("document-embeddings:{workspace}:{id}"),
                 "document-embeddings-response": response("document-embeddings:{workspace}:{id}"),
                 explainability: flow("triples-store:{workspace}:{id}"),
+                "librarian-request": librarian_request,
+                "librarian-response": librarian_response,
             },
         },
         "doc-embeddings-query:{id}": {
