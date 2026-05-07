@@ -136,22 +136,11 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 for r in container.secretRefs
             ];
             local allEnv = container.environment + secretEnv;
-            // SMB doesn't support POSIX byte-range locks (sqlite et al
-            // fail without `nobrl`). uid/gid only included when the
-            // pattern declares them via with_user/with_group; otherwise
-            // CIFS defaults apply.
-            local acaMountOpts =
-                "nobrl"
-                + (if std.objectHas(container, "uid")
-                   then ",uid=" + container.uid else "")
-                + (if std.objectHas(container, "gid")
-                   then ",gid=" + container.gid else "");
             local azureFileVolumes = [
                 {
                     name: v.volume.name,
-                    storageType: "AzureFile",
+                    storageType: "NfsAzureFile",
                     storageName: v.volume.name,
-                    mountOptions: acaMountOpts,
                 }
                 for v in container.volumes
                 if std.objectHasAll(v.volume, "kind")
@@ -602,6 +591,16 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 properties: {
                     minimumTlsVersion: "TLS1_2",
                     allowBlobPublicAccess: false,
+                    supportsHttpsTrafficOnly: false,
+                    networkAcls: {
+                        defaultAction: "Deny",
+                        virtualNetworkRules: [
+                            {
+                                id: "[parameters('infrastructureSubnetId')]",
+                                action: "Allow",
+                            },
+                        ],
+                    },
                 },
             }] else [];
         local fileShares = [
@@ -614,7 +613,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 ],
                 properties: {
                     shareQuota: quotaGib(m.size),
-                    accessTier: "Premium",
+                    enabledProtocols: "NFS",
                 },
             }
             for m in azureFileMarkers
@@ -629,10 +628,9 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                     "[resourceId('Microsoft.Storage/storageAccounts/fileServices/shares', parameters('storageAccountName'), 'default', '" + m.name + "')]",
                 ],
                 properties: {
-                    azureFile: {
-                        accountName: "[parameters('storageAccountName')]",
-                        accountKey: "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-01-01').keys[0].value]",
-                        shareName: m.name,
+                    nfsAzureFile: {
+                        server: "[concat(parameters('storageAccountName'), '.file.core.windows.net')]",
+                        shareName: "[concat('/', parameters('storageAccountName'), '/" + m.name + "')]",
                         accessMode: "ReadWrite",
                     },
                 },
@@ -658,6 +656,10 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName'))]",
             ],
             properties: {
+                vnetConfiguration: {
+                    infrastructureSubnetId: "[parameters('infrastructureSubnetId')]",
+                    internal: false,
+                },
                 appLogsConfiguration: {
                     destination: "log-analytics",
                     logAnalyticsConfiguration: {
@@ -682,6 +684,9 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 storageAccountName: {
                     type: "string",
                     defaultValue: "[concat('tg', uniqueString(resourceGroup().id))]",
+                },
+                infrastructureSubnetId: {
+                    type: "string",
                 },
             } + secretParams + secretVolumeParams,
             variables: {
