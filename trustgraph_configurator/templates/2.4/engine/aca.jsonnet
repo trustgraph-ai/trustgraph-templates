@@ -155,7 +155,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
             [
             {
                 type: "Microsoft.App/containerApps",
-                apiVersion: "2024-03-01",
+                apiVersion: "2026-01-01",
                 name: container.name,
                 location: "[parameters('location')]",
                 dependsOn: [
@@ -573,7 +573,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                     "[concat('https://', reference(resourceId("
                     + "'Microsoft.App/containerApps', '"
                     + app
-                    + "'), '2024-03-01').configuration.ingress.fqdn)]",
+                    + "'), '2026-01-01').configuration.ingress.fqdn)]",
             }
             for app in externalApps
         };
@@ -621,7 +621,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
         local envStorages = [
             {
                 type: "Microsoft.App/managedEnvironments/storages",
-                apiVersion: "2024-03-01",
+                apiVersion: "2026-01-01",
                 name: "[concat(parameters('environmentName'), '/" + m.name + "')]",
                 dependsOn: [
                     "[resourceId('Microsoft.App/managedEnvironments', parameters('environmentName'))]",
@@ -649,7 +649,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
         };
         local managedEnvironment = {
             type: "Microsoft.App/managedEnvironments",
-            apiVersion: "2024-03-01",
+            apiVersion: "2026-01-01",
             name: "[parameters('environmentName')]",
             location: "[parameters('location')]",
             dependsOn: [
