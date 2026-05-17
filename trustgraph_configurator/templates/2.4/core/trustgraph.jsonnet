@@ -12,7 +12,7 @@ local ingest = import "ingest.jsonnet";
 local rag = import "rag.jsonnet";
 local api_gateway = import "api-gateway.jsonnet";
 local document_decoder = import "document-decoder.jsonnet";
-local workbench = import "../ui/workbench-ui.jsonnet";
+local ui = import "../ui/trustgraph-ui.jsonnet";
 local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
 {
@@ -27,5 +27,5 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
     },
 
 } + control + ingest + rag + api_gateway + document_decoder
-  + workbench + config + ddg
+  + ui + config + ddg
 
