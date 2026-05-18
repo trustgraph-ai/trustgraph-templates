@@ -136,14 +136,14 @@ local url = import "values/url.jsonnet";
                     .with_command([
                         "bash",
                         "-c",
-                        "bin/apply-config-from-env.py conf/bookkeeper.conf && exec bin/pulsar bookie"
+                        "sleep 2 && bin/apply-config-from-env.py conf/bookkeeper.conf && exec bin/pulsar bookie"
                         // false ^ causes this to be a 'failure' exit.
                     ])
                     .with_limits("1", bookieMemLimit)
                     .with_reservations("0.1", bookieMemReserv)
                     .with_user(0)
                     .with_group(1000)
-                    .with_volume_mount(bookieVolume, "/pulsar/data/bookkeeper")
+                    .with_volume_mount(bookieVolume, "/pulsar/data")
                     .with_environment({
                         "clusterName": "cluster-a",
                         "zkServers": "zookeeper:2181",
