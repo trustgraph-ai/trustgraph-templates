@@ -39,7 +39,19 @@ local cassandra = import "backends/cassandra.jsonnet";
 
             local init = "trustgraph.bootstrap.initialisers";
 
-            local initialisers = [
+            local pulsarInit =
+                if $["pub-sub-params"].pubsub_backend == "pulsar" then [
+                    {
+                        "class": "%s.PulsarTopology" % init,
+                        "name": "pulsar-topology",
+                        "flag": "v1",
+                        "params": {
+                            "admin_url": url.pulsar_admin,
+                        }
+                    }
+                ] else [];
+
+            local initialisers = pulsarInit + [
                 {
                     "class": "%s.TemplateSeed" % init,
                     "name": "template-seed",
