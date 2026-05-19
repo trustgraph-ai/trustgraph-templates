@@ -14,6 +14,10 @@ local url = import "values/url.jsonnet";
         pulsar_host: url.pulsar,
     },
 
+    "pub-sub-admin-params":: {
+        pulsar_admin_url: url.pulsar_admin,
+    },
+
     "pub-sub-args":: [
         "--pubsub-backend",
         "pulsar",

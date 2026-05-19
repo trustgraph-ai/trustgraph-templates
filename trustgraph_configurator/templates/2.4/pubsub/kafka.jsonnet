@@ -11,6 +11,8 @@ local images = import "values/images.jsonnet";
         kafka_bootstrap_servers: "kafka:9092",
     },
 
+    "pub-sub-admin-params":: {},
+
     "pub-sub-args":: [
         "--pubsub-backend",
         "kafka",
