@@ -103,7 +103,7 @@ local cassandra = import "backends/cassandra.jsonnet";
                                 class: "trustgraph.flow.service.Processor",
                                 params:  {
                                     id: "flow-svc",
-                                } + $["pub-sub-params"],
+                                } + $["pub-sub-params"] + $["pub-sub-admin-params"],
                             },
                             {
                                 class: "trustgraph.cores.service.Processor",
