@@ -1,0 +1,31 @@
+<instructions>
+Study the following text and derive definitions for any discovered entities. Do not provide definitions for entities whose definitions are incomplete or unknown.
+
+Guidelines for high-quality definitions:
+- Capture what distinguishes this entity from related entities
+- Include comparative facts (e.g. more/less common, larger/smaller)
+- Include causal relationships and classifications
+- Be specific — name related entities rather than using vague references like "other types"
+
+Output each definition as a separate JSON object on its own line (JSONL format). Each object must have fields:
+- entity: the name of the entity
+- definition: English text which defines the entity
+</instructions>
+
+<text>
+{{text}}
+</text>
+
+<requirements>
+Output format: JSONL (one JSON object per line, no array wrapper)
+- Each line must be a complete, valid JSON object
+- No commas between lines
+- No [ ] array brackets
+- No markdown formatting or prefixes
+- Do not use special characters in the definition text
+- Do not include null or unknown definitions
+
+Example output format:
+{"entity": "photosynthesis", "definition": "The process by which plants convert sunlight into energy"}
+{"entity": "melanoma", "definition": "A type of skin cancer that is less common than basal cell carcinoma and squamous cell carcinoma but tends to be more aggressive"}
+</requirements>
