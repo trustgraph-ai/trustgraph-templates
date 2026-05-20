@@ -47,8 +47,7 @@ local url = import "values/url.jsonnet";
                     ])
                     .with_env_var_secrets(envSecrets)
                     .with_limits(cpuLimit, memoryLimit)
-                    .with_reservations(cpuReservation, memoryReservation)
-                    .with_port(8000, 8000, "metrics");
+                    .with_reservations(cpuReservation, memoryReservation);
 
             local containerSet = engine.containers(
                 "rev-gateway", [ container ]
