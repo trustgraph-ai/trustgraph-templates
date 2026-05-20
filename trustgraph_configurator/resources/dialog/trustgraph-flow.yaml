@@ -331,6 +331,8 @@ steps:
         next: review
       - when: "embeddings.enabled = true"
         next: embeddings-engine
+      - when: "version >= '2.4'"
+        next: mcp-server-enabled
       - next: review
 
   # ─────────────────────────────────────────────────────────────
@@ -355,6 +357,21 @@ steps:
           value: "ollama"
           icon: "ollama"
           description: "Use Ollama for embeddings. Requires Ollama to be running with an embedding model loaded."
+    transitions:
+      - when: "version >= '2.4'"
+        next: mcp-server-enabled
+      - next: review
+
+  # ─────────────────────────────────────────────────────────────
+  # MCP Server Toggle (>= 2.4 only)
+  # ─────────────────────────────────────────────────────────────
+  mcp-server-enabled:
+    title: "Enable MCP server?"
+    description: "Deploy an MCP server to allow MCP clients to interact with TrustGraph"
+    state_key: mcp_server.enabled
+    input:
+      type: toggle
+      default: true
     transitions:
       - next: review
 

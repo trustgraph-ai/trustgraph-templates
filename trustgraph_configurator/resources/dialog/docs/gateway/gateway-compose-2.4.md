@@ -1,0 +1,1 @@
+The API Gateway is a required component which supports the CLI and Workbench. As of TrustGraph 2.4, gateway authentication is managed through IAM. No separate gateway secret is required. Ensure your `IAM_BOOTSTRAP_TOKEN` environment variable is set (see IAM setup).

@@ -35,6 +35,12 @@
             "description": "IAM & data separation through workspaces",
             "version": "2.4.29",
             "status": "beta"
+        },
+        {
+            "name": "2.5",
+            "description": "Future development branch",
+            "version": "2.5.0",
+            "status": "pre-release"
         }
     ],
     "platforms": [

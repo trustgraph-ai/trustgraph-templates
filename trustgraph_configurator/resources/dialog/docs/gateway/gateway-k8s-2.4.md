@@ -1,0 +1,1 @@
+The API Gateway is a required component which supports the CLI and Workbench. As of TrustGraph 2.4, gateway authentication is managed through IAM. No separate gateway secret is required. Ensure you have created the `iam-bootstrap-token` Kubernetes secret (see IAM setup).
