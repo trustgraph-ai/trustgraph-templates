@@ -75,7 +75,7 @@ local models = import "parameters/bedrock.jsonnet";
 
             local container =
                 engine.container("text-completion")
-                    .with_image(images.trustgraph_flow)
+                    .with_image(images.trustgraph_bedrock)
                     .with_command([
                         "processor-group",
                         "--log-level",
