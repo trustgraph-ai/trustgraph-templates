@@ -89,7 +89,7 @@ local loki = import "loki.jsonnet";
                     })
                     .with_limits("1.0", "256M")
                     .with_reservations("0.5", "256M")
-                    .with_port(3000, 3000, "cassandra")
+                    .with_port(3000, 3000, "grafana")
                     .with_volume_mount(vol, "/var/lib/grafana")
                     .with_volume_mount(
                         provDashVol, "/etc/grafana/provisioning/dashboards/"
