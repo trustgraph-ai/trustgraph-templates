@@ -101,7 +101,7 @@ local url = import "values/url.jsonnet";
                     .with_reservations("0.05", zkMemReserv)
                     .with_user(0)
                     .with_group(1000)
-                    .with_volume_mount(zkVolume, "/pulsar/data/zookeeper")
+                    .with_volume_mount(zkVolume, "/pulsar/data")
                     .with_environment({
                         "metadataStoreUrl": "zk:zookeeper:2181",
                         "PULSAR_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
