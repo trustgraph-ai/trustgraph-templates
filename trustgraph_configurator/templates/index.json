@@ -33,13 +33,13 @@
         {
             "name": "2.4",
             "description": "IAM & data separation through workspaces",
-            "version": "2.4.29",
-            "status": "beta"
+            "version": "2.4.31",
+            "status": "stable"
         },
         {
             "name": "2.5",
-            "description": "Future development branch",
-            "version": "2.5.0",
+            "description": "Further updates to SPARQL retrieval",
+            "version": "2.5.3",
             "status": "pre-release"
         }
     ],

@@ -18,11 +18,16 @@ steps:
     input:
       type: select
       options:
-        - label: "TrustGraph 2.4"
-          value: "2.4"
-          description: "IAM & data separation through workspaces"
+        - label: "TrustGraph 2.5"
+          value: "2.5"
+          description: "Updates to SPARQL query support"
           badge: pre-release
           recommended: false
+        - label: "TrustGraph 2.4"
+          value: "2.4"
+          description: "New UX, IAM & data separation through workspaces"
+          badge: stable
+          recommended: true
         - label: "TrustGraph 2.3"
           value: "2.3"
           description: "Agent explainability analytics"
@@ -32,16 +37,6 @@ steps:
           value: "2.2"
           description: "Additional document format support, new agent orchestration framework"
           badge: stable
-          recommended: false
-        - label: "TrustGraph 2.1"
-          value: "2.1"
-          description: "Explainability and provenance support"
-          badge: stable
-          recommended: false
-        - label: "TrustGraph 1.9"
-          value: "1.9"
-          description: "Improvements to ontology and knowledge extraction prompts"
-          badge: pre-release
           recommended: false
     transitions:
       - next: platform
