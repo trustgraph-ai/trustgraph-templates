@@ -5,9 +5,9 @@ local images = import "values/images.jsonnet";
     "cassandra" +: {
 
         // Memory settings (can be overridden by memory-profile)
-        "memory-limit":: "1000M",
-        "memory-reservation":: "1000M",
-        "heap":: "300M",
+        "memory-limit":: "1400M",
+        "memory-reservation":: "1400M",
+        "heap":: "700M",
 
         create:: function(engine)
 
