@@ -85,6 +85,7 @@ k8s + {
                         { src: src, dest: dest, name: name  }
                     ]
                 },
+        with_external:: function() self,
         add:: function() [
             {
                 apiVersion: "v1",

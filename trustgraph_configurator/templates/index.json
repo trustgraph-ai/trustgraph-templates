@@ -1,23 +1,5 @@
 {
     "templates": [
-	{
-            "name": "1.8",
-            "description": "Pluggable messaging fabric, switched to Garage for object store",
-            "version": "1.8.21",
-            "status": "stable"
-        },
-	{
-            "name": "1.9",
-            "description": "Ontology extraction update, JSONL output from prompts",
-            "version": "1.9.4",
-            "status": "stable"
-        },
-        {
-            "name": "2.1",
-            "description": "End-to-end provenance tracking and explainability across the knowledge pipeline — from document ingestion through extraction to query-time retrieval - every answer traceable to its source evidence",
-            "version": "2.1.26",
-            "status": "stable"
-        },
         {
             "name": "2.2",
             "description": "Multi-pattern agent orchestration with explainability, extended document processing for cover many document types",
@@ -33,13 +15,13 @@
         {
             "name": "2.4",
             "description": "IAM & data separation through workspaces",
-            "version": "2.4.31",
+            "version": "2.4.33",
             "status": "stable"
         },
         {
             "name": "2.5",
             "description": "Further updates to SPARQL retrieval",
-            "version": "2.5.3",
+            "version": "2.5.7",
             "status": "pre-release"
         }
     ],
