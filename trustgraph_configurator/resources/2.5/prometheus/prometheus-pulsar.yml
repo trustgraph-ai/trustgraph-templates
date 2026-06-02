@@ -68,7 +68,7 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets:
-        - 'api-gateway:8000'
+        - 'api-gateway-metrics:8000'
 
   - job_name: 'mcp-server'
     scrape_interval: 5s

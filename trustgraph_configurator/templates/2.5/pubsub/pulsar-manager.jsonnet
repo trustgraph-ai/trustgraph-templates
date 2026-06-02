@@ -25,7 +25,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("pulsar", containerSet)
                 .with_port(9527, 9527, "api")
                 .with_port(7750, 7750, "api2);
 

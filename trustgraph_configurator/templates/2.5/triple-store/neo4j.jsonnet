@@ -31,7 +31,7 @@ neo4j + {
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("store-triples", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
@@ -64,7 +64,7 @@ neo4j + {
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("store-triples", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

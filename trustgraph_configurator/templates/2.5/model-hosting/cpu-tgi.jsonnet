@@ -53,7 +53,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("tgi-service", containerSet)
                 .with_port(7000, 7000, "tgi");
 
             engine.resources([

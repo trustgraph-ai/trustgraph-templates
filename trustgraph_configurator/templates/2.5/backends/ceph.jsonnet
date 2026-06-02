@@ -395,22 +395,22 @@ local images = import "values/images.jsonnet";
 
             // Services - expose daemon ports for inter-daemon communication
             local mon_service =
-                engine.service(mon_containerSet)
+                engine.internalService("ceph-mon", mon_containerSet)
                     .with_port(6789, 6789, "mon")
                     .with_port(3300, 3300, "mon-msgr2");
 
             local mgr_service =
-                engine.service(mgr_containerSet)
+                engine.internalService("ceph-mgr", mgr_containerSet)
                     .with_port(7000, 7000, "mgr")
                     .with_port(8443, 8443, "dashboard")
                     .with_port(9283, 9283, "prometheus");
 
             local osd_service =
-                engine.service(osd_containerSet)
+                engine.internalService("ceph-osd", osd_containerSet)
                     .with_port(6800, 6800, "osd");
 
             local rgw_service =
-                engine.service(rgw_containerSet)
+                engine.internalService("ceph-rgw", rgw_containerSet)
                     .with_port(7480, 7480, "s3");
 
             engine.resources([

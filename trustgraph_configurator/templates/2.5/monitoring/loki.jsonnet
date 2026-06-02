@@ -20,8 +20,8 @@ local images = import "values/images.jsonnet";
                     .with_image(images.loki)
                     .with_user(10001)
                     .with_group(10001)
-                    .with_limits("0.5", "256M")
-                    .with_reservations("0.1", "256M")
+                    .with_limits("1.0", "350M")
+                    .with_reservations("0.5", "350M")
                     .with_port(3100, 3100, "http")
                     .with_volume_mount(cfgVol, "/etc/loki/")
                     .with_volume_mount(vol, "/loki");
@@ -31,7 +31,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("loki", containerSet)
                 .with_port(3100, 3100, "http");
 
             engine.resources([

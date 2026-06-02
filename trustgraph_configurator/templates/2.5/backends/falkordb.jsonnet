@@ -24,7 +24,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("falkordb", containerSet)
                 .with_port(6379, 6379, "api")
                 .with_port(3010, 3010, "ui");
 

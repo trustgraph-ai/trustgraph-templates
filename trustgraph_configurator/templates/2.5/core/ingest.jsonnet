@@ -16,6 +16,7 @@ local url = import "values/url.jsonnet";
         "ingest-cpu-reservation": "0.1",
         "ingest-memory-limit": "256M",
         "ingest-memory-reservation": "256M",
+        "ingest-replicas": 1,
     },
 
     local logLevel = $.parameters["log-level"],
@@ -41,6 +42,7 @@ local url = import "values/url.jsonnet";
         local cpuReservation = pars["ingest-cpu-reservation"],
         local memoryLimit = pars["ingest-memory-limit"],
         local memoryReservation = pars["ingest-memory-reservation"],
+        local replicas = pars["ingest-replicas"],
 
         create:: function(engine)
 
@@ -113,10 +115,10 @@ local url = import "values/url.jsonnet";
 
             local containerSet = engine.containers(
                 "ingest", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("ingest", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

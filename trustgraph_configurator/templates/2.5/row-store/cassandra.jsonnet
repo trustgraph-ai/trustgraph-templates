@@ -10,6 +10,7 @@ cassandra + {
         "rows-cpu-reservation": "0.1",
         "rows-memory-limit": "512M",
         "rows-memory-reservation": "512M",
+        "rows-replicas": 1,
     },
 
     local logLevel = $.parameters["log-level"],
@@ -22,6 +23,7 @@ cassandra + {
         local cpuReservation = pars["rows-cpu-reservation"],
         local memoryLimit = pars["rows-memory-limit"],
         local memoryReservation = pars["rows-memory-reservation"],
+        local replicas = pars["rows-replicas"],
 
         create:: function(engine)
 
@@ -65,10 +67,10 @@ cassandra + {
 
             local containerSet = engine.containers(
                 "rows", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("rows", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

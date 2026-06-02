@@ -76,16 +76,16 @@ local engine = {
         with_env_var:: function(name, key) self,
     },
 
-    containers:: function(name, containers) self,
-
-    service:: function(containers) {
-        with_port:: function(src, dest, name) self,
-        with_external:: function() self,
+    containers:: function(name, containers) {
+        with_replicas:: function(n) self,
     },
 
-    internalService:: function(containers) {
+    internalService:: function(name, containers) {
         with_port:: function(src, dest, name) self,
-        with_external:: function() self,
+    },
+
+    service:: function(name, containers) {
+        with_port:: function(src, dest, name) self,
     },
 
     resources:: function(res)

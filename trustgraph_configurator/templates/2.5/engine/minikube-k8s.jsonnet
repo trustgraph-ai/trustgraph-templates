@@ -73,10 +73,11 @@ k8s + {
 
     },
 
-    service:: function(containers)
+    service:: function(name, containers)
     {
         local service = self,
-        name: containers.name,
+        name: name,
+        appName: containers.name,
         ports: [],
         with_port::
             function(src, dest, name)
@@ -85,7 +86,6 @@ k8s + {
                         { src: src, dest: dest, name: name  }
                     ]
                 },
-        with_external:: function() self,
         add:: function() [
             {
                 apiVersion: "v1",
@@ -96,7 +96,7 @@ k8s + {
                 },
                 spec: {
                     selector: {
-                        app: service.name,
+                        app: service.appName,
                     },
                     type: "LoadBalancer",
                     ports: [

@@ -12,6 +12,7 @@ local cassandra = import "backends/cassandra.jsonnet";
         "control-cpu-reservation": "0.1",
         "control-memory-limit": "256M",
         "control-memory-reservation": "256M",
+        "control-replicas": 1,
     },
 
     "control" +: {
@@ -23,6 +24,7 @@ local cassandra = import "backends/cassandra.jsonnet";
         local cpuReservation = pars["control-cpu-reservation"],
         local memoryLimit = pars["control-memory-limit"],
         local memoryReservation = pars["control-memory-reservation"],
+        local replicas = pars["control-replicas"],
 
         create:: function(engine)
 
@@ -182,10 +184,10 @@ local cassandra = import "backends/cassandra.jsonnet";
 
             local containerSet = engine.containers(
                 "control", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("control", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

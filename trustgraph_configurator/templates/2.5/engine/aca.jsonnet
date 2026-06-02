@@ -234,20 +234,18 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
 
     },
 
-    internalService:: self.service,
-
-    // service emits a sentinel marker rather than a free-standing ARM
-    // resource; ACA ingress is a property of the containerApp, not a
-    // separate resource. `package()` recognises the marker and folds
-    // it into the matching containerApp before output.
-    service:: function(containers)
+    // service/internalService emit sentinel markers rather than
+    // free-standing ARM resources; ACA ingress is a property of the
+    // containerApp, not a separate resource. `package()` recognises
+    // the marker and folds it into the matching containerApp before
+    // output.
+    internalService:: function(name, containers)
     {
 
         local service = self,
 
-        name: containers.name,
+        name: name,
         ports: [],
-        external: false,
 
         with_port::
             function(src, dest, name) self + {
@@ -256,7 +254,31 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 ],
             },
 
-        with_external:: function() self + { external: true },
+        add:: function()
+            if std.length(service.ports) == 0 then []
+            else [{
+                _aca_kind: "ingress",
+                targetApp: service.name,
+                ports: service.ports,
+                external: false,
+            }],
+
+    },
+
+    service:: function(name, containers)
+    {
+
+        local service = self,
+
+        name: name,
+        ports: [],
+
+        with_port::
+            function(src, dest, name) self + {
+                ports: super.ports + [
+                    { src: src, dest: dest, name: name }
+                ],
+            },
 
         add:: function()
             if std.length(service.ports) == 0 then []
@@ -264,7 +286,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 _aca_kind: "ingress",
                 targetApp: service.name,
                 ports: service.ports,
-                external: service.external,
+                external: true,
             }],
 
     },
@@ -359,6 +381,8 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
 
         name: name,
         containers: containers,
+
+        with_replicas:: function(n) self,
 
         add:: function() std.flattenArrays(
             [ c.add() for c in cont.containers ]

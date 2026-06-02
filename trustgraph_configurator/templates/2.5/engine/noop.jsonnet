@@ -40,15 +40,13 @@
         add:: function() {},
     },
 
-    internalService:: function(containers) {
+    internalService:: function(name, containers) {
         with_port:: function(src, dest, name) self + {},
-        with_external:: function() self + {},
         add:: function() {},
     },
 
-    service:: function(containers) {
+    service:: function(name, containers) {
         with_port:: function(src, dest, name) self + {},
-        with_external:: function() self + {},
         add:: function() {},
     },
 
@@ -71,6 +69,7 @@
     },
 
     containers:: function(name, containers) {
+        with_replicas:: function(n) self,
         add:: function() {},
     },
 

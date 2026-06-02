@@ -36,7 +36,7 @@ local loki = import "loki.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("prometheus", containerSet)
                 .with_port(9090, 9090, "http");
 
             engine.resources([
@@ -123,9 +123,9 @@ local loki = import "loki.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.service("grafana", containerSet)
                 .with_port(3000, 3000, "http")
-                .with_external();
+                ;
 
             engine.resources([
                 vol,
