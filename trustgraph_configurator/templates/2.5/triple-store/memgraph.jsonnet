@@ -34,7 +34,7 @@ memgraph + {
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("store-triples", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
@@ -69,7 +69,7 @@ memgraph + {
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("store-triples", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

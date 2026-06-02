@@ -38,7 +38,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("cassandra", containerSet)
                 .with_port(9042, 9042, "api");
 
             engine.resources([

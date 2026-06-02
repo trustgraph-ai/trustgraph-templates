@@ -18,9 +18,9 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.service("workbench-ui", containerSet)
                 .with_port(8888, 8888, "ui")
-                .with_external();
+                ;
 
             engine.resources([
                 containerSet,

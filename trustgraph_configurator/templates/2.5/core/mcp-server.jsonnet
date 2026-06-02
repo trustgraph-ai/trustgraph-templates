@@ -12,6 +12,7 @@ local url = import "values/url.jsonnet";
         "mcp-server-cpu-reservation": "0.1",
         "mcp-server-memory-limit": "256M",
         "mcp-server-memory-reservation": "256M",
+        "mcp-server-replicas": 1,
     },
 
     "mcp-server" +: {
@@ -23,6 +24,7 @@ local url = import "values/url.jsonnet";
         local cpuReservation = pars["mcp-server-cpu-reservation"],
         local memoryLimit = pars["mcp-server-memory-limit"],
         local memoryReservation = pars["mcp-server-memory-reservation"],
+        local replicas = pars["mcp-server-replicas"],
 
         create:: function(engine)
 
@@ -40,10 +42,10 @@ local url = import "values/url.jsonnet";
 
             local containerSet = engine.containers(
                 "mcp-server", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("mcp-server", containerSet)
                 .with_port(port, port, "mcp");
 
             engine.resources([

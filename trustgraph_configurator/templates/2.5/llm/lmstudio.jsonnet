@@ -21,6 +21,7 @@ local models = import "parameters/lmstudio.jsonnet";
         "text-completion-cpu-reservation": "0.1",
         "text-completion-memory-limit": "128M",
         "text-completion-memory-reservation": "128M",
+        "text-completion-replicas": 1,
         "text-completion-concurrency": 1,
         "text-completion-rag-concurrency": 1,
     },
@@ -34,6 +35,7 @@ local models = import "parameters/lmstudio.jsonnet";
         local cpuReservation = pars["text-completion-cpu-reservation"],
         local memoryLimit = pars["text-completion-memory-limit"],
         local memoryReservation = pars["text-completion-memory-reservation"],
+        local replicas = pars["text-completion-replicas"],
         local textCompletionConc = pars["text-completion-concurrency"],
         local textCompletionRagConc = pars["text-completion-rag-concurrency"],
 
@@ -91,10 +93,10 @@ local models = import "parameters/lmstudio.jsonnet";
 
             local containerSet = engine.containers(
                 "text-completion", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("text-completion", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

@@ -10,6 +10,7 @@ local images = import "values/images.jsonnet";
         "document-decoder-cpu-reservation": "0.1",
         "document-decoder-memory-limit": "512M",
         "document-decoder-memory-reservation": "512M",
+        "document-decoder-replicas": 1,
     },
 
     local logLevel = $.parameters["log-level"],
@@ -22,6 +23,7 @@ local images = import "values/images.jsonnet";
         local cpuReservation = pars["document-decoder-cpu-reservation"],
         local memoryLimit = pars["document-decoder-memory-limit"],
         local memoryReservation = pars["document-decoder-memory-reservation"],
+        local replicas = pars["document-decoder-replicas"],
 
         create:: function(engine)
 
@@ -39,10 +41,10 @@ local images = import "values/images.jsonnet";
 
             local containerSet = engine.containers(
                 "document-decoder", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("document-decoder", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

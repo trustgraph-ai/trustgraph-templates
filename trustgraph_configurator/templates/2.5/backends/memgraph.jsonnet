@@ -25,7 +25,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("memgraph", containerSet)
                 .with_port(7474, 7474, "api")
                 .with_port(7687, 7687, "api2");
 
@@ -57,7 +57,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("memgraph", containerSet)
                 .with_port(3010, 3010, "http");
 
             engine.resources([

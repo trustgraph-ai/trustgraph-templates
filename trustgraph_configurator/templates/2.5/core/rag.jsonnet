@@ -20,6 +20,7 @@ local url = import "values/url.jsonnet";
         "rag-cpu-reservation": "0.1",
         "rag-memory-limit": "256M",
         "rag-memory-reservation": "256M",
+        "rag-replicas": 1,
     },
 
     local logLevel = $.parameters["log-level"],
@@ -41,6 +42,7 @@ local url = import "values/url.jsonnet";
         local cpuReservation = pars["rag-cpu-reservation"],
         local memoryLimit = pars["rag-memory-limit"],
         local memoryReservation = pars["rag-memory-reservation"],
+        local replicas = pars["rag-replicas"],
 
         local retrieval = "trustgraph.retrieval",
         local agentOrchestrator = "trustgraph.agent.orchestrator.Processor",
@@ -144,10 +146,10 @@ local url = import "values/url.jsonnet";
 
             local containerSet = engine.containers(
                 "rag", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("rag", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

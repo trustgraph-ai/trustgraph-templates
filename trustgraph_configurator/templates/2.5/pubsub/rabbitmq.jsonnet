@@ -73,7 +73,7 @@ local url = import "values/url.jsonnet";
 
             // RabbitMQ service
             local service =
-                engine.service(containerSet)
+                engine.internalService("rabbitmq", containerSet)
                 .with_port(5672, 5672, "amqp")
                 .with_port(15672, 15672, "management");
 

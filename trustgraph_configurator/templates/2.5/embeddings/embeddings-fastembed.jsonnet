@@ -89,7 +89,7 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("embeddings", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

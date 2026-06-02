@@ -230,7 +230,7 @@ local images = import "values/images.jsonnet";
 
             // Service - expose Garage ports
             local garage_service =
-                engine.service(garage_containerSet)
+                engine.internalService("garage", garage_containerSet)
                     .with_port(3900, 3900, "s3-api")
                     .with_port(3901, 3901, "rpc")
                     .with_port(3902, 3902, "web")

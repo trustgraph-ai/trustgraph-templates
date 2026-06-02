@@ -2,7 +2,7 @@
 // — podman-compose consumes the same spec shape, so we import the same
 // engine and run the same foldl over `patterns`.
 
-local engine = import "../engine/docker-compose.jsonnet";
+local engine = import "../engine/compose.jsonnet";
 local decode = import "decode-config.jsonnet";
 local components = import "../components.jsonnet";
 

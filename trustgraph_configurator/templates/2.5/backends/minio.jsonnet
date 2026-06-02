@@ -35,7 +35,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("minio", containerSet)
                 .with_port(9000, 9000, "api")
                 .with_port(9001, 9001, "console");
 

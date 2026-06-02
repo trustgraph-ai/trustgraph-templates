@@ -9,6 +9,7 @@ qdrant + {
         "vector-store-cpu-reservation": "0.1",
         "vector-store-memory-limit": "256M",
         "vector-store-memory-reservation": "256M",
+        "vector-store-replicas": 1,
     },
 
     local logLevel = $.parameters["log-level"],
@@ -21,6 +22,7 @@ qdrant + {
         local cpuReservation = pars["vector-store-cpu-reservation"],
         local memoryLimit = pars["vector-store-memory-limit"],
         local memoryReservation = pars["vector-store-memory-reservation"],
+        local replicas = pars["vector-store-replicas"],
 
         create:: function(engine)
 
@@ -92,10 +94,10 @@ qdrant + {
 
             local containerSet = engine.containers(
                 "vector-store", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("vector-store", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

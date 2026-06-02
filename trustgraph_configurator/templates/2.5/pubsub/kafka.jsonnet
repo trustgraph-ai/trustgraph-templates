@@ -85,7 +85,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("kafka", containerSet)
                 .with_port(9092, 9092, "kafka");
 
             engine.resources([

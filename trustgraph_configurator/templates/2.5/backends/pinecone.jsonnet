@@ -31,7 +31,7 @@ local images = import "values/images.jsonnet";
             );
 
             local service =
-                engine.service(containerSet)
+                engine.internalService("pinecone", containerSet)
                 .with_port(5080, 5080, "api");
 
             engine.resources([

@@ -54,7 +54,7 @@ local url = import "values/url.jsonnet";
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("rev-gateway", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

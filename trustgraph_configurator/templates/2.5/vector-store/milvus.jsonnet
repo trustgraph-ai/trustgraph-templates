@@ -5,7 +5,15 @@ local milvus = import "backends/milvus.jsonnet";
 
 milvus + {
 
+    parameters +:: {
+        "store-graph-embeddings-replicas": 1,
+        "query-graph-embeddings-replicas": 1,
+        "store-doc-embeddings-replicas": 1,
+        "query-doc-embeddings-replicas": 1,
+    },
+
     local logLevel = $.parameters["log-level"],
+    local pars = $.parameters,
 
     "store-graph-embeddings" +: {
     
@@ -27,10 +35,10 @@ milvus + {
 
             local containerSet = engine.containers(
                 "store-graph-embeddings", [ container ]
-            );
+            ).with_replicas(pars["store-graph-embeddings-replicas"]);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("store-graph-embeddings", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
@@ -60,10 +68,10 @@ milvus + {
 
             local containerSet = engine.containers(
                 "query-graph-embeddings", [ container ]
-            );
+            ).with_replicas(pars["query-graph-embeddings-replicas"]);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("store-graph-embeddings", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
@@ -93,10 +101,10 @@ milvus + {
 
             local containerSet = engine.containers(
                 "store-doc-embeddings", [ container ]
-            );
+            ).with_replicas(pars["store-doc-embeddings-replicas"]);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("store-graph-embeddings", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
@@ -126,10 +134,10 @@ milvus + {
 
             local containerSet = engine.containers(
                 "query-doc-embeddings", [ container ]
-            );
+            ).with_replicas(pars["query-doc-embeddings-replicas"]);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("store-graph-embeddings", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

@@ -35,7 +35,7 @@ local url = import "values/url.jsonnet";
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("mistral-ocr", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

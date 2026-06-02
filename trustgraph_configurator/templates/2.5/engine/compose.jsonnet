@@ -108,14 +108,7 @@
                 },
 
         with_port::
-            function(src, dest, name)
-                self + {
-                    ports:
-                        if std.objectHas(container, "ports") then
-                            container.ports + [ "%d:%d" % [src, dest] ]
-                        else
-                            [ "%d:%d" % [src, dest] ]
-                },
+            function(src, dest, name) self,
 
         with_env_var_secrets::
             function(vars)
@@ -129,45 +122,71 @@
 
         restart: "on-failure:100",
 
-        add:: function() {
+        add:: function(replicas=1) {
             services +: {
-                [container.name]: container,
+                [container.name]: container + (
+                    if replicas > 1 then
+                        { scale: replicas }
+                    else {}
+                ),
             }
         }
 
     },
 
-    internalService:: function(containers)
+    internalService:: function(name, containers)
     {
 
         local service = self,
 
-        name: containers.name,
+        name: name,
+        ports: [],
 
         with_port:: function(src, dest, name)
-            self + { port: [src, dest] },
+            self + {
+                ports: super.ports + [dest],
+            },
 
-        with_external:: function() self,
-
-        add:: function() {
-        }
+        add:: function()
+            if std.length(service.ports) == 0 then {}
+            else {
+                services +: {
+                    [containers.name] +: {
+                        expose: [
+                            "%d" % [port]
+                            for port in service.ports
+                        ],
+                    },
+                },
+            },
 
     },
 
-    service:: function(containers)
+    service:: function(name, containers)
     {
 
         local service = self,
 
-        name: containers.name,
+        name: name,
+        ports: [],
 
         with_port:: function(src, dest, name)
-            self + { port: [src, dest] },
+            self + {
+                ports: super.ports + [{ src: src, dest: dest }],
+            },
 
-        with_external:: function() self,
-
-        add:: function() {
-        }
+        add:: function()
+            if std.length(service.ports) == 0 then {}
+            else {
+                services +: {
+                    [containers.name] +: {
+                        ports: [
+                            "%d:%d" % [port.src, port.dest]
+                            for port in service.ports
+                        ],
+                    },
+                },
+            },
 
     },
 
@@ -250,9 +269,12 @@
 
         name: name,
         containers: containers,
+        replicas: 1,
+
+        with_replicas:: function(n) self + { replicas: n },
 
         add:: function() std.foldl(
-            function(state, c) state + c.add(),
+            function(state, c) state + c.add(cont.replicas),
             cont.containers,
             {}
         ),

@@ -23,7 +23,7 @@ local url = import "values/url.jsonnet";
             );
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("ddg-mcp-server", containerSet)
                 .with_port(port, port, "mcp");
 
             engine.resources([

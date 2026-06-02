@@ -9,7 +9,7 @@
 // owning component has been merged elsewhere) and you want the build to
 // fail rather than silently produce an incomplete deployment.
 
-local engine = import "../engine/docker-compose.jsonnet";
+local engine = import "../engine/compose.jsonnet";
 local decode = import "decode-config.jsonnet";
 local components = import "../components.jsonnet";
 

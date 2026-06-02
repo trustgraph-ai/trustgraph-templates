@@ -10,6 +10,7 @@ cassandra + {
         "triples-cpu-reservation": "0.1",
         "triples-memory-limit": "512M",
         "triples-memory-reservation": "512M",
+        "triples-replicas": 1,
     },
 
     local logLevel = $.parameters["log-level"],
@@ -22,6 +23,7 @@ cassandra + {
         local cpuReservation = pars["triples-cpu-reservation"],
         local memoryLimit = pars["triples-memory-limit"],
         local memoryReservation = pars["triples-memory-reservation"],
+        local replicas = pars["triples-replicas"],
 
         create:: function(engine)
 
@@ -65,10 +67,10 @@ cassandra + {
 
             local containerSet = engine.containers(
                 "triples", [ container ]
-            );
+            ).with_replicas(replicas);
 
             local service =
-                engine.internalService(containerSet)
+                engine.internalService("triples", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

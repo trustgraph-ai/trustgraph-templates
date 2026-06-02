@@ -90,7 +90,7 @@
                     self
                 ),
 
-        add:: function() [
+        add:: function(replicas=1) [
 
                 {
                     apiVersion: "apps/v1",
@@ -103,7 +103,7 @@
                         }
                     },
                     spec: {
-                        replicas: 1,
+                        replicas: replicas,
                         selector: {
                             matchLabels: {
                                 app: container.name,
@@ -221,15 +221,13 @@
 
     },
 
-    // Just an alias
-    internalService:: self.service,
-
-    service:: function(containers)
+    internalService:: function(name, containers)
     {
 
         local service = self,
 
-        name: containers.name,
+        name: name,
+        appName: containers.name,
 
         ports: [],
 
@@ -240,8 +238,6 @@
                         { src: src, dest: dest, name: name  }
                     ]
                 },
-
-        with_external:: function() self,
 
         add:: function() [
 
@@ -255,7 +251,7 @@
                     },
                     spec: {
                         selector: {
-                            app: service.name,
+                            app: service.appName,
                         },
                         ports: [
                             {
@@ -270,6 +266,8 @@
             ],
 
     },
+
+    service:: self.internalService,
 
     volume:: function(name)
     {
@@ -390,9 +388,12 @@
 
         name: name,
         containers: containers,
+        replicas: 1,
+
+        with_replicas:: function(n) self + { replicas: n },
 
         add:: function() std.flattenArrays(
-            [ c.add() for c in cont.containers ]
+            [ c.add(cont.replicas) for c in cont.containers ]
         ),
 
     },
