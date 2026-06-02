@@ -37,6 +37,9 @@
    "vector-store-qdrant": import "vector-store/qdrant.jsonnet",
    "vector-store-pinecone": import "vector-store/pinecone.jsonnet",
 
+   // Distributed Qdrant override (include AFTER vector-store-qdrant)
+   "qdrant-cluster": import "backends/qdrant-cluster.jsonnet",
+
    // Triples stores
    "triple-store-cassandra": import "triple-store/cassandra.jsonnet",
    "triple-store-neo4j": import "triple-store/neo4j.jsonnet",
@@ -45,6 +48,12 @@
 
    // Row stores
    "row-store-cassandra": import "row-store/cassandra.jsonnet",
+
+   // Distributed Cassandra override (include AFTER the cassandra store)
+   "cassandra-cluster": import "backends/cassandra-cluster.jsonnet",
+
+   // Distributed Garage override (include AFTER the garage store)
+   "garage-cluster": import "backends/garage-cluster.jsonnet",
 
    // Observability support
    "grafana": import "monitoring/grafana.jsonnet",
