@@ -1,6 +1,17 @@
 local images = import "values/images.jsonnet";
+local url = import "values/url.jsonnet";
 
 {
+
+    // Point the librarian's object store at this Garage deployment by writing
+    // creds into its launch.yaml (control's object-store-params hook). Reads
+    // from $.garage so it tracks credential overrides (incl. garage-cluster).
+    "object-store-params" +:: {
+        object_store_endpoint: url.object_store,
+        object_store_access_key: $.garage["access-key"],
+        object_store_secret_key: $.garage["secret-key"],
+        object_store_region: $.garage.region,
+    },
 
     garage +: {
 

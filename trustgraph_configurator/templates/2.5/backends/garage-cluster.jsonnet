@@ -1,4 +1,5 @@
 local images = import "values/images.jsonnet";
+local url = import "values/url.jsonnet";
 
 // Distributed (multi-node) Garage: a primary node plus N peers forming an
 // S3-compatible cluster with real data replication.
@@ -23,6 +24,18 @@ local images = import "values/images.jsonnet";
 // (3 nodes, factor 3) is balanced; adjust both together.
 
 {
+
+    // Point the librarian's object store at this cluster (control's
+    // object-store-params hook). Reads $.garage so it tracks cred overrides.
+    // Set here too - not just in garage.jsonnet - so importing garage-cluster
+    // on its own is a complete object-store path. Idempotent when both are
+    // imported: the value is identical.
+    "object-store-params" +:: {
+        object_store_endpoint: url.object_store,
+        object_store_access_key: $.garage["access-key"],
+        object_store_secret_key: $.garage["secret-key"],
+        object_store_region: $.garage.region,
+    },
 
     garage +: {
 

@@ -37,6 +37,17 @@
    "vector-store-qdrant": import "vector-store/qdrant.jsonnet",
    "vector-store-pinecone": import "vector-store/pinecone.jsonnet",
 
+   // Object store (S3-compatible) for the librarian. Import exactly one of
+   // these to select how the librarian gets its object store.
+   "garage": import "backends/garage.jsonnet",
+
+   // Distributed Garage override (include AFTER garage)
+   "garage-cluster": import "backends/garage-cluster.jsonnet",
+
+   // External S3-compatible store (AWS S3, R2, managed MinIO, ...). Deploys
+   // nothing; wires the librarian to read creds from env-var secrets.
+   "object-store-s3": import "backends/object-store-s3.jsonnet",
+
    // Distributed Qdrant override (include AFTER vector-store-qdrant)
    "qdrant-cluster": import "backends/qdrant-cluster.jsonnet",
 
@@ -51,9 +62,6 @@
 
    // Distributed Cassandra override (include AFTER the cassandra store)
    "cassandra-cluster": import "backends/cassandra-cluster.jsonnet",
-
-   // Distributed Garage override (include AFTER the garage store)
-   "garage-cluster": import "backends/garage-cluster.jsonnet",
 
    // Observability support
    "grafana": import "monitoring/grafana.jsonnet",

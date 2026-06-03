@@ -2,7 +2,6 @@
 
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local garage = import "backends/garage.jsonnet";
 local cassandra = import "backends/cassandra.jsonnet";
 
 {
@@ -14,6 +13,25 @@ local cassandra = import "backends/cassandra.jsonnet";
         "control-memory-reservation": "256M",
         "control-replicas": 1,
     },
+
+    // S3-compatible object store the librarian talks to. Fail-secure hooks,
+    // empty by default: no params and no secrets means the librarian gets no
+    // credentials and denies (fail-closed). An object-store backend component
+    // populates one. control does NOT know which backends exist or how they
+    // work - it just merges whatever was populated.
+    //
+    // Both use +:: (merge, not replace) so these empty defaults never clobber
+    // a backend's value regardless of component order in the config list.
+    //
+    //   object-store-params  - map merged into the librarian's launch.yaml
+    //                          params (an embedded store, e.g. garage, owns
+    //                          its creds).
+    //   object-store-secrets - map of ENV_VAR -> secret-key. control builds
+    //                          the deploy-time env-var secrets from it (an
+    //                          external store, e.g. object-store-s3). Empty
+    //                          means no env secrets.
+    "object-store-params" +:: {},
+    "object-store-secrets" +:: {},
 
     "control" +: {
 
@@ -31,13 +49,25 @@ local cassandra = import "backends/cassandra.jsonnet";
             local envSecrets = engine.envSecrets("iam-bootstrap-token")
                 .with_env_var("IAM_BOOTSTRAP_TOKEN", "token");
 
+            // Object-store wiring comes entirely from the hooks above. A
+            // backend populates one; if neither is set the librarian gets no
+            // credentials and denies (fail-closed). control stays agnostic.
+            // Build env secrets from the ENV_VAR -> key map; empty map (the
+            // default, or an embedded backend) means no env secrets.
+            local objectStoreEnv = $["object-store-secrets"];
+            local objectStoreSecrets =
+                if std.length(objectStoreEnv) > 0 then
+                    std.foldl(
+                        function(s, envVar)
+                            s.with_env_var(envVar, objectStoreEnv[envVar]),
+                        std.objectFields(objectStoreEnv),
+                        engine.envSecrets("object-store")
+                    )
+                else null;
+
             local librarianParams = {
                  id: "librarian",
-                 object_store_endpoint: url.object_store,
-                 object_store_access_key: $.garage["access-key"],
-                 object_store_secret_key: $.garage["secret-key"],
-                 object_store_region: $.garage.region,
-            } + $["pub-sub-params"];
+            } + $["object-store-params"] + $["pub-sub-params"];
 
             local init = "trustgraph.bootstrap.initialisers";
 
@@ -162,7 +192,7 @@ local cassandra = import "backends/cassandra.jsonnet";
 		}
             );
 
-            local container =
+            local baseContainer =
                 engine.container("control")
                     .with_image(images.trustgraph_flow)
                     .with_command([
@@ -182,6 +212,12 @@ local cassandra = import "backends/cassandra.jsonnet";
                     .with_limits(cpuLimit, memoryLimit)
                     .with_reservations(cpuReservation, memoryReservation);
 
+            // Attach object-store env secrets only if a backend populated them.
+            local container =
+                if objectStoreSecrets != null then
+                    baseContainer.with_env_var_secrets(objectStoreSecrets)
+                else baseContainer;
+
             local containerSet = engine.containers(
                 "control", [ container ]
             ).with_replicas(replicas);
@@ -190,16 +226,20 @@ local cassandra = import "backends/cassandra.jsonnet";
                 engine.internalService("control", containerSet)
                 .with_port(8000, 8000, "metrics");
 
-            engine.resources([
-                envSecrets,
-                cfgVol,
-                templateVol,
-                containerSet,
-                service,
-            ])
+            engine.resources(
+                [
+                    envSecrets,
+                    cfgVol,
+                    templateVol,
+                    containerSet,
+                    service,
+                ]
+                + (if objectStoreSecrets != null then [ objectStoreSecrets ]
+                   else [])
+            )
 
     }
 
-// Garage and Cassandra are used by the Librarian
-} + garage + cassandra
+// Cassandra is used by the Librarian.
+} + cassandra
 
