@@ -182,6 +182,45 @@ steps:
           icon: "cassandra"
           description: "NoSQL database with fast read/write performance at scale. Used for row storage in TrustGraph."
     transitions:
+      # Backing database + object store became explicit components in 2.5;
+      # older versions bundle them, so only offer these steps for >= 2.5.
+      - when: "version >= '2.5'"
+        next: database
+      - next: model-deployment
+
+  # ─────────────────────────────────────────────────────────────
+  # Database Deployment (>= 2.5 only)
+  # ─────────────────────────────────────────────────────────────
+  database:
+    title: "Which database to deploy?"
+    description: "Backing database for the librarian, config and knowledge stores. Required regardless of the chosen graph store."
+    state_key: database
+    input:
+      type: select
+      options:
+        - label: "Apache Cassandra"
+          value: "cassandra"
+          icon: "cassandra"
+          description: "NoSQL database deployed for the librarian, config and knowledge stores."
+          recommended: true
+    transitions:
+      - next: object-store
+
+  # ─────────────────────────────────────────────────────────────
+  # Object Store Deployment (>= 2.5 only)
+  # ─────────────────────────────────────────────────────────────
+  object-store:
+    title: "Which object store?"
+    description: "S3-compatible object storage used by the librarian"
+    state_key: object_store
+    input:
+      type: select
+      options:
+        - label: "Garage"
+          value: "garage"
+          description: "Lightweight, self-hosted S3-compatible object store. Low resource usage."
+          recommended: true
+    transitions:
       - next: model-deployment
 
   # ─────────────────────────────────────────────────────────────

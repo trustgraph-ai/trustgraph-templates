@@ -50,6 +50,20 @@
     $component("grafana")
   ];
 
+  /* ─────────────────────────────────────────────────────────────
+   * Backing services deployed for the librarian / config / knowledge
+   * stores: a database (Cassandra) and an object store (Garage). These
+   * are required regardless of the chosen graph/row store, so they are
+   * their own forced choices in the dialog. The flow only offers these
+   * steps for version >= 2.5 (older versions bundle them implicitly),
+   * so we just map whatever the dialog set - the version gating lives
+   * in the flow, not here.
+   * ───────────────────────────────────────────────────────────── */
+  $backend_components := $append(
+    database ? [ $component(database) ] : [],
+    object_store ? [ $component(object_store) ] : []
+  );
+
 
   /* ─────────────────────────────────────────────────────────────
    * Model Deployment Components
@@ -132,8 +146,11 @@
     $append(
       $append(
         $append(
-          $base_components,
-          $infrastructure
+          $append(
+            $base_components,
+            $infrastructure
+          ),
+          $backend_components
         ),
         $model_components
       ),
