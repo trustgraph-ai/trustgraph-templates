@@ -8,8 +8,8 @@ local images = import "values/images.jsonnet";
     parameters +:: {
         "document-decoder-cpu-limit": "0.5",
         "document-decoder-cpu-reservation": "0.1",
-        "document-decoder-memory-limit": "512M",
-        "document-decoder-memory-reservation": "512M",
+        "document-decoder-memory-limit": "1400M",
+        "document-decoder-memory-reservation": "1400M",
         "document-decoder-replicas": 1,
     },
 
