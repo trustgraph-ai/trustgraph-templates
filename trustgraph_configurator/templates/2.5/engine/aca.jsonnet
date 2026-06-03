@@ -121,7 +121,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
             ],
         },
 
-        add:: function()
+        add:: function(replicas=1)
             local cpuRaw =
                 if std.objectHas(container, "cpuLimit") then container.cpuLimit
                 else if std.objectHas(container, "cpuReservation") then container.cpuReservation
@@ -220,8 +220,8 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                             ),
                         ],
                         scale: {
-                            minReplicas: 1,
-                            maxReplicas: 1,
+                            minReplicas: replicas,
+                            maxReplicas: replicas,
                         },
                     } + (
                         if std.length(azureFileVolumes) > 0 then
@@ -381,11 +381,12 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
 
         name: name,
         containers: containers,
+        replicas: 1,
 
-        with_replicas:: function(n) self,
+        with_replicas:: function(n) self + { replicas: n },
 
         add:: function() std.flattenArrays(
-            [ c.add() for c in cont.containers ]
+            [ c.add(cont.replicas) for c in cont.containers ]
         ),
 
     },
