@@ -65,6 +65,11 @@ local cassandra = import "backends/cassandra.jsonnet";
                     )
                 else null;
 
+            // External Cassandra (cassandra-external backend) supplies the
+            // librarian/iam/config/knowledge keyspaces' connection via env
+            // secrets; null when self-hosted (host "cassandra", no auth).
+            local cassandraSecrets = $["cassandra-env-secrets"](engine);
+
             local librarianParams = {
                  id: "librarian",
             } + $["object-store-params"] + $["pub-sub-params"];
@@ -212,11 +217,17 @@ local cassandra = import "backends/cassandra.jsonnet";
                     .with_limits(cpuLimit, memoryLimit)
                     .with_reservations(cpuReservation, memoryReservation);
 
-            // Attach object-store env secrets only if a backend populated them.
-            local container =
+            // Attach object-store and Cassandra env secrets only if a backend
+            // populated them.
+            local containerWithObjectStore =
                 if objectStoreSecrets != null then
                     baseContainer.with_env_var_secrets(objectStoreSecrets)
                 else baseContainer;
+
+            local container =
+                if cassandraSecrets != null then
+                    containerWithObjectStore.with_env_var_secrets(cassandraSecrets)
+                else containerWithObjectStore;
 
             local containerSet = engine.containers(
                 "control", [ container ]
@@ -235,6 +246,8 @@ local cassandra = import "backends/cassandra.jsonnet";
                     service,
                 ]
                 + (if objectStoreSecrets != null then [ objectStoreSecrets ]
+                   else [])
+                + (if cassandraSecrets != null then [ cassandraSecrets ]
                    else [])
             )
 

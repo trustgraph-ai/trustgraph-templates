@@ -60,8 +60,16 @@
    // Row stores
    "row-store-cassandra": import "row-store/cassandra.jsonnet",
 
+   // Self-hosted Cassandra (single node). List this to deploy it; consumers
+   // talk to host "cassandra". Mutually exclusive with cassandra-external.
+   "cassandra": import "backends/cassandra-store.jsonnet",
+
    // Distributed Cassandra override (include AFTER the cassandra store)
    "cassandra-cluster": import "backends/cassandra-cluster.jsonnet",
+
+   // External (managed/secured) Cassandra: deploys nothing, supplies
+   // connection via env secrets. Mutually exclusive with cassandra-cluster.
+   "cassandra-external": import "backends/cassandra-external.jsonnet",
 
    // Observability support
    "grafana": import "monitoring/grafana.jsonnet",
