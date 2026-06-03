@@ -1,52 +1,31 @@
-local images = import "values/images.jsonnet";
+// Cassandra connection hooks shared by every consumer (control, triples,
+// rows). This file deploys nothing - it only declares the wiring that
+// consumers read. The self-hosted deployment lives in the separately-listed
+// "cassandra" component (backends/cassandra-store.jsonnet); the managed path
+// in "cassandra-external". One of those must be in the config to back
+// Cassandra (config generation is owned upstream, so this isn't validated
+// here).
 
 {
 
-    "cassandra" +: {
+    // ENV_VAR -> secret-key map. Empty by default, which means the self-hosted
+    // store is in use: consumers talk to host "cassandra" with no auth. The
+    // cassandra-external backend populates this map; +:: so component order in
+    // the config list never clobbers it.
+    "cassandra-secrets" +:: {},
 
-        // Memory settings (can be overridden by memory-profile)
-        "memory-limit":: "1400M",
-        "memory-reservation":: "1400M",
-        "heap":: "700M",
-
-        create:: function(engine)
-
-            // Capture memory settings into locals
-            local memLimit = self["memory-limit"];
-            local memReserv = self["memory-reservation"];
-            local heap = self["heap"];
-
-            local vol = engine.volume("cassandra").with_size("20G");
-
-            local container =
-                engine.container("cassandra")
-                    .with_image(images.cassandra)
-                    .with_user(999)
-                    .with_group(999)
-                    .with_environment({
-                        JVM_OPTS: "-Xms%s -Xmx%s -Dcassandra.skip_wait_for_gossip_to_settle=0" % [
-                            heap, heap,
-                        ],
-                    })
-                    .with_limits("1.0", memLimit)
-                    .with_reservations("0.5", memReserv)
-                    .with_port(9042, 9042, "cassandra")
-                    .with_volume_mount(vol, "/var/lib/cassandra");
-
-            local containerSet = engine.containers(
-                "cassandra", [ container ]
-            );
-
-            local service =
-                engine.internalService("cassandra", containerSet)
-                .with_port(9042, 9042, "api");
-
-            engine.resources([
-                vol,
-                containerSet,
-                service,
-            ])
-
-    },
+    // Fixed helper (backends populate the map above, not this). Builds the
+    // engine env secrets from the map, or null when empty. Consumers
+    // (control / triples / rows) call this to attach the secrets to their
+    // container and to decide whether to omit the cassandra_host param.
+    "cassandra-env-secrets":: function(engine)
+        local m = $["cassandra-secrets"];
+        if std.length(m) > 0 then
+            std.foldl(
+                function(s, v) s.with_env_var(v, m[v]),
+                std.objectFields(m),
+                engine.envSecrets("cassandra")
+            )
+        else null,
 
 }

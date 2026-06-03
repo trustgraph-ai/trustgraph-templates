@@ -1,6 +1,5 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local cassandra_hosts = "cassandra";
 local cassandra = import "backends/cassandra.jsonnet";
 
 cassandra + {
@@ -27,6 +26,13 @@ cassandra + {
 
         create:: function(engine)
 
+            // External Cassandra supplies host/creds via env secrets; in that
+            // case omit cassandra_host so the processor reads CASSANDRA_HOST.
+            local cassandraSecrets = $["cassandra-env-secrets"](engine);
+            local cassandraParams =
+                if cassandraSecrets != null then {}
+                else { cassandra_host: "cassandra" };
+
             local cfgVol = engine.configVolume(
                 "rows-launch-cfg", "launch/rows",
 		{
@@ -36,22 +42,20 @@ cassandra + {
                                 class: "trustgraph.query.rows.cassandra.Processor",
                                 params: {
                                     id: "rows-query",
-                                    cassandra_host: cassandra_hosts,
-                                } + $["pub-sub-params"],
+                                } + cassandraParams + $["pub-sub-params"],
                             },
                             {
                                 class: "trustgraph.storage.rows.cassandra.Processor",
                                 params: {
                                     id: "rows-write",
-                                    cassandra_host: cassandra_hosts,
-                                } + $["pub-sub-params"],
+                                } + cassandraParams + $["pub-sub-params"],
                             },
                         ]
                     })
 		}
             );
 
-            local container =
+            local baseContainer =
                 engine.container("rows")
                     .with_image(images.trustgraph_flow)
                     .with_command([
@@ -65,6 +69,11 @@ cassandra + {
                     .with_limits(cpuLimit, memoryLimit)
                     .with_reservations(cpuReservation, memoryReservation);
 
+            local container =
+                if cassandraSecrets != null then
+                    baseContainer.with_env_var_secrets(cassandraSecrets)
+                else baseContainer;
+
             local containerSet = engine.containers(
                 "rows", [ container ]
             ).with_replicas(replicas);
@@ -77,7 +86,7 @@ cassandra + {
                 cfgVol,
                 containerSet,
                 service,
-            ])
+            ] + (if cassandraSecrets != null then [ cassandraSecrets ] else []))
 
     },
 
