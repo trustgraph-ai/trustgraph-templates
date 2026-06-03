@@ -170,7 +170,8 @@
     "eks": "eks-k8s",
     "aks": "aks-k8s",
     "scw": "scw-k8s",
-    "ovh": "ovh-k8s"
+    "ovh": "ovh-k8s",
+    "ali": "ack-k8s"
   };
   $api_platform := $lookup($platform_map, platform);
 

@@ -57,6 +57,10 @@
         {
             "name": "eks-k8s",
             "description": "Uses kubectl to deploy resources to an Kubernetes cluster running in AWS (e.g. EKS)"
+        },
+        {
+            "name": "ack-k8s",
+            "description": "Uses kubectl to deploy resources to a Kubernetes cluster running in Alibaba Cloud (ACK)"
         }
     ],
     "statuses": [
