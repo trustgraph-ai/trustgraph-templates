@@ -1,0 +1,1 @@
+You need to have an Alibaba Cloud account, and a running ACK (Container Service for Kubernetes) cluster. You also need to be authenticated with the cluster and be able to see the cluster state. See [Container Service for Kubernetes (ACK)](https://www.alibabacloud.com/product/kubernetes).

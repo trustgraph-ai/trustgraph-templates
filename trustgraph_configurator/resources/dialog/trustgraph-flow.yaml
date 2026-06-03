@@ -84,6 +84,10 @@ steps:
           value: "ovh"
           icon: "ovhcloud"
           description: "Managed Kubernetes on OVHCloud European infrastructure. Suitable for production deployment."
+        - label: "Alibaba Cloud Kubernetes (ACK)"
+          value: "ali"
+          icon: "alibabacloud"
+          description: "Managed Kubernetes on Alibaba Cloud (ACK). Suitable for production deployment."
     transitions:
       - when: "version >= '2.2'"
         next: pubsub
