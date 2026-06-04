@@ -37,6 +37,15 @@ local url = import "values/url.jsonnet";
         object_store_region: $.garage.region,
     },
 
+    // Number of peer nodes in addition to the primary. 2 peers -> a 3-node
+    // cluster. Top-level (not inside "garage") so it can be set from a
+    // config entry's parameters, alongside garage-replication-factor.
+    "garage-peers":: 2,
+
+    // S3 data replication factor written into garage.toml. Default 3 (3
+    // nodes -> 3-way replication). Keep <= node count (garage-peers + 1).
+    "garage-replication-factor":: 3,
+
     garage +: {
 
         // Garage S3 credentials (override for anything non-dev).
@@ -46,16 +55,9 @@ local url = import "values/url.jsonnet";
         "admin-token":: "batts-rockhearted-unpartially",
         region:: "garage",
 
-        // 3 nodes across 3 zones -> 3-way replication.
-        "replication-factor":: "3",
-
         // Storage volume sizes (data-size also used as layout capacity).
         "meta-size":: "2G",
         "data-size":: "5G",
-
-        // Number of peer nodes in addition to the primary.
-        // 2 peers -> a 3-node cluster.
-        "peers":: 2,
 
         create:: function(engine)
 
@@ -64,10 +66,10 @@ local url = import "values/url.jsonnet";
             local rpcSecret = self["rpc-secret"];
             local adminToken = self["admin-token"];
             local region = self.region;
-            local replicationFactor = self["replication-factor"];
+            local replicationFactor = $["garage-replication-factor"];
             local metaSize = self["meta-size"];
             local dataSize = self["data-size"];
-            local peers = self["peers"];
+            local peers = $["garage-peers"];
 
             // Node 0 keeps the name "garage" (the S3 endpoint clients use);
             // peers are garage-peer-N.

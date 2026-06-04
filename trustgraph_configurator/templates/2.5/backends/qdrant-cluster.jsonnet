@@ -17,9 +17,16 @@ local images = import "values/images.jsonnet";
 
 {
 
+    // Number of peer nodes in addition to the bootstrap node. 2 peers ->
+    // a 3-node cluster (sensible quorum). Top-level (not inside "qdrant")
+    // so it can be set from a config entry's parameters, alongside
+    // qdrant-replication-factor / qdrant-shard-number.
+    "qdrant-peers":: 2,
+
     // Collection geometry the write processors apply when creating
     // collections. Ring size = default 2 peers + bootstrap = 3. Overrides
-    // the single-node defaults of 1 from qdrant.jsonnet.
+    // the single-node defaults of 1 from qdrant.jsonnet. Keep <= node count
+    // if you change qdrant-peers.
     "qdrant-replication-factor":: 3,
     "qdrant-shard-number":: 3,
 
@@ -29,15 +36,11 @@ local images = import "values/images.jsonnet";
         "memory-limit":: "1024M",
         "memory-reservation":: "1024M",
 
-        // Number of peer nodes in addition to the bootstrap node.
-        // 2 peers -> a 3-node cluster (sensible quorum).
-        "peers":: 2,
-
         create:: function(engine)
 
             local memLimit = self["memory-limit"];
             local memReserv = self["memory-reservation"];
-            local peers = self["peers"];
+            local peers = $["qdrant-peers"];
 
             // P2P/consensus endpoint of the bootstrap node (node 0).
             local bootstrapUri = "http://qdrant:6335";
