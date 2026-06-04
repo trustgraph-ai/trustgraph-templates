@@ -26,6 +26,15 @@ qdrant + {
 
         create:: function(engine)
 
+            // Collection geometry applied only by the WRITE processors when
+            // they create collections. 1/1 single-node by default;
+            // qdrant-cluster raises both to the ring size. Query processors
+            // don't create collections, so they don't take these.
+            local collectionParams = {
+                qdrant_replication_factor: $["qdrant-replication-factor"],
+                qdrant_shard_number: $["qdrant-shard-number"],
+            };
+
             local cfgVol = engine.configVolume(
                 "vector-store-cfg", "launch/vector-store",
 		{
@@ -43,7 +52,7 @@ qdrant + {
                                 params: {
                                     id: "doc-embeddings-write",
                                     store_uri: url.qdrant,
-                                } + $["pub-sub-params"],
+                                } + collectionParams + $["pub-sub-params"],
                             },
                             {
                                 class: "trustgraph.query.graph_embeddings.qdrant.Processor",
@@ -57,7 +66,7 @@ qdrant + {
                                 params: {
                                     id: "graph-embeddings-write",
                                     store_uri: url.qdrant,
-                                } + $["pub-sub-params"],
+                                } + collectionParams + $["pub-sub-params"],
                             },
                             {
                                 class: "trustgraph.query.row_embeddings.qdrant.Processor",
@@ -71,7 +80,7 @@ qdrant + {
                                 params: {
                                     id: "row-embeddings-write",
                                     store_uri: url.qdrant,
-                                } + $["pub-sub-params"],
+                                } + collectionParams + $["pub-sub-params"],
                             },
                         ]
                     })

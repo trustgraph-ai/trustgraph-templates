@@ -70,9 +70,20 @@ local cassandra = import "backends/cassandra.jsonnet";
             // secrets; null when self-hosted (host "cassandra", no auth).
             local cassandraSecrets = $["cassandra-env-secrets"](engine);
 
+            // Replication factor for the keyspaces control's processors create.
+            // Set in self-hosted mode; omitted in external mode so the
+            // CASSANDRA_REPLICATION_FACTOR env secret takes effect. control
+            // never sets cassandra_host (processor defaults to "cassandra").
+            local cassandraParams =
+                if cassandraSecrets != null then {}
+                else {
+                    cassandra_replication_factor:
+                        $["cassandra-replication-factor"],
+                };
+
             local librarianParams = {
                  id: "librarian",
-            } + $["object-store-params"] + $["pub-sub-params"];
+            } + $["object-store-params"] + $["pub-sub-params"] + cassandraParams;
 
             local init = "trustgraph.bootstrap.initialisers";
 
@@ -134,7 +145,7 @@ local cassandra = import "backends/cassandra.jsonnet";
                                 class: "trustgraph.config.service.Processor",
                                 params:  {
                                     id: "config-svc",
-                                } + $["pub-sub-params"],
+                                } + $["pub-sub-params"] + cassandraParams,
                             },
                             {
                                 class: "trustgraph.flow.service.Processor",
@@ -146,13 +157,13 @@ local cassandra = import "backends/cassandra.jsonnet";
                                 class: "trustgraph.cores.service.Processor",
                                 params: {
                                     id: "knowledge",
-                                } + $["pub-sub-params"],
+                                } + $["pub-sub-params"] + cassandraParams,
                             },
                             {
                                 class: "trustgraph.storage.knowledge.store.Processor",
                                 params: {
                                     id: "kg-store",
-                                } + $["pub-sub-params"],
+                                } + $["pub-sub-params"] + cassandraParams,
                             },
                             {
                                 class: "trustgraph.metering.Processor",
@@ -173,7 +184,7 @@ local cassandra = import "backends/cassandra.jsonnet";
                                     bootstrap_mode: "token",
                                     // Bootstrap token is set by
                                     // IAM_BOOTSTRAP_TOKEN
-                                } + $["pub-sub-params"],
+                                } + $["pub-sub-params"] + cassandraParams,
                             },
                             {
                                 class: "trustgraph.bootstrap.bootstrapper.Processor",

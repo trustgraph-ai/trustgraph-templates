@@ -25,6 +25,11 @@ local images = import "values/images.jsonnet";
 
 {
 
+    // Replication factor for keyspaces the consumers create. Defaults to the
+    // ring size (default 2 peers + seed = 3); keep <= node count if you change
+    // peers. Overrides the single-node default of 1 from cassandra.jsonnet.
+    "cassandra-replication-factor":: 3,
+
     "cassandra" +: {
 
         // Memory settings (can be overridden by memory-profile)
