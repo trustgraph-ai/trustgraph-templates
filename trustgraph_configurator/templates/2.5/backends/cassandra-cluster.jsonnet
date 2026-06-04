@@ -25,9 +25,15 @@ local images = import "values/images.jsonnet";
 
 {
 
+    // Number of peer nodes in addition to the seed node. 2 peers -> a
+    // 3-node ring. Top-level (not inside "cassandra") so it can be set
+    // from a config entry's parameters, alongside cassandra-replication-factor.
+    "cassandra-peers":: 2,
+
     // Replication factor for keyspaces the consumers create. Defaults to the
     // ring size (default 2 peers + seed = 3); keep <= node count if you change
-    // peers. Overrides the single-node default of 1 from cassandra.jsonnet.
+    // cassandra-peers. Overrides the single-node default of 1 from
+    // cassandra.jsonnet.
     "cassandra-replication-factor":: 3,
 
     "cassandra" +: {
@@ -40,17 +46,13 @@ local images = import "values/images.jsonnet";
         // Ring identity; must match across all nodes.
         "cluster-name":: "TrustGraph",
 
-        // Number of peer nodes in addition to the seed node.
-        // 2 peers -> a 3-node ring.
-        "peers":: 2,
-
         create:: function(engine)
 
             local memLimit = self["memory-limit"];
             local memReserv = self["memory-reservation"];
             local heap = self["heap"];
             local clusterName = self["cluster-name"];
-            local peers = self["peers"];
+            local peers = $["cassandra-peers"];
 
             // All nodes gossip-bootstrap through the seed (node 0).
             local seeds = "cassandra";
