@@ -1,38 +1,73 @@
-// Cassandra connection hooks shared by every consumer (control, triples,
-// rows). This file deploys nothing - it only declares the wiring that
-// consumers read. The self-hosted deployment lives in the separately-listed
-// "cassandra" component (backends/cassandra-store.jsonnet); the managed path
-// in "cassandra-external". One of those must be in the config to back
-// Cassandra (config generation is owned upstream, so this isn't validated
-// here).
+local images = import "values/images.jsonnet";
+local secrets = import "cassandra-secrets.jsonnet";
 
-{
+// Self-hosted single-node Cassandra. List as the "cassandra" component to
+// deploy it; consumers then talk to host "cassandra" with no auth. Mutually
+// exclusive with cassandra-external (managed/secured cluster) - import one.
+// cassandra-cluster overrides this single node with a multi-node ring.
 
-    // ENV_VAR -> secret-key map. Empty by default, which means the self-hosted
-    // store is in use: consumers talk to host "cassandra" with no auth. The
-    // cassandra-external backend populates this map; +:: so component order in
-    // the config list never clobbers it.
-    "cassandra-secrets" +:: {},
+secrets + {
 
-    // Fixed helper (backends populate the map above, not this). Builds the
-    // engine env secrets from the map, or null when empty. Consumers
-    // (control / triples / rows) call this to attach the secrets to their
-    // container and to decide whether to omit the cassandra_host param.
-    "cassandra-env-secrets":: function(engine)
-        local m = $["cassandra-secrets"];
-        if std.length(m) > 0 then
-            std.foldl(
-                function(s, v) s.with_env_var(v, m[v]),
-                std.objectFields(m),
-                engine.envSecrets("cassandra")
-            )
-        else null,
-
-    // Replication factor used when a consumer CREATES a keyspace. 1 (single
-    // node) by default; cassandra-cluster raises it to match its ring size.
-    // Consumers fold this into the cassandra_replication_factor launch param in
-    // self-hosted mode, and omit it in external mode so the operator's
-    // CASSANDRA_REPLICATION_FACTOR env wins (precedence: param -> env -> 1).
+    // Replication factor for keyspaces the consumers create. 1 for a single
+    // node; cassandra-cluster raises it to the ring size. Consumers read this
+    // in self-hosted mode and omit it in external mode (CASSANDRA_REPLICATION_
+    // FACTOR env wins).
     "cassandra-replication-factor":: 1,
+
+    // Per-node memory, settable via the override component's parameters.
+    // Declared independently from cassandra-cluster (separate recipe).
+    parameters +:: {
+        "cassandra-heap": "700M",
+        "cassandra-memory-limit": "1400M",
+        "cassandra-memory-reservation": "1400M",
+    },
+
+    "cassandra" +: {
+
+        create:: function(engine)
+
+            // External Cassandra also selected (creds via env secrets): deploy
+            // nothing, external wins. Consumers read CASSANDRA_HOST etc.
+            if std.length($["cassandra-secrets"]) > 0 then
+                engine.resources([])
+            else
+
+            local pars = $.parameters;
+            local memLimit = pars["cassandra-memory-limit"];
+            local memReserv = pars["cassandra-memory-reservation"];
+            local heap = pars["cassandra-heap"];
+
+            local vol = engine.volume("cassandra").with_size("20G");
+
+            local container =
+                engine.container("cassandra")
+                    .with_image(images.cassandra)
+                    .with_user(999)
+                    .with_group(999)
+                    .with_environment({
+                        JVM_OPTS: "-Xms%s -Xmx%s -Dcassandra.skip_wait_for_gossip_to_settle=0" % [
+                            heap, heap,
+                        ],
+                    })
+                    .with_limits("1.0", memLimit)
+                    .with_reservations("0.5", memReserv)
+                    .with_port(9042, 9042, "cassandra")
+                    .with_volume_mount(vol, "/var/lib/cassandra");
+
+            local containerSet = engine.containers(
+                "cassandra", [ container ]
+            );
+
+            local service =
+                engine.internalService("cassandra", containerSet)
+                .with_port(9042, 9042, "api");
+
+            engine.resources([
+                vol,
+                containerSet,
+                service,
+            ])
+
+    },
 
 }

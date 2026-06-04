@@ -14,7 +14,9 @@
 //
 // Mutually exclusive with cassandra-cluster - import one Cassandra backend.
 
-{
+local secrets = import "cassandra-secrets.jsonnet";
+
+secrets + {
     "cassandra-secrets" +:: {
         CASSANDRA_HOST: "host",
         CASSANDRA_USERNAME: "username",

@@ -1,4 +1,5 @@
 local images = import "values/images.jsonnet";
+local secrets = import "cassandra-secrets.jsonnet";
 
 // Distributed (multi-node) Cassandra: a seed node plus N peers forming a
 // gossip ring.
@@ -23,7 +24,7 @@ local images = import "values/images.jsonnet";
 // for now data still lives on one node. This is a scaffold for
 // developing a replication strategy later.
 
-{
+secrets + {
 
     // Number of peer nodes in addition to the seed node. 2 peers -> a
     // 3-node ring. Top-level (not inside "cassandra") so it can be set
@@ -36,21 +37,27 @@ local images = import "values/images.jsonnet";
     // cassandra.jsonnet.
     "cassandra-replication-factor":: 3,
 
-    "cassandra" +: {
+    // Per-node memory, settable via the override component's parameters.
+    // Declared independently from the single-node store (separate recipe);
+    // they happen to match today but neither file depends on the other.
+    parameters +:: {
+        "cassandra-heap": "700M",
+        "cassandra-memory-limit": "1400M",
+        "cassandra-memory-reservation": "1400M",
+    },
 
-        // Memory settings (can be overridden by memory-profile)
-        "memory-limit":: "1400M",
-        "memory-reservation":: "1400M",
-        "heap":: "700M",
+    "cassandra" +: {
 
         // Ring identity; must match across all nodes.
         "cluster-name":: "TrustGraph",
 
         create:: function(engine)
 
-            local memLimit = self["memory-limit"];
-            local memReserv = self["memory-reservation"];
-            local heap = self["heap"];
+            local pars = $.parameters;
+
+            local memLimit = pars["cassandra-memory-limit"];
+            local memReserv = pars["cassandra-memory-reservation"];
+            local heap = pars["cassandra-heap"];
             local clusterName = self["cluster-name"];
             local peers = $["cassandra-peers"];
 

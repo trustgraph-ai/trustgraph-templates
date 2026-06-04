@@ -62,7 +62,7 @@
 
    // Self-hosted Cassandra (single node). List this to deploy it; consumers
    // talk to host "cassandra". Mutually exclusive with cassandra-external.
-   "cassandra": import "backends/cassandra-store.jsonnet",
+   "cassandra": import "backends/cassandra.jsonnet",
 
    // Distributed Cassandra override (include AFTER the cassandra store)
    "cassandra-cluster": import "backends/cassandra-cluster.jsonnet",

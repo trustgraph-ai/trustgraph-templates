@@ -1,8 +1,10 @@
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local cassandra = import "backends/cassandra.jsonnet";
 
-cassandra + {
+// Reads the Cassandra hooks ($["cassandra-env-secrets"] / -replication-factor)
+// off the merged config; whichever Cassandra backend is listed supplies them.
+
+{
 
     parameters +:: {
         "rows-cpu-limit": "0.5",
