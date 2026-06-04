@@ -28,4 +28,11 @@
             )
         else null,
 
+    // Replication factor used when a consumer CREATES a keyspace. 1 (single
+    // node) by default; cassandra-cluster raises it to match its ring size.
+    // Consumers fold this into the cassandra_replication_factor launch param in
+    // self-hosted mode, and omit it in external mode so the operator's
+    // CASSANDRA_REPLICATION_FACTOR env wins (precedence: param -> env -> 1).
+    "cassandra-replication-factor":: 1,
+
 }

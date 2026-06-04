@@ -9,13 +9,19 @@ local images = import "values/images.jsonnet";
 // untouched and keep addressing host "qdrant" on 6333 (url.qdrant), so
 // node 0 deliberately keeps the name "qdrant".
 //
-// Caveat: enabling cluster mode forms consensus but does NOT shard or
-// replicate data. The TrustGraph storage processor creates single-shard
-// collections (no shard_number/replication_factor knob), so for now all
-// data lives on node 0. This is a scaffold for developing a sharding /
-// replication strategy later.
+// Enabling cluster mode forms Raft consensus; the embedding-store WRITE
+// processors then create collections with the shard_number /
+// replication_factor below so data is sharded and replicated across the
+// ring. Both default to the ring size; keep replication_factor <= node
+// count if you change peers.
 
 {
+
+    // Collection geometry the write processors apply when creating
+    // collections. Ring size = default 2 peers + bootstrap = 3. Overrides
+    // the single-node defaults of 1 from qdrant.jsonnet.
+    "qdrant-replication-factor":: 3,
+    "qdrant-shard-number":: 3,
 
     "qdrant" +: {
 

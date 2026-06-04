@@ -2,6 +2,13 @@ local images = import "values/images.jsonnet";
 
 {
 
+    // Collection geometry applied by the embedding-store WRITE processors when
+    // they create collections. Both default to 1 (single node); qdrant-cluster
+    // raises them to the ring size. The writers fold these into the
+    // qdrant_replication_factor / qdrant_shard_number launch params.
+    "qdrant-replication-factor":: 1,
+    "qdrant-shard-number":: 1,
+
     "qdrant" +: {
 
         // Memory settings (can be overridden by memory-profile)

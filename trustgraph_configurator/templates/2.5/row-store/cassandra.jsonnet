@@ -27,11 +27,16 @@ cassandra + {
         create:: function(engine)
 
             // External Cassandra supplies host/creds via env secrets; in that
-            // case omit cassandra_host so the processor reads CASSANDRA_HOST.
+            // case omit cassandra_host (and replication factor) so the processor
+            // reads CASSANDRA_HOST / CASSANDRA_REPLICATION_FACTOR from env.
             local cassandraSecrets = $["cassandra-env-secrets"](engine);
             local cassandraParams =
                 if cassandraSecrets != null then {}
-                else { cassandra_host: "cassandra" };
+                else {
+                    cassandra_host: "cassandra",
+                    cassandra_replication_factor:
+                        $["cassandra-replication-factor"],
+                };
 
             local cfgVol = engine.configVolume(
                 "rows-launch-cfg", "launch/rows",
