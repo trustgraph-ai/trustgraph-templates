@@ -2,7 +2,9 @@
 
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
-local cassandra = import "backends/cassandra.jsonnet";
+
+// Reads the Cassandra hooks ($["cassandra-env-secrets"] / -replication-factor)
+// off the merged config; whichever Cassandra backend is listed supplies them.
 
 {
 
@@ -264,6 +266,5 @@ local cassandra = import "backends/cassandra.jsonnet";
 
     }
 
-// Cassandra is used by the Librarian.
-} + cassandra
+}
 
