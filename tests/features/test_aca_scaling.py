@@ -62,21 +62,23 @@ CASES = [
 @pytest.mark.parametrize("param,app", CASES, ids=[c[1] for c in CASES])
 def test_default_replicas_is_one(param, app):
     """Without an override, each app pins min/max replicas to 1."""
-    scales = scale_by_app(render_aca(minimal_config([])))
+    scales = scale_by_app(render_aca(minimal_config(["cassandra"])))
     assert scales[app] == {"minReplicas": 1, "maxReplicas": 1}
 
 
 @pytest.mark.parametrize("param,app", CASES, ids=[c[1] for c in CASES])
 def test_replica_override_applies(param, app):
     """An override flows through to the app's scale.min/maxReplicas."""
-    scales = scale_by_app(render_aca(minimal_config([], overrides={param: 3})))
+    scales = scale_by_app(
+        render_aca(minimal_config(["cassandra"], overrides={param: 3}))
+    )
     assert scales[app] == {"minReplicas": 3, "maxReplicas": 3}
 
 
 def test_override_is_scoped_to_one_app():
     """Overriding one app's replicas leaves the others at the default."""
     scales = scale_by_app(
-        render_aca(minimal_config([], overrides={"control-replicas": 4}))
+        render_aca(minimal_config(["cassandra"], overrides={"control-replicas": 4}))
     )
     assert scales["control"] == {"minReplicas": 4, "maxReplicas": 4}
     assert scales["triples"] == {"minReplicas": 1, "maxReplicas": 1}
