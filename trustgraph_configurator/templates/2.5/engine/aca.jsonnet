@@ -418,6 +418,19 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 local m = ingressByApp[arm.name];
                 local first = m.ports[0];
                 local rest = m.ports[1:];
+                // Internal additional port mappings keep the app reachable at
+                // its native target port(s) from inside the environment, the
+                // same name:port convention k8s/compose give. An EXTERNAL app's
+                // primary port is HTTP-fronted on 80/443, so its container port
+                // is otherwise unreachable internally - we map it here as an
+                // internal TCP port too. An internal app already reaches its
+                // primary port via its TCP ingress, so only its extra ports
+                // need mapping. ACA only allows the primary targetPort to be
+                // external on a default (non-custom-VNET) env; every additional
+                // mapping stays internal. (exposedPort is left unset so it
+                // defaults to targetPort, as above.)
+                local additionalPorts =
+                    (if m.external then [ first ] else []) + rest;
                 arm + {
                     properties+: {
                         configuration+: {
@@ -426,17 +439,13 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                                 transport: if m.external then "http" else "tcp",
                                 targetPort: first.dest,
                             } + (
-                                if std.length(rest) > 0 then {
-                                    // ACA only allows the primary
-                                    // targetPort to be external on a
-                                    // default (non-custom-VNET) env;
-                                    // additional ports must be internal.
+                                if std.length(additionalPorts) > 0 then {
                                     additionalPortMappings: [
                                         {
                                             external: false,
                                             targetPort: p.dest,
                                         }
-                                        for p in rest
+                                        for p in additionalPorts
                                     ],
                                 } else {}
                             ),
