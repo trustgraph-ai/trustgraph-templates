@@ -31,7 +31,7 @@ local version = import "version.jsonnet";
     memgraph_lab: "docker.io/memgraph/lab:3.10.0",
     falkordb: "docker.io/falkordb/falkordb:v4.18.7",
     "workbench-ui": "docker.io/trustgraph/workbench-ui:1.8.2",
-    ui: "docker.io/trustgraph/trustgraph-ui:0.2.1",
+    ui: "docker.io/trustgraph/trustgraph-ui:0.2.2",
     "ddg-mcp-server": "docker.io/trustgraph/ddg-mcp-server:0.1.0",
     "tgi-service-intel-xpu": "ghcr.io/huggingface/text-generation-inference:3.3.1-intel-xpu",
     "tgi-service-cpu": "ghcr.io/huggingface/text-generation-inference:3.3.7-intel-cpu",
