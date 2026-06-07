@@ -418,19 +418,14 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 local m = ingressByApp[arm.name];
                 local first = m.ports[0];
                 local rest = m.ports[1:];
-                // Internal additional port mappings keep the app reachable at
-                // its native target port(s) from inside the environment, the
-                // same name:port convention k8s/compose give. An EXTERNAL app's
-                // primary port is HTTP-fronted on 80/443, so its container port
-                // is otherwise unreachable internally - we map it here as an
-                // internal TCP port too. An internal app already reaches its
-                // primary port via its TCP ingress, so only its extra ports
-                // need mapping. ACA only allows the primary targetPort to be
-                // external on a default (non-custom-VNET) env; every additional
-                // mapping stays internal. (exposedPort is left unset so it
-                // defaults to targetPort, as above.)
-                local additionalPorts =
-                    (if m.external then [ first ] else []) + rest;
+                // Extra (non-primary) ports become internal additional port
+                // mappings. The primary port is served by the ingress itself
+                // (HTTP 80/443 when external, TCP targetPort when internal) and
+                // must NOT be repeated here: ACA requires every
+                // additionalPortMappings targetPort to be distinct from the
+                // ingress targetPort. (exposedPort is left unset so it defaults
+                // to targetPort.)
+                local additionalPorts = rest;
                 arm + {
                     properties+: {
                         configuration+: {
