@@ -9,8 +9,8 @@ local url = import "values/url.jsonnet";
     parameters +:: {
         "rows-cpu-limit": "0.5",
         "rows-cpu-reservation": "0.1",
-        "rows-memory-limit": "512M",
-        "rows-memory-reservation": "512M",
+        "rows-memory-limit": "768M",
+        "rows-memory-reservation": "768M",
         "rows-replicas": 1,
     },
 
