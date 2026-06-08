@@ -21,7 +21,7 @@
         {
             "name": "2.5",
             "description": "Further updates to SPARQL retrieval",
-            "version": "2.5.7",
+            "version": "2.5.13",
             "status": "pre-release"
         }
     ],
