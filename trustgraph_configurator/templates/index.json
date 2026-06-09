@@ -20,8 +20,14 @@
         },
         {
             "name": "2.5",
-            "description": "Further updates to SPARQL retrieval",
-            "version": "2.5.14",
+            "description": "Further updates to SPARQL and GraphQL retrieval",
+            "version": "2.5.15",
+            "status": "stable"
+        },
+        {
+            "name": "2.6",
+            "description": "Extra support for extraction patterns",
+            "version": "2.6.0",
             "status": "pre-release"
         }
     ],
