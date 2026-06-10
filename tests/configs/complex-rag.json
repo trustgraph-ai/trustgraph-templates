@@ -21,15 +21,12 @@
         "parameters": {}
     },
     {
-        "name": "triple-store-cassandra",
+        "name": "cassandra",
         "parameters": {}
     },
     {
-        "name": "override-recursive-chunker",
-        "parameters": {
-            "chunk-size": 2000,
-            "chunk-overlap": 100
-        }
+        "name": "triple-store-cassandra",
+        "parameters": {}
     },
     {
         "name": "trustgraph-base",

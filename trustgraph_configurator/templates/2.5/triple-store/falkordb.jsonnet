@@ -64,7 +64,7 @@ falkordb + {
             );
 
             local service =
-                engine.internalService("store-triples", containerSet)
+                engine.internalService("query-triples", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
