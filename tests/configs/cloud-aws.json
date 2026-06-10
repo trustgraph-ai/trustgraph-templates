@@ -16,6 +16,10 @@
         "parameters": {}
     },
     {
+        "name": "cassandra",
+        "parameters": {}
+    },
+    {
         "name": "trustgraph-base",
         "parameters": {}
     },
