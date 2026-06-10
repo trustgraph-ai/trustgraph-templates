@@ -23,6 +23,12 @@
 
         with_capability:: function(x) self + {},
 
+        with_membership:: function(group) self + {},
+
+        with_hostname:: function(h) self + {},
+
+        with_subdomain:: function(s) self + {},
+
         with_environment:: function(x) self + {},
 
         with_device:: function(hdev, cdev) self + {},
@@ -41,6 +47,11 @@
     },
 
     internalService:: function(name, containers) {
+        with_port:: function(src, dest, name) self + {},
+        add:: function() {},
+    },
+
+    headlessService:: function(name, membership, members=[]) {
         with_port:: function(src, dest, name) self + {},
         add:: function() {},
     },

@@ -75,6 +75,12 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
 
         with_entrypoint:: function(x) self + { entrypoint: x },
 
+        with_membership:: function(group) self,
+
+        with_hostname:: function(h) self,
+
+        with_subdomain:: function(s) self,
+
         with_environment:: function(x) self + {
             environment: super.environment + [
                 { name: v.key, value: v.value }
@@ -262,6 +268,15 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
                 ports: service.ports,
                 external: false,
             }],
+
+    },
+
+    headlessService:: function(name, membership, members=[])
+    {
+
+        with_port:: function(src, dest, name) self,
+
+        add:: function() [],
 
     },
 

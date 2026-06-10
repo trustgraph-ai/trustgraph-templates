@@ -1,25 +1,22 @@
 local images = import "values/images.jsonnet";
 local secrets = import "cassandra-secrets.jsonnet";
 
-// Distributed (multi-node) Cassandra: a seed node plus N peers forming a
-// gossip ring.
+// Distributed (multi-node) Cassandra: N nodes forming a gossip ring
+// behind a single headless service.
 //
 // Slots in like a memory profile: include AFTER the cassandra-backed
 // store (triple-store-cassandra / row-store-cassandra) in the config. It
 // overrides the single-node "cassandra" deployment's create:: with a
-// multi-node topology. The storage processors are untouched and keep
-// addressing host "cassandra" (cassandra_host), so node 0 deliberately
-// keeps that name and acts as the sole seed; the rest of the ring is
-// discovered via gossip.
+// multi-node topology. Consumers address host "cassandra" which, on K8s,
+// is a headless service that resolves to all node pod IPs; on Compose
+// it resolves to node 0 (the container named "cassandra").
 //
-// Caveat 1 (startup ordering): unlike Qdrant's Raft, Cassandra
-// discourages bootstrapping multiple nodes simultaneously, and the
-// engine has no depends_on/healthchecks - all nodes start at once and
-// rely on restart:on-failure retries. For a small dev ring this usually
-// settles after a few restart cycles, but it can be racy. If you hit
-// schema/token disagreements, bring the nodes up staggered (seed first).
+// On K8s each node sets hostname + subdomain so individual pods are
+// addressable as <hostname>.cassandra (e.g. cassandra-peer-1.cassandra).
+// CASSANDRA_SEEDS=cassandra resolves to any live node's pod IP, so the
+// ring can bootstrap without a fixed seed ordering.
 //
-// Caveat 2 (data): forming the ring does not replicate data. The
+// Caveat (data): forming the ring does not replicate data. The
 // TrustGraph processors create keyspaces with replication_factor 1, so
 // for now data still lives on one node. This is a scaffold for
 // developing a replication strategy later.
@@ -61,17 +58,12 @@ secrets + {
             local clusterName = self["cluster-name"];
             local peers = $["cassandra-peers"];
 
-            // All nodes gossip-bootstrap through the seed (node 0).
             local seeds = "cassandra";
 
-            // Build a single Cassandra node. Node 0 is the seed and keeps
-            // the name "cassandra" so cassandra_host keeps resolving;
-            // peers are cassandra-peer-N.
             local mkNode = function(index)
 
-                local isSeed = index == 0;
                 local name =
-                    if isSeed then "cassandra"
+                    if index == 0 then "cassandra"
                     else "cassandra-peer-%d" % index;
 
                 local vol = engine.volume(name).with_size("20G");
@@ -81,13 +73,10 @@ secrets + {
                         .with_image(images.cassandra)
                         .with_user(999)
                         .with_group(999)
+                        .with_membership("cassandra")
+                        .with_hostname(name)
+                        .with_subdomain("cassandra")
                         .with_environment({
-                            // No skip_wait_for_gossip_to_settle here: the
-                            // single-node base sets it to 0 (skip the
-                            // wait) for fast dev startup, but in a ring
-                            // we want each node to wait for gossip to
-                            // converge before proceeding, which is the
-                            // default when the flag is absent.
                             JVM_OPTS: "-Xms%s -Xmx%s" % [heap, heap],
                             CASSANDRA_CLUSTER_NAME: clusterName,
                             CASSANDRA_SEEDS: seeds,
@@ -98,22 +87,25 @@ secrets + {
 
                 local containerSet = engine.containers(name, [ container ]);
 
-                // Internal-only service. 9042 is the CQL client port;
-                // 7000 is the inter-node gossip channel and must stay
-                // internal.
-                local service =
-                    engine.internalService(name, containerSet)
-                    .with_port(9042, 9042, "cql")
-                    .with_port(7000, 7000, "gossip");
+                [ vol, containerSet ];
 
-                [ vol, containerSet, service ];
+            local memberNames = [
+                if i == 0 then "cassandra"
+                else "cassandra-peer-%d" % i
+                for i in std.range(0, peers)
+            ];
 
             local nodes = std.flattenArrays([
                 mkNode(i)
                 for i in std.range(0, peers)
             ]);
 
-            engine.resources(nodes)
+            local svc =
+                engine.headlessService("cassandra", "cassandra", memberNames)
+                .with_port(9042, 9042, "cql")
+                .with_port(7000, 7000, "gossip");
+
+            engine.resources(nodes + [svc])
 
     },
 

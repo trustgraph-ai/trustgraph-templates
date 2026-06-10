@@ -34,6 +34,12 @@
 
         with_entrypoint:: function(x) self + { entrypoint: x },
 
+        with_membership:: function(group) self + { membership: group },
+
+        with_hostname:: function(h) self + { podHostname: h },
+
+        with_subdomain:: function(s) self + { podSubdomain: s },
+
         with_environment:: function(x) self + {
             environment: super.environment + [
                 {
@@ -113,7 +119,11 @@
                             metadata: {
                                 labels: {
                                     app: container.name,
-                                }
+                                } + (
+                                    if std.objectHas(container, "membership")
+                                    then { membership: container.membership }
+                                    else {}
+                                ),
                             },
                             spec: {
                                 enableServiceLinks: false,
@@ -211,6 +221,14 @@
                                     } else {}),
                             }
                             else {}
+                        ) + (
+                            if std.objectHas(container, "podHostname")
+                            then { hostname: container.podHostname }
+                            else {}
+                        ) + (
+                            if std.objectHas(container, "podSubdomain")
+                            then { subdomain: container.podSubdomain }
+                            else {}
                         )
                     },
                 } + {}
@@ -268,6 +286,53 @@
     },
 
     service:: self.internalService,
+
+    headlessService:: function(name, membership, members=[])
+    {
+
+        local service = self,
+
+        name: name,
+        membership: membership,
+
+        ports: [],
+
+        with_port::
+            function(src, dest, name)
+                self + {
+                    ports: super.ports + [
+                        { src: src, dest: dest, name: name }
+                    ]
+                },
+
+        add:: function() [
+
+                {
+
+                    apiVersion: "v1",
+                    kind: "Service",
+                    metadata: {
+                        name: service.name,
+                        namespace: "trustgraph",
+                    },
+                    spec: {
+                        clusterIP: "None",
+                        selector: {
+                            membership: service.membership,
+                        },
+                        ports: [
+                            {
+                                port: port.src,
+                                targetPort: port.dest,
+                                name: port.name,
+                            }
+                            for port in service.ports
+                        ],
+                    }
+                }
+            ],
+
+    },
 
     volume:: function(name)
     {
