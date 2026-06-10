@@ -55,6 +55,12 @@
             else
               { cap_add: [x], },
 
+        with_membership:: function(group) self,
+
+        with_hostname:: function(h) self,
+
+        with_subdomain:: function(s) self,
+
         with_environment:: function(x) self +
             if std.objectHas(container, "environment") then
               { environment: container.environment + x }
@@ -157,6 +163,35 @@
                             for port in service.ports
                         ],
                     },
+                },
+            },
+
+    },
+
+    headlessService:: function(name, membership, members=[])
+    {
+
+        local service = self,
+
+        ports: [],
+
+        with_port:: function(src, dest, name)
+            self + {
+                ports: super.ports + [dest],
+            },
+
+        add:: function()
+            if std.length(service.ports) == 0
+               || std.length(members) == 0 then {}
+            else {
+                services +: {
+                    [m] +: {
+                        expose: [
+                            "%d" % [port]
+                            for port in service.ports
+                        ],
+                    }
+                    for m in members
                 },
             },
 
