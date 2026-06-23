@@ -133,6 +133,15 @@
   );
 
   /* ─────────────────────────────────────────────────────────────
+   * MCP Server (conditional)
+   * ───────────────────────────────────────────────────────────── */
+  $mcp_components := (
+    mcp_server.enabled
+    ? [ $component("mcp-server") ]
+    : []
+  );
+
+  /* ─────────────────────────────────────────────────────────────
    * Base Configuration
    * ───────────────────────────────────────────────────────────── */
   $base_components := [
@@ -147,16 +156,19 @@
       $append(
         $append(
           $append(
-            $base_components,
-            $infrastructure
+            $append(
+              $base_components,
+              $infrastructure
+            ),
+            $backend_components
           ),
-          $backend_components
+          $model_components
         ),
-        $model_components
+        $ocr_components
       ),
-      $ocr_components
+      $embeddings_components
     ),
-    $embeddings_components
+    $mcp_components
   );
 
   /* ─────────────────────────────────────────────────────────────
