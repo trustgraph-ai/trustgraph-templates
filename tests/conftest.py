@@ -7,8 +7,8 @@ import pytest
 # =============================================================================
 # Version Configuration - Update these when adding new template versions
 # =============================================================================
-TESTED_VERSIONS = ["2.4", "2.5"]
-PRIMARY_VERSION = "2.5"  # Used when only one version is tested
+TESTED_VERSIONS = ["2.5", "2.6"]
+PRIMARY_VERSION = "2.6"  # Used when only one version is tested
 import sys
 import json
 import tempfile
