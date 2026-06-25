@@ -27,7 +27,7 @@
         {
             "name": "2.6",
             "description": "Extra support for extraction patterns",
-            "version": "2.6.0",
+            "version": "2.6.2",
             "status": "pre-release"
         }
     ],
