@@ -7,6 +7,8 @@
 
         with_image:: function(x) self + {},
 
+        with_image_pull_secret:: function(name) self + {},
+
         with_user:: function(x) self + {},
 
         with_group:: function(x) self + {},

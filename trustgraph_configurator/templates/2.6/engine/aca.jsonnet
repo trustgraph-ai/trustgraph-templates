@@ -63,6 +63,8 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
 
         with_image:: function(x) self + { image: x },
 
+        with_image_pull_secret:: function(name) self,
+
         with_user:: function(x) self + { uid: x },
 
         with_group:: function(x) self + { gid: x },

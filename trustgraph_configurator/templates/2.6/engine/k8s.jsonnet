@@ -13,8 +13,13 @@
         bindMounts: [],
         supplementalGroups: [],
         environment: [],
+        imagePullSecrets: [],
 
         with_image:: function(x) self + { image: x },
+
+        with_image_pull_secret:: function(name) self + {
+            imagePullSecrets: super.imagePullSecrets + [name],
+        },
 
         // k8s deliberately ignores `with_user`: the running UID is
         // determined by the image's USER directive. `with_group(gid)`
@@ -228,6 +233,13 @@
                         ) + (
                             if std.objectHas(container, "podSubdomain")
                             then { subdomain: container.podSubdomain }
+                            else {}
+                        ) + (
+                            if std.length(container.imagePullSecrets) > 0
+                            then { imagePullSecrets: [
+                                { name: s }
+                                for s in container.imagePullSecrets
+                            ] }
                             else {}
                         )
                     },

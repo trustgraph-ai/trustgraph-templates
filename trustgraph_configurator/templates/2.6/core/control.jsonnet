@@ -51,6 +51,10 @@ local url = import "values/url.jsonnet";
 
         local controlImage = self["control-image"],
         local iamProcessorClass = self["iam-processor-class"],
+        local imagePullSecret =
+            if std.objectHas(self, "image-pull-secret")
+            then self["image-pull-secret"]
+            else null,
 
         create:: function(engine)
 
@@ -216,7 +220,7 @@ local url = import "values/url.jsonnet";
 		}
             );
 
-            local baseContainer =
+            local baseContainerNoSecret =
                 engine.container("control")
                     .with_image(controlImage)
                     .with_command([
@@ -235,6 +239,12 @@ local url = import "values/url.jsonnet";
                     )
                     .with_limits(cpuLimit, memoryLimit)
                     .with_reservations(cpuReservation, memoryReservation);
+
+            local baseContainer =
+                if imagePullSecret != null then
+                    baseContainerNoSecret
+                        .with_image_pull_secret(imagePullSecret)
+                else baseContainerNoSecret;
 
             // Attach object-store and Cassandra env secrets only if a backend
             // populated them.
