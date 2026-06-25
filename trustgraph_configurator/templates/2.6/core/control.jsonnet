@@ -52,7 +52,7 @@ local url = import "values/url.jsonnet";
         local controlImage = self["control-image"],
         local iamProcessorClass = self["iam-processor-class"],
         local imagePullSecret =
-            if std.objectHas(self, "image-pull-secret")
+            if std.objectHasAll(self, "image-pull-secret")
             then self["image-pull-secret"]
             else null,
 
