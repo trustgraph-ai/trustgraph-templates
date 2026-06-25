@@ -17,6 +17,8 @@
 
         with_image:: function(x) self + { image: x },
 
+        with_image_pull_secret:: function(name) self,
+
         // user/group combine into compose's "uid[:gid]" string field;
         // call order is user-then-group (a later with_user would
         // overwrite the combined value, but patterns conventionally
