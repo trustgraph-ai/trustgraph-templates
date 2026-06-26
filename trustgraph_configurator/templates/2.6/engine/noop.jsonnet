@@ -55,6 +55,7 @@
 
     headlessService:: function(name, membership, members=[]) {
         with_port:: function(src, dest, name) self + {},
+        with_publish_not_ready_addresses:: function() self + {},
         add:: function() {},
     },
 

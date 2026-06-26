@@ -306,6 +306,7 @@
 
         name: name,
         membership: membership,
+        publishNotReady: false,
 
         ports: [],
 
@@ -316,6 +317,9 @@
                         { src: src, dest: dest, name: name }
                     ]
                 },
+
+        with_publish_not_ready_addresses:: function()
+            self + { publishNotReady: true },
 
         add:: function() [
 
@@ -340,7 +344,11 @@
                             }
                             for port in service.ports
                         ],
-                    }
+                    } + (
+                        if service.publishNotReady
+                        then { publishNotReadyAddresses: true }
+                        else {}
+                    )
                 }
             ],
 

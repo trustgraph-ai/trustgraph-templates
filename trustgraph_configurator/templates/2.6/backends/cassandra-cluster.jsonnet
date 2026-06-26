@@ -58,13 +58,26 @@ secrets + {
             local clusterName = self["cluster-name"];
             local peers = $["cassandra-peers"];
 
-            local seeds = "cassandra";
+            local nodeName = function(index)
+                if index == 0 then "cassandra"
+                else "cassandra-peer-%d" % index;
+
+            local nodeFqdn = function(index)
+                "%s.cassandra.trustgraph.svc.cluster.local" %
+                    nodeName(index);
+
+            // Two fixed seeds by FQDN so every pod contacts the same
+            // deterministic set. Using the bare headless service name
+            // resolves to all pod IPs and causes split-brain when pods
+            // race during bootstrap.
+            local seedCount = std.min(2, peers + 1);
+            local seeds = std.join(",", [
+                nodeFqdn(i) for i in std.range(0, seedCount - 1)
+            ]);
 
             local mkNode = function(index)
 
-                local name =
-                    if index == 0 then "cassandra"
-                    else "cassandra-peer-%d" % index;
+                local name = nodeName(index);
 
                 local vol = engine.volume(name).with_size("20G");
 
@@ -90,8 +103,7 @@ secrets + {
                 [ vol, containerSet ];
 
             local memberNames = [
-                if i == 0 then "cassandra"
-                else "cassandra-peer-%d" % i
+                nodeName(i)
                 for i in std.range(0, peers)
             ];
 
@@ -102,6 +114,7 @@ secrets + {
 
             local svc =
                 engine.headlessService("cassandra", "cassandra", memberNames)
+                .with_publish_not_ready_addresses()
                 .with_port(9042, 9042, "cql")
                 .with_port(7000, 7000, "gossip");
 
