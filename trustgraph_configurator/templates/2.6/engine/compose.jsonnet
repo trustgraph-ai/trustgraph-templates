@@ -182,6 +182,8 @@
                 ports: super.ports + [dest],
             },
 
+        with_publish_not_ready_addresses:: function() self,
+
         add:: function()
             if std.length(service.ports) == 0
                || std.length(members) == 0 then {}

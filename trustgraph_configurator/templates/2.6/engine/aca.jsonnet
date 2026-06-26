@@ -278,6 +278,8 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
 
         with_port:: function(src, dest, name) self,
 
+        with_publish_not_ready_addresses:: function() self,
+
         add:: function() [],
 
     },
