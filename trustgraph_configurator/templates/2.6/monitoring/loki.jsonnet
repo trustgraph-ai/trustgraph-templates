@@ -2,8 +2,21 @@ local images = import "values/images.jsonnet";
 
 {
 
+    parameters +:: {
+        "loki-cpu-limit": "1.0",
+        "loki-cpu-reservation": "0.5",
+        "loki-memory-limit": "350M",
+        "loki-memory-reservation": "350M",
+    },
+
     "loki" +: {
-    
+
+        local pars = $.parameters,
+        local cpuLimit = pars["loki-cpu-limit"],
+        local cpuReservation = pars["loki-cpu-reservation"],
+        local memoryLimit = pars["loki-memory-limit"],
+        local memoryReservation = pars["loki-memory-reservation"],
+
         create:: function(engine)
 
             local vol = engine.volume("loki-data").with_size("20G");
@@ -20,8 +33,8 @@ local images = import "values/images.jsonnet";
                     .with_image(images.loki)
                     .with_user(10001)
                     .with_group(10001)
-                    .with_limits("1.0", "350M")
-                    .with_reservations("0.5", "350M")
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation)
                     .with_port(3100, 3100, "http")
                     .with_volume_mount(cfgVol, "/etc/loki/")
                     .with_volume_mount(vol, "/loki");

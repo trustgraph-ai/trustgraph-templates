@@ -5,10 +5,24 @@ local loki = import "loki.jsonnet";
 
     parameters +:: {
         "grafana-admin-user":: "admin",
+        "prometheus-cpu-limit": "0.5",
+        "prometheus-cpu-reservation": "0.1",
+        "prometheus-memory-limit": "256M",
+        "prometheus-memory-reservation": "256M",
+        "grafana-cpu-limit": "1.0",
+        "grafana-cpu-reservation": "0.5",
+        "grafana-memory-limit": "256M",
+        "grafana-memory-reservation": "256M",
     },
 
     "prometheus" +: {
-    
+
+        local pars = $.parameters,
+        local cpuLimit = pars["prometheus-cpu-limit"],
+        local cpuReservation = pars["prometheus-cpu-reservation"],
+        local memoryLimit = pars["prometheus-memory-limit"],
+        local memoryReservation = pars["prometheus-memory-reservation"],
+
         create:: function(engine)
 
             local vol = engine.volume("prometheus-data").with_size("20G");
@@ -25,8 +39,8 @@ local loki = import "loki.jsonnet";
                     .with_image(images.prometheus)
                     .with_user(65534)
                     .with_group(65534)
-                    .with_limits("0.5", "128M")
-                    .with_reservations("0.1", "128M")
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation)
                     .with_port(9090, 9090, "http")
                     .with_volume_mount(cfgVol, "/etc/prometheus/")
                     .with_volume_mount(vol, "/prometheus");
@@ -51,7 +65,11 @@ local loki = import "loki.jsonnet";
     "grafana" +: {
 
         local pars = $.parameters,
-    
+        local cpuLimit = pars["grafana-cpu-limit"],
+        local cpuReservation = pars["grafana-cpu-reservation"],
+        local memoryLimit = pars["grafana-memory-limit"],
+        local memoryReservation = pars["grafana-memory-reservation"],
+
         create:: function(engine)
 
             local vol = engine.volume("grafana-storage").with_size("20G");
@@ -104,8 +122,8 @@ local loki = import "loki.jsonnet";
                         GF_PLUGINS_EXCLUDE_APPS: "grafana-assistant-app",
                         GF_FEATURE_TOGGLES_ASSISTANT: "false",
                     })
-                    .with_limits("1.0", "256M")
-                    .with_reservations("0.5", "256M")
+                    .with_limits(cpuLimit, memoryLimit)
+                    .with_reservations(cpuReservation, memoryReservation)
                     .with_port(3000, 3000, "grafana")
                     .with_volume_mount(vol, "/var/lib/grafana")
                     .with_volume_mount(
