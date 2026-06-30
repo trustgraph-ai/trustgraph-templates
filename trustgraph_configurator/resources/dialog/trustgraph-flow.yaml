@@ -20,7 +20,7 @@ steps:
       options:
         - label: "TrustGraph 2.6"
           value: "2.6"
-          description: "Extra support for extraction patterns"
+          description: "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval"
           badge: pre-release
           recommended: false
         - label: "TrustGraph 2.5"
