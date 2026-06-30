@@ -40,11 +40,18 @@
         "advanced": true,
     },
 
+    "reranker-model": {
+        "type": "reranker-model",
+        "description": "Re-ranker model",
+        "order": 6,
+        "advanced": true,
+    },
+
     // LLM model selection for normal LLM
     "chunk-size": {
         "type": "chunk-size",
         "description": "Chunk size",
-        "order": 6,
+        "order": 7,
         "advanced": true,
     },
 
@@ -52,7 +59,7 @@
     "chunk-overlap": {
         "type": "chunk-overlap",
         "description": "Chunk overlap",
-        "order": 7,
+        "order": 8,
         "advanced": true,
     },
 

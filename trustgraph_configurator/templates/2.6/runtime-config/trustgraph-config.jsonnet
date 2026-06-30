@@ -36,6 +36,9 @@ local configuration = {
     // Embeddings model parameters
     "embeddings-models" +:: {},
 
+    // Re-ranker model parameters
+    "reranker-models" +:: {},
+
     collections +:: {
       "default": {
         "user": "default-user",
@@ -55,6 +58,7 @@ local configuration = {
         "chunk-size": std.toString($["parameter-types"]["chunk-size"].default),
         "chunk-overlap": std.toString($["parameter-types"]["chunk-overlap"].default),
         "embeddings-model": $["embeddings-models"].default,
+        "reranker-model": $["reranker-models"].default,
     },
 
     // Interface descriptions for external endpoints
@@ -64,6 +68,7 @@ local configuration = {
     "parameter-types":: {
         "llm-model": $["llm-models"],
         "embeddings-model": $["embeddings-models"],
+        "reranker-model": $["reranker-models"],
     } + chunking_params + temperature_params,
 
     // Token costs

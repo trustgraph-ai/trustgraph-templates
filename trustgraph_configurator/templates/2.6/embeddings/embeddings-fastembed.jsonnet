@@ -1,5 +1,6 @@
 local images = import "values/images.jsonnet";
-local models = import "parameters/embeddings-fastembed.jsonnet";
+local embedModels = import "parameters/embeddings-fastembed.jsonnet";
+local rerankModels = import "parameters/reranker-flashrank.jsonnet";
 
 {
 
@@ -7,13 +8,16 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
         "embeddings-concurrency": 1,
         "embeddings-cpu-limit": "4.0",
         "embeddings-cpu-reservation": "0.5",
-        "embeddings-memory-limit": "640M",
-        "embeddings-memory-reservation": "640M",
+        "embeddings-memory-limit": "1500M",
+        "embeddings-memory-reservation": "1500M",
+        "reranker-concurrency": 1,
     },
 
-    "fastembed-models":: models,
-
+    "fastembed-models":: embedModels,
     "embeddings-models" +:: $["fastembed-models"],
+
+    "flashrank-models":: rerankModels,
+    "reranker-models" +:: $["flashrank-models"],
 
     local logLevel = $.parameters["log-level"],
 
@@ -26,12 +30,14 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
         local cpuReservation = pars["embeddings-cpu-reservation"],
         local memoryLimit = pars["embeddings-memory-limit"],
         local memoryReservation = pars["embeddings-memory-reservation"],
+        local rerankerConc = pars["reranker-concurrency"],
 
         local embeds = "trustgraph.embeddings",
         local fastEmbedProc = "%s.fastembed.Processor" % embeds,
         local docEmbedProc = "%s.document_embeddings.Processor" % embeds,
         local graphEmbedProc = "%s.graph_embeddings.Processor" % embeds,
         local rowEmbedProc = "%s.row_embeddings.Processor" % embeds,
+        local flashRankProc = "trustgraph.reranker.flashrank.Processor",
 
         create:: function(engine)
 
@@ -63,6 +69,15 @@ local models = import "parameters/embeddings-fastembed.jsonnet";
                                 class: rowEmbedProc,
                                 params: {
                                     id: "row-embeddings",
+                                } + $["pub-sub-params"],
+                            },
+
+                            // FlashRank re-ranker
+                            {
+                                class: flashRankProc,
+                                params: {
+                                    id: "reranker",
+                                    concurrency: rerankerConc,
                                 } + $["pub-sub-params"],
                             },
                         ]
