@@ -26,7 +26,7 @@ local version = import "version.jsonnet";
     trustgraph_hf: "docker.io/trustgraph/trustgraph-hf:" + version,
     trustgraph_mcp: "docker.io/trustgraph/trustgraph-mcp:" + version,
     trustgraph_unstructured: "docker.io/trustgraph/trustgraph-unstructured:" + version,
-    trustgraph_enterprise: "docker.io/trustgraph/trustgraph-enterprise:0.9.6",
+    trustgraph_enterprise: "docker.io/trustgraph/trustgraph-enterprise:0.9.7",
     qdrant: "docker.io/qdrant/qdrant:v1.18.0",
     memgraph_mage: "docker.io/memgraph/memgraph-mage:3.10.1",
     memgraph_lab: "docker.io/memgraph/lab:3.10.0",
