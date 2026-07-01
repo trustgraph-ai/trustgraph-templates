@@ -18,8 +18,8 @@ local url = import "values/url.jsonnet";
         "prompt-rag-concurrency": 1,
         "rag-cpu-limit": "0.5",
         "rag-cpu-reservation": "0.1",
-        "rag-memory-limit": "256M",
-        "rag-memory-reservation": "256M",
+        "rag-memory-limit": "640M",
+        "rag-memory-reservation": "640M",
         "rag-replicas": 1,
     },
 
