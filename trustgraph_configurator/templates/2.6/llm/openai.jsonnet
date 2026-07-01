@@ -12,6 +12,8 @@ local models = import "parameters/openai.jsonnet";
 
     "openai-max-output-tokens":: 4096,
     "openai-temperature":: 0.0,
+    "openai-variant":: "openai",
+    "openai-thinking":: "off",
     "openai-models":: models,
 
     "llm-models" +:: $["openai-models"],
@@ -54,6 +56,8 @@ local models = import "parameters/openai.jsonnet";
                                     concurrency: textCompletionConc,
                                     max_output_tokens: $["openai-max-output-tokens"],
                                     temperature: $["openai-temperature"],
+                                    variant: $["openai-variant"],
+                                    thinking: $["openai-thinking"],
                                 } + $["pub-sub-params"],
                             },
                             {
@@ -63,6 +67,8 @@ local models = import "parameters/openai.jsonnet";
                                     concurrency: textCompletionRagConc,
                                     max_output_tokens: $["openai-max-output-tokens"],
                                     temperature: $["openai-temperature"],
+                                    variant: $["openai-variant"],
+                                    thinking: $["openai-thinking"],
                                 } + $["pub-sub-params"],
                             },
                         ]
