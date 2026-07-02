@@ -27,7 +27,7 @@
         {
             "name": "2.6",
             "description": "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval",
-            "version": "2.6.10",
+            "version": "2.6.11",
             "status": "pre-release"
         }
     ],
