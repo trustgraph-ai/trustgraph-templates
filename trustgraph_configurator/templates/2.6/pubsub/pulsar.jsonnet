@@ -36,6 +36,15 @@ local url = import "values/url.jsonnet";
     "prometheus-config"::
         importstr "prometheus/prometheus-pulsar.yml",
 
+    with_params:: function(pars)
+        self + {
+            "pulsar" +: std.foldl(
+                function(obj, par) obj + { [par.key]:: par.value },
+                std.objectKeysValues(pars),
+                {}
+            ),
+        },
+
     "pulsar" +: {
 
         // Zookeeper memory settings (can be overridden by memory-profile)
