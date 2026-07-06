@@ -54,10 +54,11 @@ def minimal_config(components, overrides=None, without=None):
     return config
 
 
-def run_packager(config, platform="docker-compose"):
+def run_packager(config, platform="docker-compose", template=TEMPLATE,
+                 version=VERSION):
     pkg = Packager(
-        version=VERSION,
-        template=TEMPLATE,
+        version=version,
+        template=template,
         platform=platform,
         latest=False,
         latest_stable=False,
