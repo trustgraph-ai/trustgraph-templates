@@ -1,0 +1,32 @@
+// Structured RAG extraction module
+// Extracts structured rows from text chunks
+// Outputs to rows-store for structured data querying
+
+local helpers = import "helpers.jsonnet";
+local flow = helpers.flow;
+local request = helpers.request;
+local response = helpers.response;
+
+{
+    "interfaces" +: {
+    },
+
+    "parameters" +: {
+    },
+
+    // Flow-level processor for structured row extraction
+    "flow" +: {
+        "kg-extract-rows:{id}": {
+            topics: {
+                input: flow("chunk-load:{workspace}:{id}"),
+                output: flow("rows-store:{workspace}:{id}"),
+                "entity-contexts": flow("entity-contexts-load:{workspace}:{id}"),
+                "prompt-request": request("prompt:{workspace}:{id}"),
+                "prompt-response": response("prompt:{workspace}:{id}"),
+            },
+        },
+    },
+
+    "blueprint" +: {
+    },
+}
