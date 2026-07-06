@@ -1,12 +1,6 @@
 {
     "templates": [
         {
-            "name": "2.2",
-            "description": "Multi-pattern agent orchestration with explainability, extended document processing for cover many document types",
-            "version": "2.2.27",
-            "status": "stable"
-        },
-        {
             "name": "2.3",
             "description": "Agent explainability analytics.  Reduced container footprint",
             "version": "2.3.21",
@@ -27,7 +21,13 @@
         {
             "name": "2.6",
             "description": "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval",
-            "version": "2.6.14",
+            "version": "2.6.15",
+            "status": "stable"
+        },
+        {
+            "name": "2.7",
+            "description": "Placeholder for next release",
+            "version": "2.7.0",
             "status": "pre-release"
         }
     ],
