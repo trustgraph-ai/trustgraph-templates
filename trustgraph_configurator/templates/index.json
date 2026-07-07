@@ -26,8 +26,8 @@
         },
         {
             "name": "2.7",
-            "description": "Placeholder for next release",
-            "version": "2.7.0",
+            "description": "Hybrid retrieval: sparse keyword (FTS5/BM25) + vector search with RRF fusion in Document-RAG",
+            "version": "2.7.1",
             "status": "pre-release"
         }
     ],
