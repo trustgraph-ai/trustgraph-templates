@@ -37,6 +37,10 @@
    "vector-store-qdrant": import "vector-store/qdrant.jsonnet",
    "vector-store-pinecone": import "vector-store/pinecone.jsonnet",
 
+   // Keyword (BM25) index - sparse retrieval path for Document-RAG.
+   // Including it turns on hybrid retrieval (vector + keyword, RRF-fused).
+   "keyword-index-fts5": import "keyword-index/fts5.jsonnet",
+
    // Object store (S3-compatible) for the librarian. Import exactly one of
    // these to select how the librarian gets its object store.
    "garage": import "backends/garage.jsonnet",

@@ -15,9 +15,10 @@ local librarian_response = helpers.librarian_response;
 local llm_services = import "llm-services.jsonnet";
 local embeddings_service = import "embeddings-service.jsonnet";
 local reranker_service = import "reranker-service.jsonnet";
+local keyword_index_service = import "keyword-index-service.jsonnet";
 
 // Merge shared services with document store configuration
-llm_services + embeddings_service + reranker_service + {
+llm_services + embeddings_service + reranker_service + keyword_index_service + {
 
     // External interfaces for document store
     "interfaces" +: {
@@ -54,6 +55,8 @@ llm_services + embeddings_service + reranker_service + {
                 "document-embeddings-response": response("document-embeddings:{workspace}:{id}"),
                 "reranker-request": request("reranker:{workspace}:{id}"),
                 "reranker-response": response("reranker:{workspace}:{id}"),
+                "keyword-index-request": request("keyword-index:{workspace}:{id}"),
+                "keyword-index-response": response("keyword-index:{workspace}:{id}"),
                 explainability: flow("triples-store:{workspace}:{id}"),
                 "librarian-request": librarian_request,
                 "librarian-response": librarian_response,

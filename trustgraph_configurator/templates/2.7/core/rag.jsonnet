@@ -15,6 +15,9 @@ local url = import "values/url.jsonnet";
         "graph-rag-max-subgraph-size": 100,
         "graph-rag-max-path-length": 2,
         "document-rag-doc-limit": 20,
+        // vector | keyword | hybrid; the keyword-index component overrides
+        // this to hybrid when included
+        "document-rag-retrieval-mode": "vector",
         "prompt-rag-concurrency": 1,
         "rag-cpu-limit": "0.5",
         "rag-cpu-reservation": "0.1",
@@ -37,6 +40,7 @@ local url = import "values/url.jsonnet";
         local maxSubgraphSize = pars["graph-rag-max-subgraph-size"],
         local maxPathLength = pars["graph-rag-max-path-length"],
         local docLimit = pars["document-rag-doc-limit"],
+        local retrievalMode = pars["document-rag-retrieval-mode"],
         local promptRagConc = pars["prompt-rag-concurrency"],
         local cpuLimit = pars["rag-cpu-limit"],
         local cpuReservation = pars["rag-cpu-reservation"],
@@ -86,6 +90,7 @@ local url = import "values/url.jsonnet";
                                 params: {
                                     id: "document-rag",
                                     doc_limit: docLimit,
+                                    retrieval_mode: retrievalMode,
                                 } + $["pub-sub-params"],
                             },
                             {

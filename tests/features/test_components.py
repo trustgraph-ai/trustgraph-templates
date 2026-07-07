@@ -4,9 +4,13 @@ the feature it's supposed to produce: correct processor classes, ids, and
 baked-in default param values in the generated launch.yaml.
 """
 
+import json
+
 import pytest
 
-from helpers import minimal_config, find_processor
+from helpers import (
+    minimal_config, find_processor, run_packager, extract_launches, _entry,
+)
 
 
 pytestmark = pytest.mark.features
@@ -237,3 +241,67 @@ def test_llm_concurrency_defaults(name, build):
     tc = launches["text-completion"]
     assert find_processor(tc, "text-completion")["params"]["concurrency"] == 1
     assert find_processor(tc, "text-completion-rag")["params"]["concurrency"] == 1
+
+
+# ---------------------------------------------------------------------------
+# Keyword index (FTS5) — sparse retrieval for Document-RAG (2.7 template)
+# ---------------------------------------------------------------------------
+
+# 2.7 baseline differs from the 2.3 BASELINE above: the control group needs
+# the cassandra backend and garage object store to compile.
+BASELINE_27 = [
+    "rabbitmq", "trustgraph-base", "openai", "embeddings-fastembed",
+    "cassandra", "triple-store-cassandra", "vector-store-qdrant",
+    "garage",
+]
+
+
+def _build_27(components):
+    config = [_entry(name) for name in BASELINE_27 + components]
+    compose, additionals = run_packager(
+        config, template="2.7", version="2.7.0",
+    )
+    return compose, extract_launches(additionals), additionals
+
+
+class TestKeywordIndex:
+
+    def test_component_deploys_kw_index_processor(self):
+        _, launches, _ = _build_27(["keyword-index-fts5"])
+        proc = find_processor(launches["keyword-index"], "kw-index")
+        assert proc["class"] == "trustgraph.storage.kw_index.fts5.Processor"
+        assert proc["params"]["index_path"] == "/data/kw-index.db"
+
+    def test_component_mounts_data_volume(self):
+        compose, _, _ = _build_27(["keyword-index-fts5"])
+        volumes = compose["services"]["keyword-index"]["volumes"]
+        assert any(v.startswith("keyword-index:/data") for v in volumes)
+
+    def test_component_flips_document_rag_to_hybrid(self):
+        _, launches, _ = _build_27(["keyword-index-fts5"])
+        doc_rag = find_processor(launches["rag"], "document-rag")
+        assert doc_rag["params"]["retrieval_mode"] == "hybrid"
+
+    def test_without_component_document_rag_stays_vector(self):
+        compose, launches, _ = _build_27([])
+        doc_rag = find_processor(launches["rag"], "document-rag")
+        assert doc_rag["params"]["retrieval_mode"] == "vector"
+        assert "keyword-index" not in compose["services"]
+
+    def test_blueprint_wires_keyword_index_topics(self):
+        _, _, additionals = _build_27(["keyword-index-fts5"])
+        cfg = json.loads(next(
+            a["content"] for a in additionals
+            if a["path"] == "trustgraph/config.json"
+        ))
+        bp = cfg["flow-blueprint"]["everything"]
+        if isinstance(bp, str):
+            bp = json.loads(bp)
+        topics = bp["flow"]["document-rag:{id}"]["topics"]
+        assert topics["keyword-index-request"] == \
+            "request:tg:keyword-index:{workspace}:{id}"
+        assert topics["keyword-index-response"] == \
+            "response:tg:keyword-index:{workspace}:{id}"
+        kw = bp["flow"]["kw-index:{id}"]["topics"]
+        assert kw["input"] == "flow:tg:chunk-load:{workspace}:{id}"
+        assert kw["request"] == "request:tg:keyword-index:{workspace}:{id}"
