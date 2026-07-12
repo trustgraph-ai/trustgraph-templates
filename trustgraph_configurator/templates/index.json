@@ -26,8 +26,8 @@
         },
         {
             "name": "2.7",
-            "description": "Hybrid retrieval: sparse keyword (FTS5/BM25) + vector search with RRF fusion in Document-RAG",
-            "version": "2.7.1",
+            "description": "LLM-native structured output, pluggable image-to-text vision service",
+            "version": "2.7.5",
             "status": "pre-release"
         }
     ],

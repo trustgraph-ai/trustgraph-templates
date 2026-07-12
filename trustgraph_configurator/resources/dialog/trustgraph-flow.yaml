@@ -20,7 +20,7 @@ steps:
       options:
         - label: "TrustGraph 2.7"
           value: "2.7"
-          description: "Placeholder for pre-release"
+          description: "LLM-native structured output, pluggable image-to-text vision service"
           badge: pre-release
           recommended: false
         - label: "TrustGraph 2.6"
