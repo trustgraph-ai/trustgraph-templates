@@ -41,6 +41,10 @@
    // Including it turns on hybrid retrieval (vector + keyword, RRF-fused).
    "keyword-index-fts5": import "keyword-index/fts5.jsonnet",
 
+   // Image-to-text - describes images with a vision-capable model over an
+   // OpenAI-compatible endpoint (serves the optional image-to-text service)
+   "image-to-text-openai": import "image-to-text/openai.jsonnet",
+
    // Object store (S3-compatible) for the librarian. Import exactly one of
    // these to select how the librarian gets its object store.
    "garage": import "backends/garage.jsonnet",

@@ -305,3 +305,49 @@ class TestKeywordIndex:
         kw = bp["flow"]["kw-index:{id}"]["topics"]
         assert kw["input"] == "flow:tg:chunk-load:{workspace}:{id}"
         assert kw["request"] == "request:tg:keyword-index:{workspace}:{id}"
+
+
+# ---------------------------------------------------------------------------
+# Image-to-text (OpenAI-compatible vision) — optional service (2.7 template)
+# ---------------------------------------------------------------------------
+
+class TestImageToText:
+
+    def test_component_deploys_image_to_text_processor(self):
+        _, launches, _ = _build_27(["image-to-text-openai"])
+        proc = find_processor(launches["image-to-text"], "image-to-text")
+        assert proc["class"] == \
+            "trustgraph.model.image_to_text.openai.Processor"
+        assert proc["params"]["model"] == "gpt-5-mini"
+        assert proc["params"]["max_output"] == 4096
+        assert proc["params"]["concurrency"] == 1
+
+    def test_component_gets_openai_credentials(self):
+        compose, _, _ = _build_27(["image-to-text-openai"])
+        env = compose["services"]["image-to-text"]["environment"]
+        assert "OPENAI_TOKEN" in env
+        assert "OPENAI_BASE_URL" in env
+
+    def test_without_component_nothing_deploys(self):
+        compose, launches, _ = _build_27([])
+        assert "image-to-text" not in compose["services"]
+        assert "image-to-text" not in launches
+
+    def test_blueprint_wires_image_to_text(self):
+        _, _, additionals = _build_27(["image-to-text-openai"])
+        cfg = json.loads(next(
+            a["content"] for a in additionals
+            if a["path"] == "trustgraph/config.json"
+        ))
+        bp = cfg["flow-blueprint"]["everything"]
+        if isinstance(bp, str):
+            bp = json.loads(bp)
+        topics = bp["flow"]["image-to-text:{id}"]["topics"]
+        assert topics["request"] == \
+            "request:tg:image-to-text:{workspace}:{id}"
+        assert topics["response"] == \
+            "response:tg:image-to-text:{workspace}:{id}"
+        assert bp["interfaces"]["image-to-text"] == {
+            "request": "request:tg:image-to-text:{workspace}:{id}",
+            "response": "response:tg:image-to-text:{workspace}:{id}",
+        }

@@ -16,9 +16,11 @@ local llm_services = import "llm-services.jsonnet";
 local embeddings_service = import "embeddings-service.jsonnet";
 local reranker_service = import "reranker-service.jsonnet";
 local keyword_index_service = import "keyword-index-service.jsonnet";
+local image_to_text_service = import "image-to-text-service.jsonnet";
 
 // Merge shared services with document store configuration
-llm_services + embeddings_service + reranker_service + keyword_index_service + {
+llm_services + embeddings_service + reranker_service + keyword_index_service +
+image_to_text_service + {
 
     // External interfaces for document store
     "interfaces" +: {
