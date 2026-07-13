@@ -355,6 +355,25 @@ documentation:
         namespace: "k8s.namespace"
 
     # ─────────────────────────────────────────────────────────────
+    # Image-to-Text Configuration
+    # ─────────────────────────────────────────────────────────────
+    - id: image-to-text-setup
+      goal: "Configure image-to-text credentials"
+      category: model
+      priority: 2
+      file: model/image-to-text-openai-compose.md
+      when: "image_to_text = 'openai' and platform in ['docker-compose', 'podman-compose']"
+
+    - id: image-to-text-setup
+      goal: "Configure image-to-text credentials"
+      category: model
+      priority: 2
+      file: model/image-to-text-openai-k8s.md
+      when: "image_to_text = 'openai' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh', 'ali']"
+      vars:
+        namespace: "k8s.namespace"
+
+    # ─────────────────────────────────────────────────────────────
     # Storage Setup
     # ─────────────────────────────────────────────────────────────
     - id: vector-db-setup
