@@ -374,6 +374,8 @@ steps:
         next: review
       - when: "embeddings.enabled = true"
         next: embeddings-engine
+      - when: "version >= '2.7'"
+        next: image-to-text
       - when: "version >= '2.4'"
         next: mcp-server-enabled
       - next: review
@@ -400,6 +402,31 @@ steps:
           value: "ollama"
           icon: "ollama"
           description: "Use Ollama for embeddings. Requires Ollama to be running with an embedding model loaded."
+    transitions:
+      - when: "version >= '2.7'"
+        next: image-to-text
+      - when: "version >= '2.4'"
+        next: mcp-server-enabled
+      - next: review
+
+  # ─────────────────────────────────────────────────────────────
+  # Image-to-Text (>= 2.7 only)
+  # ─────────────────────────────────────────────────────────────
+  image-to-text:
+    title: "Which image-to-text engine?"
+    description: "Describe images with a vision-capable model for use in document processing"
+    state_key: image_to_text
+    input:
+      type: select
+      options:
+        - label: "None"
+          value: "none"
+          description: "No image-to-text processing"
+          recommended: true
+        - label: "OpenAI-compatible"
+          value: "openai"
+          icon: "openai"
+          description: "Use an OpenAI-compatible vision endpoint to describe images. Reuses the OpenAI API credentials."
     transitions:
       - when: "version >= '2.4'"
         next: mcp-server-enabled
