@@ -351,3 +351,20 @@ class TestImageToText:
             "request": "request:tg:image-to-text:{workspace}:{id}",
             "response": "response:tg:image-to-text:{workspace}:{id}",
         }
+
+
+# ---------------------------------------------------------------------------
+# Chunker type override (2.7 template)
+# ---------------------------------------------------------------------------
+
+class TestChunkerType:
+
+    def test_default_chunker_is_recursive(self):
+        _, launches, _ = _build_27([])
+        proc = find_processor(launches["ingest"], "chunker")
+        assert proc["class"] == "trustgraph.chunking.recursive.Processor"
+
+    def test_chunker_token_overrides_class(self):
+        _, launches, _ = _build_27(["chunker-token"])
+        proc = find_processor(launches["ingest"], "chunker")
+        assert proc["class"] == "trustgraph.chunking.token.Processor"
