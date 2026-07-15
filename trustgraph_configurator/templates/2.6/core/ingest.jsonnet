@@ -17,14 +17,12 @@ local url = import "values/url.jsonnet";
         "ingest-memory-limit": "256M",
         "ingest-memory-reservation": "256M",
         "ingest-replicas": 1,
+        "chunker-type": "recursive",
     },
 
     local logLevel = $.parameters["log-level"],
 
     "ingest" +: {
-
-        "chunk-size":: 2000,
-        "chunk-overlap":: 100,
 
         local pars = $.parameters,
 
@@ -43,6 +41,7 @@ local url = import "values/url.jsonnet";
         local memoryLimit = pars["ingest-memory-limit"],
         local memoryReservation = pars["ingest-memory-reservation"],
         local replicas = pars["ingest-replicas"],
+        local chunkerType = pars["chunker-type"],
 
         create:: function(engine)
 
@@ -52,11 +51,9 @@ local url = import "values/url.jsonnet";
 		    "launch.yaml": std.manifestYamlDoc({
                         processors: [
                             {
-                                class: "trustgraph.chunking.recursive.Processor",
+                                class: "trustgraph.chunking." + chunkerType + ".Processor",
                                 params: {
                                     id: "chunker",
-                                    "chunk_size": $["ingest"]["chunk-size"],
-                                    "chunk_overlap": $["ingest"]["chunk-overlap"],
                                 } + $["pub-sub-params"],
                             },
                             {

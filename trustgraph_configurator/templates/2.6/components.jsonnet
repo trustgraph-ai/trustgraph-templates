@@ -78,7 +78,9 @@
    // Pulsar manager is a UI for Pulsar.  Uses a LOT of memory
    "pulsar-manager": import "pulsar/pulsar-manager.jsonnet",
 
-   "override-recursive-chunker": import "core/chunker-recursive.jsonnet",
+   // Chunker overrides
+   "chunker-recursive": import "core/chunker-recursive.jsonnet",
+   "chunker-token": import "core/chunker-token.jsonnet",
 
    // The prompt manager
    "prompt-overrides": import "core/prompt-overrides.jsonnet",
