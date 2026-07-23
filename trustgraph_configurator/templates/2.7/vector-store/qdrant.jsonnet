@@ -5,6 +5,12 @@ local qdrant = import "backends/qdrant.jsonnet";
 qdrant + {
 
     parameters +:: {
+        "doc-embeddings-query-concurrency": 1,
+        "doc-embeddings-write-concurrency": 1,
+        "graph-embeddings-query-concurrency": 1,
+        "graph-embeddings-write-concurrency": 1,
+        "row-embeddings-query-concurrency": 1,
+        "row-embeddings-write-concurrency": 1,
         "vector-store-cpu-limit": "0.5",
         "vector-store-cpu-reservation": "0.1",
         "vector-store-memory-limit": "256M",
@@ -18,6 +24,12 @@ qdrant + {
 
         local pars = $.parameters,
 
+        local docEmbQueryConc = pars["doc-embeddings-query-concurrency"],
+        local docEmbWriteConc = pars["doc-embeddings-write-concurrency"],
+        local graphEmbQueryConc = pars["graph-embeddings-query-concurrency"],
+        local graphEmbWriteConc = pars["graph-embeddings-write-concurrency"],
+        local rowEmbQueryConc = pars["row-embeddings-query-concurrency"],
+        local rowEmbWriteConc = pars["row-embeddings-write-concurrency"],
         local cpuLimit = pars["vector-store-cpu-limit"],
         local cpuReservation = pars["vector-store-cpu-reservation"],
         local memoryLimit = pars["vector-store-memory-limit"],
@@ -44,6 +56,7 @@ qdrant + {
                                 class: "trustgraph.query.doc_embeddings.qdrant.Processor",
                                 params: {
                                     id: "doc-embeddings-query",
+                                    concurrency: docEmbQueryConc,
                                     store_uri: url.qdrant,
                                 } + $["pub-sub-params"],
                             },
@@ -51,6 +64,7 @@ qdrant + {
                                 class: "trustgraph.storage.doc_embeddings.qdrant.Processor",
                                 params: {
                                     id: "doc-embeddings-write",
+                                    concurrency: docEmbWriteConc,
                                     store_uri: url.qdrant,
                                 } + collectionParams + $["pub-sub-params"],
                             },
@@ -58,6 +72,7 @@ qdrant + {
                                 class: "trustgraph.query.graph_embeddings.qdrant.Processor",
                                 params: {
                                     id: "graph-embeddings-query",
+                                    concurrency: graphEmbQueryConc,
                                     store_uri: url.qdrant,
                                 } + $["pub-sub-params"],
                             },
@@ -65,6 +80,7 @@ qdrant + {
                                 class: "trustgraph.storage.graph_embeddings.qdrant.Processor",
                                 params: {
                                     id: "graph-embeddings-write",
+                                    concurrency: graphEmbWriteConc,
                                     store_uri: url.qdrant,
                                 } + collectionParams + $["pub-sub-params"],
                             },
@@ -72,6 +88,7 @@ qdrant + {
                                 class: "trustgraph.query.row_embeddings.qdrant.Processor",
                                 params: {
                                     id: "row-embeddings-query",
+                                    concurrency: rowEmbQueryConc,
                                     store_uri: url.qdrant,
                                 } + $["pub-sub-params"],
                             },
@@ -79,6 +96,7 @@ qdrant + {
                                 class: "trustgraph.storage.row_embeddings.qdrant.Processor",
                                 params: {
                                     id: "row-embeddings-write",
+                                    concurrency: rowEmbWriteConc,
                                     store_uri: url.qdrant,
                                 } + collectionParams + $["pub-sub-params"],
                             },

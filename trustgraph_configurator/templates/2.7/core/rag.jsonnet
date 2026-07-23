@@ -7,6 +7,7 @@ local url = import "values/url.jsonnet";
 {
 
     parameters +:: {
+        "agent-manager-concurrency": 1,
         "graph-rag-concurrency": 1,
         "graph-rag-entity-limit": 50,
         "graph-rag-triple-limit": 30,
@@ -14,11 +15,17 @@ local url = import "values/url.jsonnet";
         "graph-rag-edge-score-limit": 10,
         "graph-rag-max-subgraph-size": 100,
         "graph-rag-max-path-length": 2,
+        "document-rag-concurrency": 1,
         "document-rag-doc-limit": 20,
         // vector | keyword | hybrid; the keyword-index component overrides
         // this to hybrid when included
         "document-rag-retrieval-mode": "vector",
+        "nlp-query-concurrency": 1,
+        "structured-query-concurrency": 1,
+        "structured-diag-concurrency": 1,
+        "sparql-query-concurrency": 1,
         "prompt-rag-concurrency": 1,
+        "mcp-tool-concurrency": 1,
         "rag-cpu-limit": "0.5",
         "rag-cpu-reservation": "0.1",
         "rag-memory-limit": "640M",
@@ -32,6 +39,7 @@ local url = import "values/url.jsonnet";
 
         local pars = $.parameters,
 
+        local agentManagerConc = pars["agent-manager-concurrency"],
         local graphRagConc = pars["graph-rag-concurrency"],
         local entityLimit = pars["graph-rag-entity-limit"],
         local tripleLimit = pars["graph-rag-triple-limit"],
@@ -39,9 +47,15 @@ local url = import "values/url.jsonnet";
         local edgeScoreLimit = pars["graph-rag-edge-score-limit"],
         local maxSubgraphSize = pars["graph-rag-max-subgraph-size"],
         local maxPathLength = pars["graph-rag-max-path-length"],
+        local documentRagConc = pars["document-rag-concurrency"],
         local docLimit = pars["document-rag-doc-limit"],
         local retrievalMode = pars["document-rag-retrieval-mode"],
+        local nlpQueryConc = pars["nlp-query-concurrency"],
+        local structuredQueryConc = pars["structured-query-concurrency"],
+        local structuredDiagConc = pars["structured-diag-concurrency"],
+        local sparqlQueryConc = pars["sparql-query-concurrency"],
         local promptRagConc = pars["prompt-rag-concurrency"],
+        local mcpToolConc = pars["mcp-tool-concurrency"],
         local cpuLimit = pars["rag-cpu-limit"],
         local cpuReservation = pars["rag-cpu-reservation"],
         local memoryLimit = pars["rag-memory-limit"],
@@ -70,6 +84,7 @@ local url = import "values/url.jsonnet";
                                 class: agentOrchestrator,
                                 params: {
                                     id: "agent-manager",
+                                    concurrency: agentManagerConc,
                                 } + $["pub-sub-params"],
                             },
                             {
@@ -89,6 +104,7 @@ local url = import "values/url.jsonnet";
                                 class: documentRag,
                                 params: {
                                     id: "document-rag",
+                                    concurrency: documentRagConc,
                                     doc_limit: docLimit,
                                     retrieval_mode: retrievalMode,
                                 } + $["pub-sub-params"],
@@ -97,24 +113,28 @@ local url = import "values/url.jsonnet";
                                 class: nlpQuery,
                                 params: {
                                     id: "nlp-query",
+                                    concurrency: nlpQueryConc,
                                 } + $["pub-sub-params"],
                             },
                             {
                                 class: structuredQuery,
                                 params: {
                                     id: "structured-query",
+                                    concurrency: structuredQueryConc,
                                 } + $["pub-sub-params"],
                             },
                             {
                                 class: structuredDiag,
                                 params: {
                                     id: "structured-diag",
+                                    concurrency: structuredDiagConc,
                                 } + $["pub-sub-params"],
                             },
                             {
                                 class: sparql,
                                 params: {
                                     id: "sparql-query",
+                                    concurrency: sparqlQueryConc,
                                 } + $["pub-sub-params"],
                             },
                             {
@@ -128,6 +148,7 @@ local url = import "values/url.jsonnet";
                                 class: mcpTool,
                                 params: {
                                     id: "mcp-tool",
+                                    concurrency: mcpToolConc,
                                 } + $["pub-sub-params"],
                             },
                         ]
