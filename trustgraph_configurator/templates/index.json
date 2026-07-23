@@ -27,7 +27,7 @@
         {
             "name": "2.7",
             "description": "LLM-native structured output, pluggable image-to-text vision service",
-            "version": "2.7.12",
+            "version": "2.7.13",
             "status": "pre-release"
         }
     ],
