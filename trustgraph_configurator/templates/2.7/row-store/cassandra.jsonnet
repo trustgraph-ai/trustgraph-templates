@@ -7,6 +7,8 @@ local url = import "values/url.jsonnet";
 {
 
     parameters +:: {
+        "rows-query-concurrency": 1,
+        "rows-write-concurrency": 1,
         "rows-cpu-limit": "0.5",
         "rows-cpu-reservation": "0.1",
         "rows-memory-limit": "768M",
@@ -20,6 +22,8 @@ local url = import "values/url.jsonnet";
 
         local pars = $.parameters,
 
+        local rowsQueryConc = pars["rows-query-concurrency"],
+        local rowsWriteConc = pars["rows-write-concurrency"],
         local cpuLimit = pars["rows-cpu-limit"],
         local cpuReservation = pars["rows-cpu-reservation"],
         local memoryLimit = pars["rows-memory-limit"],
@@ -49,12 +53,14 @@ local url = import "values/url.jsonnet";
                                 class: "trustgraph.query.rows.cassandra.Processor",
                                 params: {
                                     id: "rows-query",
+                                    concurrency: rowsQueryConc,
                                 } + cassandraParams + $["pub-sub-params"],
                             },
                             {
                                 class: "trustgraph.storage.rows.cassandra.Processor",
                                 params: {
                                     id: "rows-write",
+                                    concurrency: rowsWriteConc,
                                 } + cassandraParams + $["pub-sub-params"],
                             },
                         ]

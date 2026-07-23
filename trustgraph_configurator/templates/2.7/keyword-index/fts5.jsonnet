@@ -12,6 +12,7 @@ local images = import "values/images.jsonnet";
 
     parameters +:: {
         "document-rag-retrieval-mode": "hybrid",
+        "keyword-index-concurrency": 1,
         "keyword-index-cpu-limit": "0.5",
         "keyword-index-cpu-reservation": "0.1",
         "keyword-index-memory-limit": "128M",
@@ -24,6 +25,7 @@ local images = import "values/images.jsonnet";
 
         local pars = $.parameters,
 
+        local kwIndexConc = pars["keyword-index-concurrency"],
         local cpuLimit = pars["keyword-index-cpu-limit"],
         local cpuReservation = pars["keyword-index-cpu-reservation"],
         local memoryLimit = pars["keyword-index-memory-limit"],
@@ -40,6 +42,7 @@ local images = import "values/images.jsonnet";
                                 class: "trustgraph.storage.kw_index.fts5.Processor",
                                 params: {
                                     id: "kw-index",
+                                    concurrency: kwIndexConc,
                                     index_path: "/data/kw-index.db",
                                 } + $["pub-sub-params"],
                             },

@@ -7,6 +7,8 @@ local url = import "values/url.jsonnet";
 {
 
     parameters +:: {
+        "triples-query-concurrency": 3,
+        "triples-write-concurrency": 1,
         "triples-cpu-limit": "0.5",
         "triples-cpu-reservation": "0.1",
         "triples-memory-limit": "512M",
@@ -20,6 +22,8 @@ local url = import "values/url.jsonnet";
 
         local pars = $.parameters,
 
+        local triplesQueryConc = pars["triples-query-concurrency"],
+        local triplesWriteConc = pars["triples-write-concurrency"],
         local cpuLimit = pars["triples-cpu-limit"],
         local cpuReservation = pars["triples-cpu-reservation"],
         local memoryLimit = pars["triples-memory-limit"],
@@ -49,12 +53,14 @@ local url = import "values/url.jsonnet";
                                 class: "trustgraph.query.triples.cassandra.Processor",
                                 params: {
                                     id: "triples-query",
+                                    concurrency: triplesQueryConc,
                                 } + cassandraParams + $["pub-sub-params"],
                             },
                             {
                                 class: "trustgraph.storage.triples.cassandra.Processor",
                                 params: {
                                     id: "triples-write",
+                                    concurrency: triplesWriteConc,
                                 } + cassandraParams + $["pub-sub-params"],
                             },
                         ]
