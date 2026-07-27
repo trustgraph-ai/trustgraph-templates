@@ -20,7 +20,7 @@ steps:
       options:
         - label: "TrustGraph 2.8"
           value: "2.8"
-          description: "LLM-native structured output, pluggable image-to-text vision service"
+          description: "Removes scale-bottlenecks to better support large multi-tenant deployments"
           badge: pre-release
           recommended: false
         - label: "TrustGraph 2.7"
