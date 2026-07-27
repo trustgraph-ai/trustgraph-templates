@@ -18,10 +18,15 @@ steps:
     input:
       type: select
       options:
+        - label: "TrustGraph 2.8"
+          value: "2.8"
+          description: "LLM-native structured output, pluggable image-to-text vision service"
+          badge: pre-release
+          recommended: false
         - label: "TrustGraph 2.7"
           value: "2.7"
           description: "LLM-native structured output, pluggable image-to-text vision service"
-          badge: pre-release
+          badge: beta
           recommended: false
         - label: "TrustGraph 2.6"
           value: "2.6"
