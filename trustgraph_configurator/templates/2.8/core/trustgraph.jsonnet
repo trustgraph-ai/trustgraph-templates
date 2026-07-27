@@ -11,7 +11,7 @@ local control = import "control.jsonnet";
 local ingest = import "ingest.jsonnet";
 local rag = import "rag.jsonnet";
 local api_gateway = import "api-gateway.jsonnet";
-local document_decoder = import "document-decoder.jsonnet";
+local docling_decoder = import "docling-decoder.jsonnet";
 local ui = import "../ui/trustgraph-ui.jsonnet";
 local ddg = import "mcp/ddg-mcp-server.jsonnet";
 
@@ -26,6 +26,6 @@ local ddg = import "mcp/ddg-mcp-server.jsonnet";
         "log-level":: "INFO",
     },
 
-} + control + ingest + rag + api_gateway + document_decoder
+} + control + ingest + rag + api_gateway + docling_decoder
   + ui + config + ddg
 
