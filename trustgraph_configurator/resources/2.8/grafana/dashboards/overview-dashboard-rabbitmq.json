@@ -1900,7 +1900,7 @@
                       "spec": {
                         "disableTextWrap": false,
                         "editorMode": "builder",
-                        "expr": "  label_replace(\n    rabbitmq_queue_messages{queue!~\"tg.state.config.*|amq.gen-.*\"},\n    \"short\", \"$2:$1:$3\", \"queue\", \"^([^.]+)\\\\.([^.]+)\\\\.([^.]+)\\\\..+$\"\n  )\n",
+                        "expr": "label_replace(rabbitmq_queue_messages{queue!~\"tg.state.config.*|amq.gen-.*\"}, \"short\", \"$1\", \"queue\", \"[^.]+\\.(.+)\")",
                         "fullMetaSearch": false,
                         "includeNullMetadata": true,
                         "instant": false,
