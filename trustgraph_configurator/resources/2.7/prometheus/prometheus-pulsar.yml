@@ -80,17 +80,13 @@ scrape_configs:
 
   - job_name: 'pulsar'
     metric_relabel_configs:
-      # Step 1: Drop storage eviction metrics
+      # Whitelist ONLY backlog & basic health metrics.
+      # EVERYTHING ELSE from Pulsar is immediately dropped!
       - source_labels: [__name__]
-        regex: 'pulsar_storage_backlog_quota_exceeded_evictions_total'
-        action: drop
+        regex: 'pulsar_(subscription_back_?log.*|msg_back_?log.*|rate_in|rate_out|throughput_in|throughput_out|active_connections)'
+        action: keep
 
-      # Step 2: Drop non-backlog subscription telemetry (timestamps, rates, replays, etc.)
-      - source_labels: [__name__]
-        regex: 'pulsar_subscription_(dispatch_throttled.*|blocked_on_unacked.*|last_.*|msg_ack.*|msg_drop.*|in_replay|filter_.*|total_msg_.*)'
-        action: drop
-
-      # Step 3: Strip producer and consumer labels if still emitted
+      # Strip producer/consumer labels if present on kept metrics
       - regex: '(producer|consumer)'
         action: labeldrop
 
