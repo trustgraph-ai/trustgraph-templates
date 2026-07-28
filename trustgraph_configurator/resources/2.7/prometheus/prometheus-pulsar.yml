@@ -40,15 +40,15 @@ scrape_configs:
       - targets:
         - 'vector-store:8000'
 
-  - job_name: 'row-store'
+  - job_name: 'rows'
     static_configs:
       - targets:
-        - 'row-store:8000'
+        - 'rows:8000'
 
-  - job_name: 'triple-store'
+  - job_name: 'triples'
     static_configs:
       - targets:
-        - 'triple-store:8000'
+        - 'triples:8000'
 
   - job_name: 'text-completion'
     static_configs:
@@ -59,7 +59,7 @@ scrape_configs:
   - job_name: 'api-gateway'
     static_configs:
       - targets:
-        - 'api-gateway-metrics:8000'
+        - 'api-gateway:8000'
 
   - job_name: 'mcp-server'
     static_configs:
