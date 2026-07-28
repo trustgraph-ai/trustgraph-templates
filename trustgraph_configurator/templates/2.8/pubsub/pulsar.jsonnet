@@ -192,6 +192,12 @@ local url = import "values/url.jsonnet";
                         "PULSAR_MEM": "-Xms%s -Xmx%s -XX:MaxDirectMemorySize=%s" % [
                             brokerHeap, brokerHeap, brokerDirect,
                         ],
+
+                        // Turn off high-cardinality low-value Prometheus
+                        // metrics
+                        "exposeProducerLevelMetricsInPrometheus": "false",
+                        "exposeConsumerLevelMetricsInPrometheus": "false",
+
                     })
                     .with_port(6650, 6650, "pulsar")
                     .with_port(8080, 8080, "admin");
