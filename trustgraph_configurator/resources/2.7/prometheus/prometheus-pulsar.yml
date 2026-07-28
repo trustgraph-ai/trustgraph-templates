@@ -16,68 +16,57 @@ scrape_configs:
 
   # TrustGraph services in processor groups
   - job_name: 'control'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'control:8000'
 
   - job_name: 'ingest'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'ingest:8000'
 
   - job_name: 'rag'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'rag:8000'
 
   - job_name: 'embeddings'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'embeddings:8000'
 
   - job_name: 'vector-store'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'vector-store:8000'
 
   - job_name: 'row-store'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'row-store:8000'
 
   - job_name: 'triple-store'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'triple-store:8000'
 
   - job_name: 'text-completion'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'text-completion:8000'
 
   # TrustGraph services standalone
   - job_name: 'api-gateway'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'api-gateway-metrics:8000'
 
   - job_name: 'mcp-server'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'mcp-server:8000'
 
   - job_name: 'document-decoder'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'document-decoder:8000'
@@ -85,13 +74,28 @@ scrape_configs:
   # Non-Trustgraph services
   - job_name: 'garage'
     metrics_path: '/metrics'
-    scrape_interval: 5s
     static_configs:
       - targets:
         - 'garage:3903'
 
   - job_name: 'pulsar'
-    scrape_interval: 5s
+    metric_relabel_configs:
+
+      # Step A: Drop all storage eviction metrics
+      - source_labels: [__name__]
+        regex: 'pulsar_storage_backlog_quota_exceeded_evictions_total'
+        action: drop
+
+      # Step B: Drop producer and consumer labels if Pulsar still sends them
+      - regex: '(producer|consumer)'
+        action: labeldrop
+
+      # Step C: Drop ALL subscription metrics EXCEPT actual backlog metrics
+      # Drops timestamps, drop rates, ack rates, replay counts, etc.
+      - source_labels: [__name__]
+        regex: 'pulsar_subscription_(?!backlog|msg_backlog).*'
+        action: drop
+
     static_configs:
       - targets:
         - 'pulsar:8080'
