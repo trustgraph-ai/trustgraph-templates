@@ -91,6 +91,11 @@ scrape_configs:
         - 'garage:3903'
 
   - job_name: 'pulsar'
+    metric_relabel_configs:
+      # Keep backlog metrics, but drop verbose subscription telemetry
+      - source_labels: [__name__]
+        regex: 'pulsar_subscription_(dispatch_throttled.*|blocked_on_unacked.*|last_consumed_flow.*|last_mark_delete.*)'
+        action: drop
     scrape_interval: 5s
     static_configs:
       - targets:
