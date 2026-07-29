@@ -12,7 +12,6 @@ local images = import "values/images.jsonnet";
         "api-gateway-memory-limit": "512M",
         "api-gateway-memory-reservation": "512M",
         "api-gateway-replicas": 1,
-        "api-gateway-external": true,
     },
 
     "api-gateway" +: {
@@ -27,7 +26,6 @@ local images = import "values/images.jsonnet";
         local memoryLimit = pars["api-gateway-memory-limit"],
         local memoryReservation = pars["api-gateway-memory-reservation"],
         local replicas = pars["api-gateway-replicas"],
-        local external = pars["api-gateway-external"],
 
         create:: function(engine)
 
@@ -52,24 +50,14 @@ local images = import "values/images.jsonnet";
                 "api-gateway", [ container ]
             ).with_replicas(replicas);
 
-            local svc =
-                if external then
-                    engine.service("api-gateway", containerSet)
-                else
-                    engine.internalService("api-gateway", containerSet);
-
-            local service = svc
+            local service =
+                engine.internalService("api-gateway", containerSet)
                 .with_port(port, port, "api")
-                ;
-
-            local metrics =
-                engine.internalService("api-gateway-metrics", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([
                 containerSet,
                 service,
-                metrics,
             ])
 
     },
