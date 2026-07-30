@@ -93,6 +93,9 @@
    // The prompt manager
    "prompt-overrides": import "core/prompt-overrides.jsonnet",
 
+   // UI plugins
+   "register-plugins": import "ui/register-plugins.jsonnet",
+
    // Extra MCP services
    "ddg-mcp-server": import "mcp/ddg-mcp-server.jsonnet",
 
