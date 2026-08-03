@@ -105,6 +105,9 @@
    // RBAC IAM: switches control to enterprise image with RBAC processor
    "rbac-iam": import "core/rbac-iam.jsonnet",
 
+   // Attestation: adds attestation processor to RAG, switches to enterprise image
+   "attestation": import "core/attestation.jsonnet",
+
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
 

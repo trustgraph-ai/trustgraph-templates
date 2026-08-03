@@ -37,6 +37,14 @@ local url = import "values/url.jsonnet";
 
     "rag" +: {
 
+        "rag-image":: images.trustgraph_flow,
+        "rag-extra-processors":: [],
+
+        local imagePullSecret =
+            if std.objectHasAll(self, "image-pull-secret")
+            then self["image-pull-secret"]
+            else null,
+
         local pars = $.parameters,
 
         local agentManagerConc = pars["agent-manager-concurrency"],
@@ -151,14 +159,14 @@ local url = import "values/url.jsonnet";
                                     concurrency: mcpToolConc,
                                 } + $["pub-sub-params"],
                             },
-                        ]
+                        ] + $["rag"]["rag-extra-processors"]
                     })
 		}
             );
 
-            local container =
+            local containerNoSecret =
                 engine.container("rag")
-                    .with_image(images.trustgraph_flow)
+                    .with_image($["rag"]["rag-image"])
                     .with_command([
                         "processor-group",
                         "--log-level",
@@ -169,6 +177,12 @@ local url = import "values/url.jsonnet";
                     .with_volume_mount(cfgVol, "/etc/trustgraph/")
                     .with_limits(cpuLimit, memoryLimit)
                     .with_reservations(cpuReservation, memoryReservation);
+
+            local container =
+                if imagePullSecret != null then
+                    containerNoSecret
+                        .with_image_pull_secret(imagePullSecret)
+                else containerNoSecret;
 
             local containerSet = engine.containers(
                 "rag", [ container ]
