@@ -37,7 +37,7 @@ local apply = function(p, components)
         },
 
         with_params:: function(pars)
-            self + std.foldl(
+            std.foldl(
                 function(obj, par) obj.with(par.key, par.value),
                 std.objectKeysValues(pars),
                 self
