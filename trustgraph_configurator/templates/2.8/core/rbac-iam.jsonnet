@@ -1,3 +1,6 @@
+
+// Enterprise feature, relies on Enterprise container
+
 local images = import "values/images.jsonnet";
 
 {
