@@ -4,7 +4,7 @@
 {
     "type": "string",
     "description": "LLM model to use",
-    "default": "gemini-2.5-flash-lite",
+    "default": "gemini-2.5-flash",
     "enum": [
         // Gemini 3 models (preview)
         {
