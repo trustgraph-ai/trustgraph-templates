@@ -22,9 +22,6 @@
                 // Prompts configuration
                 prompt: {
                     "system": config_spec.prompts["system-template"],
-                    "template-index": std.objectFieldsAll(
-                        config_spec.prompts.templates
-                    ),
                 } + {
                     ["template." + template.key]: template.value
                     for template in std.objectKeysValuesAll(
