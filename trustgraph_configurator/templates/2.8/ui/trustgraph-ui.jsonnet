@@ -1,21 +1,33 @@
 local images = import "values/images.jsonnet";
-local default_plugins = import "ui/plugins.json";
+local default_components = import "ui/components.json";
+local default_action_buttons = import "ui/action-buttons.json";
+local default_guidance = import "ui/guidance.json";
 
 {
 
-    "ui-plugins":: default_plugins,
+    "ui-components":: default_components,
+
+    "ui-action-buttons":: default_action_buttons,
+
+    "ui-guidance":: default_guidance,
 
     "ui-bundle":: {},
 
     "trustgraph-ui" +: {
-    
+
         create:: function(engine)
 
             local cfgVol = engine.configVolume(
                 "ui-plugin-cfg", "ui/config",
                 {
-                    "plugins.json": std.manifestJsonEx(
-                        $["ui-plugins"], "  "
+                    "components.json": std.manifestJsonEx(
+                        $["ui-components"], "  "
+                    ),
+                    "action-buttons.json": std.manifestJsonEx(
+                        $["ui-action-buttons"], "  "
+                    ),
+                    "guidance.json": std.manifestJsonEx(
+                        $["ui-guidance"], "  "
                     ),
                 }
             );
