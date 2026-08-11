@@ -11,7 +11,7 @@ local models = import "parameters/vertexai.jsonnet";
         },
 
     "vertexai-private-key":: "/vertexai/private.json",
-    "vertexai-region":: "us-central1",
+    "vertexai-region":: "global",
     "vertexai-max-output-tokens":: 4096,
     "vertexai-temperature":: 0.0,
     "vertexai-models":: models,
