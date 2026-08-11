@@ -1,7 +1,10 @@
 
-// Enterprise feature, relies on Enterprise container
+// Enterprise feature, relies on Enterprise container.  Adds attestation
+// engine to the RAG processor group, and adds attestation engine to the
+// flows in the agent block
 
 local images = import "values/images.jsonnet";
+local attestation = import "flows/attestation.jsonnet";
 
 {
 
@@ -21,6 +24,13 @@ local images = import "values/images.jsonnet";
             },
         ],
         "image-pull-secret":: "private-registry-credentials",
+    },
+
+    // Add attestation engine to the flow blueprints
+    "flow-blueprints" +:: {
+        "flow-blocks" +:: {
+            "agent" +: attestation,
+        }
     },
 
 }

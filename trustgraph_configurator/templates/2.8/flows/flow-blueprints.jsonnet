@@ -1,14 +1,7 @@
 // TrustGraph Flow Blueprints Configuration
 //
-// RAG Modes (4 types):
-// - Document RAG: Uses document chunk embeddings
-// - Graph RAG: Extracts definitions + relationships to graph
-// - Ontology RAG: Extracts using ontology definitions to graph (mutually exclusive with Graph RAG)
-// - Structured RAG: Extracts objects to object store
-//
-// Module structure:
-// - *-store: Storage and query infrastructure
-// - *-extract: Extraction methods
+// We define building blocks and combine those to make the flow blueprints
+// to save a lot of repetitive code
 
 // Import all the modular flow components
 local graph_store = import "graph-store.jsonnet";
@@ -22,27 +15,52 @@ local load = import "load.jsonnet";
 local kgcore = import "kgcore.jsonnet";
 
 {
+    // This makes it easier to override in other templates by
+    // modifying $["flow-blueprints"]["flow-blocks"]
+    "flow-blocks":: {
+        "graph-store": graph_store,
+        "document-store": document_store,
+        "structured-store": structured_store,
+        "graphrag-extract": graphrag_extract,
+        "ontorag-extract": ontorag_extract,
+        "structured-extract": structured_extract,
+        "agent": agent,
+        "load": load,
+        "kgcore": kgcore,
+    },
 
     // Full system: Graph RAG + Document RAG + knowledge cores
     "everything": {
         description: "Graph RAG + Document RAG + knowledge cores",
         tags: ["document-rag", "graph-rag", "kgcore"],
     } +
-      graph_store + document_store + agent + load +
-      graphrag_extract + kgcore + structured_store,
+      $["flow-blocks"]["graph-store"] +
+      $["flow-blocks"]["document-store"] +
+      $["flow-blocks"]["agent"] +
+      $["flow-blocks"]["load"] +
+      $["flow-blocks"]["graphrag-extract"] +
+      $["flow-blocks"]["kgcore"] +
+      $["flow-blocks"]["structured-store"],
 
     // Structured RAG only
     "structured": {
         description: "Structured data extraction and querying",
         tags: ["structured"],
     } +
-      structured_store + structured_extract + agent + load,
+      $["flow-blocks"]["structured-store"] +
+      $["flow-blocks"]["structured-extract"] +
+      $["flow-blocks"]["agent"] +
+      $["flow-blocks"]["load"],
 
     // Ontology RAG + knowledge cores
     "ontology": {
         description: "Ontology RAG + knowledge cores",
         tags: ["onto-rag", "kgcore"],
     } +
-      graph_store + ontorag_extract + agent + load + kgcore,
+      $["flow-blocks"]["graph-store"] +
+      $["flow-blocks"]["ontorag-extract"] +
+      $["flow-blocks"]["agent"] +
+      $["flow-blocks"]["load"] +
+      $["flow-blocks"]["kgcore"],
 
 }

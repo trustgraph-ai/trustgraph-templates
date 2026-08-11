@@ -21,7 +21,6 @@ llm_services + mcp_service + {
     // External interfaces for agent operations
     "interfaces" +: {
         "agent": request_response_if("agent:{workspace}:{id}"),
-        "attestation-engine": request_response_if("attestation-engine:{workspace}:{id}"),
     },
 
     // Flow-level processors for agent management
@@ -52,34 +51,10 @@ llm_services + mcp_service + {
             },
         },
 
-        // Agent manager orchestrates agent conversations and tool usage
-        "attestation-engine:{id}": {
-            topics: {
-                request: request("attestation-engine:{workspace}:{id}"),
-                response: response("attestation-engine:{workspace}:{id}"),
-                "prompt-request": request("prompt-rag:{workspace}:{id}"),
-                "prompt-response": response("prompt-rag:{workspace}:{id}"),
-                "graph-rag-request": request("graph-rag:{workspace}:{id}"),
-                "graph-rag-response": response("graph-rag:{workspace}:{id}"),
-                "sparql-request": request("sparql:{workspace}:{id}"),
-                "sparql-response": response("sparql:{workspace}:{id}"),
-                "embeddings-request": request("embeddings:{workspace}:{id}"),
-                "embeddings-response": response("embeddings:{workspace}:{id}"),
-                "reranker-request": request("reranker:{workspace}:{id}"),
-                "reranker-response": response("reranker:{workspace}:{id}"),
-                "triples-request": request("triples:{workspace}:{id}"),
-                "triples-response": response("triples:{workspace}:{id}"),
-                "librarian-request": librarian_request,
-                "librarian-response": librarian_response,
-                "graph-embeddings-request": request("graph-embeddings:{workspace}:{id}"),
-                "graph-embeddings-response": response("graph-embeddings:{workspace}:{id}"),
-                explainability: flow("triples-store:{workspace}:{id}"),
-            },
-        },
-
     },
 
     // Blueprint-level processors for agent-related services
     "blueprint" +: {
     },
 }
+
