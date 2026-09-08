@@ -82,16 +82,21 @@ class Packager:
             path = self.templates.joinpath(dir, filename)
             return str(path), f"\"{self.version}\"".encode("utf-8")
 
+        cwd = pathlib.Path.cwd()
+
         if dir:
             candidates = [
                 self.templates.joinpath(dir, filename),
                 self.templates.joinpath(filename),
                 self.resources.joinpath(dir, filename),
                 self.resources.joinpath(filename),
+                cwd / dir / filename,
+                cwd / filename,
             ]
         else:
             candidates = [
-                self.templates.joinpath(filename)
+                self.templates.joinpath(filename),
+                cwd / filename,
             ]
 
         try:
