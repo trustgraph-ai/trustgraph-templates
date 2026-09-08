@@ -18,21 +18,21 @@ steps:
     input:
       type: select
       options:
+        - label: "TrustGraph 2.9"
+          value: "2.9"
+          description: "Placeholder for upcoming release"
+          badge: pre-release
+          recommended: false
         - label: "TrustGraph 2.8"
           value: "2.8"
           description: "Removes scale-bottlenecks to better support large multi-tenant deployments"
-          badge: pre-release
-          recommended: false
-        - label: "TrustGraph 2.7"
-          value: "2.7"
-          description: "LLM-native structured output, pluggable image-to-text vision service"
-          badge: beta
-          recommended: false
+          badge: stable
+          recommended: true
         - label: "TrustGraph 2.6"
           value: "2.6"
           description: "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval"
           badge: stable
-          recommended: true
+          recommended: false
         - label: "TrustGraph 2.5"
           value: "2.5"
           description: "Updates to SPARQL query support"
