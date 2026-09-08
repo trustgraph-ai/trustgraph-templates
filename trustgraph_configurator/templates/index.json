@@ -21,19 +21,19 @@
         {
             "name": "2.6",
             "description": "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval",
-            "version": "2.6.18",
+            "version": "2.6.21",
             "status": "stable"
-        },
-        {
-            "name": "2.7",
-            "description": "LLM-native structured output, pluggable image-to-text vision service",
-            "version": "2.7.14",
-            "status": "beta"
         },
         {
             "name": "2.8",
             "description": "Removes scale-bottlenecks to better support large multi-tenant deployments",
-            "version": "2.8.15",
+            "version": "2.8.17",
+            "status": "stable"
+        },
+        {
+            "name": "2.9",
+            "description": "Placeholder for upcoming release",
+            "version": "2.9.2",
             "status": "pre-release"
         }
     ],

@@ -1,0 +1,331 @@
+{
+
+    // Extract resources using the engine
+    package:: function(patterns)
+        std.foldl(
+            function(state, p) state + p.create(self),
+            std.objectValues(patterns),
+            {}
+        ),
+
+    container:: function(name)
+    {
+
+        local container = self,
+
+        name:: name,
+
+        with_image:: function(x) self + { image: x },
+
+        with_image_pull_secret:: function(name) self,
+
+        // user/group combine into compose's "uid[:gid]" string field;
+        // call order is user-then-group (a later with_user would
+        // overwrite the combined value, but patterns conventionally
+        // declare user before group).
+        with_user:: function(x) self,
+
+        with_group:: function(x) self,
+
+        with_supplemental_group:: function(x) self +
+            if std.objectHas(container, "group_add") then
+              { group_add: container.group_add + [x] }
+            else
+              { group_add: [x] },
+
+        with_command:: function(x) self + {
+            command:
+                if std.isString(x) then
+                    std.strReplace(x, "$", "$$")
+                else if std.isArray(x) then
+                    std.map(function(s) std.strReplace(s, "$", "$$"), x)
+                else
+                    x
+        },
+
+        with_entrypoint:: function(x) self + { entrypoint: x },
+
+        with_runtime:: function(x) self + { runtime: x },
+
+        with_privileged:: function(x) self + { privileged: x },
+
+        with_ipc:: function(x) self + { ipc: x },
+
+        with_capability:: function(x) self +
+            if std.objectHas(container, "capability") then
+              { cap_add: container.capability + x }
+            else
+              { cap_add: [x], },
+
+        with_membership:: function(group) self,
+
+        with_hostname:: function(h) self,
+
+        with_subdomain:: function(s) self,
+
+        with_environment:: function(x) self +
+            if std.objectHas(container, "environment") then
+              { environment: container.environment + x }
+            else
+              { environment: x, },
+
+        with_device:: function(hdev, cdev) self +
+            if std.objectHas(container, "devices") then
+              { devices: container.devices + [ "%s:%s" % [hdev, cdev] ] }
+            else
+              { devices: [ "%s:%s" % [hdev, cdev] ], },
+
+        with_limits:: function(c, m) self + {
+           deploy +: { resources +: {
+               limits: { cpus: c, memory: m }
+           } },
+        },
+
+        with_reservations:: function(c, m) self + {
+            deploy +: { resources +: {
+                reservations: { cpus: c, memory: m }
+            } },
+        },
+
+        with_volume_mount::
+            function(vol, mnt)
+                self + {
+                    volumes:
+                        if std.objectHas(container, "volumes") then
+                            container.volumes + [
+                                "%s:%s" % [vol.volid, mnt]
+                            ]
+                        else
+                            [
+                                "%s:%s" % [vol.volid, mnt]
+                            ]
+                },
+
+        with_bind_mount::
+            function(src, dest)
+                self + {
+                    volumes:
+                        if std.objectHas(container, "volumes") then
+                            container.volumes + [
+                                "%s:%s" % [src, dest]
+                            ]
+                        else
+                            [
+                                "%s:%s" % [src, dest]
+                            ]
+                },
+
+        with_port::
+            function(src, dest, name) self,
+
+        with_env_var_secrets::
+            function(vars)
+                std.foldl(
+                    function(obj, x) obj.with_environment(
+                        { [x]: "${" + x  + "}" }
+                    ),
+                    vars.variables,
+                    self
+                ),
+
+        restart: "on-failure:100",
+
+        add:: function(replicas=1) {
+            services +: {
+                [container.name]: container + (
+                    if replicas > 1 then
+                        { scale: replicas }
+                    else {}
+                ),
+            }
+        }
+
+    },
+
+    internalService:: function(name, containers)
+    {
+
+        local service = self,
+
+        name: name,
+        ports: [],
+
+        with_port:: function(src, dest, name)
+            self + {
+                ports: super.ports + [dest],
+            },
+
+        add:: function()
+            if std.length(service.ports) == 0 then {}
+            else {
+                services +: {
+                    [containers.name] +: {
+                        expose: [
+                            "%d" % [port]
+                            for port in service.ports
+                        ],
+                    },
+                },
+            },
+
+    },
+
+    headlessService:: function(name, membership, members=[])
+    {
+
+        local service = self,
+
+        ports: [],
+
+        with_port:: function(src, dest, name)
+            self + {
+                ports: super.ports + [dest],
+            },
+
+        with_publish_not_ready_addresses:: function() self,
+
+        add:: function()
+            if std.length(service.ports) == 0
+               || std.length(members) == 0 then {}
+            else {
+                services +: {
+                    [m] +: {
+                        expose: [
+                            "%d" % [port]
+                            for port in service.ports
+                        ],
+                    }
+                    for m in members
+                },
+            },
+
+    },
+
+    service:: function(name, containers)
+    {
+
+        local service = self,
+
+        name: name,
+        ports: [],
+
+        with_port:: function(src, dest, name)
+            self + {
+                ports: super.ports + [{ src: src, dest: dest }],
+            },
+
+        add:: function()
+            if std.length(service.ports) == 0 then {}
+            else {
+                services +: {
+                    [containers.name] +: {
+                        ports: [
+                            "%d:%d" % [port.src, port.dest]
+                            for port in service.ports
+                        ],
+                    },
+                },
+            },
+
+    },
+
+    volume:: function(name)
+    {
+
+        local volume = self,
+
+        name: name,
+
+        volid:: name,
+
+        with_size:: function(size) self + { size: size },
+
+        add:: function() {
+            volumes +: {
+                [volume.name]: {}
+            }
+        }
+
+    },
+
+    configVolume:: function(name, dir, parts)
+    {
+
+        local volume = self,
+
+        name: dir,
+
+        volid:: "./" + dir,
+
+        with_size:: function(size) self + { size: size },
+
+        add:: function() {
+        }
+
+    },
+
+    secretVolume:: function(name, dir, parts)
+    {
+
+        local volume = self,
+
+        name: dir,
+
+        volid:: dir,
+
+        with_size:: function(size) self + { size: size },
+
+        add:: function() {
+        }
+
+    },
+
+    envSecrets:: function(name)
+    {
+
+        local volume = self,
+
+        name: name,
+
+        volid:: name,
+
+        variables:: [],
+
+        with_env_var::
+            function(name, key) self + {
+                variables: super.variables + [name],
+            },
+
+        add:: function() {
+        }
+
+    },
+
+    containers:: function(name, containers)
+    {
+
+        local cont = self,
+
+        name: name,
+        containers: containers,
+        replicas: 1,
+
+        with_replicas:: function(n) self + { replicas: n },
+
+        add:: function() std.foldl(
+            function(state, c) state + c.add(cont.replicas),
+            cont.containers,
+            {}
+        ),
+
+    },
+
+    resources:: function(res)
+        std.foldl(
+            function(state, c) state + c.add(),
+            res,
+            {}
+        ),
+
+}
+
