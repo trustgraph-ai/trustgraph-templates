@@ -20,6 +20,10 @@ local url = import "values/url.jsonnet";
         local pars = $.parameters,
 
         local port = pars["mcp-server-port"],
+        local apiGatewayPort = pars["api-gateway-port"],
+        local websocketUrl =
+            "ws://api-gateway:%s/api/v1/socket" %
+            std.toString(apiGatewayPort),
         local cpuLimit = pars["mcp-server-cpu-limit"],
         local cpuReservation = pars["mcp-server-cpu-reservation"],
         local memoryLimit = pars["mcp-server-memory-limit"],
@@ -35,6 +39,8 @@ local url = import "values/url.jsonnet";
                         "mcp-server",
                         "--port",
                         std.toString(port),
+                        "--websocket-url",
+                        websocketUrl,
                     ])
                     .with_limits(cpuLimit, memoryLimit)
                     .with_reservations(cpuReservation, memoryReservation)
