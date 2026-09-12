@@ -228,5 +228,41 @@
         "globalName": "ThreatPlugin"
       }
     ]
+  },
+  {
+    "title": "Administration",
+    "description": "Administration and management tools. Requires admin permissions.",
+    "tab": "admin",
+    "navLabel": "Admin",
+    "navIcon": "⚙",
+    "components": [
+      {
+        "id": "user-admin",
+        "title": "User Management",
+        "icon": "◉",
+        "paletteKey": "blue",
+        "description": "Create, update, enable and manage user accounts.",
+        "url": "/plugins/user-admin.iife.js",
+        "globalName": "UserAdminPlugin"
+      },
+      {
+        "id": "workspace-admin",
+        "title": "Workspace Management",
+        "icon": "◈",
+        "paletteKey": "cyan",
+        "description": "Create and manage workspaces.",
+        "url": "/plugins/workspace-admin.iife.js",
+        "globalName": "WorkspaceAdminPlugin"
+      },
+      {
+        "id": "api-keys",
+        "title": "API Key Management",
+        "icon": "⚿",
+        "paletteKey": "amber",
+        "description": "Create, view and revoke API keys for user accounts.",
+        "url": "/plugins/api-keys.iife.js",
+        "globalName": "ApiKeysPlugin"
+      }
+    ]
   }
 ]

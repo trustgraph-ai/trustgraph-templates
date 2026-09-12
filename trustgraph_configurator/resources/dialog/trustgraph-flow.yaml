@@ -33,21 +33,6 @@ steps:
           description: "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval"
           badge: stable
           recommended: false
-        - label: "TrustGraph 2.5"
-          value: "2.5"
-          description: "Updates to SPARQL query support"
-          badge: stable
-          recommended: false
-        - label: "TrustGraph 2.4"
-          value: "2.4"
-          description: "New UX, IAM & data separation through workspaces"
-          badge: stable
-          recommended: false
-        - label: "TrustGraph 2.3"
-          value: "2.3"
-          description: "Agent explainability analytics"
-          badge: stable
-          recommended: false
     transitions:
       - next: platform
 
