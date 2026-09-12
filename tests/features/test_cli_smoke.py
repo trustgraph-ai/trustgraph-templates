@@ -14,6 +14,7 @@ import zipfile
 import pytest
 
 from helpers import minimal_config
+from conftest import PRIMARY_VERSION
 
 
 pytestmark = pytest.mark.features
@@ -59,7 +60,7 @@ class TestCliSmoke:
         """Running the CLI against a real config produces a non-empty
         deploy.zip on disk."""
         result = _cli(
-            ["-t", "2.3", "-p", "docker-compose",
+            ["-t", PRIMARY_VERSION, "-p", "docker-compose",
              "-i", "config.json", "-o", "deploy.zip"],
             cwd=cli_workspace,
         )
@@ -75,7 +76,7 @@ class TestCliSmoke:
         at least one launch.yaml — proves resource loading + additionals
         rendering + zip packaging all work end to end."""
         _cli(
-            ["-t", "2.3", "-p", "docker-compose",
+            ["-t", PRIMARY_VERSION, "-p", "docker-compose",
              "-i", "config.json", "-o", "deploy.zip"],
             cwd=cli_workspace,
         )
@@ -96,7 +97,7 @@ class TestCliSmoke:
         import yaml
 
         _cli(
-            ["-t", "2.3", "-p", "docker-compose",
+            ["-t", PRIMARY_VERSION, "-p", "docker-compose",
              "-i", "config.json", "-o", "deploy.zip"],
             cwd=cli_workspace,
         )
@@ -113,7 +114,7 @@ class TestCliSmoke:
         """Sanity: the CLI surfaces failure with non-zero exit code when
         handed a bogus platform."""
         result = _cli(
-            ["-t", "2.3", "-p", "not-a-real-platform",
+            ["-t", PRIMARY_VERSION, "-p", "not-a-real-platform",
              "-i", "config.json", "-o", "deploy.zip"],
             cwd=cli_workspace,
         )

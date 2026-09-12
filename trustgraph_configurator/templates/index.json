@@ -1,24 +1,6 @@
 {
     "templates": [
         {
-            "name": "2.3",
-            "description": "Agent explainability analytics.  Reduced container footprint",
-            "version": "2.3.21",
-            "status": "stable"
-        },
-        {
-            "name": "2.4",
-            "description": "IAM & data separation through workspaces",
-            "version": "2.4.33",
-            "status": "stable"
-        },
-        {
-            "name": "2.5",
-            "description": "Further updates to SPARQL and GraphQL retrieval",
-            "version": "2.5.16",
-            "status": "stable"
-        },
-        {
             "name": "2.6",
             "description": "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval",
             "version": "2.6.21",
@@ -33,7 +15,7 @@
         {
             "name": "2.9",
             "description": "Placeholder for upcoming release",
-            "version": "2.9.2",
+            "version": "2.9.4",
             "status": "pre-release"
         }
     ],
