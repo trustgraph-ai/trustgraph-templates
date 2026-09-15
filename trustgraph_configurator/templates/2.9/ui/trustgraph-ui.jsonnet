@@ -13,9 +13,21 @@ local default_guidance = import "ui/guidance.json";
 
     "ui-bundle":: {},
 
+    "ui-proxies":: [
+        {
+            path: "/demo-data",
+            url: "https://github.com/trustgraph-ai/demo-standard/raw/refs/heads/master/datasets",
+        },
+    ],
+
     "trustgraph-ui" +: {
 
         create:: function(engine)
+
+            local proxyArgs = std.flatMap(
+                function(p) ["--proxy", p.path + "=" + p.url],
+                $["ui-proxies"]
+            );
 
             local cfgVol = engine.configVolume(
                 "ui-plugin-cfg", "ui/config",
@@ -43,6 +55,7 @@ local default_guidance = import "ui/guidance.json";
                     .with_limits("0.1", "256M")
                     .with_reservations("0.1", "256M")
                     .with_port(8888, 8888, "ui")
+                    .with_command(["service"] + proxyArgs)
                     .with_volume_mount(cfgVol, "/usr/lib/python3.12/site-packages/trustgraph_ui/ui/config/")
                     .with_volume_mount(bundleVol, "/usr/lib/python3.12/site-packages/trustgraph_ui/ui/bundle/");
 
