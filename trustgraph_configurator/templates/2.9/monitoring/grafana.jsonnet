@@ -9,10 +9,12 @@ local loki = import "loki.jsonnet";
         "prometheus-cpu-reservation": "0.1",
         "prometheus-memory-limit": "256M",
         "prometheus-memory-reservation": "256M",
+        "prometheus-storage-size": "20G",
         "grafana-cpu-limit": "1.0",
         "grafana-cpu-reservation": "0.5",
         "grafana-memory-limit": "256M",
         "grafana-memory-reservation": "256M",
+        "grafana-storage-size": "20G",
     },
 
     "prometheus" +: {
@@ -25,7 +27,7 @@ local loki = import "loki.jsonnet";
 
         create:: function(engine)
 
-            local vol = engine.volume("prometheus-data").with_size("20G");
+            local vol = engine.volume("prometheus-data").with_size(pars["prometheus-storage-size"]);
 
             local cfgVol = engine.configVolume(
                 "prometheus-cfg", "prometheus",
@@ -72,7 +74,7 @@ local loki = import "loki.jsonnet";
 
         create:: function(engine)
 
-            local vol = engine.volume("grafana-storage").with_size("20G");
+            local vol = engine.volume("grafana-storage").with_size(pars["grafana-storage-size"]);
 
             local envSecrets = engine.envSecrets("grafana-secret")
                 .with_env_var("GF_SECURITY_ADMIN_PASSWORD", "password");
