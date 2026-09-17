@@ -10,8 +10,8 @@ import yaml
 from trustgraph_configurator.packager import Packager
 
 
-TEMPLATE = "2.3"
-VERSION = "2.3.10"
+TEMPLATE = "2.9"
+VERSION = "2.9.9"
 
 # Baseline components required to make any feature compile. A full
 # TrustGraph deployment needs a pubsub, the core, an LLM, embeddings, and
@@ -26,6 +26,8 @@ BASELINE = [
     "triple-store-cassandra",
     "row-store-cassandra",
     "vector-store-qdrant",
+    "cassandra",
+    "garage",
 ]
 
 

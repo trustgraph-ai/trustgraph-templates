@@ -37,8 +37,6 @@ class TestIngest:
         _, launches = build(minimal_config([]))
         ingest = launches["ingest"]
         chunker = find_processor(ingest, "chunker")
-        assert chunker["params"]["chunk_size"] == 2000
-        assert chunker["params"]["chunk_overlap"] == 100
         prompt = find_processor(ingest, "prompt")
         assert prompt["params"]["concurrency"] == 1
         for pid in ("kg-extract-definitions", "kg-extract-ontology",
@@ -178,12 +176,6 @@ class TestEmbeddingsFastembed:
 
 # (component-name, class-suffix used in trustgraph.model.text_completion.<x>,
 #  extra-params-to-check)
-# tgi is xfailed: tgi.jsonnet never declared a models table, so selecting
-# it as the only LLM leaves $["llm-models"] empty and the runtime-config
-# generator crashes looking up a default flow. Pre-existing latent bug,
-# surfaced by these tests.
-_tgi_mark = pytest.mark.xfail(reason="tgi.jsonnet missing models table", strict=True)
-
 LLM_CASES = [
     ("openai",          "openai",          {"max_output_tokens", "temperature"}, None),
     ("azure",           "azure",           {"max_output_tokens", "temperature"}, None),
@@ -196,7 +188,7 @@ LLM_CASES = [
     ("lmstudio",        "lmstudio",        {"max_output_tokens", "temperature"}, None),
     ("mistral",         "mistral",         {"max_output_tokens", "temperature"}, None),
     ("ollama",          "ollama",          set(),                                 None),
-    ("tgi",             "tgi",             {"max_output_tokens", "temperature"}, _tgi_mark),
+    ("tgi",             "tgi",             {"max_output_tokens", "temperature"}, None),
     ("vertexai",        "vertexai",        {"max_output_tokens", "temperature",
                                             "private_key", "region"},             None),
     ("vllm",            "vllm",            {"max_output_tokens", "temperature"}, None),

@@ -95,7 +95,7 @@ CASES = [
 
     # --- rag container resources ---
     ("rag-cpu-limit", "0.5", "3.0", _service_limit("rag", "cpu-limit")),
-    ("rag-memory-limit", "256M", "768M",
+    ("rag-memory-limit", "640M", "768M",
      _service_limit("rag", "memory-limit")),
 
     # --- embeddings ---
@@ -103,7 +103,7 @@ CASES = [
      _launch_param("embeddings", "embeddings", "concurrency")),
     ("embeddings-cpu-limit", "4.0", "8.0",
      _service_limit("embeddings", "cpu-limit")),
-    ("embeddings-memory-limit", "640M", "1G",
+    ("embeddings-memory-limit", "1500M", "2G",
      _service_limit("embeddings", "memory-limit")),
 
     # --- llm (openai is in baseline) ---
@@ -119,7 +119,7 @@ CASES = [
     # --- stores ---
     ("rows-cpu-limit", "0.5", "2.0",
      _service_limit("rows", "cpu-limit")),
-    ("rows-memory-limit", "512M", "1G",
+    ("rows-memory-limit", "768M", "1G",
      _service_limit("rows", "memory-limit")),
     ("triples-cpu-limit", "0.5", "2.0",
      _service_limit("triples", "cpu-limit")),
