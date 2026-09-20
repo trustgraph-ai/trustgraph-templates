@@ -14,8 +14,8 @@
         },
         {
             "name": "2.9",
-            "description": "Placeholder for upcoming release",
-            "version": "2.9.9",
+            "description": "Plugin UI architecture with DCAT catalog support for richer, extensible deployments",
+            "version": "2.9.10",
             "status": "pre-release"
         }
     ],
