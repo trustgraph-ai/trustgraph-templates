@@ -90,6 +90,27 @@
                 "ui-guidance" +:: value,
             }
 
+        // --- grid tab (all-in-one) ---
+        else if key == "add-grid-tab" then
+            self + {
+                "ui-tabs" +:: [{
+                    label: value.label,
+                    icon: value.icon,
+                    target: "urn:tab:" + value.id,
+                }],
+                "ui-routes" +:: [{
+                    target: "urn:tab:" + value.id,
+                    component: value.id + "-grid",
+                }],
+                "ui-components" +:: [{
+                    id: value.id + "-grid",
+                    config: "/config/tabs/" + value.id + ".json",
+                }],
+                "ui-extra-tab-configs" +:: {
+                    [value.id + ".json"]: value.tab,
+                },
+            }
+
         // --- bundle ---
         else if key == "bundle" then
             self + {

@@ -20,13 +20,10 @@ local config = import "config.json";
 // Produce patterns from config
 local patterns = decode(config);
 
-// Custom engine that collects configVolume parts
+// Collecting engine: every method is a no-op except configVolume,
+// which captures {dir, parts} into a plain array.
 local engine = {
 
-    // Collection of all configVolume parts
-    configVolumes:: [],
-
-    // Implement all required engine methods as no-ops
     container:: function(name) {
         with_image:: function(x) self,
         with_command:: function(x) self,
@@ -50,23 +47,12 @@ local engine = {
         with_size:: function(size) self,
     },
 
-    // The key method - collects configVolume parts
-    configVolume:: function(name, dir, parts)
-        local collector = self + {
-            configVolumes: super.configVolumes + [
-                {
-                    dir: dir,
-                    parts: parts,
-                }
-            ]
-        };
-        {
-            // Return a dummy volume that has the collector in it
-            name: name,
-            with_size:: function(size) collector,
-            // Provide a way to get back to the collector
-            getCollector:: function() collector,
-        },
+    configVolume:: function(name, dir, parts) {
+        name: name,
+        dir:: dir,
+        parts:: parts,
+        with_size:: function(size) self,
+    },
 
     secretVolume:: function(name, dir, parts) {
         with_size:: function(size) self,
@@ -89,64 +75,42 @@ local engine = {
     },
 
     resources:: function(res)
-        // Fold over resources and collect any configVolume state
-        local collected = std.foldl(
-            function(state, r)
-                if std.objectHasAll(r, 'getCollector') then
-                    // Merge the configVolumes from the volume's collector into our state
-                    local volumeCollector = r.getCollector();
-                    state + {
-                        configVolumes: state.configVolumes + volumeCollector.configVolumes
-                    }
-                else
-                    state,
-            res,
-            self
-        );
-        collected,
+        [
+            { dir: r.dir, parts: r.parts }
+            for r in res
+            if std.objectHasAll(r, 'parts')
+        ],
 };
 
-// Execute all component create() functions with our collecting engine
-// Note: create:: is a hidden field, so we must use objectHasAll not objectHas
-local result = std.foldl(
-    function(state, p)
-        if std.objectHasAll(p, 'create') then
-            // Pattern has create directly - call it
-            p.create(state)
-        else
-            state,
-    std.objectValues(patterns),
-    engine
-);
+// Evaluate each component independently against a fresh engine.
+// No fold, no accumulated state — each create() gets a clean engine.
+local perComponent = [
+    p.create(engine)
+    for p in std.objectValues(patterns)
+    if std.objectHasAll(p, 'create')
+];
 
-// Debug: show what we collected
-local debug = {
-    numPatterns: std.length(std.objectValues(patterns)),
-    numConfigVolumes: std.length(result.configVolumes),
-};
+// Each create() returns the engine.resources() output: an array of
+// {dir, parts} objects. Flatten them all together.
+local allConfigVolumes = std.flattenArrays(perComponent);
 
 // Transform collected data into output format
 local allFiles = std.flattenArrays([
     [
         {
-            // Remove trailing slash from dir to avoid double slashes
             path: std.join("/", [std.rstripChars(cv.dir, "/"), filename]),
             content: cv.parts[filename]
         }
         for filename in std.objectFields(cv.parts)
     ]
-    for cv in result.configVolumes
+    for cv in allConfigVolumes
 ]);
 
-// Deduplicate by path - use a map to keep only unique paths
+// Deduplicate by path — last writer wins
 local uniqueMap = std.foldl(
     function(acc, item) acc + { [item.path]: item },
     allFiles,
     {}
 );
 
-// Convert back to array
-local additionals = std.objectValues(uniqueMap);
-
-// Output the array
-additionals
+std.objectValues(uniqueMap)
