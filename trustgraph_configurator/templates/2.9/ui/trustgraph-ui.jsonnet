@@ -29,6 +29,8 @@ local default_tab_admin = import "ui/tabs/admin.json";
 
     "ui-tab-admin":: default_tab_admin,
 
+    "ui-extra-tab-configs":: {},
+
     "ui-bundle":: {},
 
     "ui-proxies":: [
@@ -71,6 +73,11 @@ local default_tab_admin = import "ui/tabs/admin.json";
                 }
             );
 
+            local extraTabs = {
+                [k]: std.manifestJsonEx($["ui-extra-tab-configs"][k], "  ")
+                for k in std.objectFields($["ui-extra-tab-configs"])
+            };
+
             local tabsCfgVol = engine.configVolume(
                 "ui-tabs-cfg", "ui/config/tabs",
                 {
@@ -83,7 +90,7 @@ local default_tab_admin = import "ui/tabs/admin.json";
                     "admin.json": std.manifestJsonEx(
                         $["ui-tab-admin"], "  "
                     ),
-                }
+                } + extraTabs
             );
 
             local bundleVol = engine.configVolume(

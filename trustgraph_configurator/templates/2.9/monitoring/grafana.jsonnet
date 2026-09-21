@@ -27,7 +27,8 @@ local loki = import "loki.jsonnet";
 
         create:: function(engine)
 
-            local vol = engine.volume("prometheus-data").with_size(pars["prometheus-storage-size"]);
+            local vol = engine.volume("prometheus-data")
+                .with_size(pars["prometheus-storage-size"]);
 
             local cfgVol = engine.configVolume(
                 "prometheus-cfg", "prometheus",
@@ -74,7 +75,8 @@ local loki = import "loki.jsonnet";
 
         create:: function(engine)
 
-            local vol = engine.volume("grafana-storage").with_size(pars["grafana-storage-size"]);
+            local vol = engine.volume("grafana-storage")
+                .with_size(pars["grafana-storage-size"]);
 
             local envSecrets = engine.envSecrets("grafana-secret")
                 .with_env_var("GF_SECURITY_ADMIN_PASSWORD", "password");
@@ -85,7 +87,6 @@ local loki = import "loki.jsonnet";
 		    "dashboard.yml":
                         importstr "grafana/provisioning/dashboard.yml",
 		}
-		
             );
 
             local provDataVol = engine.configVolume(
@@ -94,7 +95,6 @@ local loki = import "loki.jsonnet";
 		    "datasource.yml":
                         importstr "grafana/provisioning/datasource.yml",
 		}
-		
             );
 
             local dashVol = engine.configVolume(
@@ -105,7 +105,6 @@ local loki = import "loki.jsonnet";
 		    "log-dashboard.json":
                         importstr "grafana/dashboards/log-dashboard.json",
 		}
-		
             );
 
             local container =
