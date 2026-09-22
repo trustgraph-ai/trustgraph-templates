@@ -1,0 +1,151 @@
+[
+  {
+    "id": "welcome"
+  },
+  {
+    "id": "docs"
+  },
+  {
+    "id": "search"
+  },
+  {
+    "id": "home-grid",
+    "config": "/config/tabs/home.json"
+  },
+  {
+    "id": "demos-grid",
+    "config": "/config/tabs/demos.json"
+  },
+  {
+    "id": "admin-grid",
+    "config": "/config/tabs/admin.json"
+  },
+  {
+    "id": "ingest"
+  },
+  {
+    "id": "context-graph-navigator"
+  },
+  {
+    "id": "graph-rag"
+  },
+  {
+    "id": "document-rag"
+  },
+  {
+    "id": "agent"
+  },
+  {
+    "id": "graph-navigator"
+  },
+  {
+    "id": "prompts"
+  },
+  {
+    "id": "agent-config"
+  },
+  {
+    "id": "table-explorer"
+  },
+  {
+    "id": "ontology"
+  },
+  {
+    "id": "ontology-manage"
+  },
+  {
+    "id": "schemas"
+  },
+  {
+    "id": "sparql"
+  },
+  {
+    "id": "graphql"
+  },
+  {
+    "id": "graph"
+  },
+  {
+    "id": "query"
+  },
+  {
+    "id": "explain"
+  },
+  {
+    "id": "demo-loader",
+    "url": "/plugins/demo-data.iife.js",
+    "globalName": "DemoDataPlugin"
+  },
+  {
+    "id": "solar-missions",
+    "url": "/plugins/solar-missions.iife.js",
+    "globalName": "SolarMissionsPlugin"
+  },
+  {
+    "id": "hwsec",
+    "url": "/plugins/hwsec.iife.js",
+    "globalName": "HwSecPlugin"
+  },
+  {
+    "id": "playground",
+    "url": "/plugins/playground.iife.js",
+    "globalName": "PlaygroundPlugin"
+  },
+  {
+    "id": "world-events",
+    "url": "/plugins/world-events.iife.js",
+    "globalName": "WorldEventsPlugin"
+  },
+  {
+    "id": "retail-assistant",
+    "url": "/plugins/retail-brand.iife.js",
+    "globalName": "RetailBrandPlugin",
+    "componentName": "RetailAssistant"
+  },
+  {
+    "id": "brand-analytics",
+    "url": "/plugins/retail-brand.iife.js",
+    "globalName": "RetailBrandPlugin",
+    "componentName": "BrandAnalytics"
+  },
+  {
+    "id": "risk",
+    "url": "/plugins/risk.iife.js",
+    "globalName": "RiskPlugin"
+  },
+  {
+    "id": "game-theory",
+    "url": "/plugins/game-theory.iife.js",
+    "globalName": "GameTheoryPlugin"
+  },
+  {
+    "id": "innovation",
+    "url": "/plugins/innovation.iife.js",
+    "globalName": "InnovationPlugin"
+  },
+  {
+    "id": "law-in-context",
+    "url": "/plugins/law.iife.js",
+    "globalName": "LawPlugin"
+  },
+  {
+    "id": "threat-explorer",
+    "url": "/plugins/threat.iife.js",
+    "globalName": "ThreatPlugin"
+  },
+  {
+    "id": "user-admin",
+    "url": "/plugins/user-admin.iife.js",
+    "globalName": "UserAdminPlugin"
+  },
+  {
+    "id": "workspace-admin",
+    "url": "/plugins/workspace-admin.iife.js",
+    "globalName": "WorkspaceAdminPlugin"
+  },
+  {
+    "id": "api-keys",
+    "url": "/plugins/api-keys.iife.js",
+    "globalName": "ApiKeysPlugin"
+  }
+]

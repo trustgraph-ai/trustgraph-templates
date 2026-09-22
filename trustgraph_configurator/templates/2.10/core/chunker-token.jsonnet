@@ -1,0 +1,5 @@
+{
+    parameters +:: {
+        "chunker-type": "token",
+    },
+}

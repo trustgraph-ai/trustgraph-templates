@@ -18,16 +18,21 @@ steps:
     input:
       type: select
       options:
-        - label: "TrustGraph 2.9"
-          value: "2.9"
-          description: "Placeholder for upcoming release"
+        - label: "TrustGraph 2.10"
+          value: "2.10"
+          description: "Plugin UI architecture with DCAT catalog support for richer, extensible deployments"
           badge: pre-release
           recommended: false
+        - label: "TrustGraph 2.9"
+          value: "2.9"
+          description: "Plugin UI architecture with DCAT catalog support for richer, extensible deployments"
+          badge: stable
+          recommended: true
         - label: "TrustGraph 2.8"
           value: "2.8"
           description: "Removes scale-bottlenecks to better support large multi-tenant deployments"
           badge: stable
-          recommended: true
+          recommended: false
         - label: "TrustGraph 2.6"
           value: "2.6"
           description: "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval"

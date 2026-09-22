@@ -1,0 +1,23 @@
+[
+  {
+    "label": "Welcome",
+    "icon": "⌂",
+    "target": "urn:tab:welcome"
+  },
+  {
+    "label": "Workflows",
+    "icon": "◈",
+    "target": "urn:tab:home"
+  },
+  {
+    "label": "Demos",
+    "icon": "▷",
+    "target": "urn:tab:demos"
+  },
+  {
+    "label": "Admin",
+    "icon": "⚙",
+    "target": "urn:tab:admin",
+    "hidden": false
+  }
+]
