@@ -104,7 +104,7 @@ class Api:
 
         url = (
             f"https://{self.event_api_host}"
-            f"/v1/datasets/{self.event_api_dataset}/ingest"
+            f"/v1/ingest/{self.event_api_dataset}"
         )
 
         headers = {
