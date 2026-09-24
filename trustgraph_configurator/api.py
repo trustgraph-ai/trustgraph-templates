@@ -1,10 +1,13 @@
 
 from aiohttp import web
+import aiohttp
 import yaml
 import zipfile
 from io import BytesIO
 import importlib.resources
 import json
+import os
+from datetime import datetime, timezone
 
 from . generator import Generator
 from . import Index, Packager
@@ -37,6 +40,24 @@ class Api:
             web.get("/api/docs-manifest", self.get_docs_manifest),
             web.get("/api/docs/{path:.*}", self.get_docs_fragment),
         ])
+
+        self.event_api_token = os.environ.get("EVENT_API_TOKEN")
+        self.event_api_host = os.environ.get("EVENT_API_HOST")
+        self.event_api_dataset = os.environ.get("EVENT_API_DATASET")
+
+        self.events_enabled = all([
+            self.event_api_token, self.event_api_host,
+            self.event_api_dataset,
+        ])
+
+        if self.events_enabled:
+            logger.info(
+                f"Event logging enabled, "
+                f"dataset={self.event_api_dataset} "
+                f"host={self.event_api_host}"
+            )
+        else:
+            logger.info("Event logging disabled")
 
     def latest(self, request):
 
@@ -73,6 +94,35 @@ class Api:
             }
             for v in versions
         ])
+
+    async def send_event(self, event):
+
+        if not self.events_enabled:
+            return
+
+        event["_time"] = datetime.now(timezone.utc).isoformat()
+
+        url = (
+            f"https://{self.event_api_host}"
+            f"/v1/datasets/{self.event_api_dataset}/ingest"
+        )
+
+        headers = {
+            "Authorization": f"Bearer {self.event_api_token}",
+            "Content-Type": "application/json",
+        }
+
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    url, headers=headers, json=[event]
+                ) as resp:
+                    if resp.status >= 300:
+                        logger.warning(
+                            f"Event API returned {resp.status}"
+                        )
+        except Exception as e:
+            logger.warning(f"Failed to send event: {e}")
 
     def load_dialog_resource(self, filename):
         """Load a dialog flow resource file from resources/dialog/"""
@@ -159,6 +209,16 @@ class Api:
 
         logger.info(f"Generating for platform={platform} template={template}")
 
+        user_agent = request.headers.get("User-Agent")
+        forwarded_for = request.headers.get("X-Forwarded-For")
+        remote_ip = (
+            forwarded_for.split(",")[0].strip()
+            if forwarded_for
+            else request.remote
+        )
+
+        dec = None
+
         try:
 
             config = await request.text()
@@ -177,6 +237,14 @@ class Api:
             except:
                 # Incorrectly formatted stuff is not our problem,
                 logger.info(f"Bad JSON")
+                await self.send_event({
+                    "type": "generate-error",
+                    "platform": platform,
+                    "template": template,
+                    "error": "bad-json",
+                    "remote-ip": remote_ip,
+                    "user-agent": user_agent,
+                })
                 return web.HTTPBadRequest()
 
             logger.info(f"Config: {config}")
@@ -191,6 +259,15 @@ class Api:
 
             data = pkg.generate(config)
 
+            await self.send_event({
+                "type": "generate",
+                "platform": platform,
+                "template": template,
+                "config": dec,
+                "remote-ip": remote_ip,
+                "user-agent": user_agent,
+            })
+
             return web.Response(
                 body = data,
                 content_type = "application/octet-stream"
@@ -198,6 +275,15 @@ class Api:
 
         except Exception as e:
             logging.error(f"Exception: {e}")
+            await self.send_event({
+                "type": "generate-error",
+                "platform": platform,
+                "template": template,
+                "config": dec,
+                "error": str(e),
+                "remote-ip": remote_ip,
+                "user-agent": user_agent,
+            })
             return web.HTTPInternalServerError()
 
     def run(self):

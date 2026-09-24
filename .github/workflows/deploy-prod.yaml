@@ -73,4 +73,7 @@ jobs:
         env:
           PULUMI_CONFIG_PASSPHRASE: ""
           IMAGE_VERSION: ${{ steps.version.outputs.VERSION }}
+          EVENT_API_TOKEN: ${{ secrets.EVENT_API_TOKEN }}
+          EVENT_API_HOST: ${{ vars.EVENT_API_HOST }}
+          EVENT_API_DATASET: ${{ vars.EVENT_API_DATASET }}
 
