@@ -23,6 +23,10 @@ const imageVersion = process.env.IMAGE_VERSION;
 if (!imageVersion)
     throw Error("IMAGE_VERSION not defined");
 
+const eventApiToken = process.env.EVENT_API_TOKEN || "";
+const eventApiHost = process.env.EVENT_API_HOST || "";
+const eventApiDataset = process.env.EVENT_API_DATASET || "";
+
 const repo = get("artifact-repo");
 const artifactRepoRegion = get("artifact-repo-region");
 const artifactName = get("artifact-name");
@@ -133,6 +137,20 @@ const service = new gcp.cloudrun.Service(
 				"name": "http1", // Must be http1 or h2c.
 				"containerPort": 8080,
                             }
+			],
+			envs: [
+			    {
+				name: "EVENT_API_TOKEN",
+				value: eventApiToken,
+			    },
+			    {
+				name: "EVENT_API_HOST",
+				value: eventApiHost,
+			    },
+			    {
+				name: "EVENT_API_DATASET",
+				value: eventApiDataset,
+			    },
 			],
 			resources: {
                             limits: {
