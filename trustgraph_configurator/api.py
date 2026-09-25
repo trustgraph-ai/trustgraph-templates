@@ -262,10 +262,18 @@ class Api:
 
             data = pkg.generate(config)
 
+            templates = Index.get_templates()
+            maturity = next(
+                (v.status for v in templates if v.name == template),
+                "unknown"
+            )
+
             await self.send_event({
                 "type": "generate",
                 "platform": platform,
                 "template": template,
+                "version": pkg.version,
+                "maturity": maturity,
                 "config": dec,
                 "remote-ip": remote_ip,
                 "user-agent": user_agent,
