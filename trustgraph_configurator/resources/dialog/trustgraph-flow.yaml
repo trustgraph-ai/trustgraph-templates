@@ -89,9 +89,7 @@ steps:
           icon: "alibabacloud"
           description: "Managed Kubernetes on Alibaba Cloud (ACK). Suitable for production deployment."
     transitions:
-      - when: "version >= '2.2'"
-        next: pubsub
-      - next: graph-store
+      - next: pubsub
 
   # ─────────────────────────────────────────────────────────────
   # Pub/Sub Messaging (>= 2.2 only)
@@ -186,11 +184,7 @@ steps:
           icon: "cassandra"
           description: "NoSQL database with fast read/write performance at scale. Used for row storage in TrustGraph."
     transitions:
-      # Backing database + object store became explicit components in 2.5;
-      # older versions bundle them, so only offer these steps for >= 2.5.
-      - when: "version >= '2.5'"
-        next: database
-      - next: model-deployment
+      - next: database
 
   # ─────────────────────────────────────────────────────────────
   # Database Deployment (>= 2.5 only)
@@ -364,16 +358,11 @@ steps:
       type: toggle
       default: false
     transitions:
-      # Version gate: embeddings config not available before 1.6.0
-      - when: "version < '1.6.0'"
-        next: review
       - when: "embeddings.enabled = true"
         next: embeddings-engine
-      - when: "version >= '2.7'"
+      - when: "version != '2.6'"
         next: image-to-text
-      - when: "version >= '2.4'"
-        next: mcp-server-enabled
-      - next: review
+      - next: mcp-server-enabled
 
   # ─────────────────────────────────────────────────────────────
   # Embeddings Engine (conditional)
@@ -398,11 +387,9 @@ steps:
           icon: "ollama"
           description: "Use Ollama for embeddings. Requires Ollama to be running with an embedding model loaded."
     transitions:
-      - when: "version >= '2.7'"
+      - when: "version != '2.6'"
         next: image-to-text
-      - when: "version >= '2.4'"
-        next: mcp-server-enabled
-      - next: review
+      - next: mcp-server-enabled
 
   # ─────────────────────────────────────────────────────────────
   # Image-to-Text (>= 2.7 only)
@@ -423,12 +410,10 @@ steps:
           icon: "openai"
           description: "Use an OpenAI-compatible vision endpoint to describe images. Reuses the OpenAI API credentials."
     transitions:
-      - when: "version >= '2.4'"
-        next: mcp-server-enabled
-      - next: review
+      - next: mcp-server-enabled
 
   # ─────────────────────────────────────────────────────────────
-  # MCP Server Toggle (>= 2.4 only)
+  # MCP Server Toggle
   # ─────────────────────────────────────────────────────────────
   mcp-server-enabled:
     title: "Enable MCP server?"
