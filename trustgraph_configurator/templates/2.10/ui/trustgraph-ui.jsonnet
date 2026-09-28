@@ -1,3 +1,4 @@
+local version = import "version.jsonnet";
 local images = import "values/images.jsonnet";
 local default_navigation = import "ui/navigation.json";
 local default_tabs = import "ui/tabs.json";
@@ -36,7 +37,7 @@ local default_tab_admin = import "ui/tabs/admin.json";
     "ui-proxies":: [
         {
             path: "/demo-data",
-            url: "https://github.com/trustgraph-ai/demo-standard/raw/refs/heads/master/datasets",
+            url: "https://datasets.app.trustgraph.ai",
         },
     ],
 
@@ -69,6 +70,9 @@ local default_tab_admin = import "ui/tabs/admin.json";
                     ),
                     "guidance.json": std.manifestJsonEx(
                         $["ui-guidance"], "  "
+                    ),
+                    "version.json": std.manifestJsonEx(
+                        { version: version }, "  "
                     ),
                 }
             );
