@@ -33,6 +33,7 @@ class Packager:
     def __init__(
             self, version, template, platform,
             latest, latest_stable,
+            local_dir=None,
     ):
 
         if latest:
@@ -65,6 +66,7 @@ class Packager:
         self.templates = files.joinpath("templates").joinpath(template)
         self.resources = files.joinpath("resources").joinpath(template)
         self.platform = platform
+        self.local_dir = local_dir
 
     def fetch(self, dir, filename):
 
@@ -81,6 +83,27 @@ class Packager:
         if filename == "version.jsonnet":
             path = self.templates.joinpath(dir, filename)
             return str(path), f"\"{self.version}\"".encode("utf-8")
+
+        # Local component support: components.jsonnet imports
+        # local.jsonnet which is dynamically generated here. When
+        # local_dir is set (CLI only), we scan that directory for
+        # .jsonnet files and return an import map. When local_dir is
+        # None (config service), we return {} so no local components
+        # are loaded. This is intentional: local components execute
+        # arbitrary jsonnet and must never be enabled on the
+        # server-side config service.
+        if filename == "local.jsonnet":
+            path = self.templates.joinpath(dir, filename)
+            if self.local_dir:
+                local_path = pathlib.Path.cwd() / self.local_dir
+                if local_path.is_dir():
+                    entries = sorted(local_path.glob("*.jsonnet"))
+                    items = ", ".join(
+                        f'"{e.stem}": import "{self.local_dir}/{e.name}"'
+                        for e in entries
+                    )
+                    return str(path), f"{{{items}}}".encode("utf-8")
+            return str(path), b"{}"
 
         cwd = pathlib.Path.cwd()
 

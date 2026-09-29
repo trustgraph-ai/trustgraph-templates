@@ -63,6 +63,12 @@ def generate_deployment():
     )
 
     parser.add_argument(
+        '-l', '--local-dir',
+        default=None,
+        help="Enable local jsonnet components from the specified directory",
+    )
+
+    parser.add_argument(
         '-O', '--output-tg-config',
         action='store_true',
         help="Output only TrustGraph configuration to stdout",
