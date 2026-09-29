@@ -1,5 +1,4 @@
 local images = import "values/images.jsonnet";
-local secrets = import "cassandra-secrets.jsonnet";
 
 // Distributed (multi-node) Cassandra: N nodes forming a gossip ring
 // behind a single headless service.
@@ -21,7 +20,7 @@ local secrets = import "cassandra-secrets.jsonnet";
 // for now data still lives on one node. This is a scaffold for
 // developing a replication strategy later.
 
-secrets + {
+{
 
     // Number of peer nodes in addition to the seed node. 2 peers -> a
     // 3-node ring. Top-level (not inside "cassandra") so it can be set

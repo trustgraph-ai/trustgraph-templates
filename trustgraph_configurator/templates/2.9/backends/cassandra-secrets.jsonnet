@@ -10,6 +10,12 @@
 
 {
 
+    // Replication factor for keyspaces the consumers create. 1 for a single
+    // node; cassandra-cluster raises it to the ring size. Consumers read this
+    // in self-hosted mode and omit it in external mode (CASSANDRA_REPLICATION_
+    // FACTOR env wins).
+    "cassandra-replication-factor":: 1,
+
     // ENV_VAR -> secret-key map. Empty => self-hosted (host "cassandra", no
     // auth). cassandra-external populates it; +:: so component order in the
     // config list never clobbers it.

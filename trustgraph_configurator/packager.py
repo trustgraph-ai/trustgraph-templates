@@ -168,6 +168,10 @@ class Packager:
 
         self.config = config
 
+        dec = json.loads(config)
+        if not isinstance(dec, list):
+            raise RuntimeError("Config must be a JSON array")
+
         logger.info(f"Generating for platform={self.platform} "
                     f"template={self.template} "
                     f"version={self.version}")
