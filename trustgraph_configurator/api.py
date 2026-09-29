@@ -252,12 +252,15 @@ class Api:
 
             logger.info(f"Config: {config}")
 
+            # local_dir is intentionally NOT set here. Local components
+            # execute arbitrary jsonnet and must never be enabled on the
+            # config service — only the CLI sets local_dir.
             pkg = Packager(
-                version = None,      # Use version from template configuration
+                version = None,
                 template = template,
                 platform = platform,
                 latest = False,
-                latest_stable = False
+                latest_stable = False,
             )
 
             data = pkg.generate(config)
