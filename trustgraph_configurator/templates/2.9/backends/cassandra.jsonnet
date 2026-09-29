@@ -1,12 +1,11 @@
 local images = import "values/images.jsonnet";
-local secrets = import "cassandra-secrets.jsonnet";
 
 // Self-hosted single-node Cassandra. List as the "cassandra" component to
 // deploy it; consumers then talk to host "cassandra" with no auth. Mutually
 // exclusive with cassandra-external (managed/secured cluster) - import one.
 // cassandra-cluster overrides this single node with a multi-node ring.
 
-secrets + {
+{
 
     // Replication factor for keyspaces the consumers create. 1 for a single
     // node; cassandra-cluster raises it to the ring size. Consumers read this

@@ -2,6 +2,7 @@
 
 local images = import "values/images.jsonnet";
 local url = import "values/url.jsonnet";
+local cassandra_backend_secrets = import "backends/cassandra-secrets.jsonnet";
 
 // Reads the Cassandra hooks ($["cassandra-env-secrets"] / -replication-factor)
 // off the merged config; whichever Cassandra backend is listed supplies them.
@@ -282,5 +283,5 @@ local url = import "values/url.jsonnet";
 
     }
 
-}
+} + cassandra_backend_secrets
 
