@@ -32,9 +32,10 @@ local url = import "values/url.jsonnet";
 
         create:: function(engine)
 
-            // External Cassandra supplies host/creds via env secrets; in that
-            // case omit cassandra_host (and replication factor) so the processor
-            // reads CASSANDRA_HOST / CASSANDRA_REPLICATION_FACTOR from env.
+            // External Cassandra supplies host/creds via env secrets; in
+            // that case omit cassandra_host (and replication factor) so the
+            // processor reads CASSANDRA_HOST / CASSANDRA_REPLICATION_FACTOR
+            // from env.
             local cassandraSecrets = $["cassandra-env-secrets"](engine);
             local cassandraParams =
                 if cassandraSecrets != null then {}
@@ -60,6 +61,13 @@ local url = import "values/url.jsonnet";
                                 class: "trustgraph.storage.triples.cassandra.Processor",
                                 params: {
                                     id: "triples-write",
+                                    concurrency: triplesWriteConc,
+                                } + cassandraParams + $["pub-sub-params"],
+                            },
+                            {
+                                class: "trustgraph.policy.triples.service.Processor",
+                                params: {
+                                    id: "triples-policy",
                                     concurrency: triplesWriteConc,
                                 } + cassandraParams + $["pub-sub-params"],
                             },

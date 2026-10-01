@@ -82,8 +82,16 @@ llm_services + embeddings_service + reranker_service + {
         },
         "triples-query:{id}": {
             topics: {
+                request: request("unfiltered-triples:{workspace}:{id}"),
+                response: response("unfiltered-triples:{workspace}:{id}"),
+            },
+        },
+        "triples-policy:{id}": {
+            topics: {
                 request: request("triples:{workspace}:{id}"),
                 response: response("triples:{workspace}:{id}"),
+                "triples-request": request("unfiltered-triples:{workspace}:{id}"),
+                "triples-response": response("unfiltered-triples:{workspace}:{id}"),
             },
         },
         "graph-embeddings-query:{id}": {
