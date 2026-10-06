@@ -15,6 +15,9 @@ documentation:
 
   # Categories define grouping and display order
   categories:
+    - id: preamble
+      title: "Getting Started"
+      priority: 0
     - id: platform
       title: "Platform Setup"
       priority: 1
@@ -38,6 +41,16 @@ documentation:
       priority: 7
 
   instructions:
+
+    # ─────────────────────────────────────────────────────────────
+    # Preamble
+    # ─────────────────────────────────────────────────────────────
+    - id: preamble
+      goal: "Documentation and guides"
+      category: preamble
+      priority: 1
+      file: preamble/getting-started.md
+      when: "true"
 
     # ─────────────────────────────────────────────────────────────
     # Platform Setup
