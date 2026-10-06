@@ -149,8 +149,7 @@ local url = import "values/url.jsonnet";
                     .with_command([
                         "bash",
                         "-c",
-                        "sleep 2 && bin/apply-config-from-env.py conf/bookkeeper.conf && exec bin/pulsar bookie"
-                        // false ^ causes this to be a 'failure' exit.
+                        "until (echo > /dev/tcp/zookeeper/2181) >/dev/null 2>&1; do sleep 2; done && bin/apply-config-from-env.py conf/bookkeeper.conf && exec bin/pulsar bookie"
                     ])
                     .with_limits("1", bookieMemLimit)
                     .with_reservations("0.1", bookieMemReserv)
