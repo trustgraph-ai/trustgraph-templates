@@ -20,7 +20,7 @@ steps:
       options:
         - label: "TrustGraph 2.10"
           value: "2.10"
-          description: "Plugin UI architecture with DCAT catalog support for richer, extensible deployments"
+          description: "SHACL-AF policy filtering, IAM user context, guided graph traversal, TriG/named graph support, and streaming policy service"
           badge: pre-release
           recommended: false
         - label: "TrustGraph 2.9"
