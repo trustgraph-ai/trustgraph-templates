@@ -459,7 +459,7 @@
         },
 
         with_env_var::
-            function(name, key) self + {
+            function(name, key, compose_var=name) self + {
                 variables: super.variables + [name],
                 keyMap: super.keyMap + { [name]: key },
             },

@@ -78,7 +78,7 @@
     },
 
     envSecrets:: function(name) {
-        with_env_var:: function(name, key) self + {},
+        with_env_var:: function(name, key, compose_var=name) self + {},
         add:: function() {},
     },
 

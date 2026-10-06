@@ -122,7 +122,7 @@
             function(vars)
                 std.foldl(
                     function(obj, x) obj.with_environment(
-                        { [x]: "${" + x  + "}" }
+                        { [x[0]]: "${" + x[1]  + "}" }
                     ),
                     vars.variables,
                     self
@@ -292,8 +292,8 @@
         variables:: [],
 
         with_env_var::
-            function(name, key) self + {
-                variables: super.variables + [name],
+            function(name, key, compose_var=name) self + {
+                variables: super.variables + [[name, compose_var]],
             },
 
         add:: function() {

@@ -33,11 +33,6 @@ steps:
           description: "Removes scale-bottlenecks to better support large multi-tenant deployments"
           badge: stable
           recommended: false
-        - label: "TrustGraph 2.6"
-          value: "2.6"
-          description: "Multi-step cross-encoder reranker replaces LLM edge scoring in GraphRAG for faster, more accurate retrieval"
-          badge: stable
-          recommended: false
     transitions:
       - next: platform
 
@@ -245,6 +240,10 @@ steps:
           icon: "lm-studio"
           description: "Easy local LLM running. Very usable, great support. Commercial, free for personal use."
         # Cloud API Providers
+        - label: "Near AI"
+          value: "near-ai"
+          icon: "near"
+          description: "Multi-model inference gateway with access to Claude, GPT, Gemini, DeepSeek, Grok and more. Requires API key."
         - label: "OpenAI"
           value: "openai"
           icon: "openai"
@@ -261,6 +260,18 @@ steps:
           value: "cohere"
           icon: "cohere"
           description: "Cloud-agnostic AI with high security, privacy, and customization. Supports on-premises and private cloud. Requires API key."
+        - label: "DeepSeek"
+          value: "deepseek"
+          icon: "deepseek"
+          description: "High-performance reasoning and general-purpose models. Requires API key."
+        - label: "DashScope (Alibaba Cloud)"
+          value: "dashscope"
+          icon: "alibabacloud"
+          description: "Alibaba Cloud's model platform hosting Qwen models. Requires DashScope API key."
+        - label: "GLM (Zhipu AI)"
+          value: "glm"
+          icon: "zhipu"
+          description: "Zhipu AI's GLM family of models. Requires API key."
         # Cloud Platform Services
         - label: "Azure AI"
           value: "azure"
@@ -360,9 +371,7 @@ steps:
     transitions:
       - when: "embeddings.enabled = true"
         next: embeddings-engine
-      - when: "version != '2.6'"
-        next: image-to-text
-      - next: mcp-server-enabled
+      - next: image-to-text
 
   # ─────────────────────────────────────────────────────────────
   # Embeddings Engine (conditional)
@@ -387,9 +396,7 @@ steps:
           icon: "ollama"
           description: "Use Ollama for embeddings. Requires Ollama to be running with an embedding model loaded."
     transitions:
-      - when: "version != '2.6'"
-        next: image-to-text
-      - next: mcp-server-enabled
+      - next: image-to-text
 
   # ─────────────────────────────────────────────────────────────
   # Image-to-Text (>= 2.7 only)

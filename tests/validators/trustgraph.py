@@ -22,6 +22,7 @@ def validate_service_references(config: List[Dict[str, Any]]) -> List[str]:
         'graph-rag', 'text-completion',
         'embeddings-hf', 'embeddings-fastembed', 'embeddings-openai',
         'openai', 'anthropic', 'ollama', 'bedrock', 'vertexai',
+        'deepseek', 'dashscope', 'glm', 'near-ai',
         'trustgraph-base', 'grafana', 'prometheus',
         'override-recursive-chunker', 'override-text-splitter',
         'neo4j', 'astra'
@@ -138,7 +139,8 @@ def validate_llm_configuration(config: List[Dict[str, Any]]) -> List[str]:
     service_names = [s.get('name') for s in config if isinstance(s, dict)]
 
     # Check for at least one LLM provider
-    llm_providers = {'openai', 'anthropic', 'ollama', 'bedrock', 'vertexai', 'vllm', 'llamacpp'}
+    llm_providers = {'openai', 'anthropic', 'ollama', 'bedrock', 'vertexai', 'vllm', 'llamacpp',
+                      'deepseek', 'dashscope', 'glm', 'near-ai'}
     has_llm = any(name in llm_providers for name in service_names)
 
     if not has_llm:

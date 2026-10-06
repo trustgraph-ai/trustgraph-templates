@@ -192,6 +192,10 @@ LLM_CASES = [
     ("vertexai",        "vertexai",        {"max_output_tokens", "temperature",
                                             "private_key", "region"},             None),
     ("vllm",            "vllm",            {"max_output_tokens", "temperature"}, None),
+    ("deepseek",        "openai",          {"max_output_tokens", "temperature"}, None),
+    ("dashscope",       "openai",          {"max_output_tokens", "temperature"}, None),
+    ("glm",             "openai",          {"max_output_tokens", "temperature"}, None),
+    ("near-ai",         "openai",          {"max_output_tokens", "temperature"}, None),
 ]
 
 _llm_params = [

@@ -135,6 +135,13 @@ documentation:
       when: "model_deployment = 'ollama' and platform in ['docker-compose', 'podman-compose']"
 
     - id: model-setup
+      goal: "Configure Near AI integration"
+      category: model
+      priority: 1
+      file: model/near-ai-compose.md
+      when: "model_deployment = 'near-ai' and platform in ['docker-compose', 'podman-compose']"
+
+    - id: model-setup
       goal: "Configure OpenAI integration"
       category: model
       priority: 1
@@ -161,6 +168,27 @@ documentation:
       priority: 1
       file: model/cohere-compose.md
       when: "model_deployment = 'cohere' and platform in ['docker-compose', 'podman-compose']"
+
+    - id: model-setup
+      goal: "Configure DeepSeek integration"
+      category: model
+      priority: 1
+      file: model/deepseek-compose.md
+      when: "model_deployment = 'deepseek' and platform in ['docker-compose', 'podman-compose']"
+
+    - id: model-setup
+      goal: "Configure DashScope integration"
+      category: model
+      priority: 1
+      file: model/dashscope-compose.md
+      when: "model_deployment = 'dashscope' and platform in ['docker-compose', 'podman-compose']"
+
+    - id: model-setup
+      goal: "Configure GLM (Zhipu AI) integration"
+      category: model
+      priority: 1
+      file: model/glm-compose.md
+      when: "model_deployment = 'glm' and platform in ['docker-compose', 'podman-compose']"
 
     - id: model-setup
       goal: "Configure Azure AI integration"
@@ -238,6 +266,15 @@ documentation:
         namespace: "k8s.namespace"
 
     - id: model-setup
+      goal: "Configure Near AI integration"
+      category: model
+      priority: 1
+      file: model/near-ai-k8s.md
+      when: "model_deployment = 'near-ai' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh', 'ali']"
+      vars:
+        namespace: "k8s.namespace"
+
+    - id: model-setup
       goal: "Configure OpenAI integration"
       category: model
       priority: 1
@@ -270,6 +307,33 @@ documentation:
       priority: 1
       file: model/cohere-k8s.md
       when: "model_deployment = 'cohere' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh', 'ali']"
+      vars:
+        namespace: "k8s.namespace"
+
+    - id: model-setup
+      goal: "Configure DeepSeek integration"
+      category: model
+      priority: 1
+      file: model/deepseek-k8s.md
+      when: "model_deployment = 'deepseek' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh', 'ali']"
+      vars:
+        namespace: "k8s.namespace"
+
+    - id: model-setup
+      goal: "Configure DashScope integration"
+      category: model
+      priority: 1
+      file: model/dashscope-k8s.md
+      when: "model_deployment = 'dashscope' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh', 'ali']"
+      vars:
+        namespace: "k8s.namespace"
+
+    - id: model-setup
+      goal: "Configure GLM (Zhipu AI) integration"
+      category: model
+      priority: 1
+      file: model/glm-k8s.md
+      when: "model_deployment = 'glm' and platform in ['gke', 'eks', 'aks', 'minikube', 'scw', 'ovh', 'ali']"
       vars:
         namespace: "k8s.namespace"
 
