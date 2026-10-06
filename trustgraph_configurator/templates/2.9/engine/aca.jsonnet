@@ -382,7 +382,7 @@ local toArmParam = function(s) std.strReplace(s, "-", "_");
         with_size:: function(size) self,
 
         with_env_var::
-            function(name, key) self + {
+            function(name, key, compose_var=name) self + {
                 variables: super.variables + [name],
                 keyMap: super.keyMap + { [name]: key },
             },

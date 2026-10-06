@@ -84,7 +84,11 @@
       "google-ai-studio": "googleaistudio",
       "vertex-ai": "vertexai",
       "vllm": "vllm",
-      "tgi": "tgi"
+      "tgi": "tgi",
+      "near-ai": "near-ai",
+      "deepseek": "deepseek",
+      "dashscope": "dashscope",
+      "glm": "glm"
     };
 
     $component_name := $lookup($deployment_map, model_deployment);
