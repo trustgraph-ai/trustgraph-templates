@@ -10,10 +10,15 @@ Navigate to the `docker-compose` directory. From this directory, launch TrustGra
 podman compose -f docker-compose.yaml up -d
 ```
 
-If you are on Linux, running SELinux, you may need to change permissions on files in the deploy bundle so that they are accessible from within containers. This affects the `grafana` and `prometheus` directories.
+You may need to fix permissions on files in the deploy bundle so that they are accessible from within containers.
 
 ```bash
-chcon -Rt svirt_sandbox_file_t grafana prometheus
-chmod 755 prometheus/ grafana/ grafana/*/
-chmod 644 prometheus/* grafana/*/*
+find garage/ loki/ prometheus/ grafana/ trustgraph/ launch/ ui/ -type d | xargs chmod 755
+find garage/ loki/ prometheus/ grafana/ trustgraph/ launch/ ui/ -type f | xargs chmod 644
+```
+
+On Linux with SELinux, you also need to set the container file context:
+
+```bash
+chcon -Rt svirt_sandbox_file_t garage/ loki/ prometheus/ grafana/ trustgraph/ launch/ ui/
 ```

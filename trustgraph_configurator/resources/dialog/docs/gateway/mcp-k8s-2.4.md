@@ -1,1 +1,1 @@
-The MCP server allows MCP clients to interact with TrustGraph. As of TrustGraph 2.4, MCP server authentication is managed through IAM. No separate MCP server credentials are required.
+The MCP server allows MCP clients to interact with TrustGraph. MCP server authentication is managed through IAM. No separate MCP server credentials are required. MCP clients must authenticate using an IAM API key (e.g. the bootstrap token set in `iam-bootstrap-token`).
