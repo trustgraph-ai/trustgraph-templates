@@ -4,6 +4,7 @@
    "trustgraph-base": import "core/trustgraph.jsonnet",
    "rev-gateway": import "core/rev-gateway.jsonnet",
    "pulsar": import "pubsub/pulsar.jsonnet",
+   "pulsar5": import "pubsub/pulsar5.jsonnet",
    "rabbitmq": import "pubsub/rabbitmq.jsonnet",
    "kafka": import "pubsub/kafka.jsonnet",
 

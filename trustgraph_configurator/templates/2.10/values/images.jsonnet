@@ -8,6 +8,8 @@ local version = import "version.jsonnet";
     cassandra: "docker.io/cassandra:5.0.8",
     neo4j: "docker.io/neo4j:2026.04.0-community-bullseye",
     pulsar: "docker.io/apachepulsar/pulsar:4.2.1",
+    pulsar5: "docker.io/apachepulsar/pulsar:5.0.0",
+    oxia: "docker.io/oxia/oxia:0.16.10",
     rabbitmq: "docker.io/rabbitmq:4.1-management",
     kafka: "docker.io/apache/kafka:4.1.2",
     pulsar_manager: "docker.io/apachepulsar/pulsar-manager:v0.4.0",
