@@ -204,10 +204,9 @@
   $api_platform := $lookup($platform_map, platform);
 
   /* ─────────────────────────────────────────────────────────────
-   * API Configuration
+   * API Configuration (relative path — clients prepend their base URL)
    * ───────────────────────────────────────────────────────────── */
-  $api_base := "https://config-ui.demo.trustgraph.ai/api/generate";
-  $api_url := $api_base & "/" & $api_platform & "/" & version;
+  $api_path := "generate/" & $api_platform & "/" & version;
 
   /* ─────────────────────────────────────────────────────────────
    * Final Output
@@ -215,7 +214,7 @@
   {
     "version": version,
     "platform": $api_platform,
-    "api_url": $api_url,
+    "api_path": $api_path,
     "templates": $templates
   }
 )
