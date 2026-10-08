@@ -14,6 +14,7 @@ class Template:
     description: str
     version: str
     status: str
+    announcement: str = None
 
 @dataclasses.dataclass
 class Status:
@@ -63,6 +64,7 @@ class Index:
                 description = v["description"],
                 version = v["version"],
                 status = v["status"],
+                announcement = v.get("announcement"),
             )
             for v in ix["templates"]
         ]
