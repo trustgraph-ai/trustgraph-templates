@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 
 from . generator import Generator
 from . import Index, Packager
+from .index import version_unpack
 
 import logging
 logger = logging.getLogger("api")
@@ -32,6 +33,7 @@ class Api:
             web.get("/api/latest-stable", self.latest_stable),
             web.get("/api/latest", self.latest),
             web.get("/api/versions", self.versions),
+            web.get("/api/check-version", self.check_version),
         ])
 
         self.app.add_routes([
@@ -91,9 +93,58 @@ class Api:
                 "version": v.version,
                 "description": v.description,
                 "status": v.status,
+                **({"announcement": v.announcement} if v.announcement else {}),
             }
             for v in versions
         ])
+
+    def check_version(self, request):
+
+        current = request.query.get("version")
+        if not current:
+            raise web.HTTPBadRequest(text="Missing 'version' parameter")
+
+        try:
+            current_parts = version_unpack(current)
+        except:
+            raise web.HTTPBadRequest(text="Invalid version format")
+
+        current_major = f"{current_parts[0]}.{current_parts[1]}"
+
+        templates = Index.get_templates()
+        stable = [t for t in templates if t.status == "stable"]
+
+        resp = {"status": "current"}
+
+        same_line = [
+            t for t in stable
+            if t.name == current_major
+        ]
+
+        if same_line:
+            t = same_line[0]
+            if version_unpack(t.version) > current_parts:
+                resp = {
+                    "status": "patch-available",
+                    "version": t.version,
+                }
+
+        latest_stable = Index.sort_versions(stable)[-1] if stable else None
+
+        if latest_stable and latest_stable.name != current_major:
+            if version_unpack(latest_stable.version) > current_parts:
+                upgrade = {
+                    "template": latest_stable.name,
+                    "version": latest_stable.version,
+                    "description": latest_stable.description,
+                }
+                if latest_stable.announcement:
+                    upgrade["announcement"] = latest_stable.announcement
+                resp["upgrade"] = upgrade
+                if resp["status"] == "current":
+                    resp["status"] = "upgrade-available"
+
+        return web.json_response(resp)
 
     async def send_event(self, event):
 

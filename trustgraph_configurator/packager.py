@@ -16,6 +16,7 @@ artefact to stdout instead of producing a zip.
 import pathlib
 import yaml
 import json
+import hashlib
 import logging
 import importlib.resources
 from io import BytesIO
@@ -83,6 +84,17 @@ class Packager:
         if filename == "version.jsonnet":
             path = self.templates.joinpath(dir, filename)
             return str(path), f"\"{self.version}\"".encode("utf-8")
+
+        # Variant ID: a consistent hash of config + version + platform
+        # for future variant-specific advice e.g. vulnerability detection.
+        if filename == "variant-id.jsonnet":
+            path = self.templates.joinpath(dir, filename)
+            h = hashlib.sha256()
+            h.update(self.config.encode("utf-8"))
+            h.update(self.version.encode("utf-8"))
+            h.update(self.platform.encode("utf-8"))
+            variant_id = h.hexdigest()[:16]
+            return str(path), f"\"{variant_id}\"".encode("utf-8")
 
         # Local component support: components.jsonnet imports
         # local.jsonnet which is dynamically generated here. When

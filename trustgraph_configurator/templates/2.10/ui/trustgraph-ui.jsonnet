@@ -1,4 +1,5 @@
 local version = import "version.jsonnet";
+local variant_id = import "variant-id.jsonnet";
 local images = import "values/images.jsonnet";
 local default_navigation = import "ui/navigation.json";
 local default_tabs = import "ui/tabs.json";
@@ -72,7 +73,7 @@ local default_tab_admin = import "ui/tabs/admin.json";
                         $["ui-guidance"], "  "
                     ),
                     "version.json": std.manifestJsonEx(
-                        { version: version }, "  "
+                        { version: version, "variant-id": variant_id }, "  "
                     ),
                 }
             );
