@@ -40,6 +40,10 @@ local default_tab_admin = import "ui/tabs/admin.json";
             path: "/demo-data",
             url: "https://datasets.app.trustgraph.ai",
         },
+        {
+            path: "/config-svc",
+            url: "https://config-svc.app.trustgraph.ai",
+        },
     ],
 
     "trustgraph-ui" +: {
