@@ -1,0 +1,32 @@
+{
+    "advisories": [
+        {
+            "id": "GHSA-2jrc-mr3c-ch6g",
+            "severity": "medium",
+            "summary": "N-Quads injection via unvalidated o_language in knowledge bundle export",
+            "description": "The language tag on a literal is interpolated into the N-Quads line without validation or escaping. A tag containing a newline ends the line early, and the remainder is parsed as an additional quad. An exported knowledge bundle can therefore contain triples that were never in the source graph.",
+            "url": "https://github.com/trustgraph-ai/trustgraph/security/advisories/GHSA-2jrc-mr3c-ch6g",
+            "affects": [
+                {
+                    "template": "2.6",
+                    "versions": "<2.6.21",
+                    "fixed_in": "2.6.21"
+                },
+                {
+                    "template": "2.7",
+                    "versions": ">=2.7.0"
+                },
+                {
+                    "template": "2.8",
+                    "versions": "<2.8.17",
+                    "fixed_in": "2.8.17"
+                },
+                {
+                    "template": "2.9",
+                    "versions": "<2.9.2",
+                    "fixed_in": "2.9.2"
+                }
+            ]
+        }
+    ]
+}

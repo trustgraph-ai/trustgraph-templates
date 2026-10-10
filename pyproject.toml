@@ -39,6 +39,7 @@ Homepage = "https://github.com/trustgraph-ai/trustgraph-configurator"
 tg-build-deployment = "trustgraph_configurator:generate_deployment"
 tg-config-svc = "trustgraph_configurator:run_service"
 tg-show-config-params = "trustgraph_configurator:list_templates"
+tg-show-advisories = "trustgraph_configurator:show_advisories"
 
 [tool.setuptools.packages.find]
 include = ["trustgraph_configurator*"]
