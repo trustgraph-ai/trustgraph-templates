@@ -17,6 +17,21 @@ class Template:
     announcement: str = None
 
 @dataclasses.dataclass
+class AffectedRange:
+    template: str
+    versions: str
+    fixed_in: str = None
+
+@dataclasses.dataclass
+class Advisory:
+    id: str
+    severity: str
+    summary: str
+    description: str
+    url: str
+    affects: list
+
+@dataclasses.dataclass
 class Status:
     name: str
     description: str
@@ -29,6 +44,21 @@ def version_sort(x):
 
 def version_compare(a, b):
     return version_unpack(a) < version_unpack(b)
+
+def version_matches(version, spec):
+    """Check if a version matches a spec like '<2.8.15' or '>=2.7.0'."""
+    import re
+    m = re.match(r'^([<>]=?)\s*(.+)$', spec.strip())
+    if not m:
+        return False
+    op, target = m.group(1), m.group(2)
+    v = version_unpack(version)
+    t = version_unpack(target)
+    if op == '<': return v < t
+    if op == '<=': return v <= t
+    if op == '>': return v > t
+    if op == '>=': return v >= t
+    return False
 
 class Index:
 
@@ -120,4 +150,32 @@ class Index:
             raise RuntimeError("No latest stable version")
 
         return v[-1]
+
+    @staticmethod
+    def get_advisories():
+
+        files = importlib.resources.files()
+        index = files.joinpath("templates").joinpath("advisories.json")
+
+        with open(index) as f:
+            data = json.load(f)
+
+        return [
+            Advisory(
+                id=a["id"],
+                severity=a["severity"],
+                summary=a["summary"],
+                description=a["description"],
+                url=a["url"],
+                affects=[
+                    AffectedRange(
+                        template=af["template"],
+                        versions=af["versions"],
+                        fixed_in=af.get("fixed_in"),
+                    )
+                    for af in a["affects"]
+                ],
+            )
+            for a in data.get("advisories", [])
+        ]
 

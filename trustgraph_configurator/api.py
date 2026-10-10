@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 
 from . generator import Generator
 from . import Index, Packager
-from .index import version_unpack
+from .index import version_unpack, version_matches
 
 import logging
 logger = logging.getLogger("api")
@@ -34,6 +34,7 @@ class Api:
             web.get("/api/latest", self.latest),
             web.get("/api/versions", self.versions),
             web.get("/api/check-version", self.check_version),
+            web.get("/api/advisories", self.advisories),
         ])
 
         self.app.add_routes([
@@ -144,7 +145,49 @@ class Api:
                 if resp["status"] == "current":
                     resp["status"] = "upgrade-available"
 
+        matching = []
+        for advisory in Index.get_advisories():
+            for af in advisory.affects:
+                if af.template == current_major and version_matches(
+                    current, af.versions
+                ):
+                    entry = {
+                        "id": advisory.id,
+                        "severity": advisory.severity,
+                        "summary": advisory.summary,
+                        "url": advisory.url,
+                    }
+                    if af.fixed_in:
+                        entry["fixed_in"] = af.fixed_in
+                    matching.append(entry)
+                    break
+
+        resp["advisories"] = matching
+
         return web.json_response(resp)
+
+    def advisories(self, request):
+
+        advisories = Index.get_advisories()
+
+        return web.json_response([
+            {
+                "id": a.id,
+                "severity": a.severity,
+                "summary": a.summary,
+                "description": a.description,
+                "url": a.url,
+                "affects": [
+                    {
+                        "template": af.template,
+                        "versions": af.versions,
+                        **({"fixed_in": af.fixed_in} if af.fixed_in else {}),
+                    }
+                    for af in a.affects
+                ],
+            }
+            for a in advisories
+        ])
 
     async def send_event(self, event):
 
