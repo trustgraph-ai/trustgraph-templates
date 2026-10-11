@@ -179,3 +179,13 @@ class Index:
             for a in data.get("advisories", [])
         ]
 
+    @staticmethod
+    def get_dialog_resource(filename):
+
+        files = importlib.resources.files()
+        path = files.joinpath("resources").joinpath("dialog").joinpath(
+            filename
+        )
+
+        return path.read_text()
+

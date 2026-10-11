@@ -7,5 +7,4 @@ from . index import Index
 from . run import generate_deployment
 from . list import list_templates
 from . show_advisories import show_advisories
-from . service import run_service
 
