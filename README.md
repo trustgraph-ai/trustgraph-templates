@@ -6,6 +6,8 @@ TrustGraph configurator is a Python-based tool that generates deployment configu
 
 The configurator uses Jsonnet templates to generate deployment configurations for various platforms including Docker Compose, Podman, and multiple Kubernetes environments. It packages the generated configurations into ZIP files containing all necessary deployment resources.
 
+The configuration service that hosts this as a REST API is in the separate [config-svc](https://github.com/trustgraph-ai/config-svc) repository, which depends on this package.
+
 ## Configuration Process
 
 The TrustGraph configuration system uses a multi-stage pipeline to generate deployment packages:
@@ -34,7 +36,7 @@ The JSONata transform file (`trustgraph-output.jsonata`) converts the state obje
 
 ### 3. Configuration Service
 
-The configuration service receives the configuration object, invokes the appropriate Jsonnet templates, and runs the package builder. The output is a **deployment package** - a ZIP file containing all deployment resources (docker-compose.yaml or Kubernetes manifests, plus supporting files).
+The configuration service (hosted separately in [config-svc](https://github.com/trustgraph-ai/config-svc)) receives the configuration object, invokes the appropriate Jsonnet templates, and runs the package builder. The output is a **deployment package** - a ZIP file containing all deployment resources (docker-compose.yaml or Kubernetes manifests, plus supporting files).
 
 ### 4. Documentation Flow
 
@@ -42,11 +44,9 @@ The original state object can also be used with the documentation manifest (`tru
 
 ## Installation
 
-The configurator is distributed as a Python package. To use it:
+The configurator is distributed as a Python package:
 
 ```bash
-export PYTHONPATH=.
-# or install the package
 pip install -e .
 ```
 
@@ -65,18 +65,32 @@ This will display:
 - Available templates with versions and stability status
 - Latest version and latest stable version
 
+### Show Security Advisories
+
+To see security advisories:
+
+```bash
+tg-show-advisories
+```
+
+To show only advisories affecting a specific version:
+
+```bash
+tg-show-advisories --version 2.8.3
+```
+
 ### Generate Configuration
 
 To generate a configuration package:
 
 ```bash
-scripts/tg-build-deployment --template <template-name> --version <version> \
+tg-build-deployment --template <template-name> \
     --input config.json --output output.zip --platform <platform>
 ```
 
 Example:
 ```bash
-scripts/tg-build-deployment --template 1.1 --version 1.1.9 \
+tg-build-deployment --template 2.9 --latest-stable \
     --input config.json --output deployment.zip --platform docker-compose
 ```
 
@@ -84,45 +98,31 @@ scripts/tg-build-deployment --template 1.1 --version 1.1.9 \
 
 To output only the TrustGraph configuration:
 ```bash
-scripts/tg-build-deployment --template 1.1 --latest-stable \
+tg-build-deployment --template 2.9 --latest-stable \
     --input config.json -O > trustgraph-config.json
 ```
 
 To output only the platform resources (docker-compose.yaml or resources.yaml):
 ```bash
 # For Docker Compose
-scripts/tg-build-deployment --template 1.1 --latest-stable \
+tg-build-deployment --template 2.9 --latest-stable \
     --input config.json --platform docker-compose -R > docker-compose.yaml
 
 # For Kubernetes
-scripts/tg-build-deployment --template 1.1 --latest-stable \
+tg-build-deployment --template 2.9 --latest-stable \
     --input config.json --platform gcp-k8s -R > resources.yaml
 ```
-
-### Configuration Service API
-
-You can also run the configurator as a REST API service:
-
-```bash
-scripts/tg-config-svc
-```
-
-This starts a web service on port 8080 that provides:
-- REST API endpoints for configuration generation
-- Programmatic access to version information
-- Web-based configuration generation
-
-The service provides the same functionality as the command-line tool but through HTTP endpoints (see API Service section below for details).
 
 ### Command Line Options
 
 - `-i, --input`: Input configuration file (default: config.json)
 - `-o, --output`: Output ZIP file (default: output.zip)
-- `-t, --template`: Template name (e.g., "1.1", "1.0", "0.23")
+- `-t, --template`: Template name (e.g., "2.10", "2.9", "2.8")
 - `-v, --version`: Specific version to use
 - `-p, --platform`: Target platform (default: docker-compose)
 - `--latest`: Use the latest available version
 - `--latest-stable`: Use the latest stable version
+- `-l, --local-dir`: Enable local jsonnet components from specified directory
 - `-O, --output-tg-config`: Output only TrustGraph configuration to stdout (no ZIP file)
 - `-R, --output-resources`: Output only platform resources (docker-compose.yaml or resources.yaml) to stdout (no ZIP file)
 
@@ -135,14 +135,14 @@ The service provides the same functionality as the command-line tool but through
 - `aks-k8s`: Azure Kubernetes Service (AKS)
 - `eks-k8s`: AWS Elastic Kubernetes Service (EKS)
 - `scw-k8s`: Scaleway Kubernetes
+- `ovh-k8s`: OVHCloud Kubernetes
+- `ack-k8s`: Alibaba Cloud Kubernetes (ACK)
 
 ## Python Architecture
 
 ### Module Structure
 
 The `trustgraph_configurator` package consists of several key modules:
-
-#### Core Modules
 
 1. **generator.py** (`Generator` class)
    - Processes Jsonnet templates using the `_jsonnet` library
@@ -155,38 +155,34 @@ The `trustgraph_configurator` package consists of several key modules:
    - Generates platform-specific deployment packages
    - Creates ZIP archives with all necessary files
    - Supports both Docker Compose and Kubernetes outputs
+   - Dynamically generates `version.jsonnet` and `variant-id.jsonnet`
 
 3. **index.py** (`Index` class)
-   - Manages template and platform metadata
-   - Reads from `templates/index.json`
-   - Provides version sorting and comparison
-   - Offers methods to get latest/stable versions
+   - Manages template, platform, and advisory metadata
+   - Reads from `templates/index.json` and `templates/advisories.json`
+   - Provides version sorting, comparison, and matching
+   - Offers methods to get latest/stable versions and advisories
+   - Serves dialog flow resources via `get_dialog_resource()`
 
-4. **api.py** (`Api` class)
-   - REST API service for configuration generation
-   - Endpoints for version information and generation
-   - Validates input JSON before processing
-   - Returns generated configurations as binary data
-
-5. **service.py**
-   - Simple wrapper to run the API service
-   - Configures logging and starts the web server on port 8080
-
-6. **run.py**
-   - Command-line interface implementation
+4. **run.py**
+   - Command-line interface implementation for `tg-build-deployment`
    - Argument parsing and validation
    - Reads input configuration and writes output ZIP
 
-7. **list.py**
-   - Command-line tool to list available configurations
+5. **list.py**
+   - Command-line tool `tg-show-config-params`
    - Displays platforms, templates, and versions in tabular format
+
+6. **show_advisories.py**
+   - Command-line tool `tg-show-advisories`
+   - Displays security advisories, optionally filtered by version
 
 ### How Components Interact
 
 ```
 User Input (config.json) 
     ↓
-run.py (CLI) or api.py (REST)
+run.py (CLI) or config-svc (REST)
     ↓
 Packager (orchestrator)
     ├─→ Index (metadata/versions)
@@ -201,8 +197,8 @@ Packager (orchestrator)
 
 ### Key Design Patterns
 
-1. **Template Resolution**: The `Packager.fetch()` method implements a sophisticated file resolution system:
-   - Special handling for `trustgraph/config.json` and `version.jsonnet`
+1. **Template Resolution**: The `Packager.fetch()` method implements a file resolution system:
+   - Special handling for `trustgraph/config.json`, `version.jsonnet`, and `variant-id.jsonnet`
    - Fallback search paths for templates and resources
    - Version-specific template directories
 
@@ -215,57 +211,16 @@ Packager (orchestrator)
    - Multiple template versions with different features
    - Stability levels (alpha, beta, stable)
    - Automatic version selection (latest/latest-stable)
+   - Security advisories with version-range matching
 
-### Configuration Flow
+## Metadata Files
 
-1. User provides a JSON configuration file
-2. Packager validates and loads the appropriate template version
-3. Generator processes Jsonnet templates with the configuration
-4. Platform-specific resources are added (Grafana dashboards, Prometheus config)
-5. Everything is packaged into a ZIP file for deployment
+Template metadata is in `trustgraph_configurator/templates/`:
 
-### API Service
+- `index.json` — defines available templates, platforms, and statuses
+- `advisories.json` — security advisories with affected version ranges
 
-The REST API service (`tg-config-svc`) provides programmatic access to the configurator functionality. Start the service with:
-
-```bash
-scripts/tg-config-svc
-```
-
-The service runs on port 8080 and provides the following endpoints:
-
-```
-POST /api/generate/{platform}/{template}  # Generate configuration
-GET /api/latest                          # Get latest version info
-GET /api/latest-stable                   # Get latest stable version info
-GET /api/versions                        # List all available versions
-```
-
-#### Dialog Flow Resources
-
-These endpoints serve the dialog flow resources described in the Configuration Process section:
-
-```
-GET /api/dialog-flow     # Dialog flow state machine (YAML)
-GET /api/config-prepare  # JSONata transform for config preparation
-GET /api/docs-manifest   # Documentation manifest (YAML)
-GET /api/docs/{path}     # Documentation markdown fragments
-```
-
-Example usage:
-```bash
-# Generate configuration via API
-curl -X POST http://localhost:8080/api/generate/docker-compose/1.1 \
-  -H "Content-Type: application/json" \
-  -d @config.json \
-  --output deployment.zip
-
-# Fetch dialog flow configuration
-curl http://localhost:8080/api/dialog-flow
-
-# Fetch a documentation fragment
-curl http://localhost:8080/api/docs/platform/docker-compose.md
-```
+See `trustgraph_configurator/templates/README.md` for schema documentation.
 
 ## Output Structure
 
@@ -299,13 +254,4 @@ To extend or modify the configurator:
    - `trustgraph-output.jsonata` - State-to-config transform
    - `trustgraph-docs.yaml` - Documentation manifest
    - `docs/` - Markdown documentation fragments
-
-## Error Handling
-
-The configurator includes error handling for:
-- Missing or invalid templates
-- Malformed input JSON
-- File resolution failures
-- Platform-specific generation errors
-
-Errors are logged with appropriate context for debugging.
+6. Security advisories go in `trustgraph_configurator/templates/advisories.json`
