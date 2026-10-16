@@ -15,9 +15,12 @@ local librarian_response = helpers.librarian_response;
 local llm_services = import "llm-services.jsonnet";
 local embeddings_service = import "embeddings-service.jsonnet";
 local reranker_service = import "reranker-service.jsonnet";
+local cloze_service = import "cloze-service.jsonnet";
+local decision_scoring_service = import "decision-scoring-service.jsonnet";
 
 // Merge shared services with graph store configuration
-llm_services + embeddings_service + reranker_service + {
+llm_services + embeddings_service + reranker_service + cloze_service +
+decision_scoring_service + {
 
     // External interfaces exposed by the graph store
     "interfaces" +: {

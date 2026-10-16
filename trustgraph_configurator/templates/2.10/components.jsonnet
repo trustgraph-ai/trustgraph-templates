@@ -113,6 +113,12 @@
    // Attestation: adds attestation processor to RAG, switches to enterprise image
    "attestation": import "enterprise/attestation.jsonnet",
 
+   // Decision scoring: adds decision scoring processor to RAG group
+   "decision-scoring-laya": import "decision-scoring/laya.jsonnet",
+
+   // Cloze: deploys cloze processor in its own container (trustgraph-hf)
+   "cloze-hf": import "cloze/hf.jsonnet",
+
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
 
