@@ -8,8 +8,8 @@ local images = import "values/images.jsonnet";
     parameters +:: {
         "decision-scoring-cpu-limit": "3.0",
         "decision-scoring-cpu-reservation": "1.0",
-        "decision-scoring-memory-limit": "3G",
-        "decision-scoring-memory-reservation": "3G",
+        "decision-scoring-memory-limit": "6G",
+        "decision-scoring-memory-reservation": "6G",
         "decision-scoring-concurrency": 1,
     },
 
