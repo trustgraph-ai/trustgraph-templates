@@ -18,7 +18,7 @@
         {
             "name": "2.10",
             "description": "SHACL-AF policy filtering, IAM user context, guided graph traversal, TriG/named graph support, and streaming policy service",
-            "version": "2.10.14",
+            "version": "2.10.16",
             "status": "pre-release"
         }
     ],
