@@ -46,7 +46,7 @@ local images = import "values/images.jsonnet";
 
             local container =
                 engine.container("decision-scoring")
-                    .with_image(images.trustgraph_flow)
+                    .with_image(images.trustgraph_torch)
                     .with_command([
                         "processor-group",
                         "--log-level",

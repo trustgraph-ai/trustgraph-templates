@@ -116,7 +116,7 @@
    // Decision scoring: adds decision scoring processor to RAG group
    "decision-scoring-laya": import "decision-scoring/laya.jsonnet",
 
-   // Cloze: deploys cloze processor in its own container (trustgraph-hf)
+   // Cloze: deploys cloze processor in its own container (trustgraph-torch)
    "cloze-hf": import "cloze/hf.jsonnet",
 
    // Does nothing.  But, can be a hack to overwrite parameters
