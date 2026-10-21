@@ -25,7 +25,7 @@ local version = import "version.jsonnet";
     trustgraph_ocr: "docker.io/trustgraph/trustgraph-ocr:" + version,
     trustgraph_bedrock: "docker.io/trustgraph/trustgraph-bedrock:" + version,
     trustgraph_vertexai: "docker.io/trustgraph/trustgraph-vertexai:" + version,
-    trustgraph_hf: "docker.io/trustgraph/trustgraph-hf:" + version,
+    trustgraph_torch: "docker.io/trustgraph/trustgraph-torch:" + version,
     trustgraph_mcp: "docker.io/trustgraph/trustgraph-mcp:" + version,
     trustgraph_unstructured: "docker.io/trustgraph/trustgraph-unstructured:" + version,
     trustgraph_enterprise: "docker.io/trustgraph/trustgraph-enterprise:1.2.3",

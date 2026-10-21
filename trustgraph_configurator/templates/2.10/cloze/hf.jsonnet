@@ -1,5 +1,5 @@
 // Cloze service (HuggingFace) - deploys the cloze processor in its own
-// container using the trustgraph-hf image. Provides vector cloze
+// container using the trustgraph-torch image. Provides vector cloze
 // generation for text.
 
 local images = import "values/images.jsonnet";
@@ -47,7 +47,7 @@ local images = import "values/images.jsonnet";
 
             local container =
                 engine.container("cloze")
-                    .with_image(images.trustgraph_hf)
+                    .with_image(images.trustgraph_torch)
                     .with_command([
                         "processor-group",
                         "--log-level",

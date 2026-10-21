@@ -19,7 +19,7 @@ local models = import "parameters/embeddings-huggingface.jsonnet";
 
             local container =
                 engine.container("embeddings")
-                    .with_image(images.trustgraph_hf)
+                    .with_image(images.trustgraph_torch)
                     .with_command([
                         "embeddings-hf",
                     ] + $["pub-sub-args"] + [
