@@ -8,8 +8,8 @@ local rerankModels = import "parameters/reranker-flashrank.jsonnet";
         "embeddings-concurrency": 1,
         "embeddings-cpu-limit": "4.0",
         "embeddings-cpu-reservation": "0.5",
-        "embeddings-memory-limit": "1500M",
-        "embeddings-memory-reservation": "1500M",
+        "embeddings-memory-limit": "1850M",
+        "embeddings-memory-reservation": "1850M",
         "reranker-concurrency": 1,
     },
 
