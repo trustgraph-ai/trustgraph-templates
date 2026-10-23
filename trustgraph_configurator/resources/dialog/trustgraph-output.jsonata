@@ -146,6 +146,28 @@
   );
 
   /* ─────────────────────────────────────────────────────────────
+   * Decision Scoring (conditional, 2.10+)
+   * ───────────────────────────────────────────────────────────── */
+  $decision_scoring_components := (
+    decision_scoring and decision_scoring != "none"
+    ? [ $component("decision-scoring-" & decision_scoring) ]
+    : []
+  );
+
+  /* ─────────────────────────────────────────────────────────────
+   * Cloze Model (conditional, 2.10+)
+   * ───────────────────────────────────────────────────────────── */
+  $cloze_map := {
+    "transformer": "hf"
+  };
+
+  $cloze_components := (
+    cloze and cloze != "none"
+    ? [ $component("cloze-" & $lookup($cloze_map, cloze)) ]
+    : []
+  );
+
+  /* ─────────────────────────────────────────────────────────────
    * MCP Server (conditional)
    * ───────────────────────────────────────────────────────────── */
   $mcp_components := (
@@ -171,18 +193,24 @@
           $append(
             $append(
               $append(
-                $base_components,
-                $infrastructure
+                $append(
+                  $append(
+                    $base_components,
+                    $infrastructure
+                  ),
+                  $backend_components
+                ),
+                $model_components
               ),
-              $backend_components
+              $ocr_components
             ),
-            $model_components
+            $embeddings_components
           ),
-          $ocr_components
+          $image_to_text_components
         ),
-        $embeddings_components
+        $decision_scoring_components
       ),
-      $image_to_text_components
+      $cloze_components
     ),
     $mcp_components
   );
