@@ -319,10 +319,38 @@ steps:
       max: 65536
       step: 256
     transitions:
-      - next: ocr-enabled
+      - next: mcp-server-enabled
 
   # ─────────────────────────────────────────────────────────────
-  # OCR Pipelines Toggle
+  # MCP Server Toggle
+  # ─────────────────────────────────────────────────────────────
+  mcp-server-enabled:
+    title: "Enable MCP server?"
+    description: "Deploy an MCP server to allow MCP clients to interact with TrustGraph"
+    state_key: mcp_server.enabled
+    input:
+      type: toggle
+      default: true
+    transitions:
+      - next: advanced-options
+
+  # ─────────────────────────────────────────────────────────────
+  # Advanced Options Toggle
+  # ─────────────────────────────────────────────────────────────
+  advanced-options:
+    title: "Configure advanced options?"
+    description: "Customise OCR, embeddings, image-to-text, and other optional features"
+    state_key: advanced.enabled
+    input:
+      type: toggle
+      default: false
+    transitions:
+      - when: "advanced.enabled = true"
+        next: ocr-enabled
+      - next: review
+
+  # ─────────────────────────────────────────────────────────────
+  # OCR Pipelines Toggle (advanced)
   # ─────────────────────────────────────────────────────────────
   ocr-enabled:
     title: "Enable OCR processing?"
@@ -359,7 +387,7 @@ steps:
       - next: embeddings-enabled
 
   # ─────────────────────────────────────────────────────────────
-  # Embeddings Configuration Toggle
+  # Embeddings Configuration Toggle (advanced)
   # ─────────────────────────────────────────────────────────────
   embeddings-enabled:
     title: "Configure embeddings engine?"
@@ -399,7 +427,7 @@ steps:
       - next: image-to-text
 
   # ─────────────────────────────────────────────────────────────
-  # Image-to-Text (>= 2.7 only)
+  # Image-to-Text (advanced)
   # ─────────────────────────────────────────────────────────────
   image-to-text:
     title: "Which image-to-text engine?"
@@ -417,18 +445,49 @@ steps:
           icon: "openai"
           description: "Use an OpenAI-compatible vision endpoint to describe images. Reuses the OpenAI API credentials."
     transitions:
-      - next: mcp-server-enabled
+      - when: "version = '2.8'"
+        next: review
+      - when: "version = '2.9'"
+        next: review
+      - next: decision-scoring
 
   # ─────────────────────────────────────────────────────────────
-  # MCP Server Toggle
+  # Decision Scoring (2.10+ advanced)
   # ─────────────────────────────────────────────────────────────
-  mcp-server-enabled:
-    title: "Enable MCP server?"
-    description: "Deploy an MCP server to allow MCP clients to interact with TrustGraph"
-    state_key: mcp_server.enabled
+  decision-scoring:
+    title: "Decision model support?"
+    description: "Deploy a fast decision scoring model for evaluating choices"
+    state_key: decision_scoring
     input:
-      type: toggle
-      default: true
+      type: select
+      options:
+        - label: "None"
+          value: "none"
+          description: "No decision scoring model"
+          recommended: true
+        - label: "Laya"
+          value: "laya"
+          description: "Fast 'system 1' scoring model for decision evaluation"
+    transitions:
+      - next: cloze
+
+  # ─────────────────────────────────────────────────────────────
+  # Cloze Model (2.10+ advanced)
+  # ─────────────────────────────────────────────────────────────
+  cloze:
+    title: "Cloze model support?"
+    description: "Deploy a cloze model for vector fill-in-the-blank text generation"
+    state_key: cloze
+    input:
+      type: select
+      options:
+        - label: "None"
+          value: "none"
+          description: "No cloze model"
+          recommended: true
+        - label: "Transformer"
+          value: "transformer"
+          description: "Transformer-based cloze model for fill-in-the-blank text generation"
     transitions:
       - next: review
 
