@@ -12,14 +12,14 @@
             "description": "Plugin UI architecture with DCAT catalog support for richer, extensible deployments",
             "version": "2.9.12",
             "status": "stable",
-            "recommended": true,
             "announcement": "https://trustgraph.ai/news/release-2-9/"
         },
         {
             "name": "2.10",
             "description": "SHACL-AF policy filtering, IAM user context, guided graph traversal, TriG/named graph support, and streaming policy service",
             "version": "2.10.18",
-            "status": "pre-release"
+            "status": "stable",
+            "recommended": true
         }
     ],
     "platforms": [

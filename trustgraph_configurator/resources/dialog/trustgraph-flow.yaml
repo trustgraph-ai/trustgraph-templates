@@ -21,13 +21,13 @@ steps:
         - label: "TrustGraph 2.10"
           value: "2.10"
           description: "SHACL-AF policy filtering, IAM user context, guided graph traversal, TriG/named graph support, and streaming policy service"
-          badge: pre-release
-          recommended: false
+          badge: stable
+          recommended: true
         - label: "TrustGraph 2.9"
           value: "2.9"
           description: "Plugin UI architecture with DCAT catalog support for richer, extensible deployments"
           badge: stable
-          recommended: true
+          recommended: false
         - label: "TrustGraph 2.8"
           value: "2.8"
           description: "Removes scale-bottlenecks to better support large multi-tenant deployments"
@@ -339,52 +339,15 @@ steps:
   # ─────────────────────────────────────────────────────────────
   advanced-options:
     title: "Configure advanced options?"
-    description: "Customise OCR, embeddings, image-to-text, and other optional features"
+    description: "Customise embeddings, image-to-text, and other optional features"
     state_key: advanced.enabled
     input:
       type: toggle
       default: false
     transitions:
       - when: "advanced.enabled = true"
-        next: ocr-enabled
+        next: embeddings-enabled
       - next: review
-
-  # ─────────────────────────────────────────────────────────────
-  # OCR Pipelines Toggle (advanced)
-  # ─────────────────────────────────────────────────────────────
-  ocr-enabled:
-    title: "Enable OCR processing?"
-    description: "Replace standard PDF decoding with Optical Character Recognition for scanned documents and images"
-    state_key: ocr.enabled
-    input:
-      type: toggle
-      default: false
-    transitions:
-      - when: "ocr.enabled = true"
-        next: ocr-engine
-      - next: embeddings-enabled
-
-  # ─────────────────────────────────────────────────────────────
-  # OCR Engine (conditional)
-  # ─────────────────────────────────────────────────────────────
-  ocr-engine:
-    title: "Which OCR engine?"
-    state_key: ocr.engine
-    input:
-      type: select
-      options:
-        - label: "PDF Decode"
-          value: "pdf-decode"
-          description: "Default configuration. Extracts text from PDFs with structured text, but does not perform OCR on images or scanned documents."
-          recommended: true
-        - label: "Tesseract"
-          value: "tesseract"
-          description: "Free, open-source embedded OCR engine. Best-in-class for free/open-source. Use with PDF documents containing image scans."
-        - label: "Mistral"
-          value: "mistral"
-          description: "Best-in-class commercial OCR service. Requires a Mistral subscription. Use with PDF documents containing image scans."
-    transitions:
-      - next: embeddings-enabled
 
   # ─────────────────────────────────────────────────────────────
   # Embeddings Configuration Toggle (advanced)
