@@ -20,6 +20,12 @@
             "version": "2.10.18",
             "status": "stable",
             "recommended": true
+        },
+        {
+            "name": "2.11",
+            "description": "Placeholder for next release branch",
+            "version": "2.11.0",
+            "status": "pre-release"
         }
     ],
     "platforms": [
