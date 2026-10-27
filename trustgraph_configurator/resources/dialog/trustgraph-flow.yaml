@@ -18,6 +18,10 @@ steps:
     input:
       type: select
       options:
+        - label: "TrustGraph 2.11"
+          value: "2.11"
+          description: "Placeholder for next release branch"
+          badge: pre-release
         - label: "TrustGraph 2.10"
           value: "2.10"
           description: "SHACL-AF policy filtering, IAM user context, guided graph traversal, TriG/named graph support, and streaming policy service"
@@ -431,6 +435,28 @@ steps:
         - label: "Laya"
           value: "laya"
           description: "Fast 'system 1' scoring model for decision evaluation"
+    transitions:
+      - when: "version = '2.10'"
+        next: cloze
+      - next: field-extraction
+
+  # ─────────────────────────────────────────────────────────────
+  # Field Extraction (2.11+ advanced)
+  # ─────────────────────────────────────────────────────────────
+  field-extraction:
+    title: "Field extraction model support?"
+    description: "Deploy a fast field extraction model for span tagging"
+    state_key: field_extraction
+    input:
+      type: select
+      options:
+        - label: "None"
+          value: "none"
+          description: "No field extraction model"
+          recommended: true
+        - label: "Span"
+          value: "span"
+          description: "Fast 'system 1' span-tagging model for field extraction"
     transitions:
       - next: cloze
 

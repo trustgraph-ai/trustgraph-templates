@@ -1,0 +1,95 @@
+global:
+
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'trustgraph'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+
+  # The job name is added as a label `job=<job_name>` to any timeseries
+  # scraped from this config.
+
+  # TrustGraph services in processor groups
+  - job_name: 'control'
+    static_configs:
+      - targets:
+        - 'control:8000'
+
+  - job_name: 'ingest'
+    static_configs:
+      - targets:
+        - 'ingest:8000'
+
+  - job_name: 'rag'
+    static_configs:
+      - targets:
+        - 'rag:8000'
+
+  - job_name: 'embeddings'
+    static_configs:
+      - targets:
+        - 'embeddings:8000'
+
+  - job_name: 'vector-store'
+    static_configs:
+      - targets:
+        - 'vector-store:8000'
+
+  - job_name: 'rows'
+    static_configs:
+      - targets:
+        - 'rows:8000'
+
+  - job_name: 'triples'
+    static_configs:
+      - targets:
+        - 'triples:8000'
+
+  - job_name: 'text-completion'
+    static_configs:
+      - targets:
+        - 'text-completion:8000'
+
+  # TrustGraph services standalone
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets:
+        - 'api-gateway:8000'
+
+  - job_name: 'mcp-server'
+    static_configs:
+      - targets:
+        - 'mcp-server:8000'
+
+  - job_name: 'document-decoder'
+    static_configs:
+      - targets:
+        - 'document-decoder:8000'
+
+  # Non-Trustgraph services
+  - job_name: 'garage'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+        - 'garage:3903'
+
+  - job_name: 'pulsar'
+    metric_relabel_configs:
+      # Whitelist ONLY backlog & basic health metrics.
+      # EVERYTHING ELSE from Pulsar is immediately dropped!
+      - source_labels: [__name__]
+        regex: 'pulsar_(subscription_back_?log.*|msg_back_?log.*|rate_in|rate_out|throughput_in|throughput_out|active_connections)'
+        action: keep
+
+      # Strip producer/consumer labels if present on kept metrics
+      - regex: '(producer|consumer)'
+        action: labeldrop
+
+    static_configs:
+      - targets:
+        - 'pulsar:8080'

@@ -155,6 +155,15 @@
   );
 
   /* ─────────────────────────────────────────────────────────────
+   * Field Extraction (conditional, 2.11+)
+   * ───────────────────────────────────────────────────────────── */
+  $field_extraction_components := (
+    field_extraction and field_extraction != "none"
+    ? [ $component("field-extraction-" & field_extraction) ]
+    : []
+  );
+
+  /* ─────────────────────────────────────────────────────────────
    * Cloze Model (conditional, 2.10+)
    * ───────────────────────────────────────────────────────────── */
   $cloze_map := {
@@ -195,20 +204,23 @@
               $append(
                 $append(
                   $append(
-                    $base_components,
-                    $infrastructure
+                    $append(
+                      $base_components,
+                      $infrastructure
+                    ),
+                    $backend_components
                   ),
-                  $backend_components
+                  $model_components
                 ),
-                $model_components
+                $ocr_components
               ),
-              $ocr_components
+              $embeddings_components
             ),
-            $embeddings_components
+            $image_to_text_components
           ),
-          $image_to_text_components
+          $decision_scoring_components
         ),
-        $decision_scoring_components
+        $field_extraction_components
       ),
       $cloze_components
     ),
