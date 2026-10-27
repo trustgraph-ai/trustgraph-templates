@@ -25,7 +25,7 @@ local request_response_if = helpers.request_response_if;
             },
             parameters: {
                 model: "tasksource/UltraBERT-150M-clairic-extraction",
-                "max-length": 512,
+                "max-length": "512",
             },
         },
     },
