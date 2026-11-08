@@ -8,23 +8,33 @@
             "url": "https://github.com/trustgraph-ai/trustgraph/security/advisories/GHSA-2jrc-mr3c-ch6g",
             "affects": [
                 {
-                    "template": "2.6",
-                    "versions": "<2.6.21",
-                    "fixed_in": "2.6.21"
-                },
-                {
-                    "template": "2.7",
-                    "versions": ">=2.7.0"
-                },
-                {
-                    "template": "2.8",
-                    "versions": "<2.8.17",
-                    "fixed_in": "2.8.17"
-                },
-                {
                     "template": "2.9",
                     "versions": "<2.9.2",
                     "fixed_in": "2.9.2"
+                }
+            ]
+        },
+        {
+            "id": "GHSA-3wgh-hf59-9g82",
+            "severity": "critical",
+            "summary": "Per-flow service and import/export routes skip workspace scope check, allowing cross-workspace access",
+            "description": "The per-flow gateway routes /api/v1/flow/{flow}/service/{kind}, /api/v1/flow/{flow}/import/{kind} and /api/v1/flow/{flow}/export/{kind} are authorised against a resource whose workspace is always empty. The IAM decision treats a missing workspace as no scope restriction. A user whose only role is reader or writer in workspace A can therefore query, run RAG and agent requests over, and import data into the flows of any other workspace.",
+            "url": "https://github.com/trustgraph-ai/trustgraph/security/advisories/GHSA-3wgh-hf59-9g82",
+            "affects": [
+                {
+                    "template": "2.9",
+                    "versions": "<=2.9.12",
+                    "fixed_in": "2.9.13"
+                },
+                {
+                    "template": "2.10",
+                    "versions": "<=2.10.19",
+                    "fixed_in": "2.10.20"
+                },
+                {
+                    "template": "2.11",
+                    "versions": "<=2.11.1",
+                    "fixed_in": "2.11.2"
                 }
             ]
         }
