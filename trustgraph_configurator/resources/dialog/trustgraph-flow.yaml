@@ -32,11 +32,6 @@ steps:
           description: "Plugin UI architecture with DCAT catalog support for richer, extensible deployments"
           badge: stable
           recommended: false
-        - label: "TrustGraph 2.8"
-          value: "2.8"
-          description: "Removes scale-bottlenecks to better support large multi-tenant deployments"
-          badge: stable
-          recommended: false
     transitions:
       - next: platform
 
@@ -412,8 +407,6 @@ steps:
           icon: "openai"
           description: "Use an OpenAI-compatible vision endpoint to describe images. Reuses the OpenAI API credentials."
     transitions:
-      - when: "version = '2.8'"
-        next: review
       - when: "version = '2.9'"
         next: review
       - next: decision-scoring
