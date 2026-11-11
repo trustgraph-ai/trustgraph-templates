@@ -8,13 +8,14 @@ from helpers import _entry, run_packager
 pytestmark = pytest.mark.features
 
 
-BASELINE_28 = [
+BASELINE_MCP = [
     "rabbitmq",
     "trustgraph-base",
     "openai",
     "embeddings-fastembed",
     "cassandra",
     "triple-store-cassandra",
+    "row-store-cassandra",
     "vector-store-qdrant",
     "garage",
     "mcp-server",
@@ -22,15 +23,11 @@ BASELINE_28 = [
 
 
 def build_mcp_deployment(api_gateway_port):
-    config = [_entry(name) for name in BASELINE_28]
+    config = [_entry(name) for name in BASELINE_MCP]
     config.append(_entry("override", {
         "api-gateway-port": api_gateway_port,
     }))
-    resources, _ = run_packager(
-        config,
-        template="2.8",
-        version="2.8.15",
-    )
+    resources, _ = run_packager(config)
     return resources
 
 

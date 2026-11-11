@@ -1,30 +1,23 @@
 {
     "templates": [
         {
-            "name": "2.8",
-            "description": "Removes scale-bottlenecks to better support large multi-tenant deployments",
-            "version": "2.8.17",
-            "status": "stable",
-            "announcement": "https://trustgraph.ai/news/release-2-8/"
-        },
-        {
             "name": "2.9",
             "description": "Plugin UI architecture with DCAT catalog support for richer, extensible deployments",
-            "version": "2.9.12",
+            "version": "2.9.13",
             "status": "stable",
             "announcement": "https://trustgraph.ai/news/release-2-9/"
         },
         {
             "name": "2.10",
             "description": "SHACL-AF policy filtering, IAM user context, guided graph traversal, TriG/named graph support, and streaming policy service",
-            "version": "2.10.18",
+            "version": "2.10.20",
             "status": "stable",
             "recommended": true
         },
         {
             "name": "2.11",
             "description": "Placeholder for next release branch",
-            "version": "2.11.1",
+            "version": "2.11.2",
             "status": "pre-release"
         }
     ],
