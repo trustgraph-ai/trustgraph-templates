@@ -28,6 +28,8 @@ local response = helpers.response;
                 "prompt-response": response("prompt:{workspace}:{id}"),
                 "embeddings-request": request("embeddings:{workspace}:{id}"),
                 "embeddings-response": response("embeddings:{workspace}:{id}"),
+                "ontology-request": request("ontology:{workspace}:{id}"),
+                "ontology-response": response("ontology:{workspace}:{id}"),
             },
         },
     },

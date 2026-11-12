@@ -35,6 +35,9 @@ decision_scoring_service + field_extraction_service + {
         "triples": request_response_if("triples:{workspace}:{id}"),
         "graph-embeddings": request_response_if("graph-embeddings:{workspace}:{id}"),
         "sparql": request_response_if("sparql:{workspace}:{id}"),
+        "ontology": request_response_if("ontology:{workspace}:{id}"),
+        "nl-sparql": request_response_if("nl-sparql:{workspace}:{id}"),
+        "sparql-nl-query": request_response_if("sparql-nl-query:{workspace}:{id}"),
     },
 
     // Flow-level processors - handle data streams for a specific flow instance
@@ -82,6 +85,38 @@ decision_scoring_service + field_extraction_service + {
                 response: response("sparql:{workspace}:{id}"),
                 "triples-request": request("triples:{workspace}:{id}"),
                 "triples-response": response("triples:{workspace}:{id}"),
+            },
+        },
+        "ontology:{id}": {
+            topics: {
+                request: request("ontology:{workspace}:{id}"),
+                response: response("ontology:{workspace}:{id}"),
+                "embeddings-request": request("embeddings:{workspace}:{id}"),
+                "embeddings-response": response("embeddings:{workspace}:{id}"),
+            },
+        },
+        "nl-sparql:{id}": {
+            topics: {
+                request: request("nl-sparql:{workspace}:{id}"),
+                response: response("nl-sparql:{workspace}:{id}"),
+                "embeddings-request": request("embeddings:{workspace}:{id}"),
+                "embeddings-response": response("embeddings:{workspace}:{id}"),
+                "prompt-request": request("prompt-rag:{workspace}:{id}"),
+                "prompt-response": response("prompt-rag:{workspace}:{id}"),
+                "graph-embeddings-request": request("graph-embeddings:{workspace}:{id}"),
+                "graph-embeddings-response": response("graph-embeddings:{workspace}:{id}"),
+                "ontology-request": request("ontology:{workspace}:{id}"),
+                "ontology-response": response("ontology:{workspace}:{id}"),
+            },
+        },
+        "sparql-nl-query:{id}": {
+            topics: {
+                request: request("sparql-nl-query:{workspace}:{id}"),
+                response: response("sparql-nl-query:{workspace}:{id}"),
+                "nl-sparql-request": request("nl-sparql:{workspace}:{id}"),
+                "nl-sparql-response": response("nl-sparql:{workspace}:{id}"),
+                "sparql-request": request("sparql:{workspace}:{id}"),
+                "sparql-response": response("sparql:{workspace}:{id}"),
             },
         },
         "triples-query:{id}": {
