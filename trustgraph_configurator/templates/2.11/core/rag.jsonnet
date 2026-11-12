@@ -26,6 +26,9 @@ local url = import "values/url.jsonnet";
         "sparql-query-concurrency": 1,
         "prompt-rag-concurrency": 1,
         "mcp-tool-concurrency": 1,
+        "ontology-concurrency": 1,
+        "nl-sparql-concurrency": 1,
+        "sparql-nl-query-concurrency": 1,
         "rag-cpu-limit": "0.5",
         "rag-cpu-reservation": "0.1",
         "rag-memory-limit": "640M",
@@ -64,6 +67,10 @@ local url = import "values/url.jsonnet";
         local sparqlQueryConc = pars["sparql-query-concurrency"],
         local promptRagConc = pars["prompt-rag-concurrency"],
         local mcpToolConc = pars["mcp-tool-concurrency"],
+        local ontologyConc = pars["ontology-concurrency"],
+        local nlSparqlConc = pars["nl-sparql-concurrency"],
+        local sparqlNlQueryConc = pars["sparql-nl-query-concurrency"],
+
         local cpuLimit = pars["rag-cpu-limit"],
         local cpuReservation = pars["rag-cpu-reservation"],
         local memoryLimit = pars["rag-memory-limit"],
@@ -80,6 +87,9 @@ local url = import "values/url.jsonnet";
         local sparql = "trustgraph.query.sparql.Processor",
         local promptProc = "trustgraph.prompt.template.Processor",
         local mcpTool = "trustgraph.agent.mcp_tool.Service",
+        local ontology = "trustgraph.ontology.Processor",
+        local nlSparql = "trustgraph.retrieval.nl_sparql.Processor",
+        local sparqlNlQuery = "trustgraph.retrieval.sparql_nl_query.Processor",
 
         create:: function(engine)
 
@@ -143,6 +153,27 @@ local url = import "values/url.jsonnet";
                                 params: {
                                     id: "sparql-query",
                                     concurrency: sparqlQueryConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: ontology,
+                                params: {
+                                    id: "ontology",
+                                    concurrency: ontologyConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: nlSparql,
+                                params: {
+                                    id: "nl-sparql",
+                                    concurrency: nlSparqlConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: sparqlNlQuery,
+                                params: {
+                                    id: "sparql-nl-query",
+                                    concurrency: sparqlNlQueryConc,
                                 } + $["pub-sub-params"],
                             },
                             {

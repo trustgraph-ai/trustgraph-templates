@@ -1,0 +1,34 @@
+Generate a SPARQL SELECT query for the question below using the provided
+ontology schema and resolved entity URIs.
+
+Namespace: {{namespace}}
+
+Classes:
+{% for cls in classes %}- {{cls.id}} <{{cls.uri}}>{% if cls.description %}: {{cls.description}}{% endif %}{% if cls.subclass_of %}
+ (subclass of {{cls.subclass_of}}){% endif %}
+
+{% endfor %}
+
+Object properties:
+{% for prop in object_properties %}- {{prop.id}} <{{prop.uri}}>{% if prop.domain %} domain: {{prop.domain}}{% endif %}{% if
+prop.range %} range: {{prop.range}}{% endif %}{% if prop.description %} — {{prop.description}}{% endif %}
+
+{% endfor %}
+
+Datatype properties:
+{% for prop in datatype_properties %}- {{prop.id}} <{{prop.uri}}>{% if prop.domain %} domain: {{prop.domain}}{% endif %}{% if
+prop.range %} range: {{prop.range}}{% endif %}{% if prop.description %} — {{prop.description}}{% endif %}
+
+{% endfor %}
+{% if resolved_entities %}
+Resolved entity URIs:
+{% for ent in resolved_entities %}- "{{ent.mention}}" -> <{{ent.uri}}> (type: {{ent.type}})
+{% endfor %}
+{% endif %}
+
+Use full URIs from the ontology, not prefixed names. Use the resolved entity
+URIs where available. Add LIMIT {{limit}}.
+
+Return only the SPARQL query, no explanation.
+
+Question: {{question}}

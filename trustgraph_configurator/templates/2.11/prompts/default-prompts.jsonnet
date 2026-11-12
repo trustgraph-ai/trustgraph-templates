@@ -295,6 +295,39 @@
             "response-type": "text",
         },
 
+        "sparql-extract-entities":: {
+            "prompt": importstr "sparql-extract-entities.txt",
+            "response-type": "json",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "entities": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "mention": {
+                        "type": "string",
+                        "description": "Entity name as it appears in the question"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "Ontology class id the entity belongs to"
+                      }
+                    },
+                    "required": ["mention", "type"]
+                  }
+                }
+              },
+              "required": ["entities"]
+            }
+        },
+
+        "sparql-generate":: {
+            "prompt": importstr "sparql-generate.txt",
+            "response-type": "text",
+        },
+
     }
 
 }
