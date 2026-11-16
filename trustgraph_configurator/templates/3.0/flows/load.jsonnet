@@ -7,6 +7,7 @@ local flow = helpers.flow;
 local flow_if = helpers.flow_if;
 local request = helpers.request;
 local response = helpers.response;
+local request_response_if = helpers.request_response_if;
 local librarian_request = helpers.librarian_request;
 local librarian_response = helpers.librarian_response;
 
@@ -20,6 +21,8 @@ embeddings_service + {
     "interfaces" +: {
         "document-load": flow_if("document-load:{workspace}:{id}"),
         "text-load": flow_if("text-document-load:{workspace}:{id}"),
+        "document-decode": request_response_if("document-decode:{workspace}:{id}"),
+        "chunker": request_response_if("chunker:{workspace}:{id}"),
     },
 
     // Flow-level processors for document preprocessing
@@ -30,6 +33,8 @@ embeddings_service + {
             topics: {
                 input: flow("document-load:{workspace}:{id}"),
                 output: flow("text-document-load:{workspace}:{id}"),
+                request: request("document-decode:{workspace}:{id}"),
+                response: response("document-decode:{workspace}:{id}"),
                 triples: flow("triples-store:{workspace}:{id}"),
                 "librarian-request": librarian_request,
                 "librarian-response": librarian_response,
@@ -43,6 +48,8 @@ embeddings_service + {
                 input: flow("text-document-load:{workspace}:{id}"),
                 output: flow("chunk-load:{workspace}:{id}"),
                 triples: flow("triples-store:{workspace}:{id}"),
+                request: request("chunker:{workspace}:{id}"),
+                response: response("chunker:{workspace}:{id}"),
                 "librarian-request": librarian_request,
                 "librarian-response": librarian_response,
             },

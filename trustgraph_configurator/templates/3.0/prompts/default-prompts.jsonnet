@@ -242,6 +242,37 @@
             "response-type": "text",
         },
 
+        "planner":: {
+            "prompt": importstr "planner.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "step_id": {"type": "string"},
+                        "capability": {"type": "string"},
+                        "depends_on": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                        },
+                        "params": {
+                            "type": "object",
+                            "additionalProperties": {"type": "string"},
+                        },
+                        "emits": {"type": "string"},
+                    },
+                    "required": [
+                        "step_id",
+                        "capability",
+                        "depends_on",
+                        "params",
+                        "emits",
+                    ],
+                },
+            }
+        },
+
         "plan-create":: {
             "prompt": importstr "plan-create.txt",
             "response-type": "json",

@@ -28,6 +28,12 @@ local url = import "values/url.jsonnet";
         "mcp-tool-concurrency": 1,
         "ontology-concurrency": 1,
         "nl-sparql-concurrency": 1,
+        "planner-concurrency": 1,
+        "verification-concurrency": 1,
+        "policy-concurrency": 1,
+        "action-concurrency": 1,
+        "concept-extraction-concurrency": 1,
+        "knowledge-retrieval-concurrency": 1,
         "sparql-nl-query-concurrency": 1,
         "rag-cpu-limit": "0.5",
         "rag-cpu-reservation": "0.1",
@@ -69,6 +75,12 @@ local url = import "values/url.jsonnet";
         local mcpToolConc = pars["mcp-tool-concurrency"],
         local ontologyConc = pars["ontology-concurrency"],
         local nlSparqlConc = pars["nl-sparql-concurrency"],
+        local plannerConc = pars["planner-concurrency"],
+        local verificationConc = pars["verification-concurrency"],
+        local policyConc = pars["policy-concurrency"],
+        local actionConc = pars["action-concurrency"],
+        local conceptExtractionConc = pars["concept-extraction-concurrency"],
+        local knowledgeRetrievalConc = pars["knowledge-retrieval-concurrency"],
         local sparqlNlQueryConc = pars["sparql-nl-query-concurrency"],
 
         local cpuLimit = pars["rag-cpu-limit"],
@@ -89,6 +101,12 @@ local url = import "values/url.jsonnet";
         local mcpTool = "trustgraph.agent.mcp_tool.Service",
         local ontology = "trustgraph.ontology.Processor",
         local nlSparql = "trustgraph.retrieval.nl_sparql.Processor",
+        local planner = "trustgraph.execution.planner.service.Processor",
+        local verification = "trustgraph.execution.verification.service.Processor",
+        local policy = "trustgraph.execution.policy.service.Processor",
+        local actionWorker = "trustgraph.execution.action_worker.service.Processor",
+        local conceptExtraction = "trustgraph.retrieval.concept_extraction.service.Processor",
+        local knowledgeRetrieval = "trustgraph.retrieval.knowledge_retrieval.service.Processor",
         local sparqlNlQuery = "trustgraph.retrieval.sparql_nl_query.Processor",
 
         create:: function(engine)
@@ -181,6 +199,48 @@ local url = import "values/url.jsonnet";
                                 params: {
                                     id: "prompt-rag",
                                     concurrency: promptRagConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: planner,
+                                params: {
+                                    id: "planner",
+                                    concurrency: plannerConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: verification,
+                                params: {
+                                    id: "verification",
+                                    concurrency: verificationConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: policy,
+                                params: {
+                                    id: "policy",
+                                    concurrency: policyConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: actionWorker,
+                                params: {
+                                    id: "action",
+                                    concurrency: actionConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: knowledgeRetrieval,
+                                params: {
+                                    id: "knowledge-retrieval",
+                                    concurrency: knowledgeRetrievalConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: conceptExtraction,
+                                params: {
+                                    id: "concept-extraction",
+                                    concurrency: conceptExtractionConc,
                                 } + $["pub-sub-params"],
                             },
                             {
