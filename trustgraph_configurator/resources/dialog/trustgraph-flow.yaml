@@ -20,7 +20,7 @@ steps:
       options:
         - label: "TrustGraph 2.11"
           value: "2.11"
-          description: "Placeholder for next release branch"
+          description: "Improved ontology support with CLI ontology utilities and NL-to-SPARQL retrieval"
           badge: pre-release
         - label: "TrustGraph 2.10"
           value: "2.10"
