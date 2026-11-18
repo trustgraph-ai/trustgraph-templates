@@ -1,0 +1,13 @@
+Given the following ontology classes from a knowledge graph:
+{% for cls in classes %}- {{cls.id}}: {{cls.description|default("(no description)")}}
+{% endfor %}
+
+Identify the entities mentioned in the question below. For each entity, give
+its name as it appears in the question and the ontology class it most likely
+belongs to (use the class id).
+
+Respond with JSON only, no other text.
+
+{"entities": [{"mention": "entity name", "type": "ClassName"}, ...]}
+
+Question: {{question}}
