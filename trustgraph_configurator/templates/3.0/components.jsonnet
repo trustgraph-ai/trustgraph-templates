@@ -122,6 +122,11 @@
    // Cloze: deploys cloze processor in its own container (trustgraph-torch)
    "cloze-hf": import "cloze/hf.jsonnet",
 
+   // Action services: standalone action workers for the execution engine
+   "action-erp-finance": import "action/erp-finance.jsonnet",
+   "action-joke": import "action/joke.jsonnet",
+   "action-web": import "action/web.jsonnet",
+
    // Does nothing.  But, can be a hack to overwrite parameters
    "null": {},
 
