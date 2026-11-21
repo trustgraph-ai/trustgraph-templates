@@ -13,6 +13,8 @@ local rag = import "rag.jsonnet";
 local api_gateway = import "api-gateway.jsonnet";
 local docling_decoder = import "docling-decoder.jsonnet";
 local ui = import "../ui/trustgraph-ui.jsonnet";
+local erp_action = import "action/erp-finance.jsonnet";
+local joke_action = import "action/joke.jsonnet";
 
 {
 
@@ -27,4 +29,8 @@ local ui = import "../ui/trustgraph-ui.jsonnet";
 
 } + control + ingest + rag + api_gateway + docling_decoder
   + ui + config
+
+  // FIXME: These are action services, the ERP one provides test data.  These
+  // are included by default now, will be removed for release, likely
+  + erp_action + joke_action
 
