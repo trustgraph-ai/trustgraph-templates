@@ -21,9 +21,9 @@
             "status": "beta"
         },
         {
-            "name": "2.12",
+            "name": "3.0",
             "description": "Placeholder for next release branch",
-            "version": "2.12.0",
+            "version": "3.0.0",
             "status": "pre-release"
         }
     ],

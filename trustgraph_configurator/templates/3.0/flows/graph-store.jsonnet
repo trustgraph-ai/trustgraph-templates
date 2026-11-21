@@ -38,6 +38,8 @@ decision_scoring_service + field_extraction_service + {
         "ontology": request_response_if("ontology:{workspace}:{id}"),
         "nl-sparql": request_response_if("nl-sparql:{workspace}:{id}"),
         "sparql-nl-query": request_response_if("sparql-nl-query:{workspace}:{id}"),
+        "concept-extraction": request_response_if("concept-extraction:{workspace}:{id}"),
+        "knowledge-retrieval": request_response_if("knowledge-retrieval:{workspace}:{id}"),
     },
 
     // Flow-level processors - handle data streams for a specific flow instance
@@ -64,19 +66,17 @@ decision_scoring_service + field_extraction_service + {
             topics: {
                 request: request("graph-rag:{workspace}:{id}"),
                 response: response("graph-rag:{workspace}:{id}"),
-                "embeddings-request": request("embeddings:{workspace}:{id}"),
-                "embeddings-response": response("embeddings:{workspace}:{id}"),
-                "reranker-request": request("reranker:{workspace}:{id}"),
-                "reranker-response": response("reranker:{workspace}:{id}"),
                 "prompt-request": request("prompt-rag:{workspace}:{id}"),
                 "prompt-response": response("prompt-rag:{workspace}:{id}"),
-                "graph-embeddings-request": request("graph-embeddings:{workspace}:{id}"),
-                "graph-embeddings-response": response("graph-embeddings:{workspace}:{id}"),
                 "triples-request": request("triples:{workspace}:{id}"),
                 "triples-response": response("triples:{workspace}:{id}"),
                 explainability: flow("triples-store:{workspace}:{id}"),
                 "librarian-request": librarian_request,
                 "librarian-response": librarian_response,
+                "knowledge-retrieval-request": request("knowledge-retrieval:{workspace}:{id}"),
+                "knowledge-retrieval-response": response("knowledge-retrieval:{workspace}:{id}"),
+                "concept-extraction-request": request("concept-extraction:{workspace}:{id}"),
+                "concept-extraction-response": response("concept-extraction:{workspace}:{id}"),
             },
         },
         "sparql-query:{id}": {
@@ -137,6 +137,28 @@ decision_scoring_service + field_extraction_service + {
             topics: {
                 request: request("graph-embeddings:{workspace}:{id}"),
                 response: response("graph-embeddings:{workspace}:{id}"),
+            },
+        },
+        "knowledge-retrieval:{id}": {
+            topics: {
+                request: request("knowledge-retrieval:{workspace}:{id}"),
+                response: response("knowledge-retrieval:{workspace}:{id}"),
+                "embeddings-request": request("embeddings:{workspace}:{id}"),
+                "embeddings-response": response("embeddings:{workspace}:{id}"),
+                "graph-embeddings-request": request("graph-embeddings:{workspace}:{id}"),
+                "graph-embeddings-response": response("graph-embeddings:{workspace}:{id}"),
+                "triples-request": request("triples:{workspace}:{id}"),
+                "triples-response": response("triples:{workspace}:{id}"),
+                "reranker-request": request("reranker:{workspace}:{id}"),
+                "reranker-response": response("reranker:{workspace}:{id}"),
+            },
+        },
+        "concept-extraction:{id}": {
+            topics: {
+                request: request("concept-extraction:{workspace}:{id}"),
+                response: response("concept-extraction:{workspace}:{id}"),
+                "prompt-request": request("prompt-rag:{workspace}:{id}"),
+                "prompt-response": response("prompt-rag:{workspace}:{id}"),
             },
         },
     },
