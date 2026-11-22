@@ -28,6 +28,7 @@ local url = import "values/url.jsonnet";
         "mcp-tool-concurrency": 1,
         "ontology-concurrency": 1,
         "nl-sparql-concurrency": 1,
+        "orchestrator-concurrency": 1,
         "planner-concurrency": 1,
         "verification-concurrency": 1,
         "policy-concurrency": 1,
@@ -75,6 +76,7 @@ local url = import "values/url.jsonnet";
         local mcpToolConc = pars["mcp-tool-concurrency"],
         local ontologyConc = pars["ontology-concurrency"],
         local nlSparqlConc = pars["nl-sparql-concurrency"],
+        local orchestratorConc = pars["orchestrator-concurrency"],
         local plannerConc = pars["planner-concurrency"],
         local verificationConc = pars["verification-concurrency"],
         local policyConc = pars["policy-concurrency"],
@@ -101,6 +103,7 @@ local url = import "values/url.jsonnet";
         local mcpTool = "trustgraph.agent.mcp_tool.Service",
         local ontology = "trustgraph.ontology.Processor",
         local nlSparql = "trustgraph.retrieval.nl_sparql.Processor",
+        local orchestrator = "trustgraph.execution.orchestrator.Processor",
         local planner = "trustgraph.execution.planner.service.Processor",
         local verification = "trustgraph.execution.verification.service.Processor",
         local policy = "trustgraph.execution.policy.service.Processor",
@@ -121,6 +124,13 @@ local url = import "values/url.jsonnet";
                                 params: {
                                     id: "agent-manager",
                                     concurrency: agentManagerConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: orchestrator,
+                                params: {
+                                    id: "orchestrator",
+                                    concurrency: orchestratorConc,
                                 } + $["pub-sub-params"],
                             },
                             {

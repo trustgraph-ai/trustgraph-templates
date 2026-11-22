@@ -15,6 +15,7 @@ local docling_decoder = import "docling-decoder.jsonnet";
 local ui = import "../ui/trustgraph-ui.jsonnet";
 local erp_action = import "action/erp-finance.jsonnet";
 local joke_action = import "action/joke.jsonnet";
+local redact_action = import "action/redact.jsonnet";
 local web_action = import "action/web.jsonnet";
 
 {
@@ -33,5 +34,5 @@ local web_action = import "action/web.jsonnet";
 
   // FIXME: These are action services, the ERP one provides test data.  These
   // are included by default now, will be removed for release, likely
-  + erp_action + joke_action + web_action
+  + erp_action + joke_action + redact_action + web_action
 
