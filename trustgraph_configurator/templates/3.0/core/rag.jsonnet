@@ -29,6 +29,7 @@ local url = import "values/url.jsonnet";
         "ontology-concurrency": 1,
         "nl-sparql-concurrency": 1,
         "orchestrator-concurrency": 1,
+        "query-formulation-concurrency": 1,
         "planner-concurrency": 1,
         "verification-concurrency": 1,
         "policy-concurrency": 1,
@@ -77,6 +78,7 @@ local url = import "values/url.jsonnet";
         local ontologyConc = pars["ontology-concurrency"],
         local nlSparqlConc = pars["nl-sparql-concurrency"],
         local orchestratorConc = pars["orchestrator-concurrency"],
+        local queryFormulationConc = pars["query-formulation-concurrency"],
         local plannerConc = pars["planner-concurrency"],
         local verificationConc = pars["verification-concurrency"],
         local policyConc = pars["policy-concurrency"],
@@ -104,6 +106,7 @@ local url = import "values/url.jsonnet";
         local ontology = "trustgraph.ontology.Processor",
         local nlSparql = "trustgraph.retrieval.nl_sparql.Processor",
         local orchestrator = "trustgraph.execution.orchestrator.Processor",
+        local queryFormulation = "trustgraph.execution.query_formulation.service.Processor",
         local planner = "trustgraph.execution.planner.service.Processor",
         local verification = "trustgraph.execution.verification.service.Processor",
         local policy = "trustgraph.execution.policy.service.Processor",
@@ -131,6 +134,13 @@ local url = import "values/url.jsonnet";
                                 params: {
                                     id: "orchestrator",
                                     concurrency: orchestratorConc,
+                                } + $["pub-sub-params"],
+                            },
+                            {
+                                class: queryFormulation,
+                                params: {
+                                    id: "query-formulation",
+                                    concurrency: queryFormulationConc,
                                 } + $["pub-sub-params"],
                             },
                             {

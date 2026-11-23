@@ -24,9 +24,10 @@ local images = import "values/images.jsonnet";
 
             local container =
                 engine.container("erp-finance")
-                    .with_image(images.trustgraph_flow)
+                    .with_image(images.trustgraph_erp_data)
                     .with_command([
-                        "erp-finance-action-service",
+                        "python",
+                        "service.py",
             ] + $["pub-sub-args"] + [
                         "--log-level",
                         logLevel,
