@@ -22,6 +22,7 @@ llm_services + mcp_service + {
     "interfaces" +: {
         "agent": request_response_if("agent:{workspace}:{id}"),
         "orchestrator": request_response_if("orchestrator:{workspace}:{id}"),
+        "query-formulation": request_response_if("query-formulation:{workspace}:{id}"),
         "planner": request_response_if("planner:{workspace}:{id}"),
         "verification": request_response_if("verification:{workspace}:{id}"),
         "policy": request_response_if("policy:{workspace}:{id}"),
@@ -61,7 +62,7 @@ llm_services + mcp_service + {
             topics: {
                 request: request("orchestrator:{workspace}:{id}"),
                 response: response("orchestrator:{workspace}:{id}"),
-                step: flow("step:{workspace}:{id}"),
+                next: request("orchestrator:{workspace}:{id}"),
                 "planner-request": request("planner:{workspace}:{id}"),
                 "planner-response": response("planner:{workspace}:{id}"),
                 "policy-request": request("policy:{workspace}:{id}"),
@@ -70,6 +71,16 @@ llm_services + mcp_service + {
                 "action-response": response("action:{workspace}:{id}"),
                 "verification-request": request("verification:{workspace}:{id}"),
                 "verification-response": response("verification:{workspace}:{id}"),
+            },
+        },
+
+        // Query formulation transforms queries using prompt service
+        "query-formulation:{id}": {
+            topics: {
+                request: request("query-formulation:{workspace}:{id}"),
+                response: response("query-formulation:{workspace}:{id}"),
+                "prompt-request": request("prompt-rag:{workspace}:{id}"),
+                "prompt-response": response("prompt-rag:{workspace}:{id}"),
             },
         },
 
@@ -110,6 +121,8 @@ llm_services + mcp_service + {
                 "graph-embeddings-response": response("graph-embeddings:{workspace}:{id}"),
                 "triples-request": request("triples:{workspace}:{id}"),
                 "triples-response": response("triples:{workspace}:{id}"),
+                "query-formulation-request": request("query-formulation:{workspace}:{id}"),
+                "query-formulation-response": response("query-formulation:{workspace}:{id}"),
                 "document-rag-request": request("document-rag:{workspace}:{id}"),
                 "document-rag-response": response("document-rag:{workspace}:{id}"),
                 "document-embeddings-request": request("document-embeddings:{workspace}:{id}"),

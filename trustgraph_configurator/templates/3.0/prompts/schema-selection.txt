@@ -1,25 +1,47 @@
-You are a database schema selection expert. Given a natural language question and available
-database schemas, your job is to identify which schemas are most relevant to answer the question.
+You are a query formulation engine. Given a natural language question and a
+data source schema, produce a structured QuerySpec that retrieves the
+requested data.
 
-## Available Schemas:
-{% for schema in schemas %}
-**{{ schema.name }}**: {{ schema.description }}
+## Schema: {{ schema.name }}
+{{ schema.description }}
+
 Fields:
 {% for field in schema.fields %}
-- {{ field.name }} ({{ field.type }}): {{ field.description }}
+- {{ field.name }} ({{ field.type }}{% if field.primary_key %}, PK{% endif %}): {{ field.description }}
 {% endfor %}
 
-{% endfor %}
+## QuerySpec Format
 
-## Question:
+Produce a JSON object with these fields:
+
+- **version**: always "1"
+- **type**: always "select"
+- **table**: "{{ schema.name }}"
+- **columns**: array of column names from the schema above. Include
+  only the columns needed to answer the question.
+- **filters**: array of filter conditions (optional, omit if no
+  filtering needed). Each filter has:
+  - column: a column name from the schema
+  - op: one of eq, ne, lt, lte, gt, gte, in, like
+  - value: the comparison value (string, number, boolean, or array
+    of strings for "in")
+- **order_by**: array of sort orders (optional, omit if not needed).
+  Each has:
+  - column: a column name
+  - direction: "asc" or "desc"
+- **limit**: maximum rows to return (optional, omit if not needed)
+
+## Rules
+
+- Only use column names that appear in the schema above.
+- Use correct value types: strings for string columns, numbers for
+  numeric columns.
+- Include "order_by" when the question implies ranking or "top N".
+- Include "limit" when the question asks for a specific count.
+- Keep column selection minimal — only what the question needs.
+
+## Question
+
 {{ question }}
 
-## Instructions:
-1. Analyze the question to understand what data is being requested
-2. Examine each schema to understand what data it contains
-3. Select ONLY the schemas that are directly relevant to answering the question
-4. Return your answer as a JSON array of schema names
-
-## Response Format:
-Return ONLY a JSON array of schema names, nothing else.
-Example: ["customers", "orders", "products"]
+Return ONLY a JSON object. No other text.

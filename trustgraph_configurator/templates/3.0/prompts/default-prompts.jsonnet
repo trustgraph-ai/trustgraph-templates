@@ -359,6 +359,61 @@
             "response-type": "text",
         },
 
+        "query-formulation":: {
+            "prompt": importstr "query-formulation.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "object",
+                "required": ["version", "type", "table", "columns"],
+                "additionalProperties": false,
+                "properties": {
+                    "version": { "const": "1" },
+                    "type": { "const": "select" },
+                    "table": { "type": "string" },
+                    "columns": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                    },
+                    "filters": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["column", "op", "value"],
+                            "additionalProperties": false,
+                            "properties": {
+                                "column": { "type": "string" },
+                                "op": {
+                                    "type": "string",
+                                    "enum": ["eq", "ne", "lt", "lte", "gt", "gte", "in", "like"],
+                                },
+                                "value": {
+                                    "oneOf": [
+                                        { "type": "string" },
+                                        { "type": "number" },
+                                        { "type": "boolean" },
+                                        { "type": "array", "items": { "type": "string" } },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    "order_by": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["column", "direction"],
+                            "additionalProperties": false,
+                            "properties": {
+                                "column": { "type": "string" },
+                                "direction": { "enum": ["asc", "desc"] },
+                            },
+                        },
+                    },
+                    "limit": { "type": "integer" },
+                },
+            },
+        },
+
     }
 
 }
