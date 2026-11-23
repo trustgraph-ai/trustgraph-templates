@@ -21,6 +21,7 @@ llm_services + mcp_service + {
     // External interfaces for agent operations
     "interfaces" +: {
         "agent": request_response_if("agent:{workspace}:{id}"),
+        "orchestrator": request_response_if("orchestrator:{workspace}:{id}"),
         "planner": request_response_if("planner:{workspace}:{id}"),
         "verification": request_response_if("verification:{workspace}:{id}"),
         "policy": request_response_if("policy:{workspace}:{id}"),
@@ -52,6 +53,23 @@ llm_services + mcp_service + {
                 explainability: flow("triples-store:{workspace}:{id}"),
                 "librarian-request": librarian_request,
                 "librarian-response": librarian_response,
+            },
+        },
+
+        // Orchestrator coordinates execution engine steps
+        "orchestrator:{id}": {
+            topics: {
+                request: request("orchestrator:{workspace}:{id}"),
+                response: response("orchestrator:{workspace}:{id}"),
+                step: flow("step:{workspace}:{id}"),
+                "planner-request": request("planner:{workspace}:{id}"),
+                "planner-response": response("planner:{workspace}:{id}"),
+                "policy-request": request("policy:{workspace}:{id}"),
+                "policy-response": response("policy:{workspace}:{id}"),
+                "action-request": request("action:{workspace}:{id}"),
+                "action-response": response("action:{workspace}:{id}"),
+                "verification-request": request("verification:{workspace}:{id}"),
+                "verification-response": response("verification:{workspace}:{id}"),
             },
         },
 

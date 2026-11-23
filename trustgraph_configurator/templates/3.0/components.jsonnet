@@ -125,6 +125,7 @@
    // Action services: standalone action workers for the execution engine
    "action-erp-finance": import "action/erp-finance.jsonnet",
    "action-joke": import "action/joke.jsonnet",
+   "action-redact": import "action/redact.jsonnet",
    "action-web": import "action/web.jsonnet",
 
    // Does nothing.  But, can be a hack to overwrite parameters
