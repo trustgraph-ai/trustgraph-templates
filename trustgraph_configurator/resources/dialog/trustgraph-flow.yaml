@@ -18,20 +18,23 @@ steps:
     input:
       type: select
       options:
+        - label: "TrustGraph 3.0"
+          value: "3.0"
+          description: "Execution orchestration engine with action services and planner-driven workflows"
+          badge: alpha
         - label: "TrustGraph 2.11"
           value: "2.11"
           description: "Improved ontology support with CLI ontology utilities and NL-to-SPARQL retrieval"
-          badge: pre-release
+          badge: stable
+          recommended: true
         - label: "TrustGraph 2.10"
           value: "2.10"
           description: "SHACL-AF policy filtering, IAM user context, guided graph traversal, TriG/named graph support, and streaming policy service"
           badge: stable
-          recommended: true
         - label: "TrustGraph 2.9"
           value: "2.9"
           description: "Plugin UI architecture with DCAT catalog support for richer, extensible deployments"
           badge: stable
-          recommended: false
     transitions:
       - next: platform
 

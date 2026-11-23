@@ -37,7 +37,8 @@ class Status:
     description: str
 
 def version_unpack(v):
-    return [v for v in map(int, v.split('.'))]
+    from packaging.version import Version
+    return Version(v.replace("-", ""))
 
 def version_sort(x):
     return sorted(x, key=lambda s: version_unpack(s))
