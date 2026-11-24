@@ -44,7 +44,14 @@ objects. No other text.
 
 Available capabilities:
 
-{{capabilities}}
+{% for cap in capabilities %}
+  {{cap.name}} ({{cap.type}})
+    {{cap.description}}
+{% if cap.inputs %}{% for inp in cap.inputs %}    Input: {{inp.port}}: {{inp.artifact_type}}{% if inp.optional %} (optional){% endif %}
+{% endfor %}{% else %}    Inputs: none (source — query passed as parameter)
+{% endif %}{% for out in cap.outputs %}    Output: {{out.port}}: {{out.artifact_type}}
+{% endfor %}
+{% endfor %}
 
 Goal: {{goal}}
 

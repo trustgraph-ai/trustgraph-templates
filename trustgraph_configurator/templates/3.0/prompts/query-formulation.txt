@@ -82,9 +82,12 @@ schema:
 
 prompt:
 
-Schema:
+Schema: {{schema.name}}
+{{schema.description}}
 
-{{schema}}
+Fields:
+{% for field in schema.fields %}  {{field.name}} ({{field.type}}){% if field.primary_key %} [PK]{% endif %}{% if field.required %} [required]{% endif %} — {{field.description}}
+{% endfor %}
 
 Question: {{question}}
 
