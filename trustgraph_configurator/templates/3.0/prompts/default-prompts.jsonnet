@@ -260,14 +260,12 @@
                             "type": "object",
                             "additionalProperties": {"type": "string"},
                         },
-                        "emits": {"type": "string"},
                     },
                     "required": [
                         "step_id",
                         "capability",
                         "depends_on",
                         "params",
-                        "emits",
                     ],
                 },
             }

@@ -5,29 +5,38 @@ Each step has:
 - step_id: a short unique identifier (e.g. "1A", "2B", "3")
 - capability: the name of the capability to invoke
 - depends_on: list of step_ids that must complete before this step
-- params: dictionary of parameter key-value pairs for the capability
-- emits: the artifact type this step produces
+- params: dictionary mapping input port names to values
+
+Param values:
+- For literal text inputs, use a plain string (e.g. "budget variance").
+- To wire an output from a previous step, use "ref:STEP_ID:OUTPUT_NAME"
+  where STEP_ID is the source step and OUTPUT_NAME is its output port.
+- ref: values create implicit dependencies — you do not need to repeat
+  them in depends_on.
 
 Rules:
 - Steps with no dependencies are executed in parallel.
 - Every step must use a capability from the registry.
-- Output artifact types must match what the capability emits.
-- Input dependencies must produce artifact types compatible with what
-  the capability accepts.
-- Every required input port on a capability MUST be satisfied by at
-  least one dependency that emits that artifact type. If a capability
-  has two input ports requiring different artifact types, it must
-  depend on steps that collectively provide both types.
+- Param keys must match the input port names of the capability.
+- ref: values must reference an output port that exists on the source
+  step's capability, and whose artifact type is compatible with the
+  target input port.
+- Required inputs must be provided. Optional inputs may be omitted.
 - Keep plans minimal — only include steps needed for the goal.
 
-Example step:
+Example steps:
 
   {
     "step_id": "1A",
-    "capability": "knowledge-graph-query",
+    "capability": "concept-extraction",
     "depends_on": [],
-    "params": {"query": "UK engineering teams and cost centres"},
-    "emits": "SubgraphArtifact"
+    "params": {"query": "UK engineering teams and cost centres"}
+  },
+  {
+    "step_id": "1B",
+    "capability": "knowledge-retrieval",
+    "depends_on": [],
+    "params": {"keywords": "ref:1A:keywords"}
   }
 
 Use exactly these field names. Respond with a JSON array of step
