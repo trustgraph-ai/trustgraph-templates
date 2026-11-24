@@ -23,7 +23,7 @@
         {
             "name": "3.0",
             "description": "Execution orchestration engine with action services and planner-driven workflows",
-            "version": "3.0.0-rc7",
+            "version": "3.0.0-rc11",
             "status": "alpha"
         }
     ],

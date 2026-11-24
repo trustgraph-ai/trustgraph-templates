@@ -412,6 +412,38 @@
             },
         },
 
+        "query-summarisation":: {
+            "prompt": importstr "query-summarisation.txt",
+            "response-type": "json",
+            "schema": {
+                "type": "object",
+                "required": ["group_by", "aggregations"],
+                "additionalProperties": false,
+                "properties": {
+                    "group_by": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                    },
+                    "aggregations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["function", "column", "alias"],
+                            "additionalProperties": false,
+                            "properties": {
+                                "function": {
+                                    "type": "string",
+                                    "enum": ["sum", "count", "avg", "min", "max"],
+                                },
+                                "column": { "type": "string" },
+                                "alias": { "type": "string" },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
     }
 
 }
