@@ -376,13 +376,13 @@
                         "type": "array",
                         "items": {
                             "type": "object",
-                            "required": ["column", "op", "value"],
+                            "required": ["column", "op"],
                             "additionalProperties": false,
                             "properties": {
                                 "column": { "type": "string" },
                                 "op": {
                                     "type": "string",
-                                    "enum": ["eq", "ne", "lt", "lte", "gt", "gte", "in", "like"],
+                                    "enum": ["eq", "ne", "lt", "lte", "gt", "gte", "in", "like", "is_null", "is_not_null"],
                                 },
                                 "value": {
                                     "oneOf": [
@@ -390,6 +390,7 @@
                                         { "type": "number" },
                                         { "type": "boolean" },
                                         { "type": "array", "items": { "type": "string" } },
+                                        { "type": "null" },
                                     ],
                                 },
                             },

@@ -123,7 +123,7 @@
    "cloze-hf": import "cloze/hf.jsonnet",
 
    // Action services: standalone action workers for the execution engine
-   "action-erp-finance": import "action/erp-finance.jsonnet",
+   "action-demo-erp": import "action/demo-erp.jsonnet",
    "action-joke": import "action/joke.jsonnet",
    "action-redact": import "action/redact.jsonnet",
    "action-web": import "action/web.jsonnet",
