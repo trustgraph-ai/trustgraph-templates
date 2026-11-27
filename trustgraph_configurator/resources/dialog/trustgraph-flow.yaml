@@ -20,7 +20,7 @@ steps:
       options:
         - label: "TrustGraph 3.0"
           value: "3.0"
-          description: "Execution orchestration engine with action services and planner-driven workflows"
+          description: "Execution orchestration engine with versioned knowledge graphs, action services, and planner-driven workflows"
           badge: alpha
         - label: "TrustGraph 2.11"
           value: "2.11"

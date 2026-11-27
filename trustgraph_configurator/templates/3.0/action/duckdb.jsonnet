@@ -3,28 +3,28 @@ local images = import "values/images.jsonnet";
 {
 
     parameters +:: {
-        "erp-finance-cpu-limit": "0.5",
-        "erp-finance-cpu-reservation": "0.1",
-        "erp-finance-memory-limit": "256M",
-        "erp-finance-memory-reservation": "256M",
+        "duckdb-action-cpu-limit": "0.5",
+        "duckdb-action-cpu-reservation": "0.1",
+        "duckdb-action-memory-limit": "256M",
+        "duckdb-action-memory-reservation": "256M",
     },
 
     local logLevel = $.parameters["log-level"],
 
-    "erp-finance" +: {
+    "duckdb-action" +: {
 
         local pars = $.parameters,
 
-        local cpuLimit = pars["erp-finance-cpu-limit"],
-        local cpuReservation = pars["erp-finance-cpu-reservation"],
-        local memoryLimit = pars["erp-finance-memory-limit"],
-        local memoryReservation = pars["erp-finance-memory-reservation"],
+        local cpuLimit = pars["duckdb-action-cpu-limit"],
+        local cpuReservation = pars["duckdb-action-cpu-reservation"],
+        local memoryLimit = pars["duckdb-action-memory-limit"],
+        local memoryReservation = pars["duckdb-action-memory-reservation"],
 
         create:: function(engine)
 
             local container =
-                engine.container("erp-finance")
-                    .with_image(images.trustgraph_erp_data)
+                engine.container("duckdb-action")
+                    .with_image("docker.io/trustgraph/trustgraph-duckdb-action-service:0.0.1")
                     .with_command([
                         "python",
                         "service.py",
@@ -36,11 +36,11 @@ local images = import "values/images.jsonnet";
                     .with_reservations(cpuReservation, memoryReservation);
 
             local containerSet = engine.containers(
-                "erp-finance", [ container ]
+                "duckdb-action", [ container ]
             );
 
             local service =
-                engine.internalService("erp-finance", containerSet)
+                engine.internalService("duckdb-action", containerSet)
                 .with_port(8000, 8000, "metrics");
 
             engine.resources([

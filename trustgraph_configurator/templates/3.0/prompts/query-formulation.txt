@@ -23,9 +23,13 @@ Rules:
 - "columns" must only contain column names from the schema. Always
   include the minimum columns needed to answer the question. Never
   return all columns unless the question requires them.
-- Filter operators: eq, ne, lt, lte, gt, gte, in, like.
+- Filter operators: eq, ne, lt, lte, gt, gte, in, like, is_null,
+  is_not_null.
   - "in" expects a JSON array as the value.
   - "like" is for substring matching.
+  - "is_null" matches rows where the column is null. No "value" needed.
+  - "is_not_null" matches rows where the column is not null. No "value"
+    needed.
   - Use the correct type for values: strings for string columns,
     numbers for numeric columns.
 - "order_by" is optional. Include it when the question implies
@@ -58,10 +62,10 @@ schema:
         "type": "object",
         "properties": {
           "column": { "type": "string" },
-          "op": { "type": "string", "enum": ["eq", "ne", "lt", "lte", "gt", "gte", "in", "like"] },
+          "op": { "type": "string", "enum": ["eq", "ne", "lt", "lte", "gt", "gte", "in", "like", "is_null", "is_not_null"] },
           "value": {}
         },
-        "required": ["column", "op", "value"]
+        "required": ["column", "op"]
       }
     },
     "order_by": {

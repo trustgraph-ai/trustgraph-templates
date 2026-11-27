@@ -22,8 +22,8 @@
         },
         {
             "name": "3.0",
-            "description": "Execution orchestration engine with action services and planner-driven workflows",
-            "version": "3.0.0-rc11",
+            "description": "Execution orchestration engine with versioned knowledge graphs, action services, and planner-driven workflows",
+            "version": "3.0.1",
             "status": "alpha"
         }
     ],
